@@ -1,9 +1,4 @@
 # Serveur
-Aller dans folder server
-```sh
-cd server
-```
-
 Installer les dépendances
 ```sh
 npm install
@@ -32,35 +27,38 @@ curl http://localhost:5000/api/exercises
 Le JSON suivant devrait être retourné:
 ```json
 {
-    "exercises": [
-        {
-            "id": 1,
-            "name": "Push-ups"
-        },
-        {
-            "id": 2,
-            "name": "Sit-ups"
-        },
-        {
-            "id": 3,
-            "name": "Squats"
-        }
-     ]
+  [
+    {
+      "id":1,
+      "name":"Updated Exercise Name",
+      "description":"Updated Exercise Description",
+      "numberRepetitionsMin":3,
+      "numberRepetitionsMax":8,
+      "url":"http://example.com/updated-url"
+    },
+    {
+      "id":3,
+      "name":"Sleeping",
+      "description":"Ne ris pas",
+      "numberRepetitionsMin":50,
+      "numberRepetitionsMax":60,
+      "url":"https://youtu.be/ojByzJhwVFE"
+    },
+    {
+      "id":4,"name":"Exercise Name",
+      "description":"Exercise Description",
+      "numberRepetitionsMin":5,
+      "numberRepetitionsMax":10,
+      "url":"http://example.com/exercise-url"
+      }
+  ]
 }    
 ```
 
 ## Remarques
-> * La base de donnée est nommée `sysap.db`
-> * Le shéma utilisé pour la bd est `sysap-db-schema.sql` qui se trouve sous `./server/db/` (on peut y ajouté des tables au fur et à mesure).
+> * Pour l'instant le shéma `golfit-db-schema.sql` est utilisé mais peut être channgé
 > * Le fichier qui s'occupe d'initialiser la bd est `init-db.sh` sous `./server/db/`
-> * Vous devriez vérifier les fichiers .env dans le frontend et backend et les modifier dépendement des besoins.
-> * Dans le .env du server, le PORT est configuré sur 5000 (peut-être changé au besoin ou si le PORT est déjà utilisé)
-
-
-Pour l'instant, nous utilisons une bd SQLite initialisé avec la commande :
-```sh
-npm run init-db
-```
+> * Un fichier log sous `/server/logs/access.log` contiendra toutes les requêtes faites au serveur
 
 Pour réinitialiser la base de données SQLite :
 ```sh
@@ -88,7 +86,14 @@ const ExerciseService = {
   },
   createExercise: async function (exerciseName) {
     try {
-      const response = await axios.post(`${serverURL}/api/exercises`, { name: exerciseName });
+      const newExercise = {
+          "name": "Exercise de test",
+          "description": "Description de l'exercise de test",
+          "numberRepetitionsMin": 5,
+          "numberRepetitionsMax": 10,
+          "url": "http://example.com/exercise/test"
+      }
+      const response = await axios.post(`${serverURL}/api/exercises`, newExercise);
       return response.data; 
     } catch (error) {
       throw error;
@@ -116,8 +121,3 @@ const createdExercise = await ExerciseService.createExercise(exerciseName);
 * dotenv : Le module dotenv est utilisé pour charger des variables d'environnement à partir d'un fichier `.env`
 * express-rate-limit : Met en place des limites sur le nombre de requêtes que les clients peuvent effectuer sur le serveur
 * sqlite3 : Pour l'utilisation d'une base de donnée SQLite
-
-### À faire / À penser
-> * Le rate-limit (actuellement de 100 requêtes par 15 minutes) devrait être augmenter dans `server.js`
-> * Éventuellement penser à créer des controllers
-> * Les logs des requêtes faites aux routes peuvent être fait différemment

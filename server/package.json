@@ -2,11 +2,11 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "src/server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server",
-    "dev": "nodemon server",
+    "start": "ts-node src/server.ts",
+    "dev": "nodemon src/server.ts",
     "init-db": "sh ./db/init-db.sh"
   },
   "keywords": [],
@@ -20,6 +20,9 @@
     "sqlite3": "^5.1.6"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "@types/cors": "^2.8.14",
+    "@types/express": "^4.17.19",
+    "nodemon": "^3.0.1",
+    "ts-node": "^10.9.1"
   }
 }
