@@ -1,11 +1,29 @@
 import React from 'react';
-import { TouchableHighlight, Text, View, StyleSheet } from 'react-native';
+import { TouchableHighlight, Text, View, StyleSheet, Alert } from 'react-native';
 
 const Imprimer = () => {
 
     // Not implemented
     const fetchPdf = () => {
-        // fetch('https://')
+        Alert.alert(
+            "Avertissement", // Titre de l'alerte
+            "Voulez-vous vraiment imprimer ?", // Message de l'alerte
+            [
+                {
+                    text: "Annuler",
+                    onPress: () => console.log("Annulé"),
+                    style: "cancel"
+                },
+                {
+                    text: "Oui", 
+                    onPress: () => {
+                        // Ici, vous pouvez ajouter le code pour imprimer ou faire d'autres actions
+                        console.log("Imprimer");
+                    }
+                }
+            ],
+            { cancelable: false }
+        );
     };
     return (
         <View style={styles.container}>
