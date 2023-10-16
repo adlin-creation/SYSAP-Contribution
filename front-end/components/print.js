@@ -8,9 +8,10 @@ const Imprimer = () => {
         // fetch('https://')
     };
     return (
-        <View>
-            <TouchableHighlight onPress={fetchPdf}>
-                <Text >Imprimer</Text>
+        <View style={styles.container}>
+            <TouchableHighlight
+                style={styles.button} underlayColor="lightgray" onPress={fetchPdf}>
+                <Text style={styles.buttonText}>Imprimer</Text>
             </TouchableHighlight>
         </View>
     );
