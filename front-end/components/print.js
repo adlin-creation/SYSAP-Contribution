@@ -4,10 +4,11 @@ import { TouchableHighlight, Text, View, StyleSheet, Alert } from 'react-native'
 const Imprimer = () => {
 
     // Not implemented
+    // Fichier dans le projet directement donc aller le chercher
     const fetchPdf = () => {
         Alert.alert(
-            "Avertissement", // Titre de l'alerte
-            "Voulez-vous vraiment imprimer ?", // Message de l'alerte
+            "Avertissement",
+            "Voulez-vous vraiment imprimer ?",
             [
                 {
                     text: "Annuler",
@@ -17,7 +18,6 @@ const Imprimer = () => {
                 {
                     text: "Oui", 
                     onPress: () => {
-                        // Ici, vous pouvez ajouter le code pour imprimer ou faire d'autres actions
                         console.log("Imprimer");
                     }
                 }
