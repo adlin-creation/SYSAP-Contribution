@@ -11,6 +11,7 @@ import ProfileScreen from "../screens/Profile";
 import ProgrammeScreen from "../screens/Programme";
 import ProgressionScreen from "../screens/Progression";
 import SeanceScreen from "../screens/Seance";
+import ExerciseDetail from "../screens/ExerciseDetail";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
 
@@ -140,6 +141,15 @@ function SeanceStack(props) {
         options={{
           header: ({ navigation, scene }) => (
             <Header title="Séance" scene={scene} navigation={navigation} />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="ExerciseDetail"
+        component={ExerciseDetail}
+        options={{
+          header: ({ navigation, scene }) => (
+            <Header title="ExerciseDetail" scene={scene} navigation={navigation} />
           ),
         }}
       />
