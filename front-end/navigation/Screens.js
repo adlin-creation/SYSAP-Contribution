@@ -11,6 +11,7 @@ import ProfileScreen from "../screens/Profile";
 import ProgrammeScreen from "../screens/Programme";
 import ProgressionScreen from "../screens/Progression";
 import SeanceScreen from "../screens/Seance";
+import LoginScreen from "../screens/Login";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
 
@@ -253,7 +254,7 @@ function AppStack(props) {
       />
       <Drawer.Screen
         name="Se connecter"
-        component={ProgrammeScreen}
+        component={LoginScreen}
         options={{
           drawerIcon: ({ focused }) => (
             <Icon
