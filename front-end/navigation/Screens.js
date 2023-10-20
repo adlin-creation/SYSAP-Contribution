@@ -12,6 +12,8 @@ import ProgrammeScreen from "../screens/Programme";
 import ProgressionScreen from "../screens/Progression";
 import SeanceScreen from "../screens/Seance";
 import LoginScreen from "../screens/Login";
+import RegisterScreen from "../screens/Register";
+
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
 
@@ -253,22 +255,8 @@ function AppStack(props) {
         }}
       />
       <Drawer.Screen
-        name="Se connecter"
-        component={LoginScreen}
-        options={{
-          drawerIcon: ({ focused }) => (
-            <Icon
-              size={16}
-              name="ios-log-in"
-              family="ionicon"
-              color={focused ? "white" : materialTheme.COLORS.MUTED}
-            />
-          ),
-        }}
-      />
-      <Drawer.Screen
         name="Se déconnecter"
-        component={ProgrammeScreen}
+        component={OnboardingStack}
         options={{
           drawerIcon: ({ focused }) => (
             <Icon
@@ -299,6 +287,8 @@ export default function OnboardingStack(props) {
           headerTransparent: true,
         }}
       />
+      <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="Register" component={RegisterScreen} />
       <Stack.Screen name="App" component={AppStack} />
     </Stack.Navigator>
   );

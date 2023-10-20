@@ -34,7 +34,7 @@ export default class Onboarding extends React.Component {
                 shadowless
                 style={styles.button}
                 color={materialTheme.COLORS.BUTTON_COLOR}
-                onPress={() => navigation.navigate('App')}>
+                onPress={() => navigation.navigate('Login')}>
                 Se connecter
               </Button>
             </Block>
@@ -46,14 +46,6 @@ export default class Onboarding extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "black",
-  },
-  padded: {
-    paddingHorizontal: theme.SIZES.BASE * 2,
-    position: 'relative',
-    bottom: theme.SIZES.BASE,
-  },
   button: {
     width: width - theme.SIZES.BASE * 4,
     height: theme.SIZES.BASE * 3,
