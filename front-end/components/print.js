@@ -6,43 +6,14 @@ import {Asset} from "expo-asset";
 
 const Imprimer = () => {
 
-    // Not implemented
-    // Fichier dans le projet directement donc aller le chercher
-    const fetchPdf = () => {
-        Alert.alert(
-            "Avertissement",
-            "Voulez-vous vraiment imprimer ?",
-            [
-                {
-                    text: "Annuler",
-                    onPress: () => console.log("Annulé"),
-                    style: "cancel"
-                },
-                {
-                    text: "Oui", 
-                    onPress: () => {
-                        console.log("Imprimer");
-                    }
-                }
-            ],
-            { cancelable: false }
-        );
-        printDoc();
-    };
-
-
-    // async function printDocument() {
-    //     const pdfUrl = '../assets/Plan1.pdf';
-    //     const pdfData = await fetch(pdfUrl).then((response) => response.blob());
-    //     await Print.printAsync({ uri: pdfData.uri });
-    // }
-    const printDoc = async () => {
+    const fetchPdf = async () => {
         const pdfAsset = Asset.fromModule(require('../assets/Plan1.pdf'));
         await pdfAsset.downloadAsync();
-        Print.printAsync({
+        await Print.printAsync({
             uri: pdfAsset.localUri,
         });
-    }
+    };
+
     return (
         <View style={styles.container}>
             <TouchableHighlight
@@ -60,7 +31,7 @@ const styles = StyleSheet.create({
     },
     button: {
         borderWidth: 2,
-        borderColor: 'blue',
+        borderColor: 'purple',
         backgroundColor: 'white',
         width: 200,
         height: 50,
