@@ -1,5 +1,6 @@
 import React from 'react';
 import { TouchableHighlight, Text, View, StyleSheet, Alert } from 'react-native';
+import Print from 'react-native-print'
 
 const Imprimer = () => {
 
@@ -24,6 +25,10 @@ const Imprimer = () => {
             ],
             { cancelable: false }
         );
+        Print.print({
+            filePath: '../assets/Plan1.pdf', // Remplacez par le chemin de votre document PDF
+            isLandscape: false, // Mettez à true si vous souhaitez imprimer en mode paysage
+        });
     };
     return (
         <View style={styles.container}>
