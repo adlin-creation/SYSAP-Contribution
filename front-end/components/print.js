@@ -1,6 +1,8 @@
 import React from 'react';
-import { TouchableHighlight, Text, View, StyleSheet, Alert } from 'react-native';
-import Print from 'react-native-print'
+import {Alert, StyleSheet, Text, TouchableHighlight, View} from 'react-native';
+import * as Print from 'expo-print';
+import {Asset} from "expo-asset";
+
 
 const Imprimer = () => {
 
@@ -25,11 +27,22 @@ const Imprimer = () => {
             ],
             { cancelable: false }
         );
-        Print.print({
-            filePath: '../assets/Plan1.pdf', // Remplacez par le chemin de votre document PDF
-            isLandscape: false, // Mettez à true si vous souhaitez imprimer en mode paysage
-        });
+        printDoc();
     };
+
+
+    // async function printDocument() {
+    //     const pdfUrl = '../assets/Plan1.pdf';
+    //     const pdfData = await fetch(pdfUrl).then((response) => response.blob());
+    //     await Print.printAsync({ uri: pdfData.uri });
+    // }
+    const printDoc = async () => {
+        const pdfAsset = Asset.fromModule(require('../assets/Plan1.pdf'));
+        await pdfAsset.downloadAsync();
+        Print.printAsync({
+            uri: pdfAsset.localUri,
+        });
+    }
     return (
         <View style={styles.container}>
             <TouchableHighlight
