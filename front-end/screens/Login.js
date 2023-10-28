@@ -1,8 +1,10 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
-  View,
-  Pressable,
-  Image,
+    CheckBox,
+    View,
+    Pressable,
+    Image,
+    StyleSheet
 } from 'react-native';
 
 import { Block, Text } from "galio-framework";
@@ -11,6 +13,7 @@ import { Icon } from '../components';
 import CustomButton from '../components/CustomButton';
 
 const Login = ({navigation}) => {
+    const [isSelected, setSelection] = useState(false);
     return (
         <Block style={{flex: 1, justifyContent: 'center'}}>
             <View style={{paddingHorizontal: 25}}>
@@ -29,9 +32,9 @@ const Login = ({navigation}) => {
                     color: '#333',
                     marginBottom: 30,
                 }}>
-                Login
+                Connection
                 </Text>
-
+                
                 <InputField
                 label={'email'}
                 icon={
@@ -50,7 +53,7 @@ const Login = ({navigation}) => {
                 icon={
                     <Icon
                     size={16}
-                    name="shield-outline"
+                    name="lock-closed-outline"
                     family="ionicon"
                     color={"black"}
                     />
@@ -59,8 +62,27 @@ const Login = ({navigation}) => {
                 fieldButtonLabel={"Oublié?"}
                 fieldButtonFunction={() => {}}
                 />
+
+                <View style={styles.checkboxContainer}>
+                    <CheckBox
+                    value={isSelected}
+                    onValueChange={setSelection}
+                    style={styles.checkbox}
+                    />
+                    <Text style={styles.label}>Je suis le proche aidant</Text>
+                </View>
+
+                {/* <InputField
+                label={'Code patient'}
+                icon={<Icon
+                    size={16}
+                    name="barbell-outline"
+                    family="ionicon"
+                    color={"black"}
+                    />}  
+                /> */}
                 
-                <CustomButton label={'Login'} onPress={() => {navigation.navigate('App')}} />
+                <CustomButton label={'Se connecter'} onPress={() => {navigation.navigate('App')}} />
 
                 <View
                 style={{
@@ -68,14 +90,32 @@ const Login = ({navigation}) => {
                     justifyContent: 'center',
                     marginBottom: 30,
                 }}>
-                <Text>Nouveau sur Sysap?</Text>
-                <Pressable onPress={() => navigation.navigate('Register')}>
-                    <Text style={{color: '#AD40AF', fontWeight: '700'}}> Inscription</Text>
-                </Pressable>
-                </View>
+                    <Text>Nouveau sur Sysap?</Text>
+                    <Pressable onPress={() => navigation.navigate('Register')}>
+                        <Text style={{color: '#AD40AF', fontWeight: '700'}}> Inscription</Text>
+                    </Pressable>
+                </View> 
             </View>
         </Block>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    checkboxContainer: {
+      flexDirection: 'row',
+      marginBottom: 20,
+    },
+    checkbox: {
+      alignSelf: 'center',
+    },
+    label: {
+      margin: 8,
+    },
+  });
 
 export default Login;
