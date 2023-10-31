@@ -7,7 +7,7 @@ export default class Progression extends React.Component {
         return (
             <View>
                 <Text>Progression</Text>
-                <Imprimer />
+                <Imprimer type = "programme"/>
             </View>
         );
     }

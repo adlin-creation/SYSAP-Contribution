@@ -1,13 +1,23 @@
 import React from 'react';
-import {Alert, StyleSheet, Text, TouchableHighlight, View} from 'react-native';
+import {StyleSheet, Text, TouchableHighlight, View} from 'react-native';
 import * as Print from 'expo-print';
 import {Asset} from "expo-asset";
 
 
-const Imprimer = () => {
+const Imprimer = ({type}) => {
+
+    let display;
+    if (type === "programme") {
+        display = "Imprimer";
+    } else if (type === "carnet") {
+        display = "Évaluation";
+    } else {
+        display = "Autres"
+    }
 
     const fetchPdf = async () => {
-        const pdfAsset = Asset.fromModule(require('../assets/Plan1.pdf'));
+        let impression = "Plan2";
+        const pdfAsset = Asset.fromModule(require(`../assets/${impression}.pdf`));
         await pdfAsset.downloadAsync();
         await Print.printAsync({
             uri: pdfAsset.localUri,
@@ -18,7 +28,7 @@ const Imprimer = () => {
         <View style={styles.container}>
             <TouchableHighlight
                 style={styles.button} underlayColor="lightgray" onPress={fetchPdf}>
-                <Text style={styles.buttonText}>Imprimer</Text>
+                <Text style={styles.buttonText}>{display}</Text>
             </TouchableHighlight>
         </View>
     );
