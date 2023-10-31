@@ -16,12 +16,16 @@ const Imprimer = ({type}) => {
     }
 
     const fetchPdf = async () => {
-        let impression = "Plan2";
-        const pdfAsset = Asset.fromModule(require(`../assets/${impression}.pdf`));
-        await pdfAsset.downloadAsync();
-        await Print.printAsync({
-            uri: pdfAsset.localUri,
-        });
+        try {
+            let impression = "Plan2"; // selon le programme du la personne il va falloir modifier cette ligne
+            const pdfAsset = Asset.fromModule(require(`../assets/print/${impression}.pdf`));
+            await pdfAsset.downloadAsync();
+            await Print.printAsync({
+                uri: pdfAsset.localUri,
+            });
+        } catch (e) {
+            console.log("Impression annulee");
+        }
     };
 
     return (
