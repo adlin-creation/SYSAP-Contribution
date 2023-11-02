@@ -2,8 +2,8 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 DB_DIR="$SCRIPT_DIR/../src/db"
-DB_NAME="goldfit.db"
-DB_SCHEMA="goldfit-db-schema.sql"
+DB_NAME="user.db"
+DB_SCHEMA="user-db-schema.sql"
 DB_SCHEMA_DIR="$SCRIPT_DIR"
 
 # Reset the database if it already exists

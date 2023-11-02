@@ -1,7 +1,7 @@
 import sqlite3 from 'sqlite3';
 import path from 'path';
 
-const dbFilename = 'goldfit.db';
+const dbFilename = 'user.db';
 const dbPath = path.join(__dirname, dbFilename);
 
 console.log('Connecting to the database...');

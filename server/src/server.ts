@@ -39,5 +39,5 @@ app.use('/api/patients', patientRoutes);
 // Server port
 const PORT: number = parseInt(process.env.PORT as string, 10) || 5000;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port http://localhost:${PORT}`);
 });
