@@ -3,6 +3,7 @@ import { View, StyleSheet, Text } from "react-native";
 import Feather from "react-native-vector-icons/Feather";
 
 
+
 //A MODIFIER POUR FAIRE UNE BARRE DEROULANTE
 const SemaineComponent = ({ semaine }) => {
   return (
@@ -20,7 +21,7 @@ const SemaineComponent = ({ semaine }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#48ACEC", //bleu
+    backgroundColor: "purple",
     paddingLeft: 30,
     paddingRight: 15,
     paddingVertical: 3,

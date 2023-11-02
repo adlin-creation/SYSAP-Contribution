@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet } from "react-native";
 import BarreProgressionComponent from "./BarreProgressionComponent";
 import TitreProgression from "./TitreProgression";
 import SemaineComponent from "./SemaineComponent";
@@ -25,7 +25,7 @@ const SectionHautComponent = ({ sessionsCompleted, totalSessions }) => {
         <ObjectifEtExerciceComponent
           totalSessions={sessionsCompleted}
           iconName={"flag"}
-          nomSection={"Exercices"}
+          nomSection={"Séances"}
         />
       </View>
     </View>
@@ -46,7 +46,6 @@ const styles = StyleSheet.create({
   },
   containerDroite: {
     flexDirection: "column",
-    alignItems: "flex-end",
     flex: 1,
     alignItems: "center",
   },

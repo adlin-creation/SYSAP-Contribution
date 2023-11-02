@@ -11,7 +11,7 @@ const TitreProgression = () => {
 
 const styles = StyleSheet.create({
   titreProgContainer: {
-    backgroundColor: "#48ACEC", //bleu
+    backgroundColor: "purple", //bleu
     paddingHorizontal: 30,
     paddingVertical: 10,
     margin: 10,
