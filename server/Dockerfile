@@ -10,8 +10,6 @@ USER node
 
 RUN yarn install
 
-RUN yarn init-db
-
 COPY --chown=node:node . .
 
 EXPOSE 5000
