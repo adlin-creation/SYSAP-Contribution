@@ -39,11 +39,17 @@ User.init(
       },
     },
     {
-      tableName: 'User', // Set the table name (optional)
-      sequelize: sequelize, // Pass your Sequelize instance
+      tableName: 'User',
+      sequelize: sequelize,
     }
   );
   
-  // Create or sync the table (if it doesn't exist) using sequelize.sync() or migrations
+  sequelize.sync()
+  .then(() => {
+    console.log('User table synchronized successfully.');
+  })
+  .catch((err) => {
+    console.error('Error synchronizing User table:', err);
+  });
   
   export default User;

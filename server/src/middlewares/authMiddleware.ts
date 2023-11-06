@@ -1,24 +1,34 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import config from 'config';
+import { JwtPayload } from '../types/jwtTypes';
+import * as dotenv from 'dotenv';
+dotenv.config({ path: './config/config.env' });
 
-export default function authMiddleware(req: Request, res: Response, next: NextFunction) {
-  // Get the token from the request header
-  const token = req.header('x-auth-token');
+export function authMiddleware(req: Request, res: Response, next: NextFunction) {
+  const token = req.header('Authorization');
 
-  // Check if there's no token
   if (!token) {
     return res.status(401).json({ msg: 'No token, authorization denied' });
   }
 
   try {
-    // Verify the token
-    const decoded = jwt.verify(token, config.get('jwtSecret'));
+    const jwtSecret = process.env.JWT_SECRET as string;
+    const decoded = jwt.verify(token, jwtSecret) as JwtPayload;
 
-    // Set the user in the request object
-    (req as any).user = decoded.user;
+    //req.user = decoded.user;
+    console.log(decoded);
     next();
-  } catch (err) {
+  } catch (err: any) {
     res.status(401).json({ msg: 'Token is not valid' });
   }
 }
+// export const getAuthenticatedUser = async (req: Request, res: Response) => {
+//   try {
+//     const user = req.user;
+
+//     res.json({ msg: `Hello ${user!.name}`, user });
+//   } catch (err: any) {
+//     console.error(err.message);
+//     res.status(500).send('Server Error');
+//   }
+// };

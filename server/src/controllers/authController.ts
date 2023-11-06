@@ -3,91 +3,85 @@ import { validationResult } from 'express-validator';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/User';
-import config from 'config';
+import { JwtPayload } from '../types/jwtTypes';
 
-// Handle user registration
-export const register = async (req: Request, res: Response) => {
-  // Validation
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(422).json({ errors: errors.array() });
-  }
+export default class AuthController {
+  static register = async (req: Request, res: Response) => {
+    try {
+      const { name, familyName, email, password } = req.body;
 
-  const { name, familyName, email, password } = req.body;
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+      }
 
-  try {
-    // Check if the email is already registered
-    const existingUser = await User.findOne({ where: { email } });
-    if (existingUser) {
-      return res.status(400).json({ msg: 'Email already registered' });
-    }
+      const existingUser = await User.findOne({ where: { email } });
+      if (existingUser) {
+        return res.status(400).json({ msg: 'Email already registered' });
+      }
 
-    // Hash the password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+      const hashedPassword = await hashPassword(password);
 
-    // Create a new user
-    const newUser = await User.create({
-      name,
-      familyName,
-      email,
-      password: hashedPassword,
-    });
+      const newUser = await createUser(name, familyName, email, hashedPassword);
 
-    // Generate a JWT token for the user
-    const payload = { user: { id: newUser.id } };
-    jwt.sign(payload, config.get('jwtSecret'), { expiresIn: 3600 }, (err, token) => {
-      if (err) throw err;
+      const token = generateJwtToken(newUser);
+
       res.json({ token });
-    });
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
-  }
-};
-
-// Handle user login
-export const login = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
-
-  try {
-    // Find the user by email
-    const user = await User.findOne({ where: { email } });
-
-    if (!user) {
-      return res.status(400).json({ msg: 'Invalid credentials' });
+    } catch (err: any) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
     }
+  };
 
-    const isPasswordMatch = await bcrypt.compare(password, user.password);
+  static login = async (req: Request, res: Response) => {
+    try {
+      const { email, password } = req.body;
 
-    if (!isPasswordMatch) {
-      return res.status(400).json({ msg: 'Invalid credentials' });
-    }
+      const user = await User.findOne({ where: { email } });
 
-    // Generate a JWT token for the user using the config object
-    const jwtSecret = config.get('jwtSecret');
-    const payload = { user: { id: user.id } };
-    jwt.sign(payload, jwtSecret, { expiresIn: 3600 }, (err, token) => {
-      if (err) throw err;
+      if (!user) {
+        return res.status(400).json({ msg: 'Invalid credentials' });
+      }
+
+      const isPasswordMatch = await bcrypt.compare(password, user.password);
+
+      if (!isPasswordMatch) {
+        return res.status(400).json({ msg: 'Invalid credentials' });
+      }
+
+      const token = generateJwtToken(user);
+
       res.json({ token });
-    });
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
+    } catch (err: any) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
   }
-};
+}
 
-import authMiddleware from '../middlewares/authMiddleware'; // Import your authentication middleware
+async function hashPassword(password: string) {
+  const salt = await bcrypt.genSalt(10);
+  return bcrypt.hash(password, salt);
+}
 
-// Get authenticated user
-export const getAuthenticatedUser = async (req: Request, res: Response) => {
-  try {
-    // Use the user from the authentication middleware
-    const user = req.user;
+async function createUser(name: string, familyName: string, email: string, password: string): Promise<User> {
+  return User.create({
+    name,
+    familyName,
+    email,
+    password,
+  });
+}
 
-    res.json({ msg: `Hello ${user.name}`, user });
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
-  }
-};
+function generateJwtToken(user: User) {
+  const payload: JwtPayload = {
+    user: {
+      id: user.id,
+      name: user.name,
+      familyName: user.familyName,
+      email: user.email,
+    },
+  };
+  const jwtSecret = process.env.JWT_SECRET as string;
+  return jwt.sign(payload, jwtSecret, { expiresIn: 3600 });
+}

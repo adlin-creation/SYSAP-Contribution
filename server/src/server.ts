@@ -33,8 +33,10 @@ app.use(cors({
 // Routes
 import exerciseRoutes from './routes/exerciseRoutes';
 import patientRoutes from './routes/patientRoutes';
+import authRoutes from './routes/authRoutes';
 app.use('/api/exercises', exerciseRoutes);
 app.use('/api/patients', patientRoutes);
+app.use('/api/auth', authRoutes);
 
 // Server port
 const PORT: number = parseInt(process.env.PORT as string, 10) || 5000;
