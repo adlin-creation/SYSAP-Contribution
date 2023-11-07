@@ -5,6 +5,7 @@ import { StatusBar } from "expo-status-bar";
 import SectionHautComponent from "../components/progression/SectionHautComponent";
 import BoiteEncadree from "../components/progression/Encadre";
 import TauxDiffComponent from "../components/progression/TauxDiffComponent.js";
+import ProgressionMarcheComponent from "../components/progression/ProgressionMarcheComponent";
 
 export default class Progression extends React.Component {
   render() {
@@ -22,6 +23,14 @@ export default class Progression extends React.Component {
           }
           droite={<Text>Element droite</Text>}
         />
+          <BoiteEncadree
+              gauche={
+              <View>
+                  <ProgressionMarcheComponent></ProgressionMarcheComponent>
+              </View>}
+              droite={
+              <Text>Tropher ici avec le ranking des autres vieille croute</Text>}
+              />
       </View>
     );
   }
