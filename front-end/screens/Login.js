@@ -1,19 +1,72 @@
 import React, {useState} from 'react';
 import {
-    CheckBox,
     View,
     Pressable,
     Image,
+    TextInput,
     StyleSheet
 } from 'react-native';
 
 import { Block, Text } from "galio-framework";
-import InputField from "../components/InputField";
 import { Icon } from '../components';
 import CustomButton from '../components/CustomButton';
 
 const Login = ({navigation}) => {
-    const [isSelected, setSelection] = useState(false);
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [errors, setErrors] = useState({}); 
+  
+    const validateForm = () => { 
+        let errors = {}; 
+  
+        if (!email || !password) { 
+            errors.name = 'Tous les champs sont nécessaires.'; 
+        } else if (!/\S+@\S+\.\S+/.test(email)) { 
+            errors.email = 'Email invalide.'; 
+        }
+  
+        setErrors(errors); 
+        if (Object.keys(errors).length > 0) { 
+            return false;
+        }
+        return true;
+    };
+
+    const handleLogin = () => {
+        if (!validateForm()) return;
+
+
+        // Define the request body
+        const requestBody = {
+            email: email,
+            password: password,
+        };
+        console.log(JSON.stringify(requestBody));
+
+        fetch('http://localhost:80/api/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestBody),
+        })
+        .then((response) => {
+            if (response.ok) {
+                // Request was successful, you can handle the response here
+                console.log(response);
+                navigation.navigate('App');
+
+            } else {
+                // Request failed, handle the error
+                console.log('Login failed', 'Please check your credentials and try again.');
+            }
+        })
+        .catch((error) => {
+            console.log('Login failed', 'Please check your credentials and try again.');
+        });
+    };
+
     return (
         <Block style={{flex: 1, justifyContent: 'center'}}>
             <View style={{paddingHorizontal: 25}}>
@@ -24,8 +77,7 @@ const Login = ({navigation}) => {
                     />
                 </View>
 
-                <Text
-                style={{
+                <Text style={{
                     fontFamily: 'Roboto-Medium',
                     fontSize: 28,
                     fontWeight: '500',
@@ -34,62 +86,49 @@ const Login = ({navigation}) => {
                 }}>
                 Connection
                 </Text>
-                
-                <InputField
-                label={'email'}
-                icon={
+
+                <View style={styles.container}>
                     <Icon
                     size={16}
                     name="mail-outline"
                     family="ionicon"
                     color={"black"}
                     />
-                }
-                keyboardType="email-address"
-                />
+                    <TextInput
+                    placeholder={'email'}
+                    onChangeText={setEmail}
+                    value={email}
+                    keyboardType="email-address"
+                    />
+                </View>
 
-                <InputField
-                label={'mot de passe'}
-                icon={
+                <View style={styles.container}>
                     <Icon
                     size={16}
                     name="lock-closed-outline"
                     family="ionicon"
                     color={"black"}
                     />
-                }
-                inputType="password"
-                fieldButtonLabel={"Oublié?"}
-                fieldButtonFunction={() => {}}
-                />
-
-                <View style={styles.checkboxContainer}>
-                    <CheckBox
-                    value={isSelected}
-                    onValueChange={setSelection}
-                    style={styles.checkbox}
+                    <TextInput
+                    placeholder={'mot de passe'}
+                    secureTextEntry
+                    onChangeText={setPassword}
+                    value={password}
+                    inputType="password"
+                    // fieldButtonLabel={"Oublié?"}
+                    // fieldButtonFunction={() => {}}
                     />
-                    <Text style={styles.label}>Je suis le proche aidant</Text>
                 </View>
-
-                {/* <InputField
-                label={'Code patient'}
-                icon={<Icon
-                    size={16}
-                    name="barbell-outline"
-                    family="ionicon"
-                    color={"black"}
-                    />}  
-                /> */}
                 
-                <CustomButton label={'Se connecter'} onPress={() => {navigation.navigate('App')}} />
+                <CustomButton label={'Se connecter'} onPress={handleLogin} />
 
-                <View
-                style={{
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    marginBottom: 30,
-                }}>
+                {Object.values(errors).map((error, index) => ( 
+                    <Text key={index} style={styles.error}> 
+                        {error} 
+                    </Text> 
+                ))} 
+
+                <View style={styles.container}>
                     <Text>Nouveau sur Sysap?</Text>
                     <Pressable onPress={() => navigation.navigate('Register')}>
                         <Text style={{color: '#AD40AF', fontWeight: '700'}}> Inscription</Text>
@@ -102,20 +141,18 @@ const Login = ({navigation}) => {
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
+        flexDirection: 'row',
+        borderBottomColor: '#ccc',
+        borderBottomWidth: 1,
+        paddingBottom: 8,
+        marginBottom: 25,
     },
-    checkboxContainer: {
-      flexDirection: 'row',
-      marginBottom: 20,
+    error: { 
+        color: 'red', 
+        textAlign: 'center',
+        fontSize: 14, 
+        marginBottom: 12, 
     },
-    checkbox: {
-      alignSelf: 'center',
-    },
-    label: {
-      margin: 8,
-    },
-  });
+});
 
 export default Login;

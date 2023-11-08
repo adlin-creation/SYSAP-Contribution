@@ -256,7 +256,7 @@ function AppStack(props) {
       />
       <Drawer.Screen
         name="Se déconnecter"
-        component={OnboardingStack}
+        component={LoginScreen}
         options={{
           drawerIcon: ({ focused }) => (
             <Icon

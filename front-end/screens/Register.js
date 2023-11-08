@@ -1,13 +1,69 @@
-import React, { useState } from 'react';
-import { View, TouchableOpacity, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, TouchableOpacity, Image, TextInput, Alert, StyleSheet } from 'react-native';
 
 import { Block, Text } from "galio-framework";
-import InputField from '../components/InputField';
-import Button from '../components/Button'; // Assuming you have a custom Button component
 import { Icon } from '../components';
-import CustomButton from '../components/CustomButton';
 
 export default Register = ({ navigation }) => {
+    const [name, setName] = useState('');
+    const [familyName, setFamilyName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassowrd] = useState('');
+    const [errors, setErrors] = useState({}); 
+  
+    const validateForm = () => { 
+        let errors = {}; 
+  
+        if (!name || !familyName || !email || !password || !confirmPassword) { 
+            errors.name = 'Tous les champs sont nécessaires.'; 
+        } else if (!/\S+@\S+\.\S+/.test(email)) { 
+            errors.email = 'Email invalide.'; 
+        } else if (password !== confirmPassword) { 
+            errors.password = 'Le mot de passe ne correspond pas à la confirmation.'; 
+        } 
+  
+        setErrors(errors); 
+        if (Object.keys(errors).length > 0) { 
+            return false;
+        }
+        return true;
+    };
+
+    const handleRegisteration = () => {
+        if (!validateForm()) return;
+
+        const requestBody = {
+            name: name,
+            familyName: familyName,
+            email: email,
+            password: password,
+        };
+
+        fetch('http://localhost:80/api/auth/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestBody),
+        })
+        .then((response) => {
+            if (response.ok) {
+                console.log(response);
+                navigation.navigate('App');
+
+            } else {
+                Alert.alert('Login failed', 'Please check your credentials and try again.');
+            }
+        })
+        .then((data) =>{
+            console.log("data" + data);
+        })
+        .catch((error) => {
+            Alert.alert('Login failed', 'Please check your credentials and try again.');
+        });
+    };
+
     return (
         <Block style={{ flex: 1, justifyContent: 'center' }}>
             <View style={{ paddingHorizontal: 25, alignItems: 'center' }}>
@@ -27,67 +83,87 @@ export default Register = ({ navigation }) => {
                 Inscription
                 </Text>
 
-                <InputField
-                label={'Prénom'}
-                icon={<Icon
-                    size={16}
-                    name="body-outline"
-                    family="ionicon"
-                    color={"black"}
-                    />} 
-                />
+                <View style={styles.container}>
+                    <Icon
+                        size={16}
+                        name="body-outline"
+                        family="ionicon"
+                        color={"black"}
+                        />
+                    <TextInput
+                    placeholder='Prénom'
+                    value={name}
+                    onChangeText={setName}
+                    />
+                </View>
 
-                <InputField
-                label={'Nom de famille'}
-                icon={<Icon
-                    size={16}
-                    name="body-outline"
-                    family="ionicon"
-                    color={"black"}
-                    />} 
-                />
+                <View style={styles.container}>
+                    <Icon
+                        size={16}
+                        name="body-outline"
+                        family="ionicon"
+                        color={"black"}
+                        />
+                    <TextInput
+                    placeholder='Nom de famille'
+                    value={familyName}
+                    onChangeText={setFamilyName}
+                    />
+                </View>
 
-                <InputField
-                label={'Email'}
-                icon={<Icon
-                    size={16}
-                    name="mail-outline"
-                    family="ionicon"
-                    color={"black"}
-                    />}  
-                keyboardType="email-address" />
+                <View style={styles.container}>
+                    <Icon
+                        size={16}
+                        name="mail-outline"
+                        family="ionicon"
+                        color={"black"}
+                        />
+                    <TextInput
+                    placeholder={'Email'}
+                    value={email}
+                    onChangeText={setEmail}
+                    inputType="email-address" />
+                </View>
+
+                <View style={styles.container}>
+                    <Icon
+                        size={16}
+                        name="lock-closed-outline"
+                        family="ionicon"
+                        color={"black"}
+                        />
+                    <TextInput
+                    placeholder='Mot de passe'
+                    value={password}
+                    onChangeText={setPassword}
+                    inputType="password" />
+                </View>
+
+                <View style={styles.container}>
+                    <Icon
+                        size={16}
+                        name="lock-closed-outline"
+                        family="ionicon"
+                        color={"black"}
+                    />
+                    <TextInput
+                    placeholder='Confirmez le mot de passe'
+                    value={confirmPassword}
+                    onChangeText={setConfirmPassowrd}
+                    inputType="password" />
+                </View>
+                <TouchableOpacity 
+                style={styles.button} 
+                onPress={handleRegisteration} 
+                > 
+                    <Text style={styles.buttonText}>Se connecter</Text> 
+                </TouchableOpacity> 
                 
-                <InputField
-                label={'Code patient'}
-                icon={<Icon
-                    size={16}
-                    name="barbell-outline"
-                    family="ionicon"
-                    color={"black"}
-                    />}  
-                />
-
-                <InputField
-                label={'Mot de passe'}
-                icon={<Icon
-                    size={16}
-                    name="lock-closed-outline"
-                    family="ionicon"
-                    color={"black"}
-                    />} 
-                inputType="password" />
-
-                <InputField
-                label={'Confirmez le mot de passe'}
-                icon={<Icon
-                    size={16}
-                    name="lock-closed-outline"
-                    family="ionicon"
-                    color={"black"}
-                    />} 
-                inputType="password" />
-
-                <CustomButton label={"S'inscrire"} onPress={() => {navigation.navigate('App')}} />
+                {Object.values(errors).map((error, index) => ( 
+                    <Text key={index} style={styles.error}> 
+                        {error} 
+                    </Text> 
+                ))} 
 
                 <View
                 style={{
@@ -104,3 +180,41 @@ export default Register = ({ navigation }) => {
         </Block>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flexDirection: 'row',
+        borderBottomColor: '#ccc',
+        borderBottomWidth: 1,
+        paddingBottom: 8,
+        marginBottom: 25,
+    },
+    input: { 
+        height: 60, 
+        borderColor: '#ccc', 
+        borderWidth: 1, 
+        marginBottom: 12, 
+        paddingHorizontal: 10, 
+        borderRadius: 8, 
+        fontSize: 16, 
+    }, 
+    button: { 
+        backgroundColor: '#AD40AF', 
+        borderRadius: 8, 
+        paddingVertical: 10, 
+        alignItems: 'center', 
+        marginTop: 16, 
+        marginBottom: 12, 
+    }, 
+    buttonText: { 
+        color: '#fff', 
+        fontWeight: 'bold', 
+        fontSize: 16, 
+    }, 
+    error: { 
+        color: 'red', 
+        textAlign: 'center',
+        fontSize: 14, 
+        marginBottom: 12, 
+    },
+});
