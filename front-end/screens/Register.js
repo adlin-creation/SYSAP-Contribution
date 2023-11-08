@@ -49,18 +49,21 @@ export default Register = ({ navigation }) => {
         })
         .then((response) => {
             if (response.ok) {
-                console.log(response);
-                navigation.navigate('App');
-
+                return response.json();
             } else {
-                Alert.alert('Login failed', 'Please check your credentials and try again.');
+                throw new Error('Request failed');
             }
         })
-        .then((data) =>{
-            console.log("data" + data);
+        .then(async (responseData) => 
+        {
+            if(!responseData.token) {
+                throw new Error('Login failed');
+            }
+            await AsyncStorage.setItem('userToken', responseData.token);
+            navigation.navigate('App');
         })
         .catch((error) => {
-            Alert.alert('Login failed', 'Please check your credentials and try again.');
+            console.log('Login failed', 'Please check your credentials and try again.');
         });
     };
 

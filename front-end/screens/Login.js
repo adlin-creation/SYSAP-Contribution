@@ -4,9 +4,9 @@ import {
     Pressable,
     Image,
     TextInput,
-    StyleSheet
+    StyleSheet,
 } from 'react-native';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Block, Text } from "galio-framework";
 import { Icon } from '../components';
 import CustomButton from '../components/CustomButton';
@@ -36,13 +36,10 @@ const Login = ({navigation}) => {
     const handleLogin = () => {
         if (!validateForm()) return;
 
-
-        // Define the request body
         const requestBody = {
             email: email,
             password: password,
         };
-        console.log(JSON.stringify(requestBody));
 
         fetch('http://localhost:80/api/auth/login', {
             method: 'POST',
@@ -53,17 +50,24 @@ const Login = ({navigation}) => {
         })
         .then((response) => {
             if (response.ok) {
-                // Request was successful, you can handle the response here
-                console.log(response);
-                navigation.navigate('App');
-
+                return response.json();
             } else {
-                // Request failed, handle the error
-                console.log('Login failed', 'Please check your credentials and try again.');
+                throw new Error('Request failed');
             }
         })
+        .then(async (responseData) => 
+        {
+            if(!responseData.token) {
+                throw new Error('Login failed');
+            }
+            await AsyncStorage.setItem('userToken', responseData.token);
+
+            console.log(AsyncStorage.getItem('userToken'));
+            console.log(AsyncStorage.getItem('userToken'));
+            navigation.navigate('App');
+        })
         .catch((error) => {
-            console.log('Login failed', 'Please check your credentials and try again.');
+            console.log('Login failed: ', error.message);
         });
     };
 
