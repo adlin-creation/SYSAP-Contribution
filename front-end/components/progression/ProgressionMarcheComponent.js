@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import Feather from "react-native-vector-icons/Feather";
 
 const ProgressionMarcheComponent = () => {
     // creation de variable et setters
@@ -25,17 +26,27 @@ const ProgressionMarcheComponent = () => {
     const formatTime = (totalMinutes) => {
         const hours = Math.floor(totalMinutes / 60);
         const minutes = totalMinutes % 60;
-        return `${hours}h ${minutes}m`;
+        const heures = String(hours).padStart(2, '0');
+        const minute = String(minutes).padStart(2, '0');
+        return `${heures}:${minute}`;
     };
+
 
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Progression de marches</Text>
             <View style={styles.statContainer}>
-                <Text style={styles.stat}>Temps total: {formatTime(totalTimeWalked)}</Text>
-                <Text style={styles.stat}>Nombre de marches: {nbMarches}</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Feather name="clock" size={24} style={styles.icon} />
+                    <Text style={styles.stat}>{formatTime(totalTimeWalked)}</Text>
+                </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Feather name="trending-up" size={24} style={styles.icon} />
+                    <Text style={styles.stat}>Nombre de marches: {nbMarches}</Text>
+                </View>
             </View>
         </View>
+
     );
 };
 const styles = StyleSheet.create({
@@ -65,6 +76,7 @@ const styles = StyleSheet.create({
     icon: {
         color: '#FFA500',
         marginRight: 10,
+        marginTop: -8,
     },
     // Style pour un racourcis de + pour ajouter une marches
     addButton: {

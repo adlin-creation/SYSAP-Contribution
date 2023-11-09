@@ -29,7 +29,7 @@ export default class Progression extends React.Component {
                   <ProgressionMarcheComponent></ProgressionMarcheComponent>
               </View>}
               droite={
-              <Text>Tropher ici avec le ranking des autres vieille croute</Text>}
+              <Text>Tropher ici avec le ranking des autres</Text>}
               />
       </View>
     );
