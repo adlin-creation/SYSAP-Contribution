@@ -6,6 +6,7 @@ import SectionHautComponent from "../components/progression/SectionHautComponent
 import BoiteEncadree from "../components/progression/Encadre";
 import TauxDiffComponent from "../components/progression/TauxDiffComponent.js";
 import ProgressionMarcheComponent from "../components/progression/ProgressionMarcheComponent";
+import Classement from "../components/progression/Classement";
 
 export default class Progression extends React.Component {
   render() {
@@ -29,7 +30,9 @@ export default class Progression extends React.Component {
                   <ProgressionMarcheComponent></ProgressionMarcheComponent>
               </View>}
               droite={
-              <Text>Tropher ici avec le ranking des autres</Text>}
+              <View>
+                  <Classement></Classement>
+              </View>}
               />
       </View>
     );

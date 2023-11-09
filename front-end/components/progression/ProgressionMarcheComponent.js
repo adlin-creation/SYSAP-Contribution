@@ -34,7 +34,7 @@ const ProgressionMarcheComponent = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Progression de marches</Text>
+            <Text style={styles.title}>Progression marche</Text>
             <View style={styles.statContainer}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Feather name="clock" size={24} style={styles.icon} />
