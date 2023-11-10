@@ -4,6 +4,9 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/User';
 import { JwtPayload } from '../types/jwtTypes';
+import * as dotenv from 'dotenv';
+
+dotenv.config({ path: './src/config/config.env' });
 
 export default class AuthController {
   static register = async (req: Request, res: Response) => {
@@ -43,7 +46,7 @@ export default class AuthController {
         return res.status(400).json({ msg: 'Invalid credentials' });
       }
 
-      const isPasswordMatch = await bcrypt.compare(password, user.password);
+      const isPasswordMatch = await bcrypt.compare(password, user.Password);
 
       if (!isPasswordMatch) {
         return res.status(400).json({ msg: 'Invalid credentials' });
@@ -66,22 +69,24 @@ async function hashPassword(password: string) {
 
 async function createUser(name: string, familyName: string, email: string, password: string): Promise<User> {
   return User.create({
-    name,
-    familyName,
-    email,
-    password,
+    Name: name,
+    FamilyName: familyName,
+    Email: email,
+    Password: password,
   });
 }
 
 function generateJwtToken(user: User) {
+  const expirationTime = 60 * 60 * 24 * 7; // 7 days
   const payload: JwtPayload = {
     user: {
-      id: user.id,
-      name: user.name,
-      familyName: user.familyName,
-      email: user.email,
+      id: user.idUser,
+      name: user.Name,
+      familyName: user.FamilyName,
+      email: user.Email,
+      programName: "",
     },
   };
   const jwtSecret = process.env.JWT_SECRET as string;
-  return jwt.sign(payload, jwtSecret, { expiresIn: 3600 });
+  return jwt.sign(payload, jwtSecret, { expiresIn: expirationTime });
 }

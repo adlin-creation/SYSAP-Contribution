@@ -1,15 +1,33 @@
-import { Exercise } from './Exercise';
-import { Interval } from './Interval';
-export class ExerciseSeries {
-    name: string;
-    description: string;
-    exercises: Map<Exercise, Interval>;
-    exerciseOrders: Map<number, Exercise>;
+import { Model, DataTypes } from 'sequelize';
+import { sequelize } from '../db/database';
 
-    constructor(n: string, d: string) {
-        this.name = n;
-        this.description = d;
-        this.exercises = new Map<Exercise, Interval>();
-        this.exerciseOrders = new Map<number, Exercise>();
-    }
+class ExerciseSeries extends Model {
+    public idExerciseSeries!: number;
+    public ExerciseSeriesName!: string;
+    public ExerciseSeriesDescription!: string | null;
 }
+
+ExerciseSeries.init(
+    {
+        idExerciseSeries: {
+        type: DataTypes.SMALLINT,
+        primaryKey: true,
+        autoIncrement: false,
+        },
+        ExerciseSeriesName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        },
+        ExerciseSeriesDescription: {
+        type: DataTypes.STRING,
+        },
+    },
+    {
+        sequelize,
+        modelName: 'ExerciseSeries',
+        tableName: 'ExerciseSeries',
+        timestamps: false,
+    }
+);
+
+export default ExerciseSeries;

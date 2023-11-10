@@ -4,5 +4,6 @@ export interface JwtPayload {
       name: string;
       familyName: string;
       email: string;
+      programName?: string;
     };
   }

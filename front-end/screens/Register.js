@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { View, TouchableOpacity, Image, TextInput, Alert, StyleSheet } from 'react-native';
-
+import React, { useState } from 'react';
+import { View, TouchableOpacity, Image, TextInput, StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Block, Text } from "galio-framework";
 import { Icon } from '../components';
 
@@ -54,13 +54,13 @@ export default Register = ({ navigation }) => {
                 throw new Error('Request failed');
             }
         })
-        .then(async (responseData) => 
-        {
-            if(!responseData.token) {
-                throw new Error('Login failed');
+        .then(async (data) =>{
+            if (!data.token) {
+                throw new error('missing token');
             }
-            await AsyncStorage.setItem('userToken', responseData.token);
-            navigation.navigate('App');
+            await AsyncStorage.setItem('userToken', data.token);
+            navigation.navigate('ProgramChange');
+            console.log("token" + data.token);
         })
         .catch((error) => {
             console.log('Login failed', 'Please check your credentials and try again.');
@@ -159,7 +159,7 @@ export default Register = ({ navigation }) => {
                 style={styles.button} 
                 onPress={handleRegisteration} 
                 > 
-                    <Text style={styles.buttonText}>Se connecter</Text> 
+                    <Text style={styles.buttonText}>S'inscrire</Text> 
                 </TouchableOpacity> 
                 
                 {Object.values(errors).map((error, index) => ( 
@@ -176,7 +176,7 @@ export default Register = ({ navigation }) => {
                 }}>
                     <Text>Déjà inscrit?</Text>
                     <TouchableOpacity onPress={() => navigation.goBack()}>
-                        <Text style={{ color: '#AD40AF', fontWeight: '700' }}> Connection</Text>
+                        <Text style={{ color: '#AD40AF', fontWeight: '700' }}>Connection</Text>
                     </TouchableOpacity>
                 </View>
             </View>

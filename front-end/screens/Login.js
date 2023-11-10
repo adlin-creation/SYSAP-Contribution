@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     View,
     Pressable,
@@ -12,10 +12,30 @@ import { Icon } from '../components';
 import CustomButton from '../components/CustomButton';
 
 const Login = ({navigation}) => {
-
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errors, setErrors] = useState({}); 
+
+    useEffect(() => {
+        // Inside the useEffect, you can get the token from AsyncStorage
+        const getToken = async () => {
+          try {
+            const token = await AsyncStorage.getItem('userToken');
+            if (token !== null) {
+                // Token found in AsyncStorage, you can proceed with authentication or other actions
+                console.log('Token: ', token);
+                // Replace with your authentication logic
+                navigation.navigate('App');
+            } else {
+                return;
+            }
+          } catch (error) {
+            console.error('Error fetching token:', error);
+          }
+        };
+    
+        getToken();
+      }, []);
   
     const validateForm = () => { 
         let errors = {}; 
@@ -50,6 +70,7 @@ const Login = ({navigation}) => {
         })
         .then((response) => {
             if (response.ok) {
+                // Request was successful, you can handle the response here
                 return response.json();
             } else {
                 throw new Error('Request failed');
@@ -64,6 +85,22 @@ const Login = ({navigation}) => {
 
             console.log(AsyncStorage.getItem('userToken'));
             console.log(AsyncStorage.getItem('userToken'));
+            navigation.navigate('App');
+        })
+        .then(async (data) =>{
+            if (!data.token) {
+                throw new error('missing token');
+            }
+            console.log("userToken: " + data.token);
+            AsyncStorage.setItem('userToken', data.token);
+            navigation.navigate('App');
+        })
+        .then(async (data) =>{
+            if (!data.token) {
+                throw new error('missing token');
+            }
+            console.log("userToken: " + data.token);
+            AsyncStorage.setItem('userToken', data.token);
             navigation.navigate('App');
         })
         .catch((error) => {

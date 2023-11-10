@@ -1,40 +1,104 @@
 import { Request, Response } from 'express';
-import db from '../db/db-access';
+import Program from '../models/Program';
 
-// TODO: controllers with CRUD operations are subject to change, here now for testing
-export default class ProgramController {
-  static async getAllPrograms(req: Request, res: Response): Promise<void> {
-    try {
-      db.all('SELECT * FROM Program', (err: Error | null, programs: any[]) => {
-        if (err) {
-          console.error(err);
-          res.status(500).send('Internal Server Error');
-        } else {
-          res.json(programs);
-        }
+class ProgramController {
+  static getAllPrograms(req: Request, res: Response): void {
+    Program.findAll()
+      .then((programs) => {
+        res.json(programs);
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
       });
-    } catch (error) {
-      console.error(error);
-      res.status(500).send('Internal Server Error');
-    }
   }
 
-  static async getProgramById(req: Request, res: Response): Promise<void> {
-    const programId = req.params.id;
-    try {
-      db.get('SELECT * FROM Program WHERE idProgram = ?', [programId], (err: Error | null, program: any) => {
-        if (err) {
-          console.error(err);
-          res.status(500).send('Internal Server Error');
-        } else if (!program) {
-          res.status(404).send('Program not found');
+  static getProgramById(req: Request, res: Response): void {
+    const { id } = req.params;
+
+    Program.findByPk(id)
+      .then((program) => {
+        if (!program) {
+          res.status(404).json({ error: 'Program not found' });
         } else {
           res.json(program);
         }
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
       });
-    } catch (error) {
-      console.error(error);
-      res.status(500).send('Internal Server Error');
-    }
+  }
+
+  static createProgram(req: Request, res: Response): void {
+    const { ProgramName, ProgramDescription, ProgramDuration } = req.body;
+
+    Program.create({
+      ProgramName,
+      ProgramDescription,
+      ProgramDuration,
+    })
+      .then((program) => {
+        res.status(201).json(program);
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+      });
+  }
+
+  static updateProgramById(req: Request, res: Response): void {
+    const { id } = req.params;
+    const { ProgramName, ProgramDescription, ProgramDuration } = req.body;
+
+    Program.findByPk(id)
+      .then((program) => {
+        if (!program) {
+          res.status(404).json({ error: 'Program not found' });
+        } else {
+          program.ProgramName = ProgramName;
+          program.ProgramDescription = ProgramDescription;
+          program.ProgramDuration = ProgramDuration;
+
+          program.save()
+            .then((updatedProgram) => {
+              res.json(updatedProgram);
+            })
+            .catch((error) => {
+              console.error(error);
+              res.status(500).json({ error: 'Internal server error' });
+            });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+      });
+  }
+
+  static deleteProgramById(req: Request, res: Response): void {
+    const { id } = req.params;
+
+    Program.findByPk(id)
+      .then((program) => {
+        if (!program) {
+          res.status(404).json({ error: 'Program not found' });
+        } else {
+          program.destroy()
+            .then(() => {
+              res.status(204).send();
+            })
+            .catch((error) => {
+              console.error(error);
+              res.status(500).json({ error: 'Internal server error' });
+            });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+      });
   }
 }
+
+export default ProgramController;

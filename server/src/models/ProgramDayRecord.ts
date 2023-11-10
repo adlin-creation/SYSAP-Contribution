@@ -1,26 +1,34 @@
-import { ExerciseSeries } from './ExerciseSeries';
-import { ExerciseRecord } from './ExerciseRecord';
-import { Exercise } from './Exercise';
-import { DifficultyLevel, SelfEfficacy, PainLevel, SatisfactionLevel, MotivationLevel } from './Enums';
+import { Model, DataTypes } from 'sequelize';
+import { sequelize } from '../db/database';
 
-export class ProgramDayRecord {
-    day: Date;
-    exerciseSeries: ExerciseSeries;
-    exerciseRecords: Map<Exercise, ExerciseRecord>;
-    difficultyLevel: DifficultyLevel;
-    selfEfficacy: SelfEfficacy;
-    painLevel: PainLevel;
-    satisfactionLevel: SatisfactionLevel;
-    motivationLevel: MotivationLevel;
-
-    constructor(d: Date, exSeries: ExerciseSeries) {
-        this.day = d;
-        this.exerciseSeries = exSeries;
-        this.exerciseRecords = new Map<Exercise, ExerciseRecord>();
-        this.difficultyLevel = DifficultyLevel.Easy;
-        this.selfEfficacy = SelfEfficacy.NotConfident;
-        this.painLevel = PainLevel.NoPain;
-        this.satisfactionLevel = SatisfactionLevel.Satisfied;
-        this.motivationLevel = MotivationLevel.Motivated;
-    }
+class ProgramDayRecord extends Model {
+    public idProgramDayRecord!: number;
+    public Date!: Date;
+    public UserId!: number;
 }
+
+ProgramDayRecord.init(
+    {
+        idProgramDayRecord: {
+            type: DataTypes.SMALLINT,
+            primaryKey: true,
+            autoIncrement: false,
+        },
+        Date: {
+            type: DataTypes.DATE,
+            allowNull: false,
+        },
+        UserId: {
+            type: DataTypes.SMALLINT,
+            allowNull: false,
+        },
+    },
+    {
+        sequelize,
+        modelName: 'ProgramDayRecord',
+        tableName: 'ProgramDayRecord',
+        timestamps: false,
+    }
+);
+
+export default ProgramDayRecord;

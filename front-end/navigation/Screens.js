@@ -13,6 +13,8 @@ import ProgressionScreen from "../screens/Progression";
 import SeanceScreen from "../screens/Seance";
 import LoginScreen from "../screens/Login";
 import RegisterScreen from "../screens/Register";
+import ProgramChangeScreen from "../screens/ProgramChange";
+import LogoutScreen from "../screens/Logout";
 
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -23,9 +25,11 @@ const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
 const profile = {
-  // TODO: should be replaced after login feature is implemented
-  name: "Code Utilisateur",
-  type: "Nom programme"
+  id:"",
+  name: "",
+  familyName: "",
+  email: "",
+  programName: ""
 };
 
 function ProfileStack(props) {
@@ -256,7 +260,7 @@ function AppStack(props) {
       />
       <Drawer.Screen
         name="Se déconnecter"
-        component={LoginScreen}
+        component={LogoutScreen}
         options={{
           drawerIcon: ({ focused }) => (
             <Icon
@@ -289,6 +293,7 @@ export default function OnboardingStack(props) {
       />
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Register" component={RegisterScreen} />
+      <Stack.Screen name="ProgramChange" component={ProgramChangeScreen} />
       <Stack.Screen name="App" component={AppStack} />
     </Stack.Navigator>
   );

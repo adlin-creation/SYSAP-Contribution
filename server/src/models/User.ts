@@ -2,39 +2,39 @@ import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../db/database';
 
 class User extends Model {
-    public id!: number;
-    public name!: string;
-    public familyName!: string;
-    public email!: string;
-    public password!: string;
-    public programName!: string | null;
+    public idUser!: number;
+    public Name!: string;
+    public FamilyName!: string;
+    public Email!: string;
+    public Password!: string;
+    public ProgramId!: number | null; // Foreign key to Program
 }
 
 User.init(
     {
-      id: {
+      idUser: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
       },
-      name: {
+      Name: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      familyName: {
+      FamilyName: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      email: {
+      Email: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
       },
-      password: {
+      Password: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      programName: {
+      ProgramId: {
         type: DataTypes.STRING,
       },
     },
@@ -43,13 +43,5 @@ User.init(
       sequelize: sequelize,
     }
   );
-  
-  sequelize.sync()
-  .then(() => {
-    console.log('User table synchronized successfully.');
-  })
-  .catch((err) => {
-    console.error('Error synchronizing User table:', err);
-  });
   
   export default User;
