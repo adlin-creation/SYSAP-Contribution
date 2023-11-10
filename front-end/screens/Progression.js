@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Button } from "react-native";
 import Imprimer from "../components/imprimer/print.js";
 import { StatusBar } from "expo-status-bar";
 import SectionHautComponent from "../components/progression/SectionHautComponent";
@@ -22,18 +22,18 @@ export default class Progression extends React.Component {
               <TauxDiffComponent difficultyLevels={[2]}></TauxDiffComponent>
             </View>
           }
-          droite={<Text>Element droite</Text>}
+          droite={<Button title="Modifier Exercices" onPress={() => this.props.navigation.navigate('Profile')} />}
         />
-          <BoiteEncadree
-              gauche={
-              <View>
-                  <ProgressionMarcheComponent></ProgressionMarcheComponent>
-              </View>}
-              droite={
-              <View>
-                  <Classement></Classement>
-              </View>}
-              />
+        <BoiteEncadree
+          gauche={
+            <View>
+              <ProgressionMarcheComponent></ProgressionMarcheComponent>
+            </View>}
+          droite={
+            <View>
+              <Classement></Classement>
+            </View>}
+        />
       </View>
     );
   }
