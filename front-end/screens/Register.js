@@ -32,6 +32,8 @@ export default Register = ({ navigation }) => {
 
     const handleRegisteration = () => {
         if (!validateForm()) return;
+        let errors = {}; 
+        setErrors({});
 
         const requestBody = {
             name: name,
@@ -54,16 +56,22 @@ export default Register = ({ navigation }) => {
                 throw new Error('Request failed');
             }
         })
-        .then(async (data) =>{
-            if (!data.token) {
+        .then(async (response) =>{
+            if (!response.token) {
                 throw new error('missing token');
             }
-            await AsyncStorage.setItem('userToken', data.token);
+            await AsyncStorage.setItem('userToken', response.token);
             navigation.navigate('ProgramChange');
-            console.log("token" + data.token);
         })
         .catch((error) => {
-            console.log('Login failed', 'Please check your credentials and try again.');
+            if (error.message === 'Failed to fetch') {
+                errors.failed = 'Failed to connect to the server'
+              } else { 
+                console.log(error);
+                errors.failed = 'Login Failed'
+            }
+            setErrors(errors);
+            return;
         });
     };
 

@@ -30,7 +30,7 @@ const Login = ({navigation}) => {
                 return;
             }
           } catch (error) {
-            console.error('Error fetching token:', error);
+                console.error('Error fetching token:', error);
           }
         };
     
@@ -55,6 +55,8 @@ const Login = ({navigation}) => {
 
     const handleLogin = () => {
         if (!validateForm()) return;
+        let errors = {}; 
+        setErrors({});
 
         const requestBody = {
             email: email,
@@ -79,32 +81,29 @@ const Login = ({navigation}) => {
         .then(async (responseData) => 
         {
             if(!responseData.token) {
-                throw new Error('Login failed');
+                throw new Error('missing token');
             }
             await AsyncStorage.setItem('userToken', responseData.token);
 
-            console.log(AsyncStorage.getItem('userToken'));
-            console.log(AsyncStorage.getItem('userToken'));
             navigation.navigate('App');
         })
         .then(async (data) =>{
             if (!data.token) {
-                throw new error('missing token');
+                errors.failed = 'Login Failed'
+                setErrors(errors);
             }
-            console.log("userToken: " + data.token);
-            AsyncStorage.setItem('userToken', data.token);
-            navigation.navigate('App');
-        })
-        .then(async (data) =>{
-            if (!data.token) {
-                throw new error('missing token');
-            }
-            console.log("userToken: " + data.token);
+            
             AsyncStorage.setItem('userToken', data.token);
             navigation.navigate('App');
         })
         .catch((error) => {
-            console.log('Login failed: ', error.message);
+            if (error.message === 'Failed to fetch') {
+                errors.failed = 'Failed to connect to the server'
+              } else { 
+                errors.failed = 'Login Failed'
+            }
+            setErrors(errors);
+            return;
         });
     };
 

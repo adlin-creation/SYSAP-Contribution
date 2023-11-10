@@ -24,6 +24,7 @@
     "expo-splash-screen": "~0.20.5",
     "expo-status-bar": "~1.6.0",
     "galio-framework": "^0.8.0",
+    "jsonwebtoken": "^9.0.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.72.5",
