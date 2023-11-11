@@ -13,10 +13,10 @@ class ProgramController {
       });
   }
 
-  static getProgramById(req: Request, res: Response): void {
-    const { id } = req.params;
+  static getProgramByName(req: Request, res: Response): void {
+    const { programName } = req.params;
 
-    Program.findByPk(id)
+    Program.findByPk(programName)
       .then((program) => {
         if (!program) {
           res.status(404).json({ error: 'Program not found' });
@@ -30,75 +30,75 @@ class ProgramController {
       });
   }
 
-  static createProgram(req: Request, res: Response): void {
-    const { ProgramName, ProgramDescription, ProgramDuration } = req.body;
+  // static createProgram(req: Request, res: Response): void {
+  //   const { ProgramName, ProgramDescription, ProgramDuration } = req.body;
 
-    Program.create({
-      ProgramName,
-      ProgramDescription,
-      ProgramDuration,
-    })
-      .then((program) => {
-        res.status(201).json(program);
-      })
-      .catch((error) => {
-        console.error(error);
-        res.status(500).json({ error: 'Internal server error' });
-      });
-  }
+  //   Program.create({
+  //     ProgramName,
+  //     ProgramDescription,
+  //     ProgramDuration,
+  //   })
+  //     .then((program) => {
+  //       res.status(201).json(program);
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //       res.status(500).json({ error: 'Internal server error' });
+  //     });
+  // }
 
-  static updateProgramById(req: Request, res: Response): void {
-    const { id } = req.params;
-    const { ProgramName, ProgramDescription, ProgramDuration } = req.body;
+  // static updateProgramById(req: Request, res: Response): void {
+  //   const { programName } = req.params;
+  //   const { ProgramName, ProgramDescription, ProgramDuration } = req.body;
 
-    Program.findByPk(id)
-      .then((program) => {
-        if (!program) {
-          res.status(404).json({ error: 'Program not found' });
-        } else {
-          program.ProgramName = ProgramName;
-          program.ProgramDescription = ProgramDescription;
-          program.ProgramDuration = ProgramDuration;
+  //   Program.findByPk(programName)
+  //     .then((program) => {
+  //       if (!program) {
+  //         res.status(404).json({ error: 'Program not found' });
+  //       } else {
+  //         program.ProgramName = ProgramName;
+  //         program.ProgramDescription = ProgramDescription;
+  //         program.ProgramDuration = ProgramDuration;
 
-          program.save()
-            .then((updatedProgram) => {
-              res.json(updatedProgram);
-            })
-            .catch((error) => {
-              console.error(error);
-              res.status(500).json({ error: 'Internal server error' });
-            });
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        res.status(500).json({ error: 'Internal server error' });
-      });
-  }
+  //         program.save()
+  //           .then((updatedProgram) => {
+  //             res.json(updatedProgram);
+  //           })
+  //           .catch((error) => {
+  //             console.error(error);
+  //             res.status(500).json({ error: 'Internal server error' });
+  //           });
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //       res.status(500).json({ error: 'Internal server error' });
+  //     });
+  // }
 
-  static deleteProgramById(req: Request, res: Response): void {
-    const { id } = req.params;
+  // static deleteProgramById(req: Request, res: Response): void {
+  //   const { programName } = req.params;
 
-    Program.findByPk(id)
-      .then((program) => {
-        if (!program) {
-          res.status(404).json({ error: 'Program not found' });
-        } else {
-          program.destroy()
-            .then(() => {
-              res.status(204).send();
-            })
-            .catch((error) => {
-              console.error(error);
-              res.status(500).json({ error: 'Internal server error' });
-            });
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        res.status(500).json({ error: 'Internal server error' });
-      });
-  }
+  //   Program.findByPk(programName)
+  //     .then((program) => {
+  //       if (!program) {
+  //         res.status(404).json({ error: 'Program not found' });
+  //       } else {
+  //         program.destroy()
+  //           .then(() => {
+  //             res.status(204).send();
+  //           })
+  //           .catch((error) => {
+  //             console.error(error);
+  //             res.status(500).json({ error: 'Internal server error' });
+  //           });
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //       res.status(500).json({ error: 'Internal server error' });
+  //     });
+  // }
 }
 
 export default ProgramController;

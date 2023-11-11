@@ -2,7 +2,6 @@ import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../db/database';
 
 class Program extends Model {
-    public idProgram!: number;
     public ProgramName!: string;
     public ProgramDescription!: string;
     public ProgramDuration!: number;
@@ -10,14 +9,10 @@ class Program extends Model {
 
 Program.init(
     {
-        idProgram: {
-            type: DataTypes.SMALLINT,
-            primaryKey: true,
-            autoIncrement: false,
-        },
         ProgramName: {
             type: DataTypes.STRING,
-            allowNull: false,
+            primaryKey: true,
+            autoIncrement: false,
         },
         ProgramDescription: {
             type: DataTypes.STRING,

@@ -3,7 +3,7 @@ import { sequelize } from '../db/database';
 
 class ProgramExerciseSeries extends Model {
     public idProgramExerciseSeries!: number;
-    public ProgramId!: number;
+    public ProgramName!: string;
     public ExerciseSeriesId!: number;
     public StartDay!: number;
     public EndDay!: number;
@@ -16,8 +16,8 @@ ProgramExerciseSeries.init(
             primaryKey: true,
             autoIncrement: false,
         },
-        ProgramId: {
-            type: DataTypes.SMALLINT,
+        ProgramName: {
+            type: DataTypes.STRING,
             allowNull: false,
         },
         ExerciseSeriesId: {

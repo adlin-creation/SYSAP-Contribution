@@ -6,14 +6,15 @@ import Program from './Program';
 import ProgramDayRecord from './ProgramDayRecord';
 import User from './User';
 import ProgramExerciseSeries from './ProgramExerciseSeries';
+import Reminder from './Reminder';
 
 export function createAssociations(){
     Program.hasMany(ProgramExerciseSeries, {
-        foreignKey: 'ProgramId',
+        foreignKey: 'ProgramName',
         as: 'ExerciseSeries',
     });
     ProgramExerciseSeries.belongsTo(Program, {
-        foreignKey: 'ProgramId',
+        foreignKey: 'ProgramName',
         as: 'Program',
     });
       
@@ -46,15 +47,24 @@ export function createAssociations(){
         as: 'SeriesExercises',
     });
       
-    User.belongsTo(Program, {
-        foreignKey: 'ProgramId',
-        as: 'Program',
-    });
     Program.hasMany(User, {
-        foreignKey: 'ProgramId',
+        foreignKey: 'ProgramName',
         as: 'Users',
     });
+    User.belongsTo(Program, {
+        foreignKey: 'ProgramName',
+        as: 'Program',
+    });
 
+    User.hasMany(Reminder, {
+        foreignKey: 'UserId',
+        as: 'Reminders',
+    });
+    Reminder.belongsTo(User, {
+        foreignKey: 'UserId',
+        as: 'User',
+    });
+    
     User.hasMany(ProgramDayRecord, {
         foreignKey: 'UserId',
         as: 'DayRecords',
@@ -62,15 +72,6 @@ export function createAssociations(){
     ProgramDayRecord.belongsTo(User, {
         foreignKey: 'UserId',
         as: 'User',
-    });
-
-    Program.hasMany(ProgramDayRecord, {
-        foreignKey: 'ProgramId',
-        as: 'DayRecords',
-    });
-    ProgramDayRecord.belongsTo(Program, {
-        foreignKey: 'ProgramId',
-        as: 'Program',
     });
       
     ProgramDayRecord.hasMany(ExerciseRecord, {
@@ -80,5 +81,14 @@ export function createAssociations(){
     ExerciseRecord.belongsTo(ProgramDayRecord, {
         foreignKey: 'ProgramDayRecordId',
         as: 'ProgramDayRecord',
+    });
+
+    Exercise.hasMany(ExerciseRecord, {
+        foreignKey: 'ExerciseId',
+        as: 'ExerciseRecords',
+    });
+    ExerciseRecord.belongsTo(Exercise, {
+        foreignKey: 'ExerciseId',
+        as: 'Exercise',
     });
 }

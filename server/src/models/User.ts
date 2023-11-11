@@ -7,7 +7,7 @@ class User extends Model {
     public FamilyName!: string;
     public Email!: string;
     public Password!: string;
-    public ProgramId!: number | null; // Foreign key to Program
+    public ProgramName!: string | null; // Foreign key to Program
 }
 
 User.init(
@@ -34,7 +34,7 @@ User.init(
         type: DataTypes.STRING,
         allowNull: false,
       },
-      ProgramId: {
+      ProgramName: {
         type: DataTypes.STRING,
       },
     },
