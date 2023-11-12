@@ -1,5 +1,5 @@
 export interface JwtPayload {
-    user: {
+    patient: {
       id: number;
       name: string;
       familyName: string;

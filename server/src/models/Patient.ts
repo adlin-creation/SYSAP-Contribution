@@ -1,8 +1,8 @@
 import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../db/database';
 
-class User extends Model {
-    public idUser!: number;
+class Patient extends Model {
+    public idPatient!: number;
     public Name!: string;
     public FamilyName!: string;
     public Email!: string;
@@ -10,9 +10,9 @@ class User extends Model {
     public ProgramName!: string | null; // Foreign key to Program
 }
 
-User.init(
+Patient.init(
     {
-      idUser: {
+      idPatient: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
@@ -39,9 +39,9 @@ User.init(
       },
     },
     {
-      tableName: 'User',
+      tableName: 'Patient',
       sequelize: sequelize,
     }
   );
   
-  export default User;
+  export default Patient;

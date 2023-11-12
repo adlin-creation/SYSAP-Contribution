@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import User from '../models/User';
+import Patient from '../models/Patient';
 import { JwtPayload } from '../types/jwtTypes';
 import * as dotenv from 'dotenv';
 
@@ -18,16 +18,16 @@ export default class AuthController {
         return res.status(422).json({ errors: errors.array() });
       }
 
-      const existingUser = await User.findOne({ where: { email } });
-      if (existingUser) {
+      const existingPatient = await Patient.findOne({ where: { email } });
+      if (existingPatient) {
         return res.status(400).json({ msg: 'Email already registered' });
       }
 
       const hashedPassword = await hashPassword(password);
 
-      const newUser = await createUser(name, familyName, email, hashedPassword);
+      const newPatient = await createPatient(name, familyName, email, hashedPassword);
 
-      const token = generateJwtToken(newUser);
+      const token = generateJwtToken(newPatient);
 
       res.json({ token });
     } catch (err: any) {
@@ -40,19 +40,19 @@ export default class AuthController {
     try {
       const { email, password } = req.body;
 
-      const user = await User.findOne({ where: { email } });
+      const patient = await Patient.findOne({ where: { email } });
 
-      if (!user) {
+      if (!patient) {
         return res.status(400).json({ msg: 'Invalid credentials' });
       }
 
-      const isPasswordMatch = await bcrypt.compare(password, user.Password);
+      const isPasswordMatch = await bcrypt.compare(password, patient.Password);
 
       if (!isPasswordMatch) {
         return res.status(400).json({ msg: 'Invalid credentials' });
       }
 
-      const token = generateJwtToken(user);
+      const token = generateJwtToken(patient);
 
       res.json({ token });
     } catch (err: any) {
@@ -67,8 +67,8 @@ async function hashPassword(password: string) {
   return bcrypt.hash(password, salt);
 }
 
-async function createUser(name: string, familyName: string, email: string, password: string): Promise<User> {
-  return User.create({
+async function createPatient(name: string, familyName: string, email: string, password: string): Promise<Patient> {
+  return Patient.create({
     Name: name,
     FamilyName: familyName,
     Email: email,
@@ -76,14 +76,14 @@ async function createUser(name: string, familyName: string, email: string, passw
   });
 }
 
-function generateJwtToken(user: User) {
+function generateJwtToken(patient: Patient) {
   const expirationTime = 60 * 60 * 24 * 7; // 7 days
   const payload: JwtPayload = {
-    user: {
-      id: user.idUser,
-      name: user.Name,
-      familyName: user.FamilyName,
-      email: user.Email,
+    patient: {
+      id: patient.idPatient,
+      name: patient.Name,
+      familyName: patient.FamilyName,
+      email: patient.Email,
       programName: "",
     },
   };

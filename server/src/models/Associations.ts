@@ -4,7 +4,7 @@ import ExerciseSeries from './ExerciseSeries';
 import ExerciseSeriesExercise from './ExerciseSeriesExercise';
 import Program from './Program';
 import ProgramDayRecord from './ProgramDayRecord';
-import User from './User';
+import Patient from './Patient';
 import ProgramExerciseSeries from './ProgramExerciseSeries';
 import Reminder from './Reminder';
 
@@ -47,31 +47,31 @@ export function createAssociations(){
         as: 'SeriesExercises',
     });
       
-    Program.hasMany(User, {
+    Program.hasMany(Patient, {
         foreignKey: 'ProgramName',
-        as: 'Users',
+        as: 'Patients',
     });
-    User.belongsTo(Program, {
+    Patient.belongsTo(Program, {
         foreignKey: 'ProgramName',
         as: 'Program',
     });
 
-    User.hasMany(Reminder, {
-        foreignKey: 'UserId',
+    Patient.hasMany(Reminder, {
+        foreignKey: 'PatientId',
         as: 'Reminders',
     });
-    Reminder.belongsTo(User, {
-        foreignKey: 'UserId',
-        as: 'User',
+    Reminder.belongsTo(Patient, {
+        foreignKey: 'PatientId',
+        as: 'Patient',
     });
     
-    User.hasMany(ProgramDayRecord, {
-        foreignKey: 'UserId',
+    Patient.hasMany(ProgramDayRecord, {
+        foreignKey: 'PatientId',
         as: 'DayRecords',
     });
-    ProgramDayRecord.belongsTo(User, {
-        foreignKey: 'UserId',
-        as: 'User',
+    ProgramDayRecord.belongsTo(Patient, {
+        foreignKey: 'PatientId',
+        as: 'Patient',
     });
       
     ProgramDayRecord.hasMany(ExerciseRecord, {
