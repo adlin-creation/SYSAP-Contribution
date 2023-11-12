@@ -2,7 +2,7 @@ import React from "react";
 import { Text, Block, Radio, Button } from "galio-framework";
 import { useState, useReducer } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { Entypo } from "@expo/vector-icons";
+import { Entypo, FontAwesome5 } from "@expo/vector-icons";
 
 function reducer(state, action) {
   switch (action.type) {
@@ -23,12 +23,11 @@ function reducer(state, action) {
       };
     case "IncrementerTempsDeMarche":
       return { ...state, tempsDeMarche: state.tempsDeMarche + 1 };
-    case "DecrementerTempsDeMarche":
-      {
-        if (state.tempsDeMarche > 0) {
-          return { ...state, tempsDeMarche: state.tempsDeMarche - 1 };
-        }
+    case "DecrementerTempsDeMarche": {
+      if (state.tempsDeMarche > 0) {
+        return { ...state, tempsDeMarche: state.tempsDeMarche - 1 };
       }
+    }
     case "nbExercices":
       return { ...state, nbExercices: action.value };
     default:
@@ -47,11 +46,26 @@ export default function Evaluation(props) {
     nbExercices: nbExercices,
   });
   const satisfactionOptions = [
-    "Très satisfait",
-    "Satisfait",
-    "Neutre",
-    "insatisfait",
-    "Très insatisfait",
+    {
+      nom: "Très satisfait",
+      icone: <Entypo name="emoji-flirt" size={24} color="#3740ff" />,
+    },
+    {
+      nom: "Satisfait",
+      icone: <Entypo name="emoji-happy" size={24} color="#3740ff" />,
+    },
+    {
+      nom: "Neutre",
+      icone: <Entypo name="emoji-neutral" size={24} color="#3740ff" />,
+    },
+    {
+      nom: "insatisfait",
+      icone: <Entypo name="emoji-sad" size={24} color="#3740ff" />,
+    },
+    {
+      nom: "Très insatisfait",
+      icone: <FontAwesome5 name="angry" size={24} color="#3740ff" />,
+    },
   ];
   const douleurOptions = [
     "Aucune",
@@ -61,35 +75,46 @@ export default function Evaluation(props) {
     "Très sévère",
   ];
   const motivationOptions = ["Bonne", "Mauvaise"];
+  const nextStep = () => {
+    setStep(step + 1);
+  };
 
   return (
     <Block center>
-      <Text h5>Statisfaction</Text>
-      <Block>
-        {satisfactionOptions.map((option, index) => (
-          <TouchableOpacity
-            key={index}
-            style={styles.option}
-            onPress={() =>
-              dispatchValeurs({
-                type: "satisfaction",
-                satisfaction: valeurs.satisfaction,
-                value: index,
-              })
-            }
-          >
-            <Block row>
-              <View key={index} style={styles.radioCircle}>
-                {valeurs.satisfaction === index && (
-                  <View style={styles.selectedRb} />
-                )}
-              </View>
-              <Text>{option}</Text>
-            </Block>
-          </TouchableOpacity>
-        ))}
-      </Block>
-      <Text h5>Douleur</Text>
+      {/* Selection du niveau de satisfaction */}
+      {step === 0 && (
+        <Block center>
+          <Text h6>Êtes-vous satisfait de l'exercice ?</Text>
+          <Block left>
+            {satisfactionOptions.map((option, index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.option}
+                onPress={() =>
+                  dispatchValeurs({
+                    type: "satisfaction",
+                    satisfaction: valeurs.satisfaction,
+                    value: index,
+                  })
+                }
+              >
+                <Block row middle>
+                  <View key={index} style={styles.radioCircle}>
+                    {valeurs.satisfaction === index && (
+                      <View style={styles.selectedRb} />
+                    )}
+                  </View>
+                  <View style={styles.icones}>{option.icone}</View>
+                  <Text>{option.nom}</Text>
+                </Block>
+              </TouchableOpacity>
+            ))}
+          </Block>
+          <Button disabled={valeurs.satisfaction === ""} onPress={nextStep}>Suivant</Button>
+        </Block>
+      )}
+      {/* Selection du niveau de douleur */}
+      {/* <Text h5>Douleur</Text>
       <Block>
         {douleurOptions.map((option, index) => (
           <TouchableOpacity
@@ -164,7 +189,7 @@ export default function Evaluation(props) {
             <Entypo name="plus" size={24} color="black" />
           </Button>
         </Block>
-      </Block>
+      </Block> */}
     </Block>
   );
 }
@@ -189,5 +214,8 @@ const styles = StyleSheet.create({
 
   option: {
     margin: 10,
+  },
+  icones: {
+    margin: 5,
   },
 });
