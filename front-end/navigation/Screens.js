@@ -11,6 +11,7 @@ import ProfileScreen from "../screens/Profile";
 import ProgrammeScreen from "../screens/Programme";
 import ProgressionScreen from "../screens/Progression";
 import SeanceScreen from "../screens/Seance";
+import EvaluationScreen from "../screens/Evaluation";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
 
@@ -147,6 +148,28 @@ function SeanceStack(props) {
   );
 }
 
+function EvaluationStack(props) {
+  return (
+    <Stack.Navigator
+      initialRouteName="Évaluation"
+      screenOptions={{
+        mode: "card",
+        headerShown: "screen",
+      }}
+    >
+      <Stack.Screen
+        name="EvaluationScreen"
+        component={EvaluationScreen}
+        options={{
+          header: ({ navigation, scene }) => (
+            <Header title="Évaluation" scene={scene} navigation={navigation} />
+          ),
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
+
 function AppStack(props) {
   return (
     <Drawer.Navigator
@@ -240,6 +263,20 @@ function AppStack(props) {
       <Drawer.Screen
         name="Séance"
         component={SeanceStack}
+        options={{
+          drawerIcon: ({ focused }) => (
+            <Icon
+              size={16}
+              name="heart"
+              family="entypo"
+              color={focused ? "white" : materialTheme.COLORS.MUTED}
+            />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Évaluation"
+        component={EvaluationStack}
         options={{
           drawerIcon: ({ focused }) => (
             <Icon
