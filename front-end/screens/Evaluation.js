@@ -68,15 +68,17 @@ export default function Evaluation(props) {
     },
   ];
   const douleurOptions = [
-    "Aucune",
-    "Légère",
-    "Modérée",
-    "Sévère",
-    "Très sévère",
+    {name: "Intense", color: "#ff0000"},
+    {name: "Modérée", color: "#ff8000"},
+    {name: "Légère", color: "#ffff00"},
+    {name: "Aucune", color: "#00ff00"},
   ];
   const motivationOptions = ["Bonne", "Mauvaise"];
   const nextStep = () => {
     setStep(step + 1);
+  };
+  const previousStep = () => {
+    setStep(step - 1);
   };
 
   return (
@@ -114,6 +116,41 @@ export default function Evaluation(props) {
         </Block>
       )}
       {/* Selection du niveau de douleur */}
+      {step === 1 && (
+        <Block center>
+          <Text h6>Quel est votre niveau de douleur ?</Text>
+          <Block left>
+            {douleurOptions.map((option, index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.option}
+                onPress={() =>
+                  dispatchValeurs({
+                    type: "douleur",
+                    douleur: valeurs.douleur,
+                    value: index,
+                  })
+                }
+              >
+                <Block row>
+                  <View key={index} style={styles.radioCircle}>
+                    {valeurs.douleur === index && (
+                      <View style={styles.selectedRb} />
+                    )}
+                  </View>
+                  <View style={{backgroundColor: option.color, width: 40, height: 20, marginRight: 10}}></View>
+                  <Text>{option.name}</Text>
+                </Block>
+              </TouchableOpacity>
+            ))}
+          </Block>
+          <Block row>
+            <Button onPress={previousStep}>Précédent</Button>
+          <Button disabled={valeurs.douleur === ""} onPress={nextStep}>Suivant</Button>
+          </Block>
+        </Block>
+      )}
+      {/* Selection de la motivation */}
       {/* <Text h5>Douleur</Text>
       <Block>
         {douleurOptions.map((option, index) => (
