@@ -33,4 +33,5 @@ async function seedExercise() {
 
 
 
+
 export { seedExercise };

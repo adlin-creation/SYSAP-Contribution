@@ -7,26 +7,36 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  Button,
 } from "react-native";
-import ExerciseService from "../services/ExerciseService";
+import ExerciseService from "../services/ExerciceService";
 import ReactPlayer from "react-player";
 
 export default class Seance extends React.Component {
+  exercises = [];
   constructor(props) {
     super(props);
     this.state = {
-      exercises: [],
+      currentVideoIndex: 0,
+      showVideos: false,
     };
   }
 
   async componentDidMount() {
-    this.fetchData();
+    try {
+      await this.fetchData();
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+    this.playNextVideo();
   }
 
   async fetchData() {
     try {
       const data = await ExerciseService.fetchExercises();
-      this.setState({ exercises: data });
+      console.log(data);
+      this.exercises = data;
+      console.log(this.exercises);
     } catch (error) {
       console.error(
         "Une erreur s'est produite lors de la récupération des données.",
@@ -35,69 +45,76 @@ export default class Seance extends React.Component {
     }
   }
 
-  renderExerciseList = ({ item }) => {
-    return (
-      <view>
-        <Text style={styles.exercices}>{item.name}</Text>
-      </view>
-    );
+  playNextVideo = () => {
+    const { currentVideoIndex } = this.state;
+    const nextIndex = (currentVideoIndex + 1) % this.exercises.length;
+    this.setState({ currentVideoIndex: nextIndex });
   };
 
-  renderExercise = ({ item }) => {
+
+
+  renderExercise = ({ item, index }) => {
+    console.log(item);
     return (
-      <view>
-        <TouchableOpacity
-          style={{ padding: 10, borderBottomWidth: 1, borderColor: "#ccc" }}
+      <View key={index}>
+        <View>
+          <Text style={styles.exComplete}>{item.ExerciseName}</Text>
+          <Text>Minimum repetitions: {item.ExerciseNumberRepetitionsMin}</Text>
+          <Text>Maximum repetitions: {item.ExerciseNumberRepetitionsMax}</Text>
+          {/* <Text>Url video: {item.ExerciseDescriptionURL}</Text> */}
+          {/* <Image source={{ uri: item.image }} style={styles.exerciseImage} /> */}
+        </View>
+        <Text
+          style={styles.detailsButton}
           onPress={() => {
-            console.log("Navigating with name:", item.name);
+            console.log("Navigating with name:", item.nom);
             this.props.navigation.navigate("ExerciseDetail", {
-              exerciseName: item.name,
-              otherParam: "anything you want here",
+              exerciseName: item.nom,
             });
           }}
         >
-          <Text style={styles.exercices}>{item.name}</Text>
-          <Text>{item.description}</Text>
-          <Image
-            source={{ uri: item.image }}
-            style={{ width: 200, height: 200 }}
-          />
-        </TouchableOpacity>
-      </view>
+          Détails
+        </Text>
+      </View>
     );
   };
 
   render() {
+    const { currentVideoIndex, showVideos } = this.state;
     return (
       <ScrollView>
         <View style={styles.mainContainer}>
           <Text style={styles.mainTitle}>Ma Séance</Text>
-
-          <View style={styles.playerContainer}>
-            {/* fonctionne juste sur web (bug sur ios) */}
-            <ReactPlayer
-              style={styles.player}
-              //eventuellement fetch de la bd
-              url="https://youtu.be/dQw4w9WgXcQ?si=ca1IKvP_pVCkckVi"
-              controls={true}
-              onError={(e) => console.error("ReactPlayer error:", e)}
-            />
-          </View>
+          {showVideos ? (
+            <View style={styles.playerContainer}>
+              <ReactPlayer
+                style={styles.player}
+                url={this.exercises[currentVideoIndex].ExerciseDescriptionURL}
+                controls={true}
+                onError={(e) => console.error("ReactPlayer error:", e)}
+                onEnded={this.playNextVideo}
+              />
+            </View>
+          ) : (
+            <TouchableOpacity
+              style={styles.jouerButtonSeance}
+              onPress={() => this.setState({ showVideos: true })}
+            >
+              <Text style={styles.jouerButtonText}>Démarrer La Séance</Text>
+              <View style={styles.playTriangle} />
+            </TouchableOpacity>
+          )}
           <View style={styles.exComplete}>
-            {/* faire une liste dynamic avec checkbox.. */}
-            <Text style={styles.exTitle}>Exerices à compléter aujourd'hui</Text>
-            {this.state.exercises.map((exercise, index) => (
-              <Text key={index}>
-                {exercise.name} - {exercise.description}
-              </Text>
-            ))}
+            <Text style={styles.exTitle}>
+              Exercices à compléter aujourd'hui
+            </Text>
           </View>
           <View>
-            <FlatList
-              data={this.state.exercises}
-              renderItem={this.renderExercise}
-            />
+            {this.exercises.map((item, index) =>
+              this.renderExercise({ item, index })
+            )}
           </View>
+
           <TouchableOpacity
             style={styles.retour}
             onPress={() => this.props.navigation.goBack()}
@@ -119,18 +136,33 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   mainTitle: {
+    color: "brown",
     fontSize: 48,
     fontWeight: "bold",
     marginBottom: 20,
   },
   exTitle: {
-    color: "green",
+    color: "red",
     fontSize: 36,
     fontWeight: "bold",
     marginBottom: 20,
+    marginTop: 60,
   },
   exComplete: {
     margin: "3%",
+    fontSize: 26,
+  },
+  exerciseImage: {
+    width: 100,
+    height: 100,
+  },
+  detailsButton: {
+    color: "blue",
+    textDecorationLine: "underline",
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
+    padding: 10,
   },
   playerContainer: {
     marginTop: "3%",
@@ -143,7 +175,35 @@ const styles = StyleSheet.create({
     width: "100%",
     aspectRatio: 16 / 9,
   },
-  exercices: {
+  jouerButtonSeance: {
+    backgroundColor: "green",
+    padding: 40,
+    alignItems: "center",
+    width: 400,
+    marginTop: 20,
+    borderRadius: 10,
+    position: "relative",
+    overflow: "hidden",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 40,
+  },
+
+  playTriangle: {
+    width: 0,
+    height: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 30,
+    borderBottomWidth: 30,
+    borderLeftColor: "transparent",
+    borderRightColor: "transparent",
+    borderBottomColor: "white",
+  },
+  jouerButtonText: {
+    paddingRight: 30,
+    color: "white",
     fontSize: 18,
     fontWeight: "bold",
   },
