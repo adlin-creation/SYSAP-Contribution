@@ -63,7 +63,7 @@ const Login = ({navigation}) => {
             password: password,
         };
 
-        fetch('http://localhost:80/api/auth/login', {
+        fetch('http://localhost:5000/api/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
