@@ -22,7 +22,7 @@ export default class Progression extends React.Component {
               <TauxDiffComponent difficultyLevels={[2]}></TauxDiffComponent>
             </View>
           }
-          droite={<Button title="Modifier Exercices" onPress={() => this.props.navigation.navigate('Profile')} />}
+          droite={<Button title="Effectuer Exercices" onPress={() => this.props.navigation.navigate('Profile')} />}
         />
         <BoiteEncadree
           gauche={

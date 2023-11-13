@@ -3,21 +3,28 @@ import {StyleSheet, Text, TouchableHighlight, View} from 'react-native';
 import * as Print from 'expo-print';
 import {Asset} from "expo-asset";
 
-const Imprimer = ({type}) => {
-    const display =
-        type === 'programme' ? 'Imprimer' : type === 'carnet' ? 'Évaluation' : 'Autres';
 
-    let document = "Bleu1";
-    let pdfPath = `../../assets/imprimer/${document}.pdf`
+const Imprimer = ({type}) => {
+
+    let display;
+    if (type === "programme") {
+        display = "Imprimer";
+    } else if (type === "carnet") {
+        display = "Évaluation";
+    } else {
+        display = "Autres"
+    }
+
     const fetchPdf = async () => {
         try {
-            const pdfAsset = Asset.fromModule(require(pdfPath));
+            let impression = "Plan2"; // selon le programme du la personne il va falloir modifier cette ligne
+            const pdfAsset = Asset.fromModule(require(`../assets/print/${impression}.pdf`));
             await pdfAsset.downloadAsync();
             await Print.printAsync({
                 uri: pdfAsset.localUri,
             });
         } catch (e) {
-            console.log('Error while printing:', e);
+            console.log("Impression annulee");
         }
     };
 
@@ -32,9 +39,9 @@ const Imprimer = ({type}) => {
 };
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        margin:10,
     },
     button: {
         borderWidth: 2,
