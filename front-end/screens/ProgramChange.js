@@ -6,7 +6,7 @@ function ProgramChange({navigation}) {
   const [programName, setProgramName] = useState('');
 
   const handleSaveProgramName = async () => {
-    // fetch('http://localhost:80/api/auth/changeProgram', {
+    // fetch('http://localhost:5000/api/auth/changeProgram', {
     //     method: 'POST',
     //     headers: {
     //         'Content-Type': 'application/json',
