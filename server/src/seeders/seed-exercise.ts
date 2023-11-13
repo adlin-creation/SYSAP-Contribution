@@ -30,7 +30,6 @@ async function seedExercise() {
     console.error('Error seeding Exercise:', error);
   }
 }
-seedExercise()
 
 
 

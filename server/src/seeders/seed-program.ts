@@ -19,7 +19,6 @@ async function seedProgram() {
     console.error('Error seeding Program:', error);
   }
 }
-seedProgram()
 
 
 
