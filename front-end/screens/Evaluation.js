@@ -22,10 +22,12 @@ function reducer(state, action) {
         motivation: action.motivation === action.value ? "" : action.value,
       };
     case "IncrementerTempsDeMarche":
-      return { ...state, tempsDeMarche: state.tempsDeMarche + 1 };
+      return { ...state, tempsDeMarche: state.tempsDeMarche + action.value };
     case "DecrementerTempsDeMarche": {
-      if (state.tempsDeMarche > 0) {
-        return { ...state, tempsDeMarche: state.tempsDeMarche - 1 };
+      if (state.tempsDeMarche - action.value > 0) {
+        return { ...state, tempsDeMarche: state.tempsDeMarche - action.value };
+      } else {
+        return { ...state, tempsDeMarche: 0 };
       }
     }
     case "nbExercices":
@@ -38,12 +40,16 @@ function reducer(state, action) {
 export default function Evaluation(props) {
   const [step, setStep] = useState(0);
   const { nbExercices } = props;
+  let nbExos = 0;
+  if (nbExercices) {
+    nbExos = nbExercices;
+  }
   const [valeurs, dispatchValeurs] = useReducer(reducer, {
     satisfaction: "",
     douleur: "",
     motivation: "",
     tempsDeMarche: 0,
-    nbExercices: nbExercices,
+    nbExercices: nbExos,
   });
   const satisfactionOptions = [
     {
@@ -68,12 +74,21 @@ export default function Evaluation(props) {
     },
   ];
   const douleurOptions = [
-    {name: "Intense", color: "#ff0000"},
-    {name: "Modérée", color: "#ff8000"},
-    {name: "Légère", color: "#ffff00"},
-    {name: "Aucune", color: "#00ff00"},
+    { name: "Intense", color: "#ff0000" },
+    { name: "Modérée", color: "#ff8000" },
+    { name: "Légère", color: "#ffff00" },
+    { name: "Aucune", color: "#00ff00" },
   ];
-  const motivationOptions = ["Bonne", "Mauvaise"];
+  const motivationOptions = [
+    {
+      name: "Bonne",
+      icone: <Entypo name="thumbs-up" size={50} color="#3740ff" />,
+    },
+    {
+      name: "Mauvaise",
+      icone: <Entypo name="thumbs-down" size={50} color="#3740ff" />,
+    },
+  ];
   const nextStep = () => {
     setStep(step + 1);
   };
@@ -112,7 +127,9 @@ export default function Evaluation(props) {
               </TouchableOpacity>
             ))}
           </Block>
-          <Button disabled={valeurs.satisfaction === ""} onPress={nextStep}>Suivant</Button>
+          <Button disabled={valeurs.satisfaction === ""} onPress={nextStep}>
+            Suivant
+          </Button>
         </Block>
       )}
       {/* Selection du niveau de douleur */}
@@ -138,7 +155,14 @@ export default function Evaluation(props) {
                       <View style={styles.selectedRb} />
                     )}
                   </View>
-                  <View style={{backgroundColor: option.color, width: 40, height: 20, marginRight: 10}}></View>
+                  <View
+                    style={{
+                      backgroundColor: option.color,
+                      width: 40,
+                      height: 20,
+                      marginRight: 10,
+                    }}
+                  ></View>
                   <Text>{option.name}</Text>
                 </Block>
               </TouchableOpacity>
@@ -146,87 +170,157 @@ export default function Evaluation(props) {
           </Block>
           <Block row>
             <Button onPress={previousStep}>Précédent</Button>
-          <Button disabled={valeurs.douleur === ""} onPress={nextStep}>Suivant</Button>
+            <Button disabled={valeurs.douleur === ""} onPress={nextStep}>
+              Suivant
+            </Button>
           </Block>
         </Block>
       )}
       {/* Selection de la motivation */}
-      {/* <Text h5>Douleur</Text>
-      <Block>
-        {douleurOptions.map((option, index) => (
-          <TouchableOpacity
-            key={index}
-            style={styles.option}
-            onPress={() =>
-              dispatchValeurs({
-                type: "douleur",
-                douleur: valeurs.douleur,
-                value: index,
-              })
-            }
-          >
-            <Block row>
-              <View key={index} style={styles.radioCircle}>
-                {valeurs.douleur === index && (
-                  <View style={styles.selectedRb} />
-                )}
-              </View>
-              <Text>{option}</Text>
-            </Block>
-          </TouchableOpacity>
-        ))}
-      </Block>
-      <Text h5>Motivation</Text>
-      <Block>
-        {motivationOptions.map((option, index) => (
-          <TouchableOpacity
-            key={index}
-            style={styles.option}
-            onPress={() =>
-              dispatchValeurs({
-                type: "motivation",
-                motivation: valeurs.motivation,
-                value: index,
-              })
-            }
-          >
-            <Block row>
-              <View key={index} style={styles.radioCircle}>
-                {valeurs.motivation === index && (
-                  <View style={styles.selectedRb} />
-                )}
-              </View>
-              <Text>{option}</Text>
-            </Block>
-          </TouchableOpacity>
-        ))}
-      </Block>
-      <Text h5>Temps de marche</Text>
-      <Block>
-        <Text>{valeurs.tempsDeMarche} minutes</Text>
-        <Block row>
-          <Button
-            onPress={() =>
-              dispatchValeurs({
-                type: "DecrementerTempsDeMarche",
-                value: 1,
-              })
-            }
-          >
-            <Entypo name="minus" size={24} color="black" />
-          </Button>
-          <Button
-            onPress={() =>
-              dispatchValeurs({
-                type: "IncrementerTempsDeMarche",
-                value: 1,
-              })
-            }
-          >
-            <Entypo name="plus" size={24} color="black" />
-          </Button>
+      {step === 2 && (
+        <Block center space="between">
+          <Text h6>Quel est votre niveau de motivation ?</Text>
+          <Block row>
+            {motivationOptions.map((option, index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.option}
+                onPress={() =>
+                  dispatchValeurs({
+                    type: "motivation",
+                    motivation: valeurs.motivation,
+                    value: index,
+                  })
+                }
+              >
+                <Block column center>
+                  <View style={styles.icones}>{option.icone}</View>
+                  <Text>{option.name}</Text>
+                  <View key={index} style={styles.radioCircle}>
+                    {valeurs.motivation === index && (
+                      <View style={styles.selectedRb} />
+                    )}
+                  </View>
+                </Block>
+              </TouchableOpacity>
+            ))}
+          </Block>
+          <Block row>
+            <Button onPress={previousStep}>Précédent</Button>
+            <Button disabled={valeurs.motivation === ""} onPress={nextStep}>
+              Suivant
+            </Button>
+          </Block>
         </Block>
-      </Block> */}
+      )}
+      {/* Selection du temps de marche avec des boutons pour incrementer par 1, par 5 et par 10 au-dessus et decrementer par les memes steps en dessous */}
+      {step === 3 && (
+        <Block center>
+          <Text h6>Combien de temps avez-vous marché ?</Text>
+          <Block row fluid>
+            {[1, 5, 10].map((value) => (
+              <Button
+                size="small"
+                onPress={() =>
+                  dispatchValeurs({
+                    type: "IncrementerTempsDeMarche",
+                    value: value,
+                  })
+                }
+              >
+                <Text color="#FFFFFF">+{value}</Text>
+              </Button>
+            ))}
+          </Block>
+          <Text>{valeurs.tempsDeMarche} minutes</Text>
+          <Block row fluid>
+            {[1, 5, 10].map((value) => (
+              <Button
+                size="small"
+                onPress={() =>
+                  dispatchValeurs({
+                    type: "DecrementerTempsDeMarche",
+                    value: value,
+                  })
+                }
+              >
+                <Text color="#FFFFFF">-{value}</Text>
+              </Button>
+            ))}
+          </Block>
+          <Block row>
+            <Button onPress={previousStep}>Précédent</Button>
+            <Button onPress={nextStep}>Suivant</Button>
+          </Block>
+        </Block>
+      )}
+      {/* Résumé des données saisies */}
+      {step === 4 && (
+        <Block center flex space="around">
+          <Text h4>Bilan</Text>
+          <Block left>
+            <Block row middle>
+              <Text h6 bold>
+                Satisfaction :{" "}
+              </Text>
+              {satisfactionOptions[valeurs.satisfaction].icone}
+              <Text color="#3740ff" size={20}>
+                {"  " + satisfactionOptions[valeurs.satisfaction].nom}
+              </Text>
+            </Block>
+            <Block row middle>
+              <Text h6 bold>
+                Douleur :{" "}
+              </Text>
+              <View
+                style={{
+                  backgroundColor:
+                    douleurOptions[valeurs.douleur].color || "#00ff00",
+                  width: 40,
+                  height: 20,
+                  marginRight: 10,
+                }}
+              ></View>
+              <Text color="#3740ff" size={20}>
+                {douleurOptions[valeurs.douleur].name}
+              </Text>
+            </Block>
+            <Block row middle>
+              <Text h6 bold>
+                Motivation :{" "}
+              </Text>
+              {motivationOptions[valeurs.motivation].icone}
+            </Block>
+            <Block row middle>
+              <Text h6 bold>Temps de marche : </Text>
+              <Text size={20} color="#3740ff">
+                {valeurs.tempsDeMarche} minutes
+              </Text>
+            </Block>
+            <Block row middle>
+              <Text h6 bold>Nombre d'exercices : </Text>
+              <Text size={20} color="#3740ff">
+                {valeurs.nbExercices} exercices
+              </Text>
+            </Block>
+          </Block>
+          <Block row>
+            <Button onPress={previousStep}>Précédent</Button>
+            <Button onPress={nextStep}>Suivant</Button>
+          </Block>
+        </Block>
+      )}
+      {/* Fin de l'évaluation, Message d'encouragement, bouton precedent et envoie du formulaire */}
+      {step === 5 && (
+        <Block center>
+          <Text h4>Merci pour votre participation !</Text>
+          <Text h5>Continuez comme ça !</Text>
+          <Block row>
+            <Button onPress={previousStep}>Précédent</Button>
+            <Button onPress={() => {}}>Envoyer</Button>
+          </Block>
+        </Block>
+      )}
     </Block>
   );
 }
