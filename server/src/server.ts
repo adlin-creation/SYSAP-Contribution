@@ -2,16 +2,13 @@ import express, { Application } from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
-import logRequest from './utils/requestLogger';
+import { createAssociations } from './models/Associations';
+import { initDatabase } from './db/database';
 import * as dotenv from 'dotenv';
 
-// Loads variables from config file
-dotenv.config({ path: './config/config.env' });
+dotenv.config({ path: './src/config/config.env' });
 
 const app: Application = express();
-
-// Request logger
-app.use(logRequest);
 
 // Rate limiting
 const limiter = rateLimit({
@@ -26,18 +23,31 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // Cross Origin Resource Sharing
 app.use(cors({
-  origin: '*',
+  origin: process.env.CLIENT_URL,
   credentials: false,
 }));
 
 // Routes
 import exerciseRoutes from './routes/exerciseRoutes';
-import patientRoutes from './routes/patientRoutes';
+import authRoutes from './routes/authRoutes';
+import programRoutes from './routes/programRoutes';
 app.use('/api/exercises', exerciseRoutes);
-app.use('/api/patients', patientRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/programs', programRoutes);
 
-// Server port
-const PORT: number = parseInt(process.env.PORT as string, 10) || 5000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+
+configureDatabase();
+async function configureDatabase() {
+  // create association between models
+  createAssociations();
+  try {
+    // intitialize the database
+    await initDatabase();
+  } catch (error: any) {
+    throw new Error(error);
+  }
+}
+
+app.listen(process.env.PORT, () => {
+  console.log(`Server started on port ${process.env.PORT}: http://localhost:${process.env.PORT}`);
 });

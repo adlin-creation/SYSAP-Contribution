@@ -1,16 +1,34 @@
-import { ExerciseSeries } from './ExerciseSeries';
-import { Interval } from './Interval';
+import { DataTypes, Model } from 'sequelize';
+import { sequelize } from '../db/database';
 
-export class Program {
-    name: String;
-    description: String;
-    duration: number;
-    mapExerciseSeries: Map<Interval, ExerciseSeries>;
-
-    constructor(n: String, des: string, d: number) {
-        this.name = n;
-        this.description = des;
-        this.duration = d;
-        this.mapExerciseSeries = new Map<Interval, ExerciseSeries>();
-    }
+class Program extends Model {
+    public ProgramName!: string;
+    public ProgramDescription!: string;
+    public ProgramDuration!: number;
 }
+
+Program.init(
+    {
+        ProgramName: {
+            type: DataTypes.STRING,
+            primaryKey: true,
+            autoIncrement: false,
+        },
+        ProgramDescription: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        ProgramDuration: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
+    },
+    {
+        sequelize,
+        modelName: 'Program',
+        tableName: 'Program',
+        timestamps: false,
+    }
+);
+
+export default Program;

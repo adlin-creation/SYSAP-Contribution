@@ -1,56 +1,119 @@
 import { Request, Response } from 'express';
-import { Exercise } from '../models/Exercise';
+import Exercise from '../models/Exercise'; // Import the Exercise model
 
-// TODO: controllers with CRUD operations are subject to change, here now for testing
-export default class ExerciseController {
+class ExerciseController {
+    // Get all exercises
     static getAllExercises(req: Request, res: Response): void {
-        Exercise.getAllExercises((exercises) => {
+        Exercise.findAll()
+        .then((exercises) => {
             res.json(exercises);
+        })
+        .catch((error) => {
+            console.error(error);
+            res.status(500).json({ error: 'Internal server error' });
         });
     }
 
-    static getExerciseById(req: Request, res: Response): void {
-        const id = parseInt(req.params.id);
-        Exercise.getExerciseById(id, (exercise) => {
-            if (exercise) {
-                res.json(exercise);
-            } else {
-                res.status(404).json({ error: 'Exercise not found' });
-            }
-        });
-    }
+    // static createExercise(req: Request, res: Response): void {
+    //     const { 
+    //         ExerciseName, 
+    //         ExerciseDescription, 
+    //         ExerciseNumberRepetitionsMin, 
+    //         ExerciseNumberRepetitionsMax, 
+    //         ExerciseDescriptionURL } = req.body;
+    
+    //     Exercise.create({
+    //       ExerciseName,
+    //       ExerciseDescription,
+    //       ExerciseNumberRepetitionsMin,
+    //       ExerciseNumberRepetitionsMax,
+    //       ExerciseDescriptionURL,
+    //     })
+    //       .then((exercise) => {
+    //         res.status(201).json(exercise);
+    //       })
+    //       .catch((error) => {
+    //         console.error(error);
+    //         res.status(500).json({ error: 'Internal server error' });
+    //       });
+    //   }
 
-    static createExercise(req: Request, res: Response): void {
-        const { name, description, min, max, url } = req.body;
-        Exercise.createExercise(name, description, min, max, url, (success) => {
-            if (success) {
-                res.status(201).json({ message: 'Exercise created' });
-            } else {
-                res.status(500).json({ error: 'Failed to create exercise' });
-            }
-        });
-    }
+    // static getExerciseById(req: Request, res: Response): void {
+    //     const { id } = req.params;
 
-    static updateExerciseById(req: Request, res: Response): void {
-        const id = parseInt(req.params.id);
-        const { name, description, min, max, url } = req.body;
-        Exercise.updateExerciseById(id, name, description, min, max, url, (success) => {
-            if (success) {
-                res.json({ message: 'Exercise updated' });
-            } else {
-                res.status(404).json({ error: 'Exercise not found' });
-            }
-        });
-    }
+    //     Exercise.findByPk(id)
+    //     .then((exercise) => {
+    //         if (!exercise) {
+    //         res.status(404).json({ error: 'Exercise not found' });
+    //         } else {
+    //         res.json(exercise);
+    //         }
+    //     })
+    //     .catch((error) => {
+    //         console.error(error);
+    //         res.status(500).json({ error: 'Internal server error' });
+    //     });
+    // }
+    // static updateExerciseById(req: Request, res: Response): void {
+    //     const { id } = req.params;
+    //     const {
+    //     ExerciseName,
+    //     ExerciseDescription,
+    //     ExerciseNumberRepetitionsMin,
+    //     ExerciseNumberRepetitionsMax,
+    //     ExerciseDescriptionURL,
+    //     } = req.body;
 
-    static deleteExerciseById(req: Request, res: Response): void {
-        const id = parseInt(req.params.id);
-        Exercise.deleteExerciseById(id, (success) => {
-            if (success) {
-                res.json({ message: 'Exercise deleted' });
-            } else {
-                res.status(404).json({ error: 'Exercise not found' });
-            }
-        });
-    }
+    //     Exercise.findByPk(id)
+    //     .then((exercise) => {
+    //         if (!exercise) {
+    //             res.status(404).json({ error: 'Exercise not found' });
+    //         } else {
+    //             exercise.ExerciseName = ExerciseName;
+    //             exercise.ExerciseDescription = ExerciseDescription;
+    //             exercise.ExerciseNumberRepetitionsMin = ExerciseNumberRepetitionsMin;
+    //             exercise.ExerciseNumberRepetitionsMax = ExerciseNumberRepetitionsMax;
+    //             exercise.ExerciseDescriptionURL = ExerciseDescriptionURL;
+
+    //             exercise.save()
+    //                 .then((updatedExercise) => {
+    //                 res.json(updatedExercise);
+    //                 })
+    //                 .catch((error) => {
+    //                 console.error(error);
+    //                 res.status(500).json({ error: 'Internal server error' });
+    //             });
+    //         }
+    //     })
+    //     .catch((error) => {
+    //         console.error(error);
+    //         res.status(500).json({ error: 'Internal server error' });
+    //     });
+    // }
+
+    // static deleteExerciseById(req: Request, res: Response): void {
+    //     const { id } = req.params;
+
+    //     Exercise.findByPk(id)
+    //     .then((exercise) => {
+    //         if (!exercise) {
+    //         res.status(404).json({ error: 'Exercise not found' });
+    //         } else {
+    //         exercise.destroy()
+    //             .then(() => {
+    //                 res.status(204).send();
+    //             })
+    //             .catch((error) => {
+    //                 console.error(error);
+    //                 res.status(500).json({ error: 'Internal server error' });
+    //             });
+    //         }
+    //     })
+    //     .catch((error) => {
+    //         console.error(error);
+    //         res.status(500).json({ error: 'Internal server error' });
+    //     });
+    // }
 }
+
+export default ExerciseController;

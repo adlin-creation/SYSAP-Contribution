@@ -4,6 +4,6 @@ import programController from '../controllers/programController'; // Import your
 const router = express.Router();
 
 router.get('/', programController.getAllPrograms);
-router.get('/:id', programController.getProgramById);
+router.get('/:programName', programController.getProgramByName);
 
 export default router;

@@ -22,7 +22,7 @@ function CustomDrawerContent({
     "Progression",
     "Programme",
     "Séance",
-    "Rappel"
+    "Rappel",
   ];
 
   return (
@@ -70,11 +70,6 @@ function CustomDrawerContent({
         </ScrollView>
       </Block>
       <Block flex={0.3} style={{ paddingLeft: 7, paddingRight: 14 }}>
-        <DrawerCustomItem
-          title="Se connecter"
-          navigation={navigation}
-          focused={state.index === 8 ? true : false}
-        />
         <DrawerCustomItem
           title="Se déconnecter"
           navigation={navigation}
