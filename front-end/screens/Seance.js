@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import ExerciseService from "../services/ExerciceService";
 import ReactPlayer from "react-player";
+// import Video from 'react-native-video';
 
 export default class Seance extends React.Component {
   exercises = [];
@@ -61,7 +62,7 @@ export default class Seance extends React.Component {
           <Text style={styles.exComplete}>{item.ExerciseName}</Text>
           <Text>Minimum repetitions: {item.ExerciseNumberRepetitionsMin}</Text>
           <Text>Maximum repetitions: {item.ExerciseNumberRepetitionsMax}</Text>
-          {/* <Text>Url video: {item.ExerciseDescriptionURL}</Text> */}
+          <Text>Chemin video: {item.ExerciseDescriptionURL}</Text>
           {/* <Image source={{ uri: item.image }} style={styles.exerciseImage} /> */}
         </View>
         <Text
@@ -89,10 +90,12 @@ export default class Seance extends React.Component {
             <View style={styles.playerContainer}>
               <ReactPlayer
                 style={styles.player}
-                url={this.exercises[currentVideoIndex].ExerciseDescriptionURL}
+                // url={require(this.exercises[currentVideoIndex]?.ExerciseDescriptionURL)}
+                // url={require(`../assets/videos_test/${this.exercises[currentVideoIndex]?.ExerciseDescriptionURL}`)}
+                url={`../assets/videos_test/${this.exercises[currentVideoIndex].ExerciseDescriptionURL}`}
                 controls={true}
                 onError={(e) => console.error("ReactPlayer error:", e)}
-                onEnded={this.playNextVideo}
+                onEnded={this.playNextVideo}Z
               />
             </View>
           ) : (
