@@ -4,9 +4,9 @@ Installer les dépendances
 npm install
 ```
 
-Initialiser la base de donnée
+Pour peupler la base de données
 ```sh
-npm run init-db
+npm run seed
 ```
 
 Faire marcher le serveur
@@ -60,6 +60,10 @@ Le JSON suivant devrait être retourné:
 > * Le fichier qui s'occupe d'initialiser la bd est `init-db.sh` sous `./server/db/`
 > * Un fichier log sous `/server/logs/access.log` contiendra toutes les requêtes faites au serveur
 
+Initialiser la base de donnée
+```sh
+npm run init-db
+```
 Pour réinitialiser la base de données SQLite :
 ```sh
 npm run init-db -- --reset
