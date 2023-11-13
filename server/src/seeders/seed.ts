@@ -1,5 +1,5 @@
 import { seedProgram } from './seed-program';
-import { seedExercise } from './seed-exercice';
+import { seedExercise } from './seed-exercise';
 
 
 async function seedAll() {
