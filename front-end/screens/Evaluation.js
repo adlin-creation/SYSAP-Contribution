@@ -320,7 +320,7 @@ export default function Evaluation(props) {
       )}
       {/* Fin de l'évaluation, Message d'encouragement, bouton precedent et envoie du formulaire */}
       {step === 5 && (
-        <Block center>
+        <Block center flex space="around">
           <Text h4>Merci pour votre participation !</Text>
           <Text h5>Continuez comme ça !</Text>
           <Block row>
