@@ -7,7 +7,7 @@ const Imprimer = ({type}) => {
     const display =
         type === 'programme' ? 'Imprimer' : type === 'carnet' ? 'Évaluation' : 'Autres';
 
-    let doc = "Plan2"
+    let doc = "Bleu I"
     let pdfPath = `../../assets/imprimer/${doc}.pdf`
     const fetchPdf = async () => {
         try {
