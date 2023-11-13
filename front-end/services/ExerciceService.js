@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const serverURL = 'http://localhost:80'; // ou l'URL de votre backend en production
+const serverURL = 'http://localhost:5000'; // ou l'URL de votre backend en production
 
 const ExerciseService = {
   fetchExercises: async function () {
