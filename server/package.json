@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "ts-node --files src/server.ts",
     "dev": "nodemon src/server.ts",
-    "init-db": "sh ./db/init-db.sh"
+    "init-db": "sh ./db/init-db.sh",
+    "seed": "ts-node ./src/seeders/seed.ts"
   },
   "keywords": [],
   "author": "",
