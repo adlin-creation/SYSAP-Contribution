@@ -100,7 +100,7 @@ export default function Evaluation(props) {
     <Block center>
       {/* Selection du niveau de satisfaction */}
       {step === 0 && (
-        <Block center>
+        <Block center flex space="around">
           <Text h6>Êtes-vous satisfait de l'exercice ?</Text>
           <Block left>
             {satisfactionOptions.map((option, index) => (
@@ -134,7 +134,7 @@ export default function Evaluation(props) {
       )}
       {/* Selection du niveau de douleur */}
       {step === 1 && (
-        <Block center>
+        <Block center flex space="around">
           <Text h6>Quel est votre niveau de douleur ?</Text>
           <Block left>
             {douleurOptions.map((option, index) => (
@@ -178,7 +178,7 @@ export default function Evaluation(props) {
       )}
       {/* Selection de la motivation */}
       {step === 2 && (
-        <Block center space="between">
+        <Block center flex space="around">
           <Text h6>Quel est votre niveau de motivation ?</Text>
           <Block row>
             {motivationOptions.map((option, index) => (
@@ -215,38 +215,42 @@ export default function Evaluation(props) {
       )}
       {/* Selection du temps de marche avec des boutons pour incrementer par 1, par 5 et par 10 au-dessus et decrementer par les memes steps en dessous */}
       {step === 3 && (
-        <Block center>
+        <Block center flex space="around">
           <Text h6>Combien de temps avez-vous marché ?</Text>
-          <Block row fluid>
-            {[1, 5, 10].map((value) => (
-              <Button
-                size="small"
-                onPress={() =>
-                  dispatchValeurs({
-                    type: "IncrementerTempsDeMarche",
-                    value: value,
-                  })
-                }
-              >
-                <Text color="#FFFFFF">+{value}</Text>
-              </Button>
-            ))}
-          </Block>
-          <Text>{valeurs.tempsDeMarche} minutes</Text>
-          <Block row fluid>
-            {[1, 5, 10].map((value) => (
-              <Button
-                size="small"
-                onPress={() =>
-                  dispatchValeurs({
-                    type: "DecrementerTempsDeMarche",
-                    value: value,
-                  })
-                }
-              >
-                <Text color="#FFFFFF">-{value}</Text>
-              </Button>
-            ))}
+          <Block center>
+            <Block row fluid>
+              {[1, 5, 10].map((value) => (
+                <Button
+                  key={value}
+                  size="small"
+                  onPress={() =>
+                    dispatchValeurs({
+                      type: "IncrementerTempsDeMarche",
+                      value: value,
+                    })
+                  }
+                >
+                  <Text color="#FFFFFF">+{value}</Text>
+                </Button>
+              ))}
+            </Block>
+            <Text size={25} margin={20}>{valeurs.tempsDeMarche} minutes</Text>
+            <Block row fluid>
+              {[1, 5, 10].map((value) => (
+                <Button
+                  key={value}
+                  size="small"
+                  onPress={() =>
+                    dispatchValeurs({
+                      type: "DecrementerTempsDeMarche",
+                      value: value,
+                    })
+                  }
+                >
+                  <Text color="#FFFFFF">-{value}</Text>
+                </Button>
+              ))}
+            </Block>
           </Block>
           <Block row>
             <Button onPress={previousStep}>Précédent</Button>
@@ -292,13 +296,17 @@ export default function Evaluation(props) {
               {motivationOptions[valeurs.motivation].icone}
             </Block>
             <Block row middle>
-              <Text h6 bold>Temps de marche : </Text>
+              <Text h6 bold>
+                Temps de marche :{" "}
+              </Text>
               <Text size={20} color="#3740ff">
                 {valeurs.tempsDeMarche} minutes
               </Text>
             </Block>
             <Block row middle>
-              <Text h6 bold>Nombre d'exercices : </Text>
+              <Text h6 bold>
+                Nombre d'exercices :{" "}
+              </Text>
               <Text size={20} color="#3740ff">
                 {valeurs.nbExercices} exercices
               </Text>
