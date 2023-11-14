@@ -1,30 +1,68 @@
-# Serveur
-Installer les dépendances
+# Serveur SYSAP
+
+## Requirements
+
+- Nodejs
+- Npm
+- docker
+
+## Execution en local
+
+### Installer les dépendances
+
 ```sh
 npm install
 ```
 
-Initialiser la base de donnée
-```sh
-npm run init-db
-```
+### Démarrer le serveur (Port 80 par défaut)
 
-Faire marcher le serveur
 ```sh
 npm start
 ```
-Le serveur devrait maintenant être en marche locallement sur http://localhost:5000
 
-## Routes et URL
-Chaque fichier placé sous `./server/routes/` sera une route accessible comme :
-`http://localhost:5000/api/<nouvelle-route>`
+Le serveur devrait maintenant être en marche locallement sur [http://localhost:80](http://localhost:80)
 
-Par exemple, une fois que le serveur est en marche il peut être tester rapidement comme ceci:
+## Execution avec docker
+
+### Construire l'image
+
 ```sh
-curl http://localhost:5000/api/exercises
+docker build . -t sysap-server
+```
+
+### Lancer le serveur (Port 4000 par défaut)
+
+```sh
+docker run -d -p 4000:80 sysap-server
+```
+
+### Stopper le serveur
+
+Copier le conteneur ID correspondant après l'éxécution de la commande
+
+```sh
+docker ps
+```
+
+Arrêter le conteneur
+
+```sh
+docker stop <container-id>
+```
+
+## Routes
+
+Chaque fichier placé sous `./server/routes/` sera une route accessible comme :
+`<base-url>/api/<nouvelle-route>`
+
+Par exemple, une fois que le serveur est en marche sur localhost:80 par exemple il peut être tester rapidement comme ceci:
+
+```sh
+curl http://localhost:80/api/exercises
 ```
 
 Le JSON suivant devrait être retourné:
+
 ```json
 {
   [
@@ -55,17 +93,8 @@ Le JSON suivant devrait être retourné:
 }    
 ```
 
-## Remarques
-> * Pour l'instant le shéma `golfit-db-schema.sql` est utilisé mais peut être channgé
-> * Le fichier qui s'occupe d'initialiser la bd est `init-db.sh` sous `./server/db/`
-> * Un fichier log sous `/server/logs/access.log` contiendra toutes les requêtes faites au serveur
+## Les requêtes depuis le frontend
 
-Pour réinitialiser la base de données SQLite :
-```sh
-npm run init-db -- --reset
-```
-
-## Et du côté frontend comment on fait les requêtes?
 Voici un **exemple** pour comment communiquer avec le serveur pour chercher ou créer des exercices
 
 ```js
@@ -73,7 +102,7 @@ Voici un **exemple** pour comment communiquer avec le serveur pour chercher ou c
 import axios from 'axios';
 import { SERVER_BASE_URL } from '@env';
 
-const serverURL = SERVER_BASE_URL || "http://localhost:5000";
+const serverURL = SERVER_BASE_URL || "http://localhost:80";
 
 const ExerciseService = {
   fetchExercises: async function () {
@@ -103,21 +132,25 @@ const ExerciseService = {
 
 export default ExerciseService;
 ```
+
 > À noter que le package `axios` est utiliser pour les méthodes GET et POST, mais on peut tout aussi bien utiliser `fetch` qui vient de base avec react-native
 
 Ensuite dans un component pour aller chercher les exercices :
+
 ```jsx
 const exercices = await ExerciseService.fetchExercises();
 ```
 
 Sinon pour en créer un :
+
 ```jsx
 const createdExercise = await ExerciseService.createExercise(exerciseName);
 ```
 
-### Dépendances
-* express : framework qui fournit des fonctionnalités pour gérer les routes, les réponses HTTP, les middlewares, etc. 
-* cors : Le module cors est utilisé pour gérer la politique de même origine (Same-Origin Policy) dans une application Express.js. Il permet d'autoriser ou de refuser les requêtes HTTP provenant de différents domaines ou origines
-* dotenv : Le module dotenv est utilisé pour charger des variables d'environnement à partir d'un fichier `.env`
-* express-rate-limit : Met en place des limites sur le nombre de requêtes que les clients peuvent effectuer sur le serveur
-* sqlite3 : Pour l'utilisation d'une base de donnée SQLite
+## Dépendances
+
+- express : framework qui fournit des fonctionnalités pour gérer les routes, les réponses HTTP, les middlewares, etc.
+- cors : Le module cors est utilisé pour gérer la politique de même origine (Same-Origin Policy) dans une application Express.js. Il permet d'autoriser ou de refuser les requêtes HTTP provenant de différents domaines ou origines
+- dotenv : Le module dotenv est utilisé pour charger des variables d'environnement à partir d'un fichier `.env`
+- express-rate-limit : Met en place des limites sur le nombre de requêtes que les clients peuvent effectuer sur le serveur
+- sqlite3 : Pour l'utilisation d'une base de donnée SQLite
