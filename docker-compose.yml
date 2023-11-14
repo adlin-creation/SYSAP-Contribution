@@ -6,7 +6,7 @@ services:
       context: ./server
       dockerfile: Dockerfile
     ports:
-      - "4000:4000"
+      - "4000"
     
   
   sysap-web:
