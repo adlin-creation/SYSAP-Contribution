@@ -55,6 +55,15 @@ class DrawerItem extends React.Component {
             color={focused ? "white" : materialTheme.COLORS.MUTED}
           />
         );
+        case "Évaluation":
+          return (
+            <Icon
+              size={16}
+              name="heart"
+              family="AntDesign"
+              color={focused ? "white" : materialTheme.COLORS.MUTED}
+            />
+          );
       case "Rappel":
         return (
           <Icon

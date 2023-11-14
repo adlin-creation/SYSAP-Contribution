@@ -15,7 +15,7 @@ import LoginScreen from "../screens/Login";
 import RegisterScreen from "../screens/Register";
 import ProgramChangeScreen from "../screens/ProgramChange";
 import LogoutScreen from "../screens/Logout";
-
+import EvaluationScreen from "../screens/Evaluation";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
 
@@ -154,6 +154,28 @@ function SeanceStack(props) {
   );
 }
 
+function EvaluationStack(props) {
+  return (
+    <Stack.Navigator
+      initialRouteName="Évaluation"
+      screenOptions={{
+        mode: "card",
+        headerShown: "screen",
+      }}
+    >
+      <Stack.Screen
+        name="EvaluationScreen"
+        component={EvaluationScreen}
+        options={{
+          header: ({ navigation, scene }) => (
+            <Header title="Évaluation" scene={scene} navigation={navigation} />
+          ),
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
+
 function AppStack(props) {
   return (
     <Drawer.Navigator
@@ -253,6 +275,34 @@ function AppStack(props) {
               size={16}
               name="heart"
               family="entypo"
+              color={focused ? "white" : materialTheme.COLORS.MUTED}
+            />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Évaluation"
+        component={EvaluationStack}
+        options={{
+          drawerIcon: ({ focused }) => (
+            <Icon
+              size={16}
+              name="heart"
+              family="entypo"
+              color={focused ? "white" : materialTheme.COLORS.MUTED}
+            />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Se connecter"
+        component={ProgrammeScreen}
+        options={{
+          drawerIcon: ({ focused }) => (
+            <Icon
+              size={16}
+              name="ios-log-in"
+              family="ionicon"
               color={focused ? "white" : materialTheme.COLORS.MUTED}
             />
           ),
