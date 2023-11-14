@@ -12,6 +12,15 @@ const ExerciseService = {
       throw error;
     }
   },
+  fetchExerciseById: async function (idExercise) {
+    try {
+      const response = await axios.get(`${serverURL}/api/exercises/${idExercise}`);
+      //console.log(response);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
   // Autres méthodes de service 
 };
 

@@ -75,8 +75,13 @@ export default class Seance extends React.Component {
         <Text //TODO: faire jouer la video explicative
           style={styles.detailsButton}
           onPress={() => {
-            console.log("Navigating with name:", item.ExerciseName);
-            this.toggleModal(index);
+            // console.log("Navigating with name:", item.ExerciseName);
+            // this.toggleModal(index);
+            console.log("Navigating with id:", item.idExercise);
+            this.props.navigation.navigate("ExerciseDetail", {
+              idExercise: item.idExercise,
+              otherParam: 'anything you want here',
+            });
           }}
         >
           Vidéo explicative de l'exercice
@@ -160,8 +165,8 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   exerciseImage: {
-    width: 100,
-    height: 100,
+    width: 250,
+    height: 250,
   },
   detailsButton: {
     color: "blue",
