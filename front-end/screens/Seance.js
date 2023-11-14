@@ -3,11 +3,10 @@ import {
   View,
   StyleSheet,
   Text,
-  FlatList,
   TouchableOpacity,
   ScrollView,
   Image,
-  Button,
+  Modal,
 } from "react-native";
 import ExerciseService from "../services/ExerciceService";
 import ReactPlayer from "react-player";
@@ -19,6 +18,8 @@ export default class Seance extends React.Component {
     this.state = {
       currentVideoIndex: 0,
       showVideos: false,
+      selectedExerciseIndex: null,
+      isModalVisible: false,
     };
   }
 
@@ -51,7 +52,12 @@ export default class Seance extends React.Component {
     this.setState({ currentVideoIndex: nextIndex });
   };
 
-
+  toggleModal = (index) => {
+    this.setState({
+      isModalVisible: !this.state.isModalVisible,
+      selectedExerciseIndex: index,
+    });
+  };
 
   renderExercise = ({ item, index }) => {
     console.log(item);
@@ -61,19 +67,19 @@ export default class Seance extends React.Component {
           <Text style={styles.exComplete}>{item.ExerciseName}</Text>
           <Text>Minimum repetitions: {item.ExerciseNumberRepetitionsMin}</Text>
           <Text>Maximum repetitions: {item.ExerciseNumberRepetitionsMax}</Text>
-          <Text>Chemin video: {item.ExerciseDescriptionURL}</Text>
-          {/* <Image source={{ uri: item.image }} style={styles.exerciseImage} /> */}
+          <Image
+            source={{ uri: `../assets/images_test/${item.ExerciseImageURL}` }}
+            style={styles.exerciseImage}
+          />
         </View>
-        <Text
+        <Text //TODO: faire jouer la video explicative
           style={styles.detailsButton}
           onPress={() => {
-            console.log("Navigating with name:", item.nom);
-            this.props.navigation.navigate("ExerciseDetail", {
-              exerciseName: item.nom,
-            });
+            console.log("Navigating with name:", item.ExerciseName);
+            this.toggleModal(index);
           }}
         >
-          Détails
+          Vidéo explicative de l'exercice
         </Text>
       </View>
     );
@@ -89,12 +95,11 @@ export default class Seance extends React.Component {
             <View style={styles.playerContainer}>
               <ReactPlayer
                 style={styles.player}
-                // url={require(this.exercises[currentVideoIndex]?.ExerciseExplanationVidURL)}
-                // url={require(`../assets/videos_test/${this.exercises[currentVideoIndex]?.ExerciseExplanationVidURL}`)}
                 url={`../assets/videos_test/${this.exercises[currentVideoIndex].ExerciseExplanationVidURL}`}
                 controls={true}
                 onError={(e) => console.error("ReactPlayer error:", e)}
-                onEnded={this.playNextVideo}Z
+                onEnded={this.playNextVideo}
+                Z
               />
             </View>
           ) : (
@@ -102,7 +107,7 @@ export default class Seance extends React.Component {
               style={styles.jouerButtonSeance}
               onPress={() => this.setState({ showVideos: true })}
             >
-              <Text style={styles.jouerButtonText}>Démarrer La Séance</Text>
+              <Text style={styles.jouerButtonText}>Démarrer la séance</Text>
               <View style={styles.playTriangle} />
             </TouchableOpacity>
           )}
@@ -152,7 +157,7 @@ const styles = StyleSheet.create({
   },
   exComplete: {
     margin: "3%",
-    fontSize: 26,
+    fontSize: 24,
   },
   exerciseImage: {
     width: 100,
@@ -161,7 +166,7 @@ const styles = StyleSheet.create({
   detailsButton: {
     color: "blue",
     textDecorationLine: "underline",
-    fontSize: 16,
+    fontSize: 12,
     fontWeight: "bold",
     textAlign: "center",
     padding: 10,
