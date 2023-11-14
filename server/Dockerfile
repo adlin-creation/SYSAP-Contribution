@@ -1,9 +1,16 @@
 FROM node:18.18.2-alpine
 
-RUN mkdir -p /opt/app
-WORKDIR /opt/app
-COPY . .
+# Set working directory
+WORKDIR /app
+
+# Copy and download dependencies
+COPY package.json package-lock.json ./
 RUN npm install
-COPY src/ .
+
+# Copy the source files into the image
+COPY . .
+
+# open port 80
 EXPOSE 80
-CMD [ "npm", "start"]
+
+CMD [ "npm","start"]
