@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  sysap-server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    
+  
+  sysap-web:
+    build:
+      context: ./front-end
+      dockerfile: Dockerfile
+    ports:
+      - "80:8081"
+    depends_on:
+      - sysap-server
