@@ -1,6 +1,6 @@
 
 # Use an official Node.js runtime as a parent image
-FROM node:18-alpine
+FROM node:18.18.2-alpine
 
 # Set the working directory to /app
 WORKDIR /app
@@ -18,4 +18,4 @@ COPY . .
 EXPOSE 8081
 
 # Start the Metro bundler and the app
-CMD ["yarn", "start"]
+CMD ["yarn", "web"]
