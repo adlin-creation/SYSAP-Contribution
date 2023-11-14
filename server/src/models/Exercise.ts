@@ -35,7 +35,13 @@ Exercise.init(
             allowNull: false,
             defaultValue: 0,
         },
-        ExerciseDescriptionURL: {
+        ExerciseImageURL: {
+            type: DataTypes.STRING,
+        },
+        ExerciseExplanationVidURL: {
+            type: DataTypes.STRING,
+        },
+        ExerciseSeanceVidURL: {
             type: DataTypes.STRING,
         },
     },

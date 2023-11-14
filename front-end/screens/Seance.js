@@ -11,7 +11,6 @@ import {
 } from "react-native";
 import ExerciseService from "../services/ExerciceService";
 import ReactPlayer from "react-player";
-// import Video from 'react-native-video';
 
 export default class Seance extends React.Component {
   exercises = [];
@@ -90,9 +89,9 @@ export default class Seance extends React.Component {
             <View style={styles.playerContainer}>
               <ReactPlayer
                 style={styles.player}
-                // url={require(this.exercises[currentVideoIndex]?.ExerciseDescriptionURL)}
-                // url={require(`../assets/videos_test/${this.exercises[currentVideoIndex]?.ExerciseDescriptionURL}`)}
-                url={`../assets/videos_test/${this.exercises[currentVideoIndex].ExerciseDescriptionURL}`}
+                // url={require(this.exercises[currentVideoIndex]?.ExerciseExplanationVidURL)}
+                // url={require(`../assets/videos_test/${this.exercises[currentVideoIndex]?.ExerciseExplanationVidURL}`)}
+                url={`../assets/videos_test/${this.exercises[currentVideoIndex].ExerciseExplanationVidURL}`}
                 controls={true}
                 onError={(e) => console.error("ReactPlayer error:", e)}
                 onEnded={this.playNextVideo}Z
