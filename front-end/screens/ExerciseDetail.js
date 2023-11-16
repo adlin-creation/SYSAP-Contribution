@@ -101,11 +101,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   exTitle: {
-    color: "red",
+    color: "black",
     fontSize: 36,
     fontWeight: "bold",
     marginBottom: 20,
     marginTop: 60,
+    textDecorationLine:"underline",
   },
   exComplete: {
     margin: "3%",
@@ -167,10 +168,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   retour: {
-    backgroundColor: "blue",
-    padding: 10,
-    margin: 20,
+    backgroundColor: "#9C26B0",
+    padding: 20,
+    margin: 30,
     alignItems: "center",
-    width: 100,
+    marginTop: 20,
+    borderRadius: 20,
+    paddingHorizontal: 200,
+    color: "white",
   },
 });
