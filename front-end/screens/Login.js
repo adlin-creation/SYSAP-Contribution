@@ -72,7 +72,6 @@ const Login = ({navigation}) => {
         })
         .then((response) => {
             if (response.ok) {
-                // Request was successful, you can handle the response here
                 return response.json();
             } else {
                 throw new Error('Request failed');
@@ -89,7 +88,7 @@ const Login = ({navigation}) => {
         })
         .then(async (data) =>{
             if (!data.token) {
-                errors.failed = 'Login Failed'
+                errors.failed = 'Connection impossible'
                 setErrors(errors);
             }
             

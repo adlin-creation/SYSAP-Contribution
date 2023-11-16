@@ -68,7 +68,7 @@ export default Register = ({ navigation }) => {
                 errors.failed = 'Failed to connect to the server'
               } else { 
                 console.log(error);
-                errors.failed = 'Login Failed'
+                errors.failed = 'Inscription impossible'
             }
             setErrors(errors);
             return;

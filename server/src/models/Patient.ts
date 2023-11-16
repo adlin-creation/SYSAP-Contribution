@@ -3,11 +3,10 @@ import { sequelize } from '../db/database';
 
 class Patient extends Model {
     public idPatient!: number;
-    public Name!: string;
-    public FamilyName!: string;
+    public PatientFirstName!: string;
+    public PatientLastName!: string;
     public Email!: string;
     public Password!: string;
-    public ProgramName!: string | null; // Foreign key to Program
 }
 
 Patient.init(
@@ -17,11 +16,11 @@ Patient.init(
         autoIncrement: true,
         primaryKey: true,
       },
-      Name: {
+      PatientFirstName: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      FamilyName: {
+      PatientLastName: {
         type: DataTypes.STRING,
         allowNull: false,
       },
@@ -33,9 +32,6 @@ Patient.init(
       Password: {
         type: DataTypes.STRING,
         allowNull: false,
-      },
-      ProgramName: {
-        type: DataTypes.STRING,
       },
     },
     {
