@@ -2,8 +2,9 @@
 
 # dependencies
 node_modules
-.yarn*
+server/package-lock.json
 
+.yarn*
 */.yarn
 */.pnp*
 */yarn.lock
@@ -41,4 +42,3 @@ yarn-error.*
 
 # WebStorm
 .idea
-
