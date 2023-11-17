@@ -10,7 +10,7 @@ async function seedExercise() {
         ExerciseNumberRepetitionsMin: 10,
         ExerciseNumberRepetitionsMax: 30,
         ExerciseImageURL: "Exo1.svg",
-        ExerciseExplanationVidURL: "Exo2.mp4",
+        ExerciseDescriptionURL: "Exo2.mp4",
         ExerciseSeanceVidURL: "an URL video",
       },
       {
@@ -19,7 +19,7 @@ async function seedExercise() {
         ExerciseNumberRepetitionsMin: 40,
         ExerciseNumberRepetitionsMax: 50,
         ExerciseImageURL: "Exo2.svg",
-        ExerciseExplanationVidURL: "Exo3.mp4",
+        ExerciseDescriptionURL: "Exo3.mp4",
         ExerciseSeanceVidURL: "an URL video",
       },
       {
@@ -28,7 +28,7 @@ async function seedExercise() {
         ExerciseNumberRepetitionsMin: 50,
         ExerciseNumberRepetitionsMax: 60,
         ExerciseImageURL: "Exo3.svg",
-        ExerciseExplanationVidURL: "Exo4.mp4",
+        ExerciseDescriptionURL: "Exo4.mp4",
         ExerciseSeanceVidURL: "an URL video",
       },
     ]);

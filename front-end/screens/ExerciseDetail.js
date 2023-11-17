@@ -19,8 +19,6 @@ export default class ExerciseDetail extends React.Component {
 };
 
 
-
-
   async componentDidMount() {
 
     const { idExercise } = this.props.route.params;
@@ -69,7 +67,7 @@ export default class ExerciseDetail extends React.Component {
           <View style={styles.playerContainer}>
               <ReactPlayer
                 style={styles.player}
-                url={`../assets/videos_test/${exercise.ExerciseExplanationVidURL}`}
+                url={`../assets/videos_test/${exercise.ExerciseDescriptionURL}`}
                 controls={true}
                 onError={(e) => console.error("ReactPlayer error:", e)}
               />

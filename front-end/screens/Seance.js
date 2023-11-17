@@ -100,7 +100,7 @@ export default class Seance extends React.Component {
             <View style={styles.playerContainer}>
               <ReactPlayer
                 style={styles.player}
-                url={`../assets/videos_test/${this.exercises[currentVideoIndex].ExerciseExplanationVidURL}`}
+                url={`../assets/videos_test/${this.exercises[currentVideoIndex].ExerciseDescriptionURL}`}
                 controls={true}
                 onError={(e) => console.error("ReactPlayer error:", e)}
                 onEnded={this.playNextVideo}
