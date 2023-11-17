@@ -11,6 +11,8 @@ import { Block, Text } from "galio-framework";
 import { Icon } from '../components';
 import CustomButton from '../components/CustomButton';
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const Login = ({navigation}) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -63,7 +65,7 @@ const Login = ({navigation}) => {
             password: password,
         };
 
-        fetch('http://localhost:5000/api/auth/login', {
+        fetch(`${apiUrl}/api/auth/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

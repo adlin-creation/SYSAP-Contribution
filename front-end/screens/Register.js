@@ -4,6 +4,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Block, Text } from "galio-framework";
 import { Icon } from '../components';
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 export default Register = ({ navigation }) => {
     const [name, setName] = useState('');
     const [familyName, setFamilyName] = useState('');
@@ -42,7 +44,7 @@ export default Register = ({ navigation }) => {
             password: password,
         };
 
-        fetch('http://localhost:5000/api/auth/register', {
+        fetch(`${apiUrl}/api/auth/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
