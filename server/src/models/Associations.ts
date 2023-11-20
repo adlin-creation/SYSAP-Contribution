@@ -20,7 +20,6 @@ export function createAssociations(){
         as: 'Program',
     });
       
-
     ExerciseSeries.hasMany(ExerciseSeriesExercise, {
         foreignKey: 'ExerciseSeriesId',
         as: 'Exercises',
@@ -30,7 +29,6 @@ export function createAssociations(){
         as: 'ExerciseSeries',
     });
       
-
     ProgramExerciseSeries.belongsTo(ExerciseSeries, {
         foreignKey: 'ExerciseSeriesId',
         as: 'Series',
