@@ -4,4 +4,6 @@ import progressController from "../controllers/progressController";
 
 const router = Router();
 
-router.get("/", progressController.test);
+router.get("/", progressController.testConnection);
+
+export default router;

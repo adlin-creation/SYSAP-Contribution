@@ -112,5 +112,4 @@ export function createAssociations(){
         foreignKey: 'PatientId',
         as: 'PatientId',
     })
-
 }
