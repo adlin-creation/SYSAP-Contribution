@@ -7,11 +7,11 @@ const Imprimer = ({type}) => {
     const display =
         type === 'programme' ? 'Imprimer' : type === 'carnet' ? 'Évaluation' : 'Autres';
 
-    let document = "Bleu1";
-    let pdfPath = `../../assets/imprimer/${document}.pdf`
+    const document = "Bleu1";
+    const pdfPath = require(`../../assets/imprimer/${document}.pdf`);
     const fetchPdf = async () => {
         try {
-            const pdfAsset = Asset.fromModule(require(pdfPath));
+            const pdfAsset = Asset.fromModule(pdfPath);
             await pdfAsset.downloadAsync();
             await Print.printAsync({
                 uri: pdfAsset.localUri,
