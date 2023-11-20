@@ -8,6 +8,7 @@ class ProgressionMarches extends Model {
     public idPatient!: number;
     public NbSemaines!: number;
     public Marche!: number;
+    public NbMarches!: number;
 }
 ProgressionMarches.init({
     ID: {
@@ -28,6 +29,10 @@ ProgressionMarches.init({
         allowNull: false,
     },
     Marche: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: false,
+    },
+    NbMarches:{
         type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
     }
