@@ -7,6 +7,9 @@ import ProgramDayRecord from './ProgramDayRecord';
 import Patient from './Patient';
 import ProgramExerciseSeries from './ProgramExerciseSeries';
 import Reminder from './Reminder';
+import ProgressionExercices from "./ProgressionExerices";
+import ProgressionMarches from "./ProgressionMarches";
+import ProgressionExerices from "./ProgressionExerices";
 
 export function createAssociations(){
     Program.hasMany(ProgramExerciseSeries, {
@@ -91,4 +94,23 @@ export function createAssociations(){
         foreignKey: 'ExerciseId',
         as: 'Exercise',
     });
+
+    Patient.hasMany(ProgressionMarches, {
+        foreignKey: 'PatientId',
+        as: 'ProgressionMarches',
+    });
+    ProgressionMarches.belongsTo(Patient, {
+        foreignKey: 'PatientId',
+        as: 'PatientId',
+    })
+
+    Patient.hasMany(ProgressionExercices, {
+        foreignKey: 'PatientId',
+        as: 'ProgressionExercices',
+    });
+    ProgressionExercices.belongsTo(Patient, {
+        foreignKey: 'PatientId',
+        as: 'PatientId',
+    })
+
 }
