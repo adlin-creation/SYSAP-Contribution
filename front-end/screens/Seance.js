@@ -7,6 +7,7 @@ import {
   ScrollView,
   Image,
   Modal,
+  CheckBox,
 } from "react-native";
 import ExerciseService from "../services/ExerciceService";
 import ReactPlayer from "react-player";
@@ -20,6 +21,7 @@ export default class Seance extends React.Component {
       showVideos: false,
       selectedExerciseIndex: null,
       isModalVisible: false,
+      exerciseSelection: Array(this.exercises.length).fill(false),
     };
   }
 
@@ -51,9 +53,8 @@ export default class Seance extends React.Component {
     const nextIndex = (currentVideoIndex + 1) % this.exercises.length;
     this.setState({ currentVideoIndex: nextIndex });
     if (currentVideoIndex === 0) {
-      this.setState({ showVideos: false });      
+      this.setState({ showVideos: false });
     }
-
   };
 
   toggleModal = (index) => {
@@ -63,33 +64,44 @@ export default class Seance extends React.Component {
     });
   };
 
+  toggleExerciseSelection = (index) => {
+    const { exerciseSelection } = this.state;
+    exerciseSelection[index] = !exerciseSelection[index];
+    this.setState({ exerciseSelection });
+  };
+
   renderExercise = ({ item, index }) => {
     console.log(item);
+    const { exerciseSelection } = this.state;
     return (
       <View key={index}>
-        <View>
+        <View style={styles.exerciseContainer}>
           <Text style={styles.exComplete}>{item.ExerciseName}</Text>
-          <Text>Minimum repetitions: {item.ExerciseNumberRepetitionsMin}</Text>
-          <Text>Maximum repetitions: {item.ExerciseNumberRepetitionsMax}</Text>
           <Image
             source={{ uri: `../assets/images_test/${item.ExerciseImageURL}` }}
             style={styles.exerciseImage}
           />
+          <Text>Minimum repetitions: {item.ExerciseNumberRepetitionsMin}</Text>
+          <Text>Maximum repetitions: {item.ExerciseNumberRepetitionsMax}</Text>
+          <Text //TODO: faire jouer la video explicative
+            style={styles.detailsButton}
+            onPress={() => {
+              // console.log("Navigating with name:", item.ExerciseName);
+              // this.toggleModal(index);
+              console.log("Navigating with id:", item.idExercise);
+              this.props.navigation.navigate("ExerciseDetail", {
+                idExercise: item.idExercise,
+                otherParam: "anything you want here",
+              });
+            }}
+          >
+            Vidéo explicative de l'exercice
+          </Text>
+          <CheckBox
+            value={exerciseSelection[index]}
+            onValueChange={() => this.toggleExerciseSelection(index)}
+          />
         </View>
-        <Text //TODO: faire jouer la video explicative
-          style={styles.detailsButton}
-          onPress={() => {
-            // console.log("Navigating with name:", item.ExerciseName);
-            // this.toggleModal(index);
-            console.log("Navigating with id:", item.idExercise);
-            this.props.navigation.navigate("ExerciseDetail", {
-              idExercise: item.idExercise,
-              otherParam: "anything you want here",
-            });
-          }}
-        >
-          Vidéo explicative de l'exercice
-        </Text>
       </View>
     );
   };
@@ -172,6 +184,10 @@ const styles = StyleSheet.create({
     marginTop: 60,
     textDecorationLine: "underline",
   },
+  exerciseContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
   exComplete: {
     margin: "7%",
     fontSize: 24,
@@ -181,6 +197,7 @@ const styles = StyleSheet.create({
   exerciseImage: {
     width: 250,
     height: 250,
+    margin: 30,
   },
   detailsButton: {
     backgroundColor: "#9C26B0",
