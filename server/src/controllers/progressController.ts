@@ -107,11 +107,11 @@ export default class ProgressController {
     static async getProgressionMarche(req: Request, res: Response): Promise<void> {
         try {
             const idPatient = parseInt(req.params.idPatient, 10);
-
             const currentWeek = getISOWeek(new Date());
+            const semaine = req.params.week || currentWeek;
 
             let progressionMarche = await ProgressionMarches.findOne({
-                where: { idPatient, NbSemaines: currentWeek },
+                where: { idPatient, NbSemaines: semaine },
             });
 
             if (!progressionMarche) {

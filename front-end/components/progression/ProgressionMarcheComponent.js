@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Feather from "react-native-vector-icons/Feather";
 import getFetch from "../apiFetch/getFetch";
+import {useIsFocused} from "@react-navigation/native";
 
 const ProgressionMarcheComponent = () => {
     // creation de variable et setters
@@ -10,6 +11,8 @@ const ProgressionMarcheComponent = () => {
     const idPatient = 1;
 
     //Aller chercher donner dans BD pour lenb marche et duree marche total
+    const isFocused = useIsFocused();
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -17,11 +20,15 @@ const ProgressionMarcheComponent = () => {
                 setTotalTimeWalked(data.data.Marche);
                 setNbMarches(data.data.NbMarches);
             } catch (error) {
-                console.error('Err1or fetching data:', error);
+                console.error('Error fetching data:', error);
             }
         };
-        fetchData();
-    }, []);
+
+        // Rechargez les données uniquement si la page est actuellement visible
+        if (isFocused) {
+            fetchData();
+        }
+    }, [isFocused]);
 
 
     const formatTime = (totalMinutes) => {
