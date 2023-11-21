@@ -10,15 +10,24 @@ const ProgressionMarcheComponent = () => {
     //Aller chercher donner dans BD pour le nb marche et duree marche total
     useEffect(() => {
         const fetchData = async () => {
-            const fakeData = {
-                totalTime: 120, // Temps total
-                marches: 5, // nombre de marche
-            };
-
-            setTotalTimeWalked(fakeData.totalTime);
-            setNbMarches(fakeData.marches);
+            try {
+                const res = await fetch(`http://localhost:3000/getAllMarche`);
+                if (!res.ok){
+                    throw new Error(`Erreur HTTP ${res.status}`);
+                }
+                const data = await res.json();
+                let tempsMarche = 0;
+                let nbdeMarche = 0;
+                data.forEach(item => {
+                    tempsMarche += item.Marche;
+                    nbdeMarche += item.NbMarches;
+                });
+                setTotalTimeWalked(tempsMarche);
+                setNbMarches(nbdeMarche);
+            } catch (error){
+               console.error();
+            }
         };
-
         fetchData();
     }, []);
 
