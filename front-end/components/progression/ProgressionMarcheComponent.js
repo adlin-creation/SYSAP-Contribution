@@ -7,18 +7,17 @@ const ProgressionMarcheComponent = () => {
     // creation de variable et setters
     const [totalTimeWalked, setTotalTimeWalked] = useState(0);
     const [nbMarches, setNbMarches] = useState(0);
+    const idPatient = 1;
 
-    //Aller chercher donner dans BD pour le nb marche et duree marche total
+    //Aller chercher donner dans BD pour lenb marche et duree marche total
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await getFetch(`http://localhost:3000/getAllMarche`);
-                let tempsMarche = 0;
-                let nbdeMarche = 0;
-                data.forEach(item => {
-                    tempsMarche += item.Marche;
-                    nbdeMarche += item.NbMarches;
-                });
+                const data = await getFetch(`http://localhost:3000/api/progress/progressionMarche/${idPatient}`);
+                const patientData = data.data;
+
+                let tempsMarche = patientData.Marche;
+                let nbdeMarche = patientData.NbMarches;
                 setTotalTimeWalked(tempsMarche);
                 setNbMarches(nbdeMarche);
             } catch (error) {
