@@ -30,7 +30,7 @@ export default class ProgressController {
             res.status(201).json({ success: true, message: 'Marche ajoutée avec succès.', data: newProgressionMarche });
         } catch (error) {
             console.error('Erreur marche :', error);
-            res.status(500).json({ success: false, message: 'Erreur marche.' });
+            res.status(500).json({ success: false, message: 'Erreur marche.' + error});
         }
     }
 
