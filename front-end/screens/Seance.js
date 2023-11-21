@@ -80,7 +80,7 @@ export default class Seance extends React.Component {
             console.log("Navigating with id:", item.idExercise);
             this.props.navigation.navigate("ExerciseDetail", {
               idExercise: item.idExercise,
-              otherParam: 'anything you want here',
+              otherParam: "anything you want here",
             });
           }}
         >
@@ -102,9 +102,9 @@ export default class Seance extends React.Component {
                 style={styles.player}
                 url={`../assets/videos_test/${this.exercises[currentVideoIndex].ExerciseDescriptionURL}`}
                 controls={true}
+                playing={true}
                 onError={(e) => console.error("ReactPlayer error:", e)}
                 onEnded={this.playNextVideo}
-                Z
               />
             </View>
           ) : (
@@ -113,7 +113,10 @@ export default class Seance extends React.Component {
               onPress={() => this.setState({ showVideos: true })}
             >
               <Text style={styles.jouerButtonText}>Démarrer la séance</Text>
-              <View style={styles.playTriangle} />
+              <Image
+                style={styles.playIcon}
+                source={require("../assets/icons/playbutton.png")}
+              />
             </TouchableOpacity>
           )}
           <View style={styles.exComplete}>
@@ -153,25 +156,23 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 20,
     alignItems: "center",
-    marginTop: 40, 
+    marginTop: 40,
     padding: 12,
-    borderRadius:20,
-    textDecorationLine:"underline",
+    borderRadius: 20,
+    textDecorationLine: "underline",
   },
   exTitle: {
     color: "black",
     fontSize: 36,
     fontWeight: "bold",
-    marginBottom: 20,
     marginTop: 60,
-    textDecorationLine:"underline",
-    
+    textDecorationLine: "underline",
   },
   exComplete: {
     margin: "7%",
     fontSize: 24,
-    paddingLeft:60,
-    textDecorationLine:"underline"
+    paddingLeft: 60,
+    textDecorationLine: "underline",
   },
   exerciseImage: {
     width: 250,
@@ -183,7 +184,7 @@ const styles = StyleSheet.create({
     margin: 30,
     alignItems: "center",
     width: 190,
-    height:10,
+    height: 10,
     marginTop: 20,
     borderRadius: 10,
     position: "relative",
@@ -193,7 +194,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 40,
     color: "white",
-    textAlign:"center",
+    textAlign: "center",
   },
   playerContainer: {
     marginTop: "3%",
@@ -221,21 +222,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 40,
   },
-
-  playTriangle: {
-    width: 0,
-    height: 0,
-    borderLeftWidth: 0,
-    borderRightWidth: 30,
-    borderBottomWidth: 30,
-    borderLeftColor: "transparent",
-    borderRightColor: "transparent",
-    borderBottomColor: "white",
+  playIcon: {
+    width: 70,
+    height: 70,
   },
   jouerButtonText: {
     paddingRight: 30,
     color: "white",
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: "bold",
   },
   retour: {
