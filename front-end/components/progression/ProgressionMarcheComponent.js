@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Feather from "react-native-vector-icons/Feather";
+import getFetch from "../apiFetch/getFetch";
 
 const ProgressionMarcheComponent = () => {
     // creation de variable et setters
@@ -11,11 +12,7 @@ const ProgressionMarcheComponent = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await fetch(`http://localhost:3000/getAllMarche`);
-                if (!res.ok){
-                    throw new Error(`Erreur HTTP ${res.status}`);
-                }
-                const data = await res.json();
+                const data = await getFetch(`http://localhost:3000/getAllMarche`);
                 let tempsMarche = 0;
                 let nbdeMarche = 0;
                 data.forEach(item => {
@@ -24,8 +21,8 @@ const ProgressionMarcheComponent = () => {
                 });
                 setTotalTimeWalked(tempsMarche);
                 setNbMarches(nbdeMarche);
-            } catch (error){
-               console.error();
+            } catch (error) {
+                console.error('Error fetching data:', error);
             }
         };
         fetchData();
