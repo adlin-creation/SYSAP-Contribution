@@ -31,9 +31,14 @@ app.use(cors({
 import exerciseRoutes from './routes/exerciseRoutes';
 import authRoutes from './routes/authRoutes';
 import programRoutes from './routes/programRoutes';
+import impressionRoutes from './routes/impressionRoutes';
+import progressRoutes from './routes/progressRoutes';
 app.use('/api/exercises', exerciseRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/programs', programRoutes);
+app.use('/api/print', impressionRoutes);
+app.use('/api/progress', progressRoutes);
+
 
 
 configureDatabase();
