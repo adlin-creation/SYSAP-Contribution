@@ -50,6 +50,10 @@ export default class Seance extends React.Component {
     const { currentVideoIndex } = this.state;
     const nextIndex = (currentVideoIndex + 1) % this.exercises.length;
     this.setState({ currentVideoIndex: nextIndex });
+    if (currentVideoIndex === 0) {
+      this.setState({ showVideos: false });      
+    }
+
   };
 
   toggleModal = (index) => {
