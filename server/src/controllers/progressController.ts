@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
+import { getISOWeek } from 'date-fns';
 import ProgressionMarches from "../models/ProgressionMarches";
 import ProgressionExercices from "../models/ProgressionExerices";
-import ProgressionExerices from "../models/ProgressionExerices";
+
 
 export default class ProgressController {
     // Fonction de test de connexion
@@ -14,32 +15,12 @@ export default class ProgressController {
         }
     }
 
-    // add row marche
-    static async addProgressionMarche(req: Request, res: Response): Promise<void> {
-        try {
-            const { idPatient, NbSemaines, Marche, NbMarches } = req.body;
-
-            // Avoir verifier que tous les champs sont valides
-            const newProgressionMarche = await ProgressionMarches.create({
-                idPatient,
-                NbSemaines,
-                Marche,
-                NbMarches,
-            });
-
-            res.status(201).json({ success: true, message: 'Marche ajoutée avec succès.', data: newProgressionMarche });
-        } catch (error) {
-            console.error('Erreur marche :', error);
-            res.status(500).json({ success: false, message: 'Erreur marche.' + error});
-        }
-    }
-
     static async addProgressionExercises(req: Request, res: Response): Promise<void> {
         try {
             const { idPatient, NbSeances, DiffMoyenne, NbSemaines, NbObjectifs, NumProgramme } = req.body;
 
             // Avoir verifier que tous les champs sont valides
-            const newProgressionMarche = await ProgressionExerices.create({
+            const newProgressionMarche = await ProgressionExercices.create({
                 idPatient,
                 NbSeances,
                 DiffMoyenne,
@@ -54,39 +35,42 @@ export default class ProgressController {
             res.status(500).json({ success: false, message: 'Erreur Progression Exercice.' });
         }
     }
-    // add row exercices
 
-    // update marche
     static async updateProgressionMarche(req: Request, res: Response): Promise<void> {
         try {
-            const { idPatient, NbSemaines, Marche, NbMarches } = req.body;
+            const {idPatient, Marche} = req.body;
 
-            // Avoir verifier que tous les champs sont valides
-
-            // Rechercher progression
+            const currentWeek = getISOWeek(new Date());
             const progressionMarche = await ProgressionMarches.findOne({
-                where: { idPatient },
+                where: { idPatient,
+                        NbSemaines: currentWeek
+                },
             });
 
-            // Creer si non existant
             if (!progressionMarche) {
-                await ProgressController.addProgressionMarche(req, res);
+                const newProgressionMarche = await ProgressionMarches.create({
+                    idPatient,
+                    NbSemaines: currentWeek,
+                    Marche: Marche,
+                    NbMarches: 1,
+                });
+
+                res.status(201).json({ success: true, message: 'Marche ajoutée avec succès.', data: newProgressionMarche });
                 return;
             }
-
-            // maj
             await progressionMarche.update({
-                NbSemaines: NbSemaines || progressionMarche.NbSemaines,
-                Marche: Marche || progressionMarche.Marche,
-                NbMarches: NbMarches || progressionMarche.NbMarches,
+                NbSemaines: currentWeek,
+                Marche: progressionMarche.Marche + Marche,
+                NbMarches: ++progressionMarche.NbMarches,
             });
-
             res.status(200).json({ success: true, message: 'Marche mise à jour.' });
         } catch (error) {
             console.error('Erreur mise à jour de la marche :', error);
             res.status(500).json({ success: false, message: 'Erreur mise à jour de la marche.' });
         }
     }
+
+
     // update exercices
     static async updateProgressionExercices(req: Request, res: Response): Promise<void> {
         try {
@@ -101,7 +85,7 @@ export default class ProgressController {
 
             // Creer si non existant
             if (!progressionExercices) {
-                await ProgressController.addProgressionMarche(req, res);
+                await ProgressController.addProgressionExercises(req, res);
                 return;
             }
 
@@ -124,10 +108,16 @@ export default class ProgressController {
         try {
             const idPatient = parseInt(req.params.idPatient, 10);
 
-            // Recherchez la progression de marche pour le patient spécifié
-            const progressionMarche = await ProgressionMarches.findOne({
-                where: { idPatient },
+            const currentWeek = getISOWeek(new Date());
+
+            let progressionMarche = await ProgressionMarches.findOne({
+                where: { idPatient, NbSemaines: currentWeek },
             });
+
+            if (!progressionMarche) {
+                res.status(404).json({succes: false, message: 'Id introvable'});
+                return;
+            }
 
             res.status(200).json({ success: true, data: progressionMarche });
         } catch (error) {
@@ -140,9 +130,12 @@ export default class ProgressController {
         try {
             const idPatient = parseInt(req.params.idPatient, 10);
 
+            const currentWeek = getWeek();
             // Recherchez la progression de marche pour le patient spécifié
             const progressionExercices = await ProgressionExercices.findOne({
-                where: { idPatient },
+                where: { idPatient,
+                    NbSemaines: currentWeek
+                },
             });
 
             res.status(200).json({ success: true, data: progressionExercices });
@@ -173,6 +166,22 @@ export default class ProgressController {
             res.status(500).json({ success: false, message: 'Erreur lors de la récupération de toutes les progressions d\'exercices.' });
         }
     }
+    static async deleteAllMarche(req: Request, res: Response): Promise<void> {
+        try {
+            // Supprime toutes les entrées de la table ProgressionMarches
+            await ProgressionMarches.destroy({
+                where: {}, // Condition vide pour supprimer toutes les entrées
+            });
 
+            res.status(200).json({ message: 'Toutes les entrées ont été supprimées avec succès.' });
+        } catch (error) {
+            console.error('Erreur lors de la suppression des entrées :', error);
+            res.status(500).json({ message: 'Une erreur s\'est produite lors de la suppression des entrées.' });
+        }
+    }
 }
 
+function getWeek(): number{
+    const currentDate = new Date();
+    return getISOWeek(currentDate);
+}

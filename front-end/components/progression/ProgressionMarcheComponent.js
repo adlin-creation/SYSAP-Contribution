@@ -14,14 +14,10 @@ const ProgressionMarcheComponent = () => {
         const fetchData = async () => {
             try {
                 const data = await getFetch(`http://localhost:3000/api/progress/progressionMarche/${idPatient}`);
-                const patientData = data.data;
-
-                let tempsMarche = patientData.Marche;
-                let nbdeMarche = patientData.NbMarches;
-                setTotalTimeWalked(tempsMarche);
-                setNbMarches(nbdeMarche);
+                setTotalTimeWalked(data.data.Marche);
+                setNbMarches(data.data.NbMarches);
             } catch (error) {
-                console.error('Error fetching data:', error);
+                console.error('Err1or fetching data:', error);
             }
         };
         fetchData();

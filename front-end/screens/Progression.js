@@ -7,7 +7,7 @@ import BoiteEncadree from "../components/progression/Encadre";
 import TauxDiffComponent from "../components/progression/TauxDiffComponent.js";
 import ProgressionMarcheComponent from "../components/progression/ProgressionMarcheComponent";
 import Classement from "../components/progression/Classement";
-
+import AjouterMarche from "../components/progression/AjouterMarche";
 
 export default class Progression extends React.Component {
 
@@ -15,6 +15,7 @@ export default class Progression extends React.Component {
         return (
             <View style={styles.container}>
                 <Imprimer type={"programme"} />
+                <AjouterMarche/>
                 <SectionHautComponent sessionsCompleted={3} totalSessions={5} />
                 <StatusBar style="auto" />
                 <BoiteEncadree

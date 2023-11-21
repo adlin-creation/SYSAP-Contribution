@@ -1,3 +1,5 @@
+import getFetch from "./getFetch";
+
 async function postFetch(apiUrl, data) {
     const requestOptions = {
         method: 'POST',
@@ -18,4 +20,18 @@ async function postFetch(apiUrl, data) {
     }
 }
 
-export default postFetch;
+async function ajouterMarche(minute) {
+    const idPatient = 1;
+    try {
+        const body = {
+            "idPatient": idPatient,
+            "Marche": minute,
+        }
+        return await postFetch(`http://localhost:3000/api/progress/updateMarche`, body);
+
+    } catch (err) {
+        console.error("Update marche failde " + err);
+    }
+}
+
+export default ajouterMarche;
