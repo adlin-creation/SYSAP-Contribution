@@ -8,6 +8,7 @@ import {
   Image,
   Modal,
   CheckBox,
+  Switch,
 } from "react-native";
 import ExerciseService from "../services/ExerciceService";
 import ReactPlayer from "react-player";
@@ -97,11 +98,14 @@ export default class Seance extends React.Component {
           >
             Vidéo explicative de l'exercice
           </Text>
-          <CheckBox
+          <Switch //checkbox?         
             value={exerciseSelection[index]}
             onValueChange={() => this.toggleExerciseSelection(index)}
+            style={styles.checkbox}
           />
+          <Text>Compléter</Text>
         </View>
+        <View style={styles.separator} />
       </View>
     );
   };
@@ -188,11 +192,21 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
+  separator: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc', 
+    marginVertical: 10, 
+  },
   exComplete: {
-    margin: "7%",
+    color: "#9C26B0",
+    margin: "6%",
     fontSize: 24,
     paddingLeft: 60,
     textDecorationLine: "underline",
+  },
+  checkbox: {
+    alignSelf: 'center',
+    margin: 20,
   },
   exerciseImage: {
     width: 250,
