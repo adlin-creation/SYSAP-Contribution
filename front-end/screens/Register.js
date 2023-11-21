@@ -61,7 +61,7 @@ export default Register = ({ navigation }) => {
                 throw new error('missing token');
             }
             await AsyncStorage.setItem('userToken', response.token);
-            navigation.navigate('ProgramChange');
+            navigation.navigate('App');
         })
         .catch((error) => {
             if (error.message === 'Failed to fetch') {
