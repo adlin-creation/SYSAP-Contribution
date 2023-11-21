@@ -10,34 +10,34 @@ class Patient extends Model {
 }
 
 Patient.init(
-    {
-      idPatient: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true,
-      },
-      PatientFirstName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      PatientLastName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      Email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      Password: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
+  {
+    idPatient: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
     },
-    {
-      tableName: 'Patient',
-      sequelize: sequelize,
-    }
-  );
-  
-  export default Patient;
+    PatientFirstName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    PatientLastName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    Email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    Password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+  },
+  {
+    tableName: 'Patient',
+    sequelize: sequelize,
+  }
+);
+
+export default Patient;

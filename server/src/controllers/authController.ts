@@ -74,7 +74,10 @@ export default class AuthController {
 
       const patient = await getPatientFromToken(token);
 
-      await createProgramEnrollment(patient.idPatient, programName);
+      const ProgramEnrollment = await createProgramEnrollment(patient.idPatient, programName);
+      
+      console.log(ProgramEnrollment);
+      
       res.status(200).json({ msg: 'Program changed' });
     } catch (err: any){
       console.error(err.message);
