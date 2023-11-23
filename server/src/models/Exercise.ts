@@ -41,7 +41,7 @@ Exercise.init(
         ExerciseDescriptionURL: {
             type: DataTypes.STRING,
         },
-        ExerciseSeanceVidURL: {
+        ExerciseSeanceURL: {
             type: DataTypes.STRING,
         },
     },
