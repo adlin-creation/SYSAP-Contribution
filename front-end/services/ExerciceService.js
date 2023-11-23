@@ -1,11 +1,11 @@
 import axios from 'axios';
 
-const serverURL = 'http://localhost:5000'; // ou l'URL de votre backend en production
+const apiUrl = process.env.REACT_APP_API_URL; // ou l'URL de votre backend en production
 
 const ExerciseService = {
   fetchExercises: async function () {
     try {
-      const response = await axios.get(`${serverURL}/api/exercises`);
+      const response = await axios.get(`${apiUrl}/api/exercises`);
       console.log(response);
       return response.data;
     } catch (error) {
@@ -14,7 +14,7 @@ const ExerciseService = {
   },
   fetchExerciseById: async function (idExercise) {
     try {
-      const response = await axios.get(`${serverURL}/api/exercises/${idExercise}`);
+      const response = await axios.get(`${apiUrl}/api/exercises/${idExercise}`);
       //console.log(response);
       return response.data;
     } catch (error) {
