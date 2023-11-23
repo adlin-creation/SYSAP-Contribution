@@ -6,30 +6,26 @@ function ProgramChange({navigation}) {
   const [programName, setProgramName] = useState('');
 
   const handleSaveProgramName = async () => {
-    // fetch('http://localhost:80/api/auth/changeProgram', {
-    //     method: 'POST',
-    //     headers: {
-    //         'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify(requestBody),
-    // })
-    // .then((response) => {
-    //     if (response.ok) {
-    //         console.log(response);
-    //         navigation.navigate('App');
+    const requestBody = {
+        programName: programName,
+    };
+    const token = await AsyncStorage.getItem('userToken');
 
-    //     } else {
-    //         Alert.alert('Login failed', 'Please check your credentials and try again.');
-    //     }
-    // })
-    try {
-        await AsyncStorage.setItem('programName', programName);
-        const token = await AsyncStorage.getItem('userToken');
-        console.log(token);
-        navigation.navigate('App');
-    } catch (error) {
-        console.error('Error storing program name:', error);
-    }
+    fetch('http://localhost:80/api/auth/change-program', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token,
+        },
+        body: JSON.stringify(requestBody),
+    })
+    .then((response) => {
+        if (response.ok) {
+            navigation.navigate('App');
+        } else {
+            Alert.alert('Login failed', 'Please check your credentials and try again.');
+        }
+    })
   };
 
   return (
