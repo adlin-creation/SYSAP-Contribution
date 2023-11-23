@@ -13,6 +13,9 @@ import {
 import ExerciseService from "../services/ExerciceService";
 import ReactPlayer from "react-player";
 
+const assetsFolderRoot = process.env.ASSETS_FOLDER_ROOT;
+
+
 export default class Seance extends React.Component {
   exercises = [];
   constructor(props) {
@@ -79,7 +82,7 @@ export default class Seance extends React.Component {
         <View style={styles.exerciseContainer}>
           <Text style={styles.exComplete}>{item.ExerciseName}</Text>
           <Image
-            source={{ uri: `../assets/images_test/${item.ExerciseImageURL}` }}
+            source={{ uri: `${assetsFolderRoot}/assets/images/${item.ExerciseImageURL}` }}
             style={styles.exerciseImage}
           />
           <Text>Minimum repetitions: {item.ExerciseNumberRepetitionsMin}</Text>
@@ -96,7 +99,7 @@ export default class Seance extends React.Component {
               });
             }}
           >
-            Vidéo explicative de l'exercice
+            Vidéo explicative
           </Text>
           <Switch //checkbox?         
             value={exerciseSelection[index]}
@@ -120,7 +123,7 @@ export default class Seance extends React.Component {
             <View style={styles.playerContainer}>
               <ReactPlayer
                 style={styles.player}
-                url={`../assets/videos_test/${this.exercises[currentVideoIndex].ExerciseDescriptionURL}`}
+                url={`${assetsFolderRoot}assets/videos/${this.exercises[currentVideoIndex].ExerciseDescriptionURL}`}
                 controls={true}
                 playing={true}
                 onError={(e) => console.error("ReactPlayer error:", e)}

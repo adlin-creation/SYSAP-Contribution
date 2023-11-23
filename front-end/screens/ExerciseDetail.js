@@ -12,6 +12,8 @@ import {
 import ExerciseService from "../services/ExerciceService";
 import ReactPlayer from "react-player";
 
+const assetsFolderRoot = process.env.ASSETS_FOLDER_ROOT;
+
 export default class ExerciseDetail extends React.Component {
   state = {
     exercise: null,
@@ -58,7 +60,7 @@ export default class ExerciseDetail extends React.Component {
       <View style={styles.mainContainer}>
           <Text style={styles.exTitle}>{exercise.ExerciseName}</Text>
           <Image
-            source={{ uri: `../assets/images_test/${exercise.ExerciseImageURL}` }}
+            source={{ uri: `${assetsFolderRoot}assets/images/${exercise.ExerciseImageURL}` }}
             style={styles.exerciseImage}
           />
           <Text>{exercise.ExerciseDescription}</Text>
@@ -67,7 +69,7 @@ export default class ExerciseDetail extends React.Component {
           <View style={styles.playerContainer}>
               <ReactPlayer
                 style={styles.player}
-                url={`../assets/videos_test/${exercise.ExerciseDescriptionURL}`}
+                url={ `${assetsFolderRoot}assets/videos/${exercise.ExerciseDescriptionURL}` }
                 controls={true}
                 onError={(e) => console.error("ReactPlayer error:", e)}
               />
