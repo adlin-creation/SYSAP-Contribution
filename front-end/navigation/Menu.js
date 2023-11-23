@@ -43,7 +43,7 @@ function CustomDrawerContent({
         </TouchableWithoutFeedback>
         <Block row>
           <Text size={16} muted style={styles.seller}>
-            {profile.type}
+            {profile.programName}
           </Text>
         </Block>
       </Block>

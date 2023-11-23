@@ -2,11 +2,11 @@ import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../db/database';
 
 class Patient extends Model {
-    public idPatient!: number;
-    public PatientFirstName!: string;
-    public PatientLastName!: string;
-    public Email!: string;
-    public Password!: string;
+  public idPatient!: number;
+  public PatientFirstName!: string;
+  public PatientLastName!: string;
+  public Email!: string;
+  public Password!: string;
 }
 
 Patient.init(
