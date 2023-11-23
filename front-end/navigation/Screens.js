@@ -20,6 +20,8 @@ import EvaluationScreen from "../screens/Evaluation";
 
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
+import { fetchServerData } from '../services/apiServices';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width } = Dimensions.get("screen");
 
@@ -27,12 +29,31 @@ const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
 const profile = {
-  id:"",
+  id: "",
   name: "",
   familyName: "",
   email: "",
   programName: ""
 };
+
+async function updateProfile() {
+  try {
+    const userId = await AsyncStorage.getItem('userId');
+    const data = await fetchServerData(`/api/programEnrollment/user/${userId}`);
+    return data;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+  // Return the updated profile
+  return profile;
+}
+
+updateProfile().then(data => {
+  profile.name = `${data.patient.firstName} ${data.patient.lastName}`;
+  profile.programName = data.program.name;
+}).catch(error => {
+  console.error('Error in updateProfile:', error);
+});
 
 function ProfileStack(props) {
   return (

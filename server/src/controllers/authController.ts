@@ -68,18 +68,18 @@ export default class AuthController {
       const programName = req.body.programName;
 
       if (!token) {
-        
+
         return res.status(401).json({ msg: 'No token, authorization denied' });
       }
 
       const patient = await getPatientFromToken(token);
 
       const ProgramEnrollment = await createProgramEnrollment(patient.idPatient, programName);
-      
+
       console.log(ProgramEnrollment);
-      
+
       res.status(200).json({ msg: 'Program changed' });
-    } catch (err: any){
+    } catch (err: any) {
       console.error(err.message);
       res.status(500).send('Server Error');
     }
@@ -101,7 +101,7 @@ async function getPatientFromToken(token: string): Promise<Patient> {
 }
 
 async function createProgramEnrollment(idPatient: number, programName: string): Promise<ProgramEnrollment> {
-  console.log(idPatient + ", " +  programName)
+  console.log(idPatient + ", " + programName)
   return ProgramEnrollment.create({
     Patientld: idPatient,
     ProgramName: programName,
