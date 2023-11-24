@@ -12,7 +12,12 @@ async function seedProgram() {
       {
         ProgramName: 'PATH',
         ProgramDescription: 'Ceci est le programme PATH',
-        ProgramDuration: 60,
+        ProgramDuration: 30,
+      },
+      {
+        ProgramName: 'PUSH',
+        ProgramDescription: 'Ceci est le programme PUSH',
+        ProgramDuration: 90,
       },
     ]);
   } catch (error) {
