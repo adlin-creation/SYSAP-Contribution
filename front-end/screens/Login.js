@@ -85,7 +85,7 @@ const Login = ({ navigation }) => {
                     throw new Error('missing token');
                 }
                 await AsyncStorage.setItem('userToken', responseData.token);
-
+                await AsyncStorage.setItem('userId', responseData.id);
                 navigation.navigate('App');
             })
             .then(async (data) => {
@@ -93,8 +93,8 @@ const Login = ({ navigation }) => {
                     errors.failed = 'Connection échouée'
                     setErrors(errors);
                 }
-
                 AsyncStorage.setItem('userToken', data.token);
+                AsyncStorage.setItem('userId', responseData.id);
                 navigation.navigate('App');
             })
             .catch((error) => {

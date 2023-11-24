@@ -1,17 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { ScrollView, View, Text, StyleSheet, Dimensions, ActivityIndicator, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Button, Block, Input, theme } from 'galio-framework';
 
 import Icon from '../components';
 import CustomCard from '../components/CustomCard';
+import ProfileContext from '../ProfileContext';
 import { fetchServerData } from '../services/apiServices';
 
 const { width } = Dimensions.get('screen');
 
+
 function ProgramInfo() {
   const [programData, setProgramData] = useState({});
   const [loading, setLoading] = useState(true);
+
+  const { updateProfile } = useContext(ProfileContext);
 
   useEffect(() => {
 
@@ -19,12 +23,23 @@ function ProgramInfo() {
       try {
         const userId = await AsyncStorage.getItem('userId');
         const data = await fetchServerData(`/api/programEnrollment/user/${userId}`);
-        setProgramData(data);
-
-        setLoading(false);
+        if (data.error) {
+          console.error('Error fetching data:', error);
+          setProgramData(undefined);
+          setLoading(false);
+        } else {
+          setProgramData(data);
+          updateProfile(
+            {
+              name: `${data.patient.firstName} ${data.patient.lastName}`,
+              programName: data.program.name
+            }
+          );
+          setLoading(false);
+        }
       } catch (error) {
         console.error('Error fetching data:', error);
-        setProgramData({ ProgramName: '', Erreur: 'Erreur de connexion' });
+        setProgramData(undefined);
         setLoading(false);
       }
     };
@@ -34,13 +49,15 @@ function ProgramInfo() {
 
   if (loading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
+  } else {
+    return (
+      <View style={{ flex: 1, padding: 20 }}>
+        <CustomCard programData={programData} />
+      </View>
+    );
   }
 
-  return (
-    <View style={{ flex: 1, padding: 20 }}>
-      {/* <CustomCard title={programData.program.name} programData={programData} /> */}
-    </View>
-  );
+
 }
 
 export default class Accueil extends React.Component {

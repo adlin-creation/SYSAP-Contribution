@@ -29,8 +29,8 @@ export default class AuthController {
       const newPatient = await createPatient(name, familyName, email, hashedPassword);
 
       const token = generateJwtToken(newPatient);
-
-      res.json({ token });
+      const id = newPatient.idPatient;
+      res.json({ token, id });
     } catch (err: any) {
       console.error(err.message);
       res.status(500).send('Server Error');
@@ -54,8 +54,8 @@ export default class AuthController {
       }
 
       const token = generateJwtToken(patient);
-
-      res.json({ token });
+      const id = patient.idPatient;
+      res.json({ token, id });
     } catch (err: any) {
       console.error(err.message);
       res.status(500).send('Server Error');
