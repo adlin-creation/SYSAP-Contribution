@@ -38,7 +38,7 @@ function ProgramInfo() {
 
   return (
     <View style={{ flex: 1, padding: 20 }}>
-      <CustomCard title={programData.program.name} programData={programData} />
+      {/* <CustomCard title={programData.program.name} programData={programData} /> */}
     </View>
   );
 }
