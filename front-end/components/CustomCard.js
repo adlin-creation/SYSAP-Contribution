@@ -13,8 +13,8 @@ const DATE_FORMAT = {
 };
 
 
-const CustomCard = ({ title, programData }) => {
-    const [showExercises, setShowExercises] = useState(programData.startDate != undefined && programData.startDate != '');
+const CustomCard = ({ programData }) => {
+    const [showExercises, setShowExercises] = useState(programData != undefined && programData.startDate != undefined && programData.startDate != '');
     const startProgram = async () => {
         const path = `/api/programEnrollment/user/startDate`;
         const data = { userId: programData.patient.id };
@@ -26,12 +26,13 @@ const CustomCard = ({ title, programData }) => {
             console.error('Error starting program:', error);
         }
     };
-    const numberExercices = programData.program.numberExercices;
+
+    const numberExercices = programData != undefined ? programData.program.numberExercices : 0;
 
     const renderProgramDates = () => {
-        if (showExercises && numberExercices > 0) {
+        if (programData != undefined && showExercises && numberExercices > 0) {
             let startDate = startDate == null ? new Date() : new Date(programData.startDate);
-            let endDate = new Date(startDate).setDate(startDate.getDate() + programData.program.duration); //startDate + programData.program.duration;
+            let endDate = new Date(startDate).setDate(startDate.getDate() + programData.program.duration);
             let today = new Date();
             let nbDaysLeft = Math.round((endDate - today) / (1000 * 60 * 60 * 24));
             let unite = 'jours'
@@ -69,7 +70,7 @@ const CustomCard = ({ title, programData }) => {
     }
 
     const renderExerciseButtons = () => {
-        if (showExercises && numberExercices > 0) {
+        if (programData != undefined && showExercises && numberExercices > 0) {
             // Group buttons into rows of 2
             let rows = [];
             for (let i = 0; i < numberExercices; i += 2) {
@@ -101,38 +102,60 @@ const CustomCard = ({ title, programData }) => {
         }
     };
 
-    return (
-        <View style={styles.cardContainer}>
-            <View style={styles.cardHeader}>
-                <Text style={styles.headerText}>{programData.program.name}</Text>
-            </View>
-            <View style={styles.cardBody}>
-                <Text style={styles.bodyText}>
-                    <Text style={styles.keyText}>Description:</Text> {programData.program.description}
-                </Text>
-                <Text style={styles.bodyText}>
-                    <Text style={styles.keyText}>Durée:</Text> {programData.program.duration} jours
-                </Text>
-                <Text style={styles.bodyText}>
-                    <Text style={styles.keyText}>Date d'enregistrement:</Text> {new Date(programData.enrollmentDate).toLocaleString('fr-FR', DATE_FORMAT)}
-                </Text>
-                {renderProgramDates()}
-                {/* Conditionally render exercise buttons or the start program button */}
-                {renderExerciseButtons()}
+    const render = () => {
+        if (programData != undefined) {
+            return (
+                <View style={styles.cardContainer}>
+                    <View style={styles.cardHeader}>
+                        <Text style={styles.headerText}>{programData.program.name}</Text>
+                    </View>
+                    <View style={styles.cardBody}>
+                        <Text style={styles.bodyText}>
+                            <Text style={styles.keyText}>Description:</Text> {programData.program.description}
+                        </Text>
+                        <Text style={styles.bodyText}>
+                            <Text style={styles.keyText}>Durée:</Text> {programData.program.duration} jours
+                        </Text>
+                        <Text style={styles.bodyText}>
+                            <Text style={styles.keyText}>Date d'enregistrement:</Text> {new Date(programData.enrollmentDate).toLocaleString('fr-FR', DATE_FORMAT)}
+                        </Text>
+                        {renderProgramDates()}
+                        {/* Conditionally render exercise buttons or the start program button */}
+                        {renderExerciseButtons()}
 
-                <View style={{ alignSelf: 'center', width: 200 }}>
-                    <Button
-                        shadowless
-                        style={styles.buttonImprimer}
-                        color='#088c4f'
-                        onPress={() => alert('impression en cours ...')}>
-                        Imprimer le programme
-                    </Button>
+                        <View style={{ alignSelf: 'center', width: 200 }}>
+                            <Button
+                                shadowless
+                                style={styles.buttonImprimer}
+                                color='#088c4f'
+                                onPress={() => alert('impression en cours ...')}>
+                                Imprimer le programme
+                            </Button>
+                        </View>
+                    </View>
+
                 </View>
-            </View>
+            );
+        } else {
+            return (
+                <View style={styles.cardContainer}>
+                    <View style={styles.cardHeader}>
+                    </View>
+                    <View style={styles.cardBody}>
+                        <Text style={styles.bodyText}>
+                            <Text style={styles.keyText}>Erreur:</Text> Données introuvables
+                        </Text>
+                    </View>
+                </View>
+            )
+        }
+    }
 
+    return (
+        <View>
+            {render()}
         </View>
-    );
+    )
 };
 
 const styles = StyleSheet.create({
@@ -188,7 +211,7 @@ const styles = StyleSheet.create({
         width: width * 0.5,
         height: 40,
         borderRadius: 20,
-        backgroundColor: '#AB47BC', // Keeping the color consistent with the other buttons
+        backgroundColor: '#AB47BC',
         shadowRadius: 4,
         shadowOpacity: 0.1,
         alignSelf: 'center',
@@ -199,7 +222,7 @@ const styles = StyleSheet.create({
         flex: 1,
         height: 40,
         borderRadius: 20,
-        backgroundColor: '#BA68C8', // A gentle and attractive purple
+        backgroundColor: '#BA68C8',
         justifyContent: 'center',
         alignItems: 'center',
         marginHorizontal: 5,
