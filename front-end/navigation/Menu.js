@@ -24,7 +24,7 @@ function CustomDrawerContent({
     "Programme",
     "Séance",
     "Rappel",
-    "Évaluation",
+    "Évaluation"
   ];
 
   return (

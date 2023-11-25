@@ -15,7 +15,9 @@ import LoginScreen from "../screens/Login";
 import RegisterScreen from "../screens/Register";
 import ProgramChangeScreen from "../screens/ProgramChange";
 import LogoutScreen from "../screens/Logout";
+import ExerciseDetail from "../screens/ExerciseDetail";
 import EvaluationScreen from "../screens/Evaluation";
+
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
 const { width } = Dimensions.get("screen");
@@ -335,6 +337,7 @@ export default function OnboardingStack(props) {
       />
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Register" component={RegisterScreen} />
+      <Stack.Screen name="ExerciseDetail" component={ExerciseDetail} />
       <Stack.Screen name="ProgramChange" component={ProgramChangeScreen} />
       <Stack.Screen name="App" component={AppStack} />
     </Stack.Navigator>
