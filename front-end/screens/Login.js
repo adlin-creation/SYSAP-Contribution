@@ -90,7 +90,7 @@ const Login = ({navigation}) => {
         })
         .then(async (data) =>{
             if (!data.token) {
-                errors.failed = 'Connection échouée'
+                errors.failed = 'Connexion échouée'
                 setErrors(errors);
             }
             
@@ -101,7 +101,7 @@ const Login = ({navigation}) => {
             if (error.message === 'Failed to fetch') {
                 errors.failed = 'Failed to connect to the server'
               } else { 
-                errors.failed = 'Connection échouée'
+                errors.failed = 'Connexion échouée'
             }
             setErrors(errors);
             return;
@@ -125,7 +125,7 @@ const Login = ({navigation}) => {
                     color: '#333',
                     marginBottom: 30,
                 }}>
-                Connection
+                Connexion
                 </Text>
 
                 <View style={styles.container}>

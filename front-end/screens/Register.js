@@ -186,7 +186,7 @@ export default Register = ({ navigation }) => {
                 }}>
                     <Text>Déjà inscrit?</Text>
                     <TouchableOpacity onPress={() => navigation.goBack()}>
-                        <Text style={{ color: '#AD40AF', fontWeight: '700' }}>Connection</Text>
+                        <Text style={{ color: '#AD40AF', fontWeight: '700' }}>Connexion</Text>
                     </TouchableOpacity>
                 </View>
             </View>
