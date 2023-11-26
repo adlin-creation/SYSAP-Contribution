@@ -8,6 +8,8 @@ import Patient from './Patient';
 import ProgramEnrollment from './ProgramEnrollment';
 import ProgramExerciseSeries from './ProgramExerciseSeries';
 import Reminder from './Reminder';
+import ProgressionExercices from "./ProgressionExerices";
+import ProgressionMarches from "./ProgressionMarches";
 
 export function createAssociations() {
     Program.hasMany(ProgramExerciseSeries, {
@@ -100,4 +102,22 @@ export function createAssociations() {
         foreignKey: 'ExerciseId',
         as: 'Exercise',
     });
+
+    Patient.hasMany(ProgressionMarches, {
+        foreignKey: 'idPatient',
+        as: 'ProgressionMarches',
+    });
+    ProgressionMarches.belongsTo(Patient, {
+        foreignKey: 'idPatient',
+        as: 'Patient',
+    })
+
+    Patient.hasMany(ProgressionExercices, {
+        foreignKey: 'idPatient',
+        as: 'ProgressionExercices',
+    });
+    ProgressionExercices.belongsTo(Patient, {
+        foreignKey: 'idPatient',
+        as: 'Patient',
+    })
 }

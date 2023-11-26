@@ -8,7 +8,7 @@
     "start": "ts-node --files src/server.ts",
     "dev": "nodemon src/server.ts",
     "init-db": "sh ./db/init-db.sh",
-    "seed": "ts-node ./src/seeders/seed.ts"
+    "serve": "npm run init-db && npm run start"
   },
   "keywords": [],
   "author": "",
@@ -30,9 +30,11 @@
     "@types/config": "^3.3.2",
     "@types/cors": "^2.8.14",
     "@types/express": "^4.17.19",
+    "@types/node": "^20.8.10",
     "@types/jsonwebtoken": "^9.0.4",
     "config": "^3.3.9",
     "nodemon": "^3.0.1",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
   }
 }
