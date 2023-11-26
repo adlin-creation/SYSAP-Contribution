@@ -4,7 +4,7 @@ import { sequelize } from '../db/database';
 class ProgramDayRecord extends Model {
     public idProgramDayRecord!: number;
     public Date!: Date;
-    public UserId!: number;
+    public ProgramEnrollmentId!: number;
 }
 
 ProgramDayRecord.init(
@@ -18,7 +18,7 @@ ProgramDayRecord.init(
             type: DataTypes.DATE,
             allowNull: false,
         },
-        UserId: {
+        ProgramEnrollmentId: {
             type: DataTypes.SMALLINT,
             allowNull: false,
         },

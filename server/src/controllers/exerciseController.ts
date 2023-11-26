@@ -38,22 +38,22 @@ class ExerciseController {
     //       });
     //   }
 
-    // static getExerciseById(req: Request, res: Response): void {
-    //     const { id } = req.params;
+    static getExerciseById(req: Request, res: Response): void {
+        const { id } = req.params;
 
-    //     Exercise.findByPk(id)
-    //     .then((exercise) => {
-    //         if (!exercise) {
-    //         res.status(404).json({ error: 'Exercise not found' });
-    //         } else {
-    //         res.json(exercise);
-    //         }
-    //     })
-    //     .catch((error) => {
-    //         console.error(error);
-    //         res.status(500).json({ error: 'Internal server error' });
-    //     });
-    // }
+        Exercise.findByPk(id)
+        .then((exercise) => {
+            if (!exercise) {
+            res.status(404).json({ error: 'Exercise not found' });
+            } else {
+            res.json(exercise);
+            }
+        })
+        .catch((error) => {
+            console.error(error);
+            res.status(500).json({ error: 'Internal server error' });
+        });
+    }
     // static updateExerciseById(req: Request, res: Response): void {
     //     const { id } = req.params;
     //     const {

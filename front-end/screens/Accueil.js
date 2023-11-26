@@ -1,10 +1,64 @@
-import React from 'react';
-import { StyleSheet, Dimensions } from 'react-native';
-import { Button, Block, Text, Input, theme } from 'galio-framework';
+import React, { useState, useEffect, useContext } from 'react';
+import { ScrollView, View, Text, StyleSheet, Dimensions, ActivityIndicator, Image } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Button, Block, Input, theme } from 'galio-framework';
 
-import { Icon } from '../components';
+import Icon from '../components';
+import CustomCard from '../components/CustomCard';
+import ProfileContext from '../ProfileContext';
+import { fetchServerData } from '../services/apiServices';
 
 const { width } = Dimensions.get('screen');
+
+
+function ProgramInfo() {
+  const [programData, setProgramData] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  const { updateProfile } = useContext(ProfileContext);
+
+  useEffect(() => {
+
+    const fetchData = async () => {
+      try {
+        const userId = await AsyncStorage.getItem('userId');
+        const data = await fetchServerData(`/api/programEnrollment/user/${userId}`);
+        if (data.error) {
+          console.error('Error fetching data:', error);
+          setProgramData(undefined);
+          setLoading(false);
+        } else {
+          setProgramData(data);
+          updateProfile(
+            {
+              name: `${data.patient.firstName} ${data.patient.lastName}`,
+              programName: data.program.name
+            }
+          );
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setProgramData(undefined);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  } else {
+    return (
+      <View style={{ flex: 1, padding: 20 }}>
+        <CustomCard programData={programData} />
+      </View>
+    );
+  }
+
+
+}
 
 export default class Accueil extends React.Component {
   renderSearch = () => {
@@ -44,11 +98,19 @@ export default class Accueil extends React.Component {
     )
   }
 
-
   render() {
     return (
-      <Block flex center style={styles.home}>
-      </Block>
+      <ScrollView>
+        <Block flex center style={styles.home}>
+          <View style={styles.imageContainer}>
+            <Image
+              style={styles.imageCenter}
+              source={require('../assets/images/abc.png')}
+            />
+          </View>
+          <ProgramInfo />
+        </Block>
+      </ScrollView>
     );
   }
 }
@@ -101,4 +163,14 @@ const styles = StyleSheet.create({
     width: width - theme.SIZES.BASE * 2,
     paddingVertical: theme.SIZES.BASE * 2,
   },
+
+  imageContainer: {
+    paddingTop: 50,
+  },
+  imageCenter: {
+    width: width - 32,
+    height: 300,
+    alignSelf: 'center',
+    marginBottom: 10
+  }
 });

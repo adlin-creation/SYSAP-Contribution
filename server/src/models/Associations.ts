@@ -5,12 +5,13 @@ import ExerciseSeriesExercise from './ExerciseSeriesExercise';
 import Program from './Program';
 import ProgramDayRecord from './ProgramDayRecord';
 import Patient from './Patient';
+import ProgramEnrollment from './ProgramEnrollment';
 import ProgramExerciseSeries from './ProgramExerciseSeries';
 import Reminder from './Reminder';
 import ProgressionExercices from "./ProgressionExerices";
 import ProgressionMarches from "./ProgressionMarches";
 
-export function createAssociations(){
+export function createAssociations() {
     Program.hasMany(ProgramExerciseSeries, {
         foreignKey: 'ProgramName',
         as: 'ExerciseSeries',
@@ -19,7 +20,15 @@ export function createAssociations(){
         foreignKey: 'ProgramName',
         as: 'Program',
     });
-      
+
+    Patient.hasOne(ProgramEnrollment, {
+        foreignKey: 'PatientId',
+        as: 'ProgramEnrollment',
+    });
+    ProgramEnrollment.belongsTo(Patient, {
+        foreignKey: 'PatientId',
+        as: 'Patient',
+    });
 
     ExerciseSeries.hasMany(ExerciseSeriesExercise, {
         foreignKey: 'ExerciseSeriesId',
@@ -29,7 +38,7 @@ export function createAssociations(){
         foreignKey: 'ExerciseSeriesId',
         as: 'ExerciseSeries',
     });
-      
+
 
     ProgramExerciseSeries.belongsTo(ExerciseSeries, {
         foreignKey: 'ExerciseSeriesId',
@@ -39,7 +48,7 @@ export function createAssociations(){
         foreignKey: 'ExerciseSeriesId',
         as: 'Programs',
     });
-      
+
     ExerciseSeriesExercise.belongsTo(Exercise, {
         foreignKey: 'ExerciseId',
         as: 'Exercise',
@@ -48,12 +57,12 @@ export function createAssociations(){
         foreignKey: 'ExerciseId',
         as: 'SeriesExercises',
     });
-      
-    Program.hasMany(Patient, {
+
+    Program.hasMany(ProgramEnrollment, {
         foreignKey: 'ProgramName',
-        as: 'Patients',
+        as: 'ProgramEnrollments',
     });
-    Patient.belongsTo(Program, {
+    ProgramEnrollment.belongsTo(Program, {
         foreignKey: 'ProgramName',
         as: 'Program',
     });
@@ -66,16 +75,16 @@ export function createAssociations(){
         foreignKey: 'PatientId',
         as: 'Patient',
     });
-    
-    Patient.hasMany(ProgramDayRecord, {
-        foreignKey: 'PatientId',
+
+    ProgramEnrollment.hasMany(ProgramDayRecord, {
+        foreignKey: 'ProgramEnrollmentId',
         as: 'DayRecords',
     });
-    ProgramDayRecord.belongsTo(Patient, {
-        foreignKey: 'PatientId',
-        as: 'Patient',
+    ProgramDayRecord.belongsTo(ProgramEnrollment, {
+        foreignKey: 'ProgramEnrollmentId',
+        as: 'ProgramEnrollment',
     });
-      
+
     ProgramDayRecord.hasMany(ExerciseRecord, {
         foreignKey: 'ProgramDayRecordId',
         as: 'ExerciseRecords',

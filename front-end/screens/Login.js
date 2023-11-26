@@ -13,43 +13,43 @@ import CustomButton from '../components/CustomButton';
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
-const Login = ({navigation}) => {
+const Login = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [errors, setErrors] = useState({}); 
+    const [errors, setErrors] = useState({});
 
     useEffect(() => {
         // Inside the useEffect, you can get the token from AsyncStorage
         const getToken = async () => {
-          try {
-            const token = await AsyncStorage.getItem('userToken');
-            if (token !== null) {
-                // Token found in AsyncStorage, you can proceed with authentication or other actions
-                console.log('Token: ', token);
-                // Replace with your authentication logic
-                navigation.navigate('App');
-            } else {
-                return;
-            }
-          } catch (error) {
+            try {
+                const token = await AsyncStorage.getItem('userToken');
+                if (token !== null) {
+                    // Token found in AsyncStorage, you can proceed with authentication or other actions
+                    console.log('Token: ', token);
+                    // Replace with your authentication logic
+                    navigation.navigate('App');
+                } else {
+                    return;
+                }
+            } catch (error) {
                 console.error('Error fetching token:', error);
-          }
+            }
         };
-    
+
         getToken();
-      }, []);
-  
-    const validateForm = () => { 
-        let errors = {}; 
-  
-        if (!email || !password) { 
-            errors.name = 'Tous les champs sont nécessaires.'; 
-        } else if (!/\S+@\S+\.\S+/.test(email)) { 
-            errors.email = 'Email invalide.'; 
+    }, []);
+
+    const validateForm = () => {
+        let errors = {};
+
+        if (!email || !password) {
+            errors.name = 'Tous les champs sont nécessaires.';
+        } else if (!/\S+@\S+\.\S+/.test(email)) {
+            errors.email = 'Email invalide.';
         }
-  
-        setErrors(errors); 
-        if (Object.keys(errors).length > 0) { 
+
+        setErrors(errors);
+        if (Object.keys(errors).length > 0) {
             return false;
         }
         return true;
@@ -57,7 +57,7 @@ const Login = ({navigation}) => {
 
     const handleLogin = () => {
         if (!validateForm()) return;
-        let errors = {}; 
+        let errors = {};
         setErrors({});
 
         const requestBody = {
@@ -72,47 +72,46 @@ const Login = ({navigation}) => {
             },
             body: JSON.stringify(requestBody),
         })
-        .then((response) => {
-            if (response.ok) {
-                // Request was successful, you can handle the response here
-                return response.json();
-            } else {
-                throw new Error('Request failed');
-            }
-        })
-        .then(async (responseData) => 
-        {
-            if(!responseData.token) {
-                throw new Error('missing token');
-            }
-            await AsyncStorage.setItem('userToken', responseData.token);
-
-            navigation.navigate('App');
-        })
-        .then(async (data) =>{
-            if (!data.token) {
-                errors.failed = 'Login Failed'
+            .then((response) => {
+                if (response.ok) {
+                    // Request was successful, you can handle the response here
+                    return response.json();
+                } else {
+                    throw new Error('Request failed');
+                }
+            })
+            .then(async (responseData) => {
+                if (!responseData.token) {
+                    throw new Error('missing token');
+                }
+                await AsyncStorage.setItem('userToken', responseData.token);
+                await AsyncStorage.setItem('userId', responseData.id);
+                navigation.navigate('App');
+            })
+            .then(async (data) => {
+                if (!data.token) {
+                    errors.failed = 'Connection échouée'
+                    setErrors(errors);
+                }
+                AsyncStorage.setItem('userToken', data.token);
+                AsyncStorage.setItem('userId', responseData.id);
+                navigation.navigate('App');
+            })
+            .catch((error) => {
+                if (error.message === 'Failed to fetch') {
+                    errors.failed = 'Failed to connect to the server'
+                } else {
+                    errors.failed = 'Connection échouée'
+                }
                 setErrors(errors);
-            }
-            
-            AsyncStorage.setItem('userToken', data.token);
-            navigation.navigate('App');
-        })
-        .catch((error) => {
-            if (error.message === 'Failed to fetch') {
-                errors.failed = 'Failed to connect to the server'
-              } else { 
-                errors.failed = 'Login Failed'
-            }
-            setErrors(errors);
-            return;
-        });
+                return;
+            });
     };
 
     return (
-        <Block style={{flex: 1, justifyContent: 'center'}}>
-            <View style={{paddingHorizontal: 25}}>
-                <View style={{alignItems: 'center'}}>
+        <Block style={{ flex: 1, justifyContent: 'center' }}>
+            <View style={{ paddingHorizontal: 25 }}>
+                <View style={{ alignItems: 'center' }}>
                     <Image
                         source={require('../assets/images/login-logo.jpg')}
                         style={{ height: 300, width: 300 }}
@@ -126,56 +125,56 @@ const Login = ({navigation}) => {
                     color: '#333',
                     marginBottom: 30,
                 }}>
-                Connection
+                    Connection
                 </Text>
 
                 <View style={styles.container}>
                     <Icon
-                    size={16}
-                    name="mail-outline"
-                    family="ionicon"
-                    color={"black"}
+                        size={16}
+                        name="mail-outline"
+                        family="ionicon"
+                        color={"black"}
                     />
                     <TextInput
-                    placeholder={'email'}
-                    onChangeText={setEmail}
-                    value={email}
-                    keyboardType="email-address"
+                        placeholder={'email'}
+                        onChangeText={setEmail}
+                        value={email}
+                        keyboardType="email-address"
                     />
                 </View>
 
                 <View style={styles.container}>
                     <Icon
-                    size={16}
-                    name="lock-closed-outline"
-                    family="ionicon"
-                    color={"black"}
+                        size={16}
+                        name="lock-closed-outline"
+                        family="ionicon"
+                        color={"black"}
                     />
                     <TextInput
-                    placeholder={'mot de passe'}
-                    secureTextEntry
-                    onChangeText={setPassword}
-                    value={password}
-                    inputType="password"
+                        placeholder={'mot de passe'}
+                        secureTextEntry
+                        onChangeText={setPassword}
+                        value={password}
+                        inputType="password"
                     // fieldButtonLabel={"Oublié?"}
                     // fieldButtonFunction={() => {}}
                     />
                 </View>
-                
+
                 <CustomButton label={'Se connecter'} onPress={handleLogin} />
 
-                {Object.values(errors).map((error, index) => ( 
-                    <Text key={index} style={styles.error}> 
-                        {error} 
-                    </Text> 
-                ))} 
+                {Object.values(errors).map((error, index) => (
+                    <Text key={index} style={styles.error}>
+                        {error}
+                    </Text>
+                ))}
 
                 <View style={styles.container}>
                     <Text>Nouveau sur Sysap?</Text>
                     <Pressable onPress={() => navigation.navigate('Register')}>
-                        <Text style={{color: '#AD40AF', fontWeight: '700'}}> Inscription</Text>
+                        <Text style={{ color: '#AD40AF', fontWeight: '700' }}> Inscription</Text>
                     </Pressable>
-                </View> 
+                </View>
             </View>
         </Block>
     );
@@ -189,11 +188,11 @@ const styles = StyleSheet.create({
         paddingBottom: 8,
         marginBottom: 25,
     },
-    error: { 
-        color: 'red', 
+    error: {
+        color: 'red',
         textAlign: 'center',
-        fontSize: 14, 
-        marginBottom: 12, 
+        fontSize: 14,
+        marginBottom: 12,
     },
 });
 
