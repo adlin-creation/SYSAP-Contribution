@@ -2,14 +2,24 @@ import React , { useEffect, useState }from "react";
 import { StyleSheet, Text, View, Button , ScrollView} from "react-native";
 import Imprimer from "../components/imprimer/print.js";
 import { StatusBar } from "expo-status-bar";
-import SectionHautComponent from "../components/progression/SectionHautComponent";
 import BoiteEncadree from "../components/progression/Encadre";
 import TauxDiffComponent from "../components/progression/TauxDiffComponent.js";
 import ProgressionMarcheComponent from "../components/progression/ProgressionMarcheComponent";
 import Classement from "../components/progression/Classement";
 import AjouterMarche from "../components/progression/AjouterMarche";
+import TitreProgression from "../components/progression/TitreProgression";
+import BarreProgressionComponent from "../components/progression/BarreProgressionComponent";
+import SemaineComponent from "../components/progression/SemaineComponent";
+import ObjectifEtExerciceComponent from "../components/progression/ObjectifEtExerciceComponent";
+
+const sessionsCompleted = 2;
+const totalSessions = 6;
 
 export default class Progression extends React.Component {
+    handleSelect = (selectedItem, index) => {
+        console.log('ParentComponent: Item selected', selectedItem, index);
+        // Mettre à jour l'état, etc.
+    };
 
     render() {
         return (
@@ -17,7 +27,29 @@ export default class Progression extends React.Component {
                 <View style={styles.container}>
                     <Imprimer type={"programme"} />
                     {<AjouterMarche/>}
-                    <SectionHautComponent sessionsCompleted={3} totalSessions={5}  />
+                    <View style={styles.container2}>
+                        <View style={styles.containerGauche}>
+                            <TitreProgression />
+                            <BarreProgressionComponent
+                                sessionsCompleted={sessionsCompleted}
+                                totalSessions={totalSessions}
+                            />
+                        </View>
+                        <View style={styles.containerDroite}>
+                            <SemaineComponent onSelect={this.handleSelect}/>
+                            <ObjectifEtExerciceComponent
+                                totalSessions={totalSessions}
+                                iconName={"zap"}
+                                nomSection={"Objectif"}
+                            />
+                            <ObjectifEtExerciceComponent
+                                totalSessions={sessionsCompleted}
+                                iconName={"flag"}
+                                nomSection={"Séances"}
+                            />
+                        </View>
+                    </View>
+                    {/*<SectionHautComponent sessionsCompleted={3} totalSessions={5} />*/}
                     <StatusBar style="auto" />
                     <BoiteEncadree
                         gauche={
@@ -47,5 +79,21 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: "#fff",
         justifyContent: "center",
+    },
+    container2: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        padding: 10,
+    },
+    containerGauche: {
+        flexDirection: "column",
+        justifyContent: "flex-start",
+        flex: 1,
+        alignItems: "center",
+    },
+    containerDroite: {
+        flexDirection: "column",
+        flex: 1,
+        alignItems: "center",
     },
 });
