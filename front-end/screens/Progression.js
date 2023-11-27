@@ -17,7 +17,7 @@ export default class Progression extends React.Component {
                 <View style={styles.container}>
                     <Imprimer type={"programme"} />
                     {<AjouterMarche/>}
-                    <SectionHautComponent sessionsCompleted={3} totalSessions={5} />
+                    <SectionHautComponent sessionsCompleted={3} totalSessions={5}  />
                     <StatusBar style="auto" />
                     <BoiteEncadree
                         gauche={
@@ -31,7 +31,7 @@ export default class Progression extends React.Component {
                     <BoiteEncadree
                         gauche={
                             <View>
-                                <ProgressionMarcheComponent></ProgressionMarcheComponent>
+                                <ProgressionMarcheComponent idPatient={1} week={1}></ProgressionMarcheComponent>
                             </View>}
                         droite={
                             <View>

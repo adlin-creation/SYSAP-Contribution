@@ -4,11 +4,10 @@ import Feather from "react-native-vector-icons/Feather";
 import getFetch from "../apiFetch/getFetch";
 import {useIsFocused} from "@react-navigation/native";
 
-const ProgressionMarcheComponent = () => {
+const ProgressionMarcheComponent = ({ idPatient, week }) => {
     // creation de variable et setters
     const [totalTimeWalked, setTotalTimeWalked] = useState(0);
     const [nbMarches, setNbMarches] = useState(0);
-    const idPatient = 1;
 
     //Aller chercher donner dans BD pour lenb marche et duree marche total
     const isFocused = useIsFocused();
@@ -16,7 +15,7 @@ const ProgressionMarcheComponent = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await getFetch(`http://localhost:3000/api/progress/progressionMarche/${idPatient}`);
+                const data = await getFetch(`http://localhost:3000/api/progress/progressionMarche/${idPatient}/${week}`);
                 setTotalTimeWalked(data.data.Marche);
                 setNbMarches(data.data.NbMarches);
             } catch (error) {

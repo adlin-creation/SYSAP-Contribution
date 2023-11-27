@@ -3,6 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import SelectDropdown from 'react-native-select-dropdown';
 
+//Ajouter le nb de semaine du programme en args
 const SemaineComponent = ({ semaine }) => {
   const weeks = [...Array(52).keys()].map(i => `Semaine ${i + 1}`);
 
@@ -10,9 +11,9 @@ const SemaineComponent = ({ semaine }) => {
     <View style={styles.container}>
       <SelectDropdown
         data={weeks}
-        defaultValueByIndex={semaine - 1} // assuming semaine is 1-based index
+        defaultValueByIndex={semaine - 1}
         onSelect={(selectedItem, index) => {
-          console.log(selectedItem, index);
+         // console.log(selectedItem, index);
         }}
         buttonTextAfterSelection={(selectedItem, index) => {
           return selectedItem;

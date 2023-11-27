@@ -115,7 +115,7 @@ export default class ProgressController {
             });
 
             if (!progressionMarche) {
-                res.status(404).json({succes: false, message: 'Id introvable'});
+                res.status(404).json({succes: false, message: 'Id introuvable'});
                 return;
             }
 

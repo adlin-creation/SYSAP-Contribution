@@ -30,7 +30,7 @@ async function ajouterMarche(minute) {
         return await postFetch(`http://localhost:3000/api/progress/updateMarche`, body);
 
     } catch (err) {
-        console.error("Update marche failde " + err);
+        console.error("Update marche failed " + err);
     }
 }
 
