@@ -16,7 +16,7 @@ export default class Progression extends React.Component {
             <ScrollView style={{ flex: 1 }}>
                 <View style={styles.container}>
                     <Imprimer type={"programme"} />
-                    <AjouterMarche/>
+                    {<AjouterMarche/>}
                     <SectionHautComponent sessionsCompleted={3} totalSessions={5} />
                     <StatusBar style="auto" />
                     <BoiteEncadree

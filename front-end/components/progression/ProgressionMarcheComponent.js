@@ -24,7 +24,6 @@ const ProgressionMarcheComponent = () => {
             }
         };
 
-        // Rechargez les données uniquement si la page est actuellement visible
         if (isFocused) {
             fetchData();
         }

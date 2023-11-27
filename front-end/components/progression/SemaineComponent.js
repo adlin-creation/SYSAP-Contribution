@@ -35,17 +35,15 @@ const SemaineComponent = ({ semaine }) => {
 
 const styles = StyleSheet.create({
   container: {
+    flexDirection: 'row',
+    width: '100%',
     backgroundColor: 'purple',
-    paddingLeft: 30,
-    paddingRight: 15,
-    paddingVertical: 3,
+    paddingHorizontal: 30,
+    paddingVertical: 10,
     margin: 10,
     borderRadius: 20,
     alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-    height: 42,
+    justifyContent: 'center',
   },
   dropdownButton: {
     backgroundColor: 'transparent',

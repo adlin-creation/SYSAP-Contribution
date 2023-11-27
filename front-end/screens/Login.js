@@ -22,7 +22,8 @@ const Login = ({navigation}) => {
         // Inside the useEffect, you can get the token from AsyncStorage
         const getToken = async () => {
           try {
-            const token = await AsyncStorage.getItem('userToken');
+            // const token = await AsyncStorage.getItem('userToken');
+              const token = "null";
             if (token !== null) {
                 // Token found in AsyncStorage, you can proceed with authentication or other actions
                 console.log('Token: ', token);

@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Image, Text, StyleSheet , TouchableOpacity, Alert} from 'react-native';
 import ajouterMarche from "../apiFetch/postFetch";
-import ProgressionMarcheComponent from "./ProgressionMarcheComponent";
 const AjouterMarche = () => {
 
     const handleButtonPress = async () => {
