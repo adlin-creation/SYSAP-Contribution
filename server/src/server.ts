@@ -22,10 +22,16 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Cross Origin Resource Sharing
-app.use(cors({
-  origin: process.env.CLIENT_URL,
-  credentials: false,
-}));
+// app.use(cors({
+//   origin: process.env.CLIENT_URL,
+//   credentials: false,
+// }));
+app.use(
+  cors({
+    origin: "*",
+    credentials: false,
+  })
+);
 
 // Routes
 import exerciseRoutes from './routes/exerciseRoutes';
