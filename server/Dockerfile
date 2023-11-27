@@ -4,13 +4,13 @@ FROM node:18.18.2-alpine
 WORKDIR /app
 
 # Copy and download dependencies
-COPY package.json package-lock.json ./
+COPY package.json ./
 RUN npm install
 
 # Copy the source files into the image
 COPY . .
 
-# open port 80
-EXPOSE 80
+# open port 3000
+EXPOSE 3000
 
 CMD [ "npm","start"]
