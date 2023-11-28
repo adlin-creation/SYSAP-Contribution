@@ -95,7 +95,8 @@ export default class ProgressController {
     static async getProgressionMarche(req: Request, res: Response): Promise<void> {
         try {
             const idPatient = parseInt(req.params.idPatient, 10);
-            const currentWeek = getISOWeek(new Date());
+            //const currentWeek = getISOWeek(new Date());
+            const currentWeek = 1;
             const semaine = req.params.week || currentWeek;
 
             let progressionMarche = await ProgressionMarches.findOne({
@@ -138,7 +139,12 @@ export default class ProgressController {
 
     static async getAllMarche(req: Request, res: Response): Promise<void> {
         try {
-            const allProgressions = await ProgressionMarches.findAll();
+            const week = req.params.week;
+            const allProgressions = await ProgressionMarches.findAll({
+                where: {
+                    NbSemaines: week
+                },
+            });
 
             res.status(200).json({ success: true, data: allProgressions });
         } catch (error) {

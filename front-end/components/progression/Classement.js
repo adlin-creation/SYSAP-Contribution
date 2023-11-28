@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { View, Image, Text, StyleSheet } from 'react-native';
 import getFetch from "../apiFetch/getFetch";
+import {useIsFocused} from "@react-navigation/native";
 
-const Classement = () => {
+const Classement = ({idPatient, week}) => {
     const [ranking, setRanking] = useState('N/A');
-    const idPatient = 1;
+
+    const isFocused = useIsFocused();
 
     useEffect(() => {
         const fetchData = async () => {
+            console.log(week);
             try {
-                const response = await getFetch('http://localhost:3000/api/progress/getAllMarche');
+                const response = await getFetch(`http://localhost:3000/api/progress/getAllMarche/${week}`);
                 const allMarchesData = response.data;
 
                 const marcheTotals = allMarchesData.reduce((acc, record) => {
@@ -28,9 +31,8 @@ const Classement = () => {
                 console.error('Error fetching data:', error);
             }
         };
-
-        fetchData();
-    }, []);
+    if (isFocused) fetchData();
+    }, [isFocused, week]);
 
     return (
         <View>
