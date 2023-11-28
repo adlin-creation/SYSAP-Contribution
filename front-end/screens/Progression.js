@@ -75,7 +75,7 @@ export default class Progression extends React.Component {
                             </View>}
                         droite={
                             <View>
-                                <Classement></Classement>
+                                <Classement idPatient={1} week={this.state.week}></Classement>
                             </View>}
                     />
                 </View>
