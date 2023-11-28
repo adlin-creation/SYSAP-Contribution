@@ -47,7 +47,7 @@ ProgressionExercices.init({
         allowNull: false,
     },
 }, {
-    tableName: 'progressionExercices',
+    tableName: 'ProgressionExercices',
     timestamps: false,
     sequelize: sequelize,
 });
