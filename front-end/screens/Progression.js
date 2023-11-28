@@ -16,9 +16,17 @@ const sessionsCompleted = 2;
 const totalSessions = 6;
 
 export default class Progression extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state={
+            week : 1
+        }
+    }
+
+
     handleSelect = (selectedItem, index) => {
-        console.log('ParentComponent: Item selected', selectedItem, index);
-        // Mettre à jour l'état, etc.
+        this.setState({week : index + 1});
     };
 
     render() {
@@ -63,7 +71,7 @@ export default class Progression extends React.Component {
                     <BoiteEncadree
                         gauche={
                             <View>
-                                <ProgressionMarcheComponent idPatient={1} week={1}></ProgressionMarcheComponent>
+                                <ProgressionMarcheComponent idPatient={1} week={this.state.week}></ProgressionMarcheComponent>
                             </View>}
                         droite={
                             <View>

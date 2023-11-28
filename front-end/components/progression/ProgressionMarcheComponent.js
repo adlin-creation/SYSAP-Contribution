@@ -26,7 +26,7 @@ const ProgressionMarcheComponent = ({ idPatient, week }) => {
         if (isFocused) {
             fetchData();
         }
-    }, [isFocused]);
+    }, [isFocused, week]);
 
 
     const formatTime = (totalMinutes) => {
