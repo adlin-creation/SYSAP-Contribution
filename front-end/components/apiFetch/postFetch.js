@@ -1,4 +1,3 @@
-import getFetch from "./getFetch";
 
 async function postFetch(apiUrl, data) {
     const requestOptions = {
@@ -20,7 +19,7 @@ async function postFetch(apiUrl, data) {
     }
 }
 
-async function ajouterMarche(minute) {
+export async function ajouterMarche(minute) {
     const idPatient = 1;
     try {
         const body = {
@@ -34,4 +33,19 @@ async function ajouterMarche(minute) {
     }
 }
 
-export default ajouterMarche;
+export async function ajouterExercices(DiffMoyenne) {
+    const idPatient = 1;
+    const NbObjectifs = 6;
+    const NumProgramme = 214;
+    try {
+        const body = {
+            "idPatient": idPatient,
+            "DiffMoyenne":DiffMoyenne,
+            "NbObjectifs": NbObjectifs,
+            "NumProgramme": NumProgramme
+        }
+        return await postFetch(`http://localhost:3000/api/progress/updateExercice`, body)
+    } catch (err) {
+        console.error("Update exercice failed " + err);
+    }
+}

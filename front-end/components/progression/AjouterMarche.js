@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Image, Text, StyleSheet , TouchableOpacity, Alert} from 'react-native';
-import ajouterMarche from "../apiFetch/postFetch";
+import {ajouterMarche} from "../apiFetch/postFetch";
 const AjouterMarche = () => {
 
     const handleButtonPress = async () => {
