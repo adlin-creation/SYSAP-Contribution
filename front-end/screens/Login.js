@@ -17,6 +17,7 @@ const Login = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errors, setErrors] = useState({});
+    console.log(apiUrl);
 
     useEffect(() => {
         // Inside the useEffect, you can get the token from AsyncStorage

@@ -6,7 +6,7 @@ FROM node:18.18.2-alpine
 WORKDIR /app
 
 # Copy package.json and package-lock.json to the container
-COPY package.json yarn.lock ./
+COPY package.json ./
 
 # Install dependencies
 RUN yarn install
