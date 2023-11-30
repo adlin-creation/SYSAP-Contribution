@@ -17,6 +17,7 @@ import ProgramChangeScreen from "../screens/ProgramChange";
 import LogoutScreen from "../screens/Logout";
 import ExerciseDetail from "../screens/ExerciseDetail";
 import EvaluationScreen from "../screens/Evaluation";
+import EmailScreen from '../screens/Email';
 
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -170,6 +171,29 @@ function EvaluationStack(props) {
   );
 }
 
+function EmailStack(props) {
+  return (
+    <Stack.Navigator
+      initialRouteName="Email"
+      screenOptions={{
+        mode: "card",
+        headerShown: "screen",
+      }}
+    >
+      <Stack.Screen
+        name="EmailScreen"
+        component={EmailScreen}
+        options={{
+          header: ({ navigation, scene }) => (
+            <Header title="Email" scene={scene} navigation={navigation} />
+          ),
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+
 function AppStack(props) {
   return (
     <Drawer.Navigator
@@ -316,6 +340,22 @@ function AppStack(props) {
           ),
         }}
       />
+      <Drawer.Screen
+        name="Email"
+        component={EmailStack}
+        options={{
+          drawerIcon: ({ focused }) => (
+            <Icon
+              size={16}
+              name="ion-email"
+              family="ionicon"
+              color={focused ? "white" : materialTheme.COLORS.MUTED}
+              style={{ marginRight: -3 }}
+            />
+          ),
+        }}
+      />
+
     </Drawer.Navigator>
   );
 }
@@ -343,4 +383,3 @@ export default function OnboardingStack(props) {
     </Stack.Navigator>
   );
 }
-

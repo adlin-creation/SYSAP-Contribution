@@ -63,7 +63,8 @@ class ProgramEnrollmentController {
         }
         console.log(programEnrollment);
         result.enrollmentCode = programEnrollment!.ProgramEnrollmentCode || '';
-        result.enrollmentDate = programEnrollment.ProgramEnrollmentDate ? new Date(programEnrollment.ProgramEnrollmentDate) : null;
+        result.enrollmentDate = programEnrollment.ProgramEnrollmentDate || null; //? new Date(programEnrollment.ProgramEnrollmentDate) : null;
+        console.log('####', result.enrollmentDate, programEnrollment.ProgramEnrollmentDate)
         result.startDate = programEnrollment.ProgramStartDate ? new Date(programEnrollment.ProgramStartDate) : null;
         return Program.findByPk(programEnrollment.ProgramName);
       })
@@ -99,8 +100,10 @@ class ProgramEnrollmentController {
     const userId = parseInt(req.body.userId);
     const today = new Date();
 
+    console.log(userId)
+
     ProgramEnrollment.update(
-      { ProgramStartDate: today },
+      { ProgramStartDate: today.toString() },
       { where: { PatientId: userId } }
     )
       .then(([affectedRows]) => {

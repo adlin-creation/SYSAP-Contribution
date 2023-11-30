@@ -42,12 +42,99 @@ Modèle d'un `Patient` :
 ### Points d'accès API pour les `Program`
 | Point d'accès           | Méthode | Description                                 | Exemple de Requête | Exemple de Réponse |
 |--------------------------|--------|---------------------------------------------|-----------------|-------------------|
-| `/programs`           | GET    | Obtenir tous les programs                | N/A             | Liste des programs  |
-| `/programs/:id`       | GET    | Obtenir un program par ID                | N/A             | Programme unique     |
+| `/api/programs`           | GET    | Obtenir tous les programs                | N/A             | Liste de `program`  |
+| `/api/programs/:programName`       | GET    | Obtenir un program par son nom                | N/A             | Programme unique     |
+
+Modèle pour une liste de `Program` :
+```json
+200:
+    [
+        {
+            "ProgramName": "Bravo",
+            "ProgramDescription": "Drainage of Right Wrist Bursa and Ligament, Perc Approach",
+            "ProgramDuration": 10
+        },
+        {
+            "ProgramName": "Bravo",
+            "ProgramDescription": "Drainage of Right Wrist Bursa and Ligament, Perc Approach",
+            "ProgramDuration": 10
+        }
+    ]
+
+500:
+    { "error": "Internal server error" }
+```
 
 Modèle d'un `Program` :
 ```json
-"name": "PACE",
-"description": "This is the pace program",
-"duration": 60,
+200:
+    {
+        "ProgramName": "Bravo",
+        "ProgramDescription": "Drainage of Right Wrist Bursa and Ligament, Perc Approach",
+        "ProgramDuration": 10
+    }
+404:
+    { "error": "Program not found" }
+500:
+    { "error": "Internal server error" }
 ```
+
+### Points d'accès API pour les `ProgramEnrollment`
+| Point d'accès           | Méthode | Description                                 | Exemple de Requête | Exemple de Réponse |
+|--------------------------|--------|---------------------------------------------|-----------------|-------------------|
+| `/api/ProgramEnrollment/user/:userId`           | GET    | Obtenir les details sur l'enregistrement d'un patient a un programme                | N/A             | `ProgramEnrollmentInfo`  |
+| `/api/programs/:programName`       | PUT    |  demarrer le prgramme pour l e patient                | `{userId : 3}`             | message de confirmation    |
+
+Modèle d'un `ProgramEnrollmentInfo` :
+```json
+200:
+    {
+        "ProgramName": "Bravo",
+        "ProgramDescription": "Drainage of Right Wrist Bursa and Ligament, Perc Approach",
+        "ProgramDuration": 10
+    }
+404:
+    { "error": "Program Enrollment not found" }
+500:
+    { "error": "Internal server error" }
+```
+Modèle d'un message de confirmation
+
+```json
+200:
+    { 
+        "message": "Program start date updated successfully." 
+    }
+404:
+    { "error": "Program enrollment not found for the given user ID." }
+500:
+    { "error": "Internal server error" }
+```
+
+### Points d'accès API pour les routes `email`
+| Point d'accès           | Méthode | Description                                 | Exemple de Requête | Exemple de Réponse |
+|--------------------------|--------|---------------------------------------------|-----------------|-------------------|
+| `/api/email`           | GET    | envoyer un courriel avec les informations reçues dans le "body" de la requête              | emaiReq            | message de confirmation  |
+
+Modèle pour emailReq :
+```json
+{
+    "subject" : "objet",
+    "message" : "ceci est le message",
+    "senderId" : "10"
+}
+```
+
+Modèle d'un message de confirmation :
+
+```json
+200 :
+    {
+        "msg": "votre courriel a été transmis avec succès!"
+    }
+404 :
+    { "error": "Patient not found" }
+500 :
+    {"error" : "une erreur est survenue lors la transmission du courriel veuillez contacter votre administrateur si le problème persiste"}
+```
+
