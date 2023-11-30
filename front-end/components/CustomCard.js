@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
 import { Button, Text, theme } from 'galio-framework';
 import { putData } from '../services/apiServices';
+import Imprimer from "../components/imprimer/print.js";
 
 const { width } = Dimensions.get('screen');
 const DATE_FORMAT = {
@@ -124,13 +125,7 @@ const CustomCard = ({ programData }) => {
                         {renderExerciseButtons()}
 
                         <View style={{ alignSelf: 'center', width: 200 }}>
-                            <Button
-                                shadowless
-                                style={styles.buttonImprimer}
-                                color='#088c4f'
-                                onPress={() => alert('impression en cours ...')}>
-                                Imprimer le programme
-                            </Button>
+                            <Imprimer type={"programme"} />
                         </View>
                     </View>
 

@@ -28,10 +28,10 @@ ProgramEnrollment.init(
             unique: true,
         },
         ProgramEnrollmentDate: {
-            type: DataTypes.DATE,
+            type: DataTypes.STRING,
         },
         ProgramStartDate: {
-            type: DataTypes.DATE,
+            type: DataTypes.STRING,
         },
         ProgramEnrollmentCode: {
             type: DataTypes.STRING,

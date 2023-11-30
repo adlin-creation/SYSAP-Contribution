@@ -39,11 +39,16 @@ import authRoutes from './routes/authRoutes';
 import programRoutes from './routes/programRoutes';
 import impressionRoutes from './routes/impressionRoutes';
 import progressRoutes from './routes/progressRoutes';
+import programEnrollment from "./routes/programEnrollmentRoutes";
+import emailRoutes from './routes/emailRoutes'
+
 app.use('/api/exercises', exerciseRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/programs', programRoutes);
 app.use('/api/print', impressionRoutes);
 app.use('/api/progress', progressRoutes);
+app.use('/api/programEnrollment', programEnrollment);
+app.use('/api/email', emailRoutes);
 
 
 
@@ -59,6 +64,8 @@ async function configureDatabase() {
   }
 }
 
-app.listen(process.env.PORT, () => {
+let server = app.listen(process.env.PORT, () => {
   console.log(`Server started on port ${process.env.PORT}: http://localhost:${process.env.PORT}`);
 });
+
+export default {server, app};
