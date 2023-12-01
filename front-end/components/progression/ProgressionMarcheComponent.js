@@ -22,7 +22,6 @@ const ProgressionMarcheComponent = ({ idPatient, week }) => {
                 console.error('Error fetching data:', error);
             }
         };
-
         if (isFocused) {
             fetchData();
         }

@@ -39,8 +39,8 @@ export default class Progression extends React.Component {
                         <View style={styles.containerGauche}>
                             <TitreProgression />
                             <BarreProgressionComponent
-                                sessionsCompleted={sessionsCompleted}
-                                totalSessions={totalSessions}
+                                idPatient={1}
+                                week = {this.state.week}
                             />
                         </View>
                         <View style={styles.containerDroite}>
