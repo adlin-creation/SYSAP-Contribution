@@ -32,7 +32,6 @@ export default class AuthController {
 
       res.json({ token });
     } catch (err: any) {
-      console.error(err.message);
       res.status(500).send('Server Error');
     }
   };
@@ -57,7 +56,27 @@ export default class AuthController {
 
       res.json({ token });
     } catch (err: any) {
-      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
+  }
+
+  static verifyToken = async (req: Request, res: Response) => {
+    try{
+      const token = req.header('Authorization')?.split(' ')[1];
+
+      if (!token) {
+        return res.status(401).json({ msg: 'No token, authorization denied' });
+      }
+    
+      const jwtSecret = process.env.JWT_SECRET as string;
+      const decoded = jwt.verify(token, jwtSecret) as JwtPayload;
+  
+      if (!decoded.patient){
+        return res.status(403).json({ msg: 'Missing program name' });
+      }
+
+      return res.status(200).json({ msg: 'token is valid'});
+    } catch (err: any) {
       res.status(500).send('Server Error');
     }
   }
@@ -76,11 +95,8 @@ export default class AuthController {
 
       const ProgramEnrollment = await createProgramEnrollment(patient.idPatient, programName);
       
-      console.log(ProgramEnrollment);
-      
       res.status(200).json({ msg: 'Program changed' });
     } catch (err: any){
-      console.error(err.message);
       res.status(500).send('Server Error');
     }
   }
@@ -95,13 +111,10 @@ async function getPatientFromToken(token: string): Promise<Patient> {
     throw new Error('Patient not found');
   }
 
-  console.log(patient);
-
   return patient;
 }
 
 async function createProgramEnrollment(idPatient: number, programName: string): Promise<ProgramEnrollment> {
-  console.log(idPatient + ", " +  programName)
   return ProgramEnrollment.create({
     Patientld: idPatient,
     ProgramName: programName,

@@ -19,24 +19,33 @@ const Login = ({navigation}) => {
     const [errors, setErrors] = useState({}); 
 
     useEffect(() => {
-        // Inside the useEffect, you can get the token from AsyncStorage
-        const getToken = async () => {
-          try {
+        const verifyToken = async () => {
             const token = await AsyncStorage.getItem('userToken');
-            if (token !== null) {
-                // Token found in AsyncStorage, you can proceed with authentication or other actions
-                console.log('Token: ', token);
-                // Replace with your authentication logic
-                navigation.navigate('App');
-            } else {
+
+            try {
+                fetch(`${apiUrl}/api/auth/verify-token`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                })
+                .then((response) => {
+                    console.log(response);
+
+                    if (response.ok) {
+                        navigation.navigate('App');
+                    } else {
+                        return;
+                    }
+                })
+            } catch (error) {
+                console.log(error);
+
                 return;
             }
-          } catch (error) {
-                console.error('Error fetching token:', error);
-          }
         };
     
-        getToken();
+        verifyToken();
       }, []);
   
     const validateForm = () => { 
@@ -68,7 +77,7 @@ const Login = ({navigation}) => {
         fetch(`${apiUrl}/api/auth/login`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(requestBody),
         })
@@ -86,15 +95,6 @@ const Login = ({navigation}) => {
             }
             await AsyncStorage.setItem('userToken', responseData.token);
 
-            navigation.navigate('App');
-        })
-        .then(async (data) =>{
-            if (!data.token) {
-                errors.failed = 'Connexion échouée'
-                setErrors(errors);
-            }
-            
-            AsyncStorage.setItem('userToken', data.token);
             navigation.navigate('App');
         })
         .catch((error) => {
