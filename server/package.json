@@ -30,7 +30,8 @@
     "sequelize": "^6.33.0",
     "sqlite3": "^5.1.6",
     "supertest": "^6.3.3",
-    "ts-jest": "^29.1.1"
+    "ts-jest": "^29.1.1",
+    "date-fns": "^2.30.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.5",
