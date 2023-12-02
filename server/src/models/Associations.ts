@@ -8,8 +8,19 @@ import Patient from './Patient';
 import ProgramEnrollment from './ProgramEnrollment';
 import ProgramExerciseSeries from './ProgramExerciseSeries';
 import Reminder from './Reminder';
+import Caregiver from './Caregiver';
+import PatientCaregiver from './PatientCaregiver';
 
 export function createAssociations(){
+    Patient.belongsToMany(Caregiver, {
+        through: PatientCaregiver,
+        foreignKey: 'patient_id',
+      });
+      Caregiver.belongsToMany(Patient, {
+        through: PatientCaregiver,
+        foreignKey: 'caregiver_id',
+      });
+
     Program.hasMany(ProgramExerciseSeries, {
         foreignKey: 'ProgramName',
         as: 'ExerciseSeries',
