@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useContext } from "react";
+import ProfileContext from '../ProfileContext';
 import { TouchableWithoutFeedback, ScrollView, StyleSheet } from "react-native";
 import { Block, Text, theme } from "galio-framework";
 import { useSafeArea } from "react-native-safe-area-context";
@@ -10,12 +11,12 @@ import { materialTheme } from "../constants/";
 function CustomDrawerContent({
   drawerPosition,
   navigation,
-  profile,
   focused,
   state,
   ...rest
 }) {
   const insets = useSafeArea();
+  const { profile } = useContext(ProfileContext);
 
   const screens = [
     "Accueil",
@@ -24,6 +25,7 @@ function CustomDrawerContent({
     "Séance",
     "Rappel",
     "Évaluation",
+    "Email"
   ];
 
   return (
@@ -43,7 +45,7 @@ function CustomDrawerContent({
         </TouchableWithoutFeedback>
         <Block row>
           <Text size={16} muted style={styles.seller}>
-            {profile.type}
+            {profile.programName}
           </Text>
         </Block>
       </Block>

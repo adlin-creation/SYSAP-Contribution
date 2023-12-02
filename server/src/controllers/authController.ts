@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 import Patient from '../models/Patient';
 import { JwtPayload } from '../types/jwtTypes';
 import * as dotenv from 'dotenv';
+import ProgramEnrollment from '../models/ProgramEnrollment';
 
 dotenv.config({ path: './src/config/config.env' });
 
@@ -28,8 +29,8 @@ export default class AuthController {
       const newPatient = await createPatient(name, familyName, email, hashedPassword);
 
       const token = generateJwtToken(newPatient);
-
-      res.json({ token });
+      const id = newPatient.idPatient;
+      res.json({ token, id });
     } catch (err: any) {
       console.error(err.message);
       res.status(500).send('Server Error');
@@ -53,8 +54,31 @@ export default class AuthController {
       }
 
       const token = generateJwtToken(patient);
+      const id = patient.idPatient;
+      res.json({ token, id });
+    } catch (err: any) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
+  }
 
-      res.json({ token });
+  static changeProgram = async (req: Request, res: Response) => {
+    try {
+      const token = req.header('Authorization')?.split(' ')[1];
+      const programName = req.body.programName;
+
+      if (!token) {
+
+        return res.status(401).json({ msg: 'No token, authorization denied' });
+      }
+
+      const patient = await getPatientFromToken(token);
+
+      const ProgramEnrollment = await createProgramEnrollment(patient.idPatient, programName);
+
+      console.log(ProgramEnrollment);
+
+      res.status(200).json({ msg: 'Program changed' });
     } catch (err: any) {
       console.error(err.message);
       res.status(500).send('Server Error');
@@ -62,31 +86,51 @@ export default class AuthController {
   }
 }
 
+async function getPatientFromToken(token: string): Promise<Patient> {
+  const jwtSecret = process.env.JWT_SECRET as string;
+  const decoded = jwt.verify(token, jwtSecret) as JwtPayload;
+
+  const patient = await Patient.findByPk(decoded.patient.id);
+  if (!patient) {
+    throw new Error('Patient not found');
+  }
+
+  console.log(patient);
+
+  return patient;
+}
+
+async function createProgramEnrollment(idPatient: number, programName: string): Promise<ProgramEnrollment> {
+  console.log(idPatient + ", " + programName)
+  return ProgramEnrollment.create({
+    Patientld: idPatient,
+    ProgramName: programName,
+  });
+}
+
 async function hashPassword(password: string) {
   const salt = await bcrypt.genSalt(10);
   return bcrypt.hash(password, salt);
 }
 
-async function createPatient(name: string, familyName: string, email: string, password: string): Promise<Patient> {
+async function createPatient(firstName: string, lastName: string, email: string, password: string): Promise<Patient> {
   return Patient.create({
-    Name: name,
-    FamilyName: familyName,
+    PatientFirstName: firstName,
+    PatientLastName: lastName,
     Email: email,
     Password: password,
   });
 }
 
 function generateJwtToken(patient: Patient) {
-  const expirationTime = 60 * 60 * 24 * 7; // 7 days
   const payload: JwtPayload = {
     patient: {
       id: patient.idPatient,
-      name: patient.Name,
-      familyName: patient.FamilyName,
+      firstName: patient.PatientFirstName,
+      lastName: patient.PatientLastName,
       email: patient.Email,
-      programName: "",
     },
   };
   const jwtSecret = process.env.JWT_SECRET as string;
-  return jwt.sign(payload, jwtSecret, { expiresIn: expirationTime });
+  return jwt.sign(payload, jwtSecret, { expiresIn: process.env.TOKEN_EXPIRE_TIME });
 }

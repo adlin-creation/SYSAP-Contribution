@@ -22,10 +22,16 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Cross Origin Resource Sharing
-app.use(cors({
-  origin: process.env.CLIENT_URL,
-  credentials: false,
-}));
+// app.use(cors({
+//   origin: process.env.CLIENT_URL,
+//   credentials: false,
+// }));
+app.use(
+  cors({
+    origin: "*",
+    credentials: false,
+  })
+);
 
 // Routes
 import exerciseRoutes from './routes/exerciseRoutes';
@@ -33,13 +39,16 @@ import authRoutes from './routes/authRoutes';
 import programRoutes from './routes/programRoutes';
 import impressionRoutes from './routes/impressionRoutes';
 import progressRoutes from './routes/progressRoutes';
-import patientRoutes from "./routes/patientRoutes";
+import programEnrollment from "./routes/programEnrollmentRoutes";
+import emailRoutes from './routes/emailRoutes'
+
 app.use('/api/exercises', exerciseRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/programs', programRoutes);
 app.use('/api/print', impressionRoutes);
 app.use('/api/progress', progressRoutes);
-app.use('/api/patient', patientRoutes)
+app.use('/api/programEnrollment', programEnrollment);
+app.use('/api/email', emailRoutes);
 
 
 
@@ -55,6 +64,8 @@ async function configureDatabase() {
   }
 }
 
-app.listen(process.env.PORT, () => {
+let server = app.listen(process.env.PORT, () => {
   console.log(`Server started on port ${process.env.PORT}: http://localhost:${process.env.PORT}`);
 });
+
+export default {server, app};

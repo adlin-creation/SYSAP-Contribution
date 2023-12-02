@@ -5,6 +5,7 @@ import { Block, GalioProvider } from "galio-framework";
 import { NavigationContainer } from "@react-navigation/native";
 import * as SplashScreen from "expo-splash-screen";
 import { materialTheme } from "./constants/";
+import { ProfileProvider } from './ProfileContext';
 import Screens from "./navigation/Screens";
 
 // Before rendering any navigation stack
@@ -43,13 +44,15 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer onReady={onLayoutRootView}>
-      <GalioProvider theme={materialTheme}>
-        <Block flex>
-          {Platform.OS === "ios" && <StatusBar barStyle="default" />}
-          <Screens />
-        </Block>
-      </GalioProvider>
-    </NavigationContainer>
+    <ProfileProvider>
+      <NavigationContainer onReady={onLayoutRootView}>
+        <GalioProvider theme={materialTheme}>
+          <Block flex>
+            {Platform.OS === "ios" && <StatusBar barStyle="default" />}
+            <Screens />
+          </Block>
+        </GalioProvider>
+      </NavigationContainer>
+    </ProfileProvider>
   );
 }
