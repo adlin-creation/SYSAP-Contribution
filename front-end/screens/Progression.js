@@ -12,9 +12,6 @@ import BarreProgressionComponent from "../components/progression/BarreProgressio
 import SemaineComponent from "../components/progression/SemaineComponent";
 import ObjectifEtExerciceComponent from "../components/progression/ObjectifEtExerciceComponent";
 
-const sessionsCompleted = 2;
-const totalSessions = 6;
-
 export default class Progression extends React.Component {
     constructor(props) {
         super(props);
@@ -46,18 +43,19 @@ export default class Progression extends React.Component {
                         <View style={styles.containerDroite}>
                             <SemaineComponent onSelect={this.handleSelect}/>
                             <ObjectifEtExerciceComponent
-                                totalSessions={totalSessions}
+                                idPatient={1}
+                                week={this.state.week}
                                 iconName={"zap"}
-                                nomSection={"Objectif"}
+                                section={"Objectif"}
                             />
                             <ObjectifEtExerciceComponent
-                                totalSessions={sessionsCompleted}
+                                idPatient={1}
+                                week={this.state.week}
                                 iconName={"flag"}
-                                nomSection={"Séances"}
+                                section={"Séances"}
                             />
                         </View>
                     </View>
-                    {/*<SectionHautComponent sessionsCompleted={3} totalSessions={5} />*/}
                     <StatusBar style="auto" />
                     <BoiteEncadree
                         gauche={

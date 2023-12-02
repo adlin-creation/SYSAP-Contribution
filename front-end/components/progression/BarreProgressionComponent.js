@@ -12,6 +12,8 @@ const BarreProgressionComponent = ({ idPatient, week }) => {
 
   useEffect(() => {
     const fetchData = async () => {
+      setCompleted(0);
+      setTotalTodo(0);
       try {
         const response = await getFetch(`http://localhost:3000/api/progress/progressionExercices/${idPatient}/${week}`);
         setCompleted(response.data.NbSeances);
@@ -23,12 +25,7 @@ const BarreProgressionComponent = ({ idPatient, week }) => {
     if (isFocused) fetchData();
   }, [isFocused, idPatient, week]);
 
-  const calculateFill = (sessionsCompleted, totalSessions) => {
-    if (!sessionsCompleted || !totalSessions || totalSessions === 0) return 0;
-    return (sessionsCompleted / totalSessions) * 100;
-  };
-
-  const fillPercentage = calculateFill(completed, totalTodo);
+  const fillPercentage = completed && totalTodo ? (completed / totalTodo) * 100 : 0;
 
   return (
       <View style={styles.container}>
@@ -71,61 +68,3 @@ const styles = StyleSheet.create({
 });
 
 export default BarreProgressionComponent;
-
-
-
-// class BarreProgressionComponent extends Component {
-//   calculateFill = () => {
-//     const { sessionsCompleted, totalSessions } = this.props;
-//     if (!sessionsCompleted || !totalSessions || totalSessions === 0) return 0;
-//     return (sessionsCompleted / totalSessions) * 100;
-//   };
-
-//   render() {
-//     const fillPercentage = this.calculateFill();
-//     const { sessionsCompleted, totalSessions } = this.props;
-//
-//     return (
-//       <View style={styles.container}>
-//         <View style={styles.progressContainer}>
-//           <AnimatedCircularProgress
-//             size={150}
-//             width={15}
-//             fill={fillPercentage}
-//             tintColor="#F4902B"
-//             backgroundColor="#E1DEDB"
-//             lineCap="round"
-//           >
-//             {() => (
-//               <View style={{ alignItems: "center" }}>
-//                 <Text
-//                   style={styles.sessionText}
-//                 >{`${sessionsCompleted} / ${totalSessions}`}</Text>
-//               </View>
-//             )}
-//           </AnimatedCircularProgress>
-//         </View>
-//       </View>
-//     );
-//   }
-// }
-//
-// const styles = StyleSheet.create({
-//   container: {
-//     flexDirection: "row",
-//     alignItems: "center",
-//     padding: 20,
-//   },
-//   progressContainer: {
-//     transform: [{ rotate: "-90deg" }],
-//     justifyContent: "center",
-//     alignItems: "center",
-//   },
-//   sessionText: {
-//     fontSize: 38,
-//     color: "#615F5F",
-//     transform: [{ rotate: "90deg" }],
-//   },
-// });
-
-// export default BarreProgressionComponent;

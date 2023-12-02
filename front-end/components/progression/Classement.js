@@ -10,7 +10,6 @@ const Classement = ({idPatient, week}) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            console.log(week);
             try {
                 const response = await getFetch(`http://localhost:3000/api/progress/getAllMarche/${week}`);
                 const allMarchesData = response.data;

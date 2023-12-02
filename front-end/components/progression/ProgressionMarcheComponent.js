@@ -14,6 +14,8 @@ const ProgressionMarcheComponent = ({ idPatient, week }) => {
 
     useEffect(() => {
         const fetchData = async () => {
+            setNbMarches(0);
+            setTotalTimeWalked(0);
             try {
                 const data = await getFetch(`http://localhost:3000/api/progress/progressionMarche/${idPatient}/${week}`);
                 setTotalTimeWalked(data.data.Marche);
