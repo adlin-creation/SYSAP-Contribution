@@ -5,7 +5,6 @@ variables:
 stages:
   - build
   - test
-  - deploy
 
 job_build:
   image: node:lts-alpine
@@ -21,13 +20,3 @@ job_test:
   stage: test
   script:
     - echo "Running tests"
-
-job_deploy:
-  image: docker:latest
-  services:
-    - docker:dind
-  stage: deploy
-  script:
-    - echo "Deploying the project"
-    - docker compose down
-    - docker compose up -d
