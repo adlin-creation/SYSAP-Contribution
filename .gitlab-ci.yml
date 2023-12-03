@@ -1,0 +1,29 @@
+variables:
+  TAG_LATEST: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:latest
+  TAG_COMMIT: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:$CI_COMMIT_SHORT_SHA
+
+stages:
+  - build
+  - test
+  - deploy
+
+job_build:
+  stage: build
+  script:
+    - echo "Building the project"
+    - cd front-end
+    - yarn install
+    - yarn build
+    - echo "Build completed"
+
+job_test:
+  stage: test
+  script:
+    - echo "Running tests"
+
+job_deploy:
+  stage: deploy
+  script:
+    - echo "Deploying the project"
+    - docker compose down
+    - docker compose up -d

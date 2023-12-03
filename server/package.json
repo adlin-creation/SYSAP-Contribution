@@ -6,9 +6,7 @@
   "scripts": {
     "test": "jest --detectOpenHandles",
     "start": "ts-node --files src/server.ts",
-    "dev": "nodemon src/server.ts",
-    "init-db": "sh ./db/init-db.sh",
-    "serve": "npm run init-db && npm run start"
+    "dev": "nodemon src/server.ts"
   },
   "keywords": [],
   "author": "",
@@ -42,6 +40,6 @@
     "config": "^3.3.9",
     "nodemon": "^3.0.1",
     "ts-node": "^10.9.1",
-    "typescript": "^5.2.2"
+    "typescript": "^5.3.2"
   }
 }
