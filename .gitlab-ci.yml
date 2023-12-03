@@ -8,6 +8,7 @@ stages:
   - deploy
 
 job_build:
+  image: node:lts-alpine
   stage: build
   script:
     - echo "Building the project"
@@ -22,6 +23,9 @@ job_test:
     - echo "Running tests"
 
 job_deploy:
+  image: docker:latest
+  services:
+    - docker:dind
   stage: deploy
   script:
     - echo "Deploying the project"
