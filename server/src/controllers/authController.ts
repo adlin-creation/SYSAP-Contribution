@@ -100,7 +100,6 @@ export default class AuthController {
       const patient = await getPatientFromToken(token);
 
       await createProgramEnrollment(patient.idPatient, programName);
-      
       return res.status(200).json({ msg: 'Program changed' });
     } catch (err: any){
       return res.status(500).send('Server Error');
@@ -121,10 +120,13 @@ async function getPatientFromToken(token: string): Promise<Patient> {
 }
 
 async function createProgramEnrollment(idPatient: number, programName: string): Promise<ProgramEnrollment> {
-  return ProgramEnrollment.create({
-    Patientld: idPatient,
+  const programEnrollment = await ProgramEnrollment.create({
+    PatientId: idPatient,
     ProgramName: programName,
+    ProgramEnrollment: new Date(Date.now())
   });
+
+  return programEnrollment
 }
 
 async function hashPassword(password: string) {
@@ -183,7 +185,6 @@ async function createCaregiver(firstName: string, lastName: string, email: strin
   if (idPatients.length > 0) {
     const patientIds = idPatients.map((id: number) => ({ patient_id: id, caregiver_id:  getPropertyByString(caregiver, "id") }));
     await PatientCaregiver.bulkCreate(patientIds);
-    console.log(patientIds)
   }
 
   return caregiver;

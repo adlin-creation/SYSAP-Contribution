@@ -66,10 +66,9 @@ export default Register = ({ navigation }) => {
                 throw new error('missing token');
             }
             await AsyncStorage.setItem('userToken', response.token);
-            // isProcheAidant ? 
-            //     navigation.navigate('App') : 
-            //     navigation.navigate('ProgramChange');
-            navigation.navigate('App');
+            isProcheAidant ? 
+                navigation.navigate('App') : 
+                navigation.navigate('ProgramChange');
         })
         .catch((error) => {
             if (error.message === 'Failed to fetch') {
