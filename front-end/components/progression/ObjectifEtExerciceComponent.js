@@ -15,9 +15,9 @@ const ObjectifEtExerciceComponent = ({idPatient, week, section, iconName}) => {
       try {
         const response = await getFetch(`http://localhost:3000/api/progress/progressionExercices/${idPatient}/${week}`);
         if (section === "Objectif") {
-          setNombre(response.data.NbSeances);
-        } else {
           setNombre(response.data.NbObjectifs);
+        } else {
+          setNombre(response.data.NbSeances);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
