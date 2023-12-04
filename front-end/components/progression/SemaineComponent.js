@@ -1,9 +1,31 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { View, StyleSheet } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import SelectDropdown from 'react-native-select-dropdown';
+import getFetch from "../apiFetch/getFetch";
 
-const SemaineComponent = ({ onSelect }) => {
+const SemaineComponent = ({ onSelect, idPatient }) => {
+
+  //faire controller pour getStartDate
+  //faire route et controller pour getDuration
+  //on veut un array qui par du start date jusqua a duree
+  //trouver une facon de show 1 a duree mais que le week soit lui actual
+
+  //
+  // const [depart, setDepart] = useState(1);
+  // const [duree, setDuree] = useState(1);
+  //
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const dateDepart = await getFetch(`http://localhost:3000/api/programEnrollment/user/getStartDate/${idPatient}/`)
+  //       // const dureeProgramme = await getFetch(...);
+  //     } catch (error){
+  //       console.error('Error fetching data', error);
+  //     }
+  //   };
+  // })
+
   const weeks = [...Array(52).keys()].map(i => `Semaine ${i + 1}`);
   const handleSelect = (selectedItem, index) => {
     console.log(selectedItem, index);

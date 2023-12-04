@@ -45,13 +45,13 @@ export default class Progression extends React.Component {
                             <ObjectifEtExerciceComponent
                                 idPatient={1}
                                 week={this.state.week}
-                                iconName={"zap"}
+                                iconName={"flag"}
                                 section={"Objectif"}
                             />
                             <ObjectifEtExerciceComponent
                                 idPatient={1}
                                 week={this.state.week}
-                                iconName={"flag"}
+                                iconName={"zap"}
                                 section={"Séances"}
                             />
                         </View>
