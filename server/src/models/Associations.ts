@@ -10,6 +10,8 @@ import ProgramExerciseSeries from './ProgramExerciseSeries';
 import Reminder from './Reminder';
 import Caregiver from './Caregiver';
 import PatientCaregiver from './PatientCaregiver';
+import ProgressionMarches from './ProgressionMarches';
+import ProgressionExercices from './ProgressionExerices';
 
 export function createAssociations(){
     Patient.belongsToMany(Caregiver, {
@@ -29,7 +31,7 @@ export function createAssociations(){
         foreignKey: 'ProgramName',
         as: 'Program',
     });
-      
+
     Patient.hasOne(ProgramEnrollment, {
         foreignKey: 'PatientId',
         as: 'ProgramEnrollment',
@@ -47,7 +49,7 @@ export function createAssociations(){
         foreignKey: 'ExerciseSeriesId',
         as: 'ExerciseSeries',
     });
-      
+
 
     ProgramExerciseSeries.belongsTo(ExerciseSeries, {
         foreignKey: 'ExerciseSeriesId',
@@ -57,7 +59,7 @@ export function createAssociations(){
         foreignKey: 'ExerciseSeriesId',
         as: 'Programs',
     });
-      
+
     ExerciseSeriesExercise.belongsTo(Exercise, {
         foreignKey: 'ExerciseId',
         as: 'Exercise',
@@ -66,7 +68,7 @@ export function createAssociations(){
         foreignKey: 'ExerciseId',
         as: 'SeriesExercises',
     });
-      
+
     Program.hasMany(ProgramEnrollment, {
         foreignKey: 'ProgramName',
         as: 'ProgramEnrollments',
@@ -84,7 +86,7 @@ export function createAssociations(){
         foreignKey: 'PatientId',
         as: 'Patient',
     });
-    
+
     ProgramEnrollment.hasMany(ProgramDayRecord, {
         foreignKey: 'ProgramEnrollmentId',
         as: 'DayRecords',
@@ -93,7 +95,7 @@ export function createAssociations(){
         foreignKey: 'ProgramEnrollmentId',
         as: 'ProgramEnrollment',
     });
-      
+
     ProgramDayRecord.hasMany(ExerciseRecord, {
         foreignKey: 'ProgramDayRecordId',
         as: 'ExerciseRecords',
@@ -111,4 +113,22 @@ export function createAssociations(){
         foreignKey: 'ExerciseId',
         as: 'Exercise',
     });
+
+    Patient.hasMany(ProgressionMarches, {
+        foreignKey: 'idPatient',
+        as: 'ProgressionMarches',
+    });
+    ProgressionMarches.belongsTo(Patient, {
+        foreignKey: 'idPatient',
+        as: 'Patient',
+    })
+
+    Patient.hasMany(ProgressionExercices, {
+        foreignKey: 'idPatient',
+        as: 'ProgressionExercices',
+    });
+    ProgressionExercices.belongsTo(Patient, {
+        foreignKey: 'idPatient',
+        as: 'Patient',
+    })
 }

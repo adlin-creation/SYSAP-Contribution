@@ -47,8 +47,6 @@ export default Register = ({ navigation }) => {
             idPatients: isProcheAidant ? idPatients.split(',').map(Number) : null,
         };
 
-        console.log(requestBody);
-
         fetch(`${apiUrl}/api/auth/register`, {
             method: 'POST',
             headers: {
@@ -77,7 +75,6 @@ export default Register = ({ navigation }) => {
             if (error.message === 'Failed to fetch') {
                 errors.failed = 'Failed to connect to the server'
               } else { 
-                console.log(error);
                 errors.failed = 'Inscription impossible'
             }
             setErrors(errors);

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, TextInput, Button, Text } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 function ProgramChange({navigation}) {
   const [programName, setProgramName] = useState('');
 
@@ -11,7 +13,7 @@ function ProgramChange({navigation}) {
     };
     const token = await AsyncStorage.getItem('userToken');
 
-    fetch('http://localhost:80/api/auth/change-program', {
+    fetch(`${apiUrl}/api/auth/change-program`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

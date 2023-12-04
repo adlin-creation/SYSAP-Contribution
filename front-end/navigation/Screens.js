@@ -15,22 +15,17 @@ import LoginScreen from "../screens/Login";
 import RegisterScreen from "../screens/Register";
 import ProgramChangeScreen from "../screens/ProgramChange";
 import LogoutScreen from "../screens/Logout";
+import ExerciseDetail from "../screens/ExerciseDetail";
 import EvaluationScreen from "../screens/Evaluation";
+import EmailScreen from '../screens/Email';
+
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
-
 const { width } = Dimensions.get("screen");
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
-const profile = {
-  id:"",
-  name: "",
-  familyName: "",
-  email: "",
-  programName: ""
-};
 
 function ProfileStack(props) {
   return (
@@ -176,12 +171,35 @@ function EvaluationStack(props) {
   );
 }
 
+function EmailStack(props) {
+  return (
+    <Stack.Navigator
+      initialRouteName="Email"
+      screenOptions={{
+        mode: "card",
+        headerShown: "screen",
+      }}
+    >
+      <Stack.Screen
+        name="EmailScreen"
+        component={EmailScreen}
+        options={{
+          header: ({ navigation, scene }) => (
+            <Header title="Email" scene={scene} navigation={navigation} />
+          ),
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+
 function AppStack(props) {
   return (
     <Drawer.Navigator
       style={{ flex: 1 }}
       drawerContent={(props) => (
-        <CustomDrawerContent {...props} profile={profile} />
+        <CustomDrawerContent {...props} />
       )}
       drawerStyle={{
         backgroundColor: "white",
@@ -322,6 +340,22 @@ function AppStack(props) {
           ),
         }}
       />
+      <Drawer.Screen
+        name="Email"
+        component={EmailStack}
+        options={{
+          drawerIcon: ({ focused }) => (
+            <Icon
+              size={16}
+              name="ion-email"
+              family="ionicon"
+              color={focused ? "white" : materialTheme.COLORS.MUTED}
+              style={{ marginRight: -3 }}
+            />
+          ),
+        }}
+      />
+
     </Drawer.Navigator>
   );
 }
@@ -343,9 +377,9 @@ export default function OnboardingStack(props) {
       />
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Register" component={RegisterScreen} />
+      <Stack.Screen name="ExerciseDetail" component={ExerciseDetail} />
       <Stack.Screen name="ProgramChange" component={ProgramChangeScreen} />
       <Stack.Screen name="App" component={AppStack} />
     </Stack.Navigator>
   );
 }
-

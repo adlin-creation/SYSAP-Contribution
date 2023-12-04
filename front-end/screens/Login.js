@@ -13,10 +13,10 @@ import CustomButton from '../components/CustomButton';
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
-const Login = ({navigation}) => {
+const Login = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [errors, setErrors] = useState({}); 
+    const [errors, setErrors] = useState({});
 
     useEffect(() => {
         const verifyToken = async () => {
@@ -30,8 +30,6 @@ const Login = ({navigation}) => {
                     }
                 })
                 .then((response) => {
-                    console.log(response);
-
                     if (response.ok) {
                         navigation.navigate('App');
                     } else {
@@ -39,8 +37,6 @@ const Login = ({navigation}) => {
                     }
                 })
             } catch (error) {
-                console.log(error);
-
                 return;
             }
         };
@@ -56,9 +52,9 @@ const Login = ({navigation}) => {
         } else if (!/\S+@\S+\.\S+/.test(email)) { 
             errors.email = 'Email invalide.'; 
         }
-  
-        setErrors(errors); 
-        if (Object.keys(errors).length > 0) { 
+
+        setErrors(errors);
+        if (Object.keys(errors).length > 0) {
             return false;
         }
         return true;
@@ -66,7 +62,7 @@ const Login = ({navigation}) => {
 
     const handleLogin = () => {
         if (!validateForm()) return;
-        let errors = {}; 
+        let errors = {};
         setErrors({});
 
         const requestBody = {
@@ -109,9 +105,9 @@ const Login = ({navigation}) => {
     };
 
     return (
-        <Block style={{flex: 1, justifyContent: 'center'}}>
-            <View style={{paddingHorizontal: 25}}>
-                <View style={{alignItems: 'center'}}>
+        <Block style={{ flex: 1, justifyContent: 'center' }}>
+            <View style={{ paddingHorizontal: 25 }}>
+                <View style={{ alignItems: 'center' }}>
                     <Image
                         source={require('../assets/images/login-logo.jpg')}
                         style={{ height: 300, width: 300 }}
@@ -130,51 +126,51 @@ const Login = ({navigation}) => {
 
                 <View style={styles.container}>
                     <Icon
-                    size={16}
-                    name="mail-outline"
-                    family="ionicon"
-                    color={"black"}
+                        size={16}
+                        name="mail-outline"
+                        family="ionicon"
+                        color={"black"}
                     />
                     <TextInput
-                    placeholder={'email'}
-                    onChangeText={setEmail}
-                    value={email}
-                    keyboardType="email-address"
+                        placeholder={'email'}
+                        onChangeText={setEmail}
+                        value={email}
+                        keyboardType="email-address"
                     />
                 </View>
 
                 <View style={styles.container}>
                     <Icon
-                    size={16}
-                    name="lock-closed-outline"
-                    family="ionicon"
-                    color={"black"}
+                        size={16}
+                        name="lock-closed-outline"
+                        family="ionicon"
+                        color={"black"}
                     />
                     <TextInput
-                    placeholder={'mot de passe'}
-                    secureTextEntry
-                    onChangeText={setPassword}
-                    value={password}
-                    inputType="password"
+                        placeholder={'mot de passe'}
+                        secureTextEntry
+                        onChangeText={setPassword}
+                        value={password}
+                        inputType="password"
                     // fieldButtonLabel={"Oublié?"}
                     // fieldButtonFunction={() => {}}
                     />
                 </View>
-                
+
                 <CustomButton label={'Se connecter'} onPress={handleLogin} />
 
-                {Object.values(errors).map((error, index) => ( 
-                    <Text key={index} style={styles.error}> 
-                        {error} 
-                    </Text> 
-                ))} 
+                {Object.values(errors).map((error, index) => (
+                    <Text key={index} style={styles.error}>
+                        {error}
+                    </Text>
+                ))}
 
                 <View style={styles.container}>
                     <Text>Nouveau sur Sysap?</Text>
                     <Pressable onPress={() => navigation.navigate('Register')}>
-                        <Text style={{color: '#AD40AF', fontWeight: '700'}}> Inscription</Text>
+                        <Text style={{ color: '#AD40AF', fontWeight: '700' }}> Inscription</Text>
                     </Pressable>
-                </View> 
+                </View>
             </View>
         </Block>
     );
@@ -188,11 +184,11 @@ const styles = StyleSheet.create({
         paddingBottom: 8,
         marginBottom: 25,
     },
-    error: { 
-        color: 'red', 
+    error: {
+        color: 'red',
         textAlign: 'center',
-        fontSize: 14, 
-        marginBottom: 12, 
+        fontSize: 14,
+        marginBottom: 12,
     },
 });
 
