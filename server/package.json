@@ -8,7 +8,8 @@
     "start": "ts-node --files src/server.ts",
     "dev": "nodemon src/server.ts",
     "init-db": "sh ./db/init-db.sh",
-    "serve": "npm run init-db && npm run start"
+    "serve": "npm run init-db && npm run start",
+    "seed" : "ts-node seedAll.ts"
   },
   "keywords": [],
   "author": "",

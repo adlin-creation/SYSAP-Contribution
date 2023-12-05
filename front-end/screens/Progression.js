@@ -22,8 +22,8 @@ export default class Progression extends React.Component {
     }
 
 
-    handleSelect = (selectedItem, index) => {
-        this.setState({week : index + 1});
+    handleSelect = (selectedItem) => {
+        this.setState({week : selectedItem});
     };
 
     render() {
@@ -41,7 +41,7 @@ export default class Progression extends React.Component {
                             />
                         </View>
                         <View style={styles.containerDroite}>
-                            <SemaineComponent onSelect={this.handleSelect}/>
+                            <SemaineComponent onSelect={this.handleSelect} idPatient={1} Programme={"PATH"}/>
                             <ObjectifEtExerciceComponent
                                 idPatient={1}
                                 week={this.state.week}

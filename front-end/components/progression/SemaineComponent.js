@@ -1,50 +1,57 @@
-import React, {useEffect, useState} from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, {useEffect, useState, } from 'react';
+import {View, StyleSheet, Platform} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import SelectDropdown from 'react-native-select-dropdown';
 import getFetch from "../apiFetch/getFetch";
+import {getISOWeek} from "date-fns";
 
-const SemaineComponent = ({ onSelect, idPatient }) => {
+const SemaineComponent = ({ onSelect, idPatient}) => {
 
-  //faire controller pour getStartDate
-  //faire route et controller pour getDuration
-  //on veut un array qui par du start date jusqua a duree
-  //trouver une facon de show 1 a duree mais que le week soit lui actual
 
-  //
-  // const [depart, setDepart] = useState(1);
-  // const [duree, setDuree] = useState(1);
-  //
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const dateDepart = await getFetch(`http://localhost:3000/api/programEnrollment/user/getStartDate/${idPatient}/`)
-  //       // const dureeProgramme = await getFetch(...);
-  //     } catch (error){
-  //       console.error('Error fetching data', error);
-  //     }
-  //   };
-  // })
+  const [depart, setDepart] = useState(48);
+  const [duree, setDuree] = useState(2);
 
-  const weeks = [...Array(52).keys()].map(i => `Semaine ${i + 1}`);
-  const handleSelect = (selectedItem, index) => {
-    console.log(selectedItem, index);
-    onSelect(selectedItem, index); // Appel de la fonction onSelect avec les valeurs
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const responseDepart = await getFetch(`http://localhost:3000/api/programEnrollment/user/${idPatient}`)
+        if (responseDepart) {
+          const startDate = new Date(responseDepart.startDate);
+          setDuree(responseDepart.program.duration);
+          setDepart(getISOWeek(startDate));
+        }
+      } catch (error){
+        console.error('Error fetching data', error);
+      }
+    };
+    fetchData();
+  })
+
+
+  const weekOptions = Array.from({ length: duree }, (_, i) => {
+    const weekNumber = depart + i <= 52 ? depart + i : depart + i - 52;
+    return {
+      label: `Semaine ${i + 1}`,
+      value: weekNumber
+    };
+  });
+
+  const handleSelect = (selectedItem) => {
+    onSelect(selectedItem.value); // Appel de la fonction onSelect avec les valeurs
   };
   return (
     <View style={styles.container}>
       <SelectDropdown
-        data={weeks}
-        defaultValueByIndex={0} // assuming semaine is 1-based index
-        onSelect={(selectedItem, index) => {
-          //console.log(selectedItem, index);
-          handleSelect(selectedItem,index);
+        data={weekOptions}
+        defaultValueByIndex={0}
+        onSelect={(selectedItem) => {
+          handleSelect(selectedItem);
         }}
-        buttonTextAfterSelection={(selectedItem, index) => {
-          return selectedItem;
+        buttonTextAfterSelection={(selectedItem) => {
+          return selectedItem.label;
         }}
-        rowTextForSelection={(item, index) => {
-          return item;
+        rowTextForSelection={(item) => {
+          return item.label;
         }}
         buttonStyle={styles.dropdownButton}
         buttonTextStyle={styles.dropdownButtonText}
@@ -53,7 +60,7 @@ const SemaineComponent = ({ onSelect, idPatient }) => {
         }}
         dropdownIconPosition={'right'}
         dropdownStyle={styles.dropdownStyle}
-        rowTextStyle={styles.rowTextStyle} // Add this line
+        rowTextStyle={styles.rowTextStyle}
       />
     </View>
   );
