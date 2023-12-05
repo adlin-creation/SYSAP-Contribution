@@ -1,15 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import { View, Image, Text, StyleSheet } from 'react-native';
+import getFetch from "../apiFetch/getFetch";
+import {useIsFocused} from "@react-navigation/native";
 
-const Classement = () => {
+const Classement = ({idPatient, week}) => {
     const [ranking, setRanking] = useState('N/A');
 
+    const isFocused = useIsFocused();
+
     useEffect(() => {
-        const fetchedRanking = '3'; //aller chercher le vrai rankings ici
-        setRanking(fetchedRanking);
-        return () => {
+        const fetchData = async () => {
+            try {
+                const response = await getFetch(`http://localhost:3000/api/progress/getAllMarche/${week}`);
+                const allMarchesData = response.data;
+
+                const marcheTotals = allMarchesData.reduce((acc, record) => {
+                    acc[record.idPatient] = (acc[record.idPatient] || 0) + record.Marche;
+                    return acc;
+                }, {});
+
+                const sortedTotals = Object.entries(marcheTotals)
+                    .map(([id, totalMarche]) => ({ idPatient: parseInt(id), totalMarche }))
+                    .sort((a, b) => b.totalMarche - a.totalMarche);
+
+                const classement = sortedTotals.findIndex(item => item.idPatient === idPatient) + 1
+                setRanking(classement);
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
         };
-    }, []);
+    if (isFocused) fetchData();
+    }, [isFocused, week]);
 
     return (
         <View>

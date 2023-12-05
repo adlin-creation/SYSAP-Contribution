@@ -8,7 +8,8 @@
     "start": "ts-node --files src/server.ts",
     "dev": "nodemon src/server.ts",
     "init-db": "sh ./db/init-db.sh",
-    "serve": "npm run init-db && npm run start"
+    "serve": "npm run init-db && npm run start",
+    "seed" : "ts-node seedAll.ts"
   },
   "keywords": [],
   "author": "",
@@ -30,7 +31,8 @@
     "sequelize": "^6.33.0",
     "sqlite3": "^5.1.6",
     "supertest": "^6.3.3",
-    "ts-jest": "^29.1.1"
+    "ts-jest": "^29.1.1",
+    "date-fns": "^2.30.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.5",
