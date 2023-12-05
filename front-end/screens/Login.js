@@ -17,36 +17,40 @@ const Login = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errors, setErrors] = useState({});
-    console.log(apiUrl);
 
     useEffect(() => {
-        // Inside the useEffect, you can get the token from AsyncStorage
-        const getToken = async () => {
+        const verifyToken = async () => {
+            const token = await AsyncStorage.getItem('userToken');
+
             try {
-                const token = await AsyncStorage.getItem('userToken');
-                if (token !== null) {
-                    // Token found in AsyncStorage, you can proceed with authentication or other actions
-                    console.log('Token: ', token);
-                    // Replace with your authentication logic
-                    navigation.navigate('App');
-                } else {
-                    return;
-                }
+                fetch(`${apiUrl}/api/auth/verify-token`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                })
+                .then((response) => {
+                    if (response.ok) {
+                        navigation.navigate('App');
+                    } else {
+                        return;
+                    }
+                })
             } catch (error) {
-                console.error('Error fetching token:', error);
+                return;
             }
         };
-
-        getToken();
-    }, []);
-
-    const validateForm = () => {
-        let errors = {};
-
-        if (!email || !password) {
-            errors.name = 'Tous les champs sont nécessaires.';
-        } else if (!/\S+@\S+\.\S+/.test(email)) {
-            errors.email = 'Email invalide.';
+    
+        verifyToken();
+      }, []);
+  
+    const validateForm = () => { 
+        let errors = {}; 
+  
+        if (!email || !password) { 
+            errors.name = 'Tous les champs sont nécessaires.'; 
+        } else if (!/\S+@\S+\.\S+/.test(email)) { 
+            errors.email = 'Email invalide.'; 
         }
 
         setErrors(errors);
@@ -69,44 +73,35 @@ const Login = ({ navigation }) => {
         fetch(`${apiUrl}/api/auth/login`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(requestBody),
         })
-            .then((response) => {
-                if (response.ok) {
-                    // Request was successful, you can handle the response here
-                    return response.json();
-                } else {
-                    throw new Error('Request failed');
-                }
-            })
-            .then(async (responseData) => {
-                if (!responseData.token) {
-                    throw new Error('missing token');
-                }
-                await AsyncStorage.setItem('userToken', responseData.token);
-                await AsyncStorage.setItem('userId', responseData.id);
-                navigation.navigate('App');
-            })
-            .then(async (data) => {
-                if (!data.token) {
-                    errors.failed = 'Connection échouée'
-                    setErrors(errors);
-                }
-                AsyncStorage.setItem('userToken', data.token);
-                AsyncStorage.setItem('userId', responseData.id);
-                navigation.navigate('App');
-            })
-            .catch((error) => {
-                if (error.message === 'Failed to fetch') {
-                    errors.failed = 'Failed to connect to the server'
-                } else {
-                    errors.failed = 'Connection échouée'
-                }
-                setErrors(errors);
-                return;
-            });
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Request failed');
+            }
+        })
+        .then(async (responseData) => 
+        {
+            if(!responseData.token) {
+                throw new Error('missing token');
+            }
+            await AsyncStorage.setItem('userToken', responseData.token);
+
+            navigation.navigate('App');
+        })
+        .catch((error) => {
+            if (error.message === 'Failed to fetch') {
+                errors.failed = 'Failed to connect to the server'
+              } else { 
+                errors.failed = 'Connexion échouée'
+            }
+            setErrors(errors);
+            return;
+        });
     };
 
     return (
@@ -126,7 +121,7 @@ const Login = ({ navigation }) => {
                     color: '#333',
                     marginBottom: 30,
                 }}>
-                    Connection
+                Connexion
                 </Text>
 
                 <View style={styles.container}>

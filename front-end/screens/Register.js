@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TouchableOpacity, Image, TextInput, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, Image, TextInput, StyleSheet, CheckBox } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Block, Text } from "galio-framework";
 import { Icon } from '../components';
@@ -12,6 +12,8 @@ export default Register = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassowrd] = useState('');
+    const [idPatients, setIdPatients] = useState('');
+    const [isProcheAidant, setIsProcheAidant] = useState('');
     const [errors, setErrors] = useState({}); 
   
     const validateForm = () => { 
@@ -42,6 +44,7 @@ export default Register = ({ navigation }) => {
             familyName: familyName,
             email: email,
             password: password,
+            idPatients: isProcheAidant ? idPatients.split(',').map(Number) : null,
         };
 
         fetch(`${apiUrl}/api/auth/register`, {
@@ -63,13 +66,14 @@ export default Register = ({ navigation }) => {
                 throw new error('missing token');
             }
             await AsyncStorage.setItem('userToken', response.token);
-            navigation.navigate('App');
+            isProcheAidant ? 
+                navigation.navigate('App') : 
+                navigation.navigate('ProgramChange');
         })
         .catch((error) => {
             if (error.message === 'Failed to fetch') {
                 errors.failed = 'Failed to connect to the server'
               } else { 
-                console.log(error);
                 errors.failed = 'Inscription impossible'
             }
             setErrors(errors);
@@ -165,6 +169,32 @@ export default Register = ({ navigation }) => {
                     onChangeText={setConfirmPassowrd}
                     inputType="password" />
                 </View>
+
+                <View style={styles.container}>
+                    <CheckBox
+                    value={isProcheAidant}
+                    onValueChange={(newValue) => setIsProcheAidant(newValue)}
+                    />
+                    <Text>Je suis un proche aidant</Text>
+                </View>
+
+
+                {isProcheAidant && (
+                    <View style={styles.container}>
+                    <Icon
+                        size={16}
+                        name="body-outline"
+                        family="ionicon"
+                        color={"black"}
+                    />
+                    <TextInput
+                        placeholder='IDs des patients (séparés par des virgules)'
+                        value={idPatients}
+                        onChangeText={setIdPatients}
+                    />
+                    </View>
+                )}
+
                 <TouchableOpacity 
                 style={styles.button} 
                 onPress={handleRegisteration} 
@@ -186,7 +216,7 @@ export default Register = ({ navigation }) => {
                 }}>
                     <Text>Déjà inscrit?</Text>
                     <TouchableOpacity onPress={() => navigation.goBack()}>
-                        <Text style={{ color: '#AD40AF', fontWeight: '700' }}>Connection</Text>
+                        <Text style={{ color: '#AD40AF', fontWeight: '700' }}>Connexion</Text>
                     </TouchableOpacity>
                 </View>
             </View>
