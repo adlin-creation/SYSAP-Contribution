@@ -10,6 +10,8 @@ COPY package.json ./
 
 # Install dependencies
 RUN yarn install
+RUN npm install -g @expo/ngrok@^4.1.0 expo
+RUN expo login -u sysap2023 -p syp2023%%% --non-interactive
 
 # Copy the rest of the application code to the container
 COPY . .
@@ -18,4 +20,4 @@ COPY . .
 EXPOSE 8081
 
 # Start the Metro bundler and the app
-CMD ["yarn", "web"]
+CMD ["yarn", "serve"]

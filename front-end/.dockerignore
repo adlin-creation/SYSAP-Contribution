@@ -1,6 +1,7 @@
 node_modules
 npm-debug.log
 Dockerfile
+Dockergile.prod
 .dockerignore
 yarn-error.log
 .git
