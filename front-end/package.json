@@ -48,7 +48,8 @@
     "react-native-web": "~0.19.6",
     "react-player": "^2.13.0",
     "webpack-config": "^7.5.0",
-    "date-fns": "^2.30.0"
+    "date-fns": "^2.30.0",
+    "react-native-base64": "^0.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

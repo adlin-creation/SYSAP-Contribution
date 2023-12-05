@@ -4,12 +4,15 @@ import Feather from 'react-native-vector-icons/Feather';
 import SelectDropdown from 'react-native-select-dropdown';
 import getFetch from "../apiFetch/getFetch";
 import {getISOWeek} from "date-fns";
+import {useIsFocused} from "@react-navigation/native";
 
 const SemaineComponent = ({ onSelect, idPatient}) => {
 
 
-  const [depart, setDepart] = useState(48);
-  const [duree, setDuree] = useState(2);
+  const [depart, setDepart] = useState(0);
+  const [duree, setDuree] = useState(0);
+
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,8 +27,8 @@ const SemaineComponent = ({ onSelect, idPatient}) => {
         console.error('Error fetching data', error);
       }
     };
-    fetchData();
-  })
+    if (isFocused) fetchData();
+  },[isFocused, idPatient])
 
 
   const weekOptions = Array.from({ length: duree }, (_, i) => {
@@ -43,7 +46,7 @@ const SemaineComponent = ({ onSelect, idPatient}) => {
     <View style={styles.container}>
       <SelectDropdown
         data={weekOptions}
-        defaultValueByIndex={0}
+        defaultValue={weekOptions[0]}
         onSelect={(selectedItem) => {
           handleSelect(selectedItem);
         }}

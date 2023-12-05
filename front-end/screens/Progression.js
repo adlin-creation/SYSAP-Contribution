@@ -11,16 +11,33 @@ import TitreProgression from "../components/progression/TitreProgression";
 import BarreProgressionComponent from "../components/progression/BarreProgressionComponent";
 import SemaineComponent from "../components/progression/SemaineComponent";
 import ObjectifEtExerciceComponent from "../components/progression/ObjectifEtExerciceComponent";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import base64 from 'react-native-base64';
 
 export default class Progression extends React.Component {
     constructor(props) {
         super(props);
 
         this.state={
-            week : 1
+            week : 1,
+            id : null
         }
     }
 
+    componentDidMount() {
+        this.fetchUserId();
+    }
+
+    //fonction tres temporaire et ne devrait pas etre utiliser lors du deployement pour raison de securiter
+    fetchUserId = async () => {
+        try {
+            const token = await AsyncStorage.getItem('userToken');
+            const idRegex = /"id":(\d+)/;
+            this.setState({id : parseInt(((base64.decode(token.split('.')[1])).toString()).match(idRegex)[1], 10)});
+        } catch (error) {
+            console.error('Error finding ID: ', error);
+        }
+    }
 
     handleSelect = (selectedItem) => {
         this.setState({week : selectedItem});
@@ -36,20 +53,20 @@ export default class Progression extends React.Component {
                         <View style={styles.containerGauche}>
                             <TitreProgression />
                             <BarreProgressionComponent
-                                idPatient={1}
+                                idPatient={this.state.id}
                                 week = {this.state.week}
                             />
                         </View>
                         <View style={styles.containerDroite}>
-                            <SemaineComponent onSelect={this.handleSelect} idPatient={1} Programme={"PATH"}/>
+                            <SemaineComponent onSelect={this.handleSelect} idPatient={this.state.id} Programme={"PATH"}/>
                             <ObjectifEtExerciceComponent
-                                idPatient={1}
+                                idPatient={this.state.id}
                                 week={this.state.week}
                                 iconName={"flag"}
                                 section={"Objectif"}
                             />
                             <ObjectifEtExerciceComponent
-                                idPatient={1}
+                                idPatient={this.state.id}
                                 week={this.state.week}
                                 iconName={"zap"}
                                 section={"Séances"}
@@ -69,11 +86,11 @@ export default class Progression extends React.Component {
                     <BoiteEncadree
                         gauche={
                             <View>
-                                <ProgressionMarcheComponent idPatient={1} week={this.state.week}></ProgressionMarcheComponent>
+                                <ProgressionMarcheComponent idPatient={this.state.id} week={this.state.week}></ProgressionMarcheComponent>
                             </View>}
                         droite={
                             <View>
-                                <Classement idPatient={1} week={this.state.week}></Classement>
+                                <Classement idPatient={this.state.id} week={this.state.week}></Classement>
                             </View>}
                     />
                 </View>
