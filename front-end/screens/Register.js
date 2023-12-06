@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, TouchableOpacity, Image, TextInput, StyleSheet, CheckBox } from 'react-native';
+import Checkbox from 'expo-checkbox'
+import { View, TouchableOpacity, Image, TextInput, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Block, Text } from "galio-framework";
 import { Icon } from '../components';
@@ -171,7 +172,7 @@ export default Register = ({ navigation }) => {
                 </View>
 
                 <View style={styles.container}>
-                    <CheckBox
+                    <Checkbox
                     value={isProcheAidant}
                     onValueChange={(newValue) => setIsProcheAidant(newValue)}
                     />
