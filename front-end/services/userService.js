@@ -1,18 +1,16 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import base64 from 'react-native-base64';
 
 export async function getUserFromToken() {
   try {
     const token = await AsyncStorage.getItem('userToken');
 
     if (token) {
-      var base64Url = token.split('.')[1];
-      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      var tokenData = decodeURIComponent(window.atob(base64).split('').map((c) => {
-          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      }).join(''));
-      const user = JSON.parse(tokenData).user;
+      const decoded = base64.decode(token.split('.')[1]).toString();
+      const cleanedJsonString = decoded.replace(/[^\x20-\x7E]/g, '');
+      const user =  JSON.parse(cleanedJsonString)
 
-       return user;
+      return user;
     } else {
       console.error('User token not found');
       return null;
