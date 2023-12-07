@@ -12,9 +12,7 @@ export async function getUserFromToken() {
       }).join(''));
       const user = JSON.parse(tokenData).user;
 
-      console.log(user);
-
-      return user;
+       return user;
     } else {
       console.error('User token not found');
       return null;
