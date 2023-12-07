@@ -46,19 +46,19 @@ export default class AuthController {
     try {
       const { email, password } = req.body;
 
-      const patient = await Patient.findOne({ where: { email } });
+      const user = await Patient.findOne({ where: { email } }) || await Caregiver.findOne({ where: { email }});
 
-      if (!patient) {
+      if (!user) {
         return res.status(400).json({ msg: 'Invalid credentials' });
       }
 
-      const isPasswordMatch = await bcrypt.compare(password, patient.Password);
+      const isPasswordMatch = await bcrypt.compare(password, user.Password);
 
       if (!isPasswordMatch) {
         return res.status(400).json({ msg: 'Invalid credentials' });
       }
 
-      const token = generateJwtToken(patient);
+      const token = generateJwtToken(user);
 
       return res.json({ token });
     } catch (err: any) {

@@ -1,16 +1,16 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { jwtDecode } from 'jwt-decode';
+import base64 from 'react-native-base64';
 
 export async function getUserFromToken() {
   try {
     const token = await AsyncStorage.getItem('userToken');
 
     if (token) {
-      const secretKey = 'SuperSecret';
+      const decoded = base64.decode(token.split('.')[1]).toString();
+      const cleanedJsonString = decoded.replace(/[^\x20-\x7E]/g, '');
+      const user =  JSON.parse(cleanedJsonString)
 
-      const decoded = jwtDecode(token, secretKey);
-
-      return decoded.user;
+      return user;
     } else {
       console.error('User token not found');
       return null;
