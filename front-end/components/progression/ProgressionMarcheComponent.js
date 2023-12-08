@@ -40,50 +40,64 @@ const ProgressionMarcheComponent = ({ idPatient, week }) => {
 
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Progression marche</Text>
-            <View style={styles.statContainer}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Feather name="clock" size={24} style={styles.icon} />
-                    <Text style={styles.stat}>{formatTime(totalTimeWalked)}</Text>
-                </View>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Feather name="trending-up" size={24} style={styles.icon} />
-                    <Text style={styles.stat}>Nombre de marches: {nbMarches}</Text>
-                </View>
-            </View>
-        </View>
-
-    );
+      <View style={styles.container}>
+          <Text style={styles.title}>Progression marche</Text>
+          <View style={styles.statContainer}>
+              <View style={styles.iconContainer}>
+                  <Feather name="clock" size={30} style={styles.icon} />
+                  <Feather name="trending-up" size={30} style={styles.icon} />
+              </View>
+              <View style={styles.textContainer}>
+                  <Text style={styles.stat}>{formatTime(totalTimeWalked)}</Text>
+                  <Text style={[styles.stat, styles.secondStat]}>
+                      Nombre de marches: {nbMarches}
+                  </Text>
+              </View>
+          </View>
+      </View>
+  );
+  
 };
 const styles = StyleSheet.create({
     container: {
-        padding: 20,
+        padding: 8,
         backgroundColor: '#fff',
+        alignItems: 'center'
     },
     title: {
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: 'bold',
         color: '#000',
-        marginBottom: 20,
+        marginBottom: 10, 
+        textAlign:'center'
     },
     statContainer: {
-        flexDirection: 'column',
+        flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        paddingVertical: 10,
+    },
+    iconContainer: {
+      flexDirection: "column",
+      alignItems: "center",
+      marginRight: 15,
+    },
+    textContainer: {
+      flexDirection: "column",
+      alignItems: "flex-start",
     },
     stat: {
         fontSize: 16,
-        fontWeight: '500',
-        color: '#000',
-        marginBottom: 10,
+        fontWeight: '700',
+        color: '#4F504F',
+        marginTop: 10,
+    },
+    secondStat: {
+      marginTop: 16,
     },
     //style pour les icones de nb marches et le petit clock
     icon: {
         color: '#FFA500',
-        marginRight: 10,
-        marginTop: -8,
+        marginBottom:4
     },
     // Style pour un racourcis de + pour ajouter une marches
     addButton: {
@@ -92,6 +106,10 @@ const styles = StyleSheet.create({
         top: 20,
         fontSize: 24,
         color: '#000',
+    },
+    statRow: {
+      flexDirection: "row",
+      alignItems: "center",
     },
 });
 

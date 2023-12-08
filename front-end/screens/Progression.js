@@ -13,6 +13,7 @@ import SemaineComponent from "../components/progression/SemaineComponent";
 import ObjectifEtExerciceComponent from "../components/progression/ObjectifEtExerciceComponent";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import base64 from 'react-native-base64';
+import RaccourcisExercice from "../components/progression/RaccourcisExercice.js";
 
 export default class Progression extends React.Component {
     constructor(props) {
@@ -76,12 +77,16 @@ export default class Progression extends React.Component {
                     <StatusBar style="auto" />
                     <BoiteEncadree
                         gauche={
-                            <View>
-                                <Text>Difficulté moyenne</Text>
-                                <TauxDiffComponent difficultyLevels={[2]}></TauxDiffComponent>
-                            </View>
+                          <View>
+                          <TauxDiffComponent difficultyLevels={[2]}></TauxDiffComponent>
+                        </View>
                         }
-                        droite={<Button title="Effectuer Exercices" onPress={() => this.props.navigation.navigate('Profile')} />}
+                        droite={              
+                        <RaccourcisExercice
+                          title="Effectuer exercices"
+                          onPress={() => this.props.navigation.navigate("Profile")}
+                        />
+                        }
                     />
                     <BoiteEncadree
                         gauche={
