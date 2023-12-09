@@ -41,6 +41,7 @@ import impressionRoutes from './routes/impressionRoutes';
 import progressRoutes from './routes/progressRoutes';
 import programEnrollment from "./routes/programEnrollmentRoutes";
 import emailRoutes from './routes/emailRoutes'
+import { seedProgram } from './seeders/seed-program';
 
 app.use('/api/exercises', exerciseRoutes);
 app.use('/api/auth', authRoutes);
@@ -59,6 +60,7 @@ async function configureDatabase() {
   try {
     // intitialize the database
     await initDatabase();
+    await seedProgram();
   } catch (error: any) {
     throw new Error(error);
   }

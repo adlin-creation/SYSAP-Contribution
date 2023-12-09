@@ -28,7 +28,7 @@ ProgramEnrollment.init(
             unique: true,
         },
         ProgramEnrollmentDate: {
-            type: DataTypes.STRING,
+            type: DataTypes.DATE,
         },
         ProgramStartDate: {
             type: DataTypes.STRING,
