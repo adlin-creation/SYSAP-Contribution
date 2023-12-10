@@ -12,27 +12,23 @@ interface User {
   firstName: string;
   lastName: string;
   email: string;
+  role: string;
 }
 
 export default class AuthServices {
   static async register(name: string, familyName: string, email: string, password: string, idPatients: any): Promise<string> {
     const hashedPassword = await AuthServices.hashPassword(password);
 
-    if (idPatients) {
-      const existingCaregiver = await Caregiver.findOne({ where: { email } });
-      if (existingCaregiver) {
-        throw new Error('Email already registered');
-      }
+    const existingUser = await Patient.findOne({ where: { email } }) || await Caregiver.findOne({ where: { email } });
+    if (existingUser) {
+      throw new Error('Email already registered');
+    }
 
+    if (idPatients) {
       const caregiver = await AuthServices.createCaregiver(name, familyName, email, hashedPassword, idPatients);
       const token = AuthServices.generateJwtToken(caregiver);
       return token;
     } else {
-      const existingPatient = await Patient.findOne({ where: { email } });
-      if (existingPatient) {
-        throw new Error('Email already registered');
-      }
-
       const patient = await AuthServices.createPatient(name, familyName, email, hashedPassword);
       const token = AuthServices.generateJwtToken(patient);
       return token;
@@ -174,9 +170,20 @@ export default class AuthServices {
       firstName: AuthServices.getPropertyByString(user, 'FirstName'),
       lastName: AuthServices.getPropertyByString(user, 'LastName'),
       email: user.Email,
+      role: this.getUserRole(user),
     };
 
     const jwtSecret = process.env.JWT_SECRET as string;
     return jwt.sign(payload, jwtSecret, { expiresIn: process.env.TOKEN_EXPIRE_TIME });
+  }
+
+  private static getUserRole(user: Patient | Caregiver): string {
+    if (user instanceof Patient) {
+      return 'patient';
+    } else if (user instanceof Caregiver) {
+      return 'caregiver';
+    } else {
+      throw new Error('Invalid user type');
+    }
   }
 }
