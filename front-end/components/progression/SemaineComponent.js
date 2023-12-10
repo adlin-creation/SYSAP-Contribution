@@ -46,7 +46,7 @@ const SemaineComponent = ({ onSelect, idPatient}) => {
     <View style={styles.container}>
       <SelectDropdown
         data={weekOptions}
-        defaultValue={weekOptions[0]}
+        // defaultValue={}
         onSelect={(selectedItem) => {
           handleSelect(selectedItem);
         }}
