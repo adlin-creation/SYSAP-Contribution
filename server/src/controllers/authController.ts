@@ -2,13 +2,20 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import Patient from '../models/Patient';
-import { JwtPayload } from '../types/jwtTypes';
 import * as dotenv from 'dotenv';
 import ProgramEnrollment from '../models/ProgramEnrollment';
 import Caregiver from '../models/Caregiver';
 import PatientCaregiver from '../models/PatientCaregiver';
+import { sequelize } from '../db/database';
 
 dotenv.config({ path: './src/config/config.env' });
+
+interface User {
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+}
 
 export default class AuthController {
   static register = async (req: Request, res: Response) => {
@@ -24,6 +31,7 @@ export default class AuthController {
             return res.status(400).json({ msg: 'Email already registered' });
           }
           const caregiver = await createCaregiver(name, familyName, email, hashedPassword, idPatients);
+          console.log(caregiver);
           const token = generateJwtToken(caregiver);
           return res.json({ token });
         }
@@ -38,6 +46,7 @@ export default class AuthController {
           return res.json({ token });
         }
     } catch (err: any) {
+      console.log(err);
       return res.status(500).send('Server Error');
     }
   }
@@ -75,9 +84,9 @@ export default class AuthController {
       }
     
       const jwtSecret = process.env.JWT_SECRET as string;
-      const decoded = jwt.verify(token, jwtSecret) as JwtPayload;
+      const user = jwt.verify(token, jwtSecret) as User;
   
-      if (!decoded.user){
+      if (!user){
         return res.status(403).json({ msg: 'Missing program name' });
       }
 
@@ -109,9 +118,9 @@ export default class AuthController {
 
 async function getPatientFromToken(token: string): Promise<Patient> {
   const jwtSecret = process.env.JWT_SECRET as string;
-  const decoded = jwt.verify(token, jwtSecret) as JwtPayload;
+  const user = jwt.verify(token, jwtSecret) as User;
 
-  const patient = await Patient.findByPk(decoded.user.id);
+  const patient = await Patient.findByPk(user.id);
   if (!patient) {
     throw new Error('Patient not found');
   }
@@ -146,13 +155,11 @@ async function createPatient(firstName: string, lastName: string, email: string,
 function generateJwtToken(user: Patient | Caregiver) {
   const idProp = getPropertyByString(user, "id");
   
-  const payload: JwtPayload = {
-    user: {
+  const payload: User = {
       id: getPropertyByString(user, "id"),
       firstName: getPropertyByString(user, "FirstName"),
       lastName: getPropertyByString(user, "LastName"),
       email: user.Email,
-    },
   };
   const jwtSecret = process.env.JWT_SECRET as string;
   return jwt.sign(payload, jwtSecret, { expiresIn: process.env.TOKEN_EXPIRE_TIME });
@@ -174,19 +181,29 @@ function getPropertyByString(obj: any, searchString: string): any | undefined {
 }
 
 async function createCaregiver(firstName: string, lastName: string, email: string, password: string, idPatients: any): Promise<Caregiver> {
-  
-  const caregiver = await Caregiver.create({
-    FirstName: firstName,
-    LastName: lastName,
-    Email: email,
-    Password: password,
-  });
 
-  if (idPatients.length > 0) {
-    const patientIds = idPatients.map((id: number) => ({ patient_id: id, caregiver_id:  getPropertyByString(caregiver, "id") }));
-    await PatientCaregiver.bulkCreate(patientIds);
+  const t = await sequelize.transaction();
+
+  try {
+    const caregiver = await Caregiver.create({
+      FirstName: firstName,
+      LastName: lastName,
+      Email: email,
+      Password: password,
+    }, { transaction: t });
+
+    if (idPatients.length > 0) {
+      const patientIds = idPatients.map((id: number) => ({ patient_id: id, caregiver_id: getPropertyByString(caregiver, "id") }));
+      await PatientCaregiver.bulkCreate(patientIds, { transaction: t });
+    }
+
+    await t.commit();
+
+    return caregiver;
+  } catch (error) {
+    console.log(error);
+    await t.rollback();
+    throw error;
   }
-
-  return caregiver;
 }
 
