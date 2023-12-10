@@ -22,10 +22,18 @@ export async function getUserFromToken() {
   }
 }
 
-export const getPatientsForCaregiver = async (caregiverId) => {
+export const getPatientsForCaregiver = async () => {
   try {
-    const path = `/api/caregivers/${caregiverId}/patients`;
+    const user = await getUserFromToken();
+    
+    const path = `/api/caregivers/${user.id}/patients`;
+    
+    if (user.role !== "caregiver"){
+      throw new Error("User is not a caregiver");
+    } 
+
     const data = await fetchServerData(path);
+
     return data.patients;
   } catch (error) {
     console.error('Error fetching patients for caregiver:', error);
