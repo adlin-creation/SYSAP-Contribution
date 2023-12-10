@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import base64 from 'react-native-base64';
+import { fetchServerData } from './apiServices'; // Adjust the path as needed
 
 export async function getUserFromToken() {
   try {
@@ -20,4 +21,23 @@ export async function getUserFromToken() {
     return null;
   }
 }
+
+export const getPatientsForCaregiver = async () => {
+  try {
+    const user = await getUserFromToken();
+    
+    const path = `/api/caregivers/${user.id}/patients`;
+    
+    if (user.role !== "caregiver"){
+      throw new Error("User is not a caregiver");
+    } 
+
+    const data = await fetchServerData(path);
+
+    return data.patients;
+  } catch (error) {
+    console.error('Error fetching patients for caregiver:', error);
+    throw error;
+  }
+};
 
