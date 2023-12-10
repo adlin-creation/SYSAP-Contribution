@@ -82,7 +82,6 @@ export default class ProgressController {
                 NbSeances: ++progressionExercices.NbSeances,
                 DiffMoyenne: (DiffMoyenne + progressionExercices.DiffMoyenne)/(progressionExercices.NbSeances),
                 NbSemaines: currentWeek,
-                NbObjectifs: NbObjectifs,
                 NumProgramme: NumProgramme,
             });
 

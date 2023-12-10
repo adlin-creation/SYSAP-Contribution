@@ -9,7 +9,7 @@ class ProgressionExercices extends Model {
     public DiffMoyenne!: number;
     public NbSemaines!: number;
     public NbObjectifs!: number;
-    public NumProgramme!: number;
+    public NumProgramme!: string;
 }
 
 ProgressionExercices.init({
@@ -43,7 +43,7 @@ ProgressionExercices.init({
         allowNull: false,
     },
     NumProgramme: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false,
     },
 }, {
