@@ -35,6 +35,7 @@ export default class Progression extends React.Component {
             const token = await AsyncStorage.getItem('userToken');
             const idRegex = /"id":(\d+)/;
             this.setState({id : parseInt(((base64.decode(token.split('.')[1])).toString()).match(idRegex)[1], 10)});
+            console.log(this.state.id);
         } catch (error) {
             console.error('Error finding ID: ', error);
         }
@@ -48,8 +49,6 @@ export default class Progression extends React.Component {
         return (
             <ScrollView style={{ flex: 1 }}>
                 <View style={styles.container}>
-                    <Imprimer type={"programme"} />
-                    {<AjouterMarche/>}
                     <View style={styles.container2}>
                         <View style={styles.containerGauche}>
                             <TitreProgression />
@@ -78,7 +77,7 @@ export default class Progression extends React.Component {
                     <BoiteEncadree
                         gauche={
                           <View>
-                          <TauxDiffComponent difficultyLevels={[2]}></TauxDiffComponent>
+                          <TauxDiffComponent idPatient={this.state.id} week={this.state.week}></TauxDiffComponent>
                         </View>
                         }
                         droite={              

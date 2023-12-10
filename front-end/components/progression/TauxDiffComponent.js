@@ -1,17 +1,31 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { View, StyleSheet, Text } from "react-native";
+import {useIsFocused} from "@react-navigation/native";
+import getFetch from "../apiFetch/getFetch";
 
-const TauxDiffComponent = ({ difficultyLevels }) => {
-  difficultyLevels = difficultyLevels;
+const TauxDiffComponent = ({ idPatient, week }) => {
+  let [difficultyLevels, setDifficulty] = useState(0);
+  const isFocused = useIsFocused();
 
-  const averageDifficulty =
-    difficultyLevels.reduce((a, b) => a + b, 0) / difficultyLevels.length;
+  useEffect(() => {
+    const fetchData = async() => {
+      try {
+        const res = await getFetch(`http://localhost:3000/api/progress/progressionExercices/${idPatient}/${week}`);
+        setDifficulty(res.data.DiffMoyenne);
+      } catch (error) {
+        console.error("Donnees non trouvee : " + error);
+      }
+    };
+    if (isFocused) fetchData();
+  }, [isFocused, week]);
+
 
   let circleColor;
-  if (averageDifficulty <= 1.5) {
+  let borderCircleColor;
+  if (difficultyLevels <= 1.5) {
     borderCircleColor = "#006400";
     circleColor = "green";
-  } else if (averageDifficulty <= 2.5) {
+  } else if (difficultyLevels <= 2.5) {
     borderCircleColor = "#E2E200";
     circleColor = "yellow";
   } else {

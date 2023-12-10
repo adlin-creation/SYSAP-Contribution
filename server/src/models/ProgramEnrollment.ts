@@ -25,7 +25,7 @@ ProgramEnrollment.init(
         ProgramName: {
             type: DataTypes.STRING,
             allowNull: false,
-            unique: true,
+            unique: false,
         },
         ProgramEnrollmentDate: {
             type: DataTypes.STRING,
