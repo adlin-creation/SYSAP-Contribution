@@ -7,6 +7,7 @@ import Icon from '../components';
 import CustomCard from '../components/CustomCard';
 import ProfileContext from '../ProfileContext';
 import { fetchServerData } from '../services/apiServices';
+import { getPatientsForCaregiver, getUserFromToken } from '../services/userService';
 
 const { width } = Dimensions.get('screen');
 
@@ -21,6 +22,11 @@ function ProgramInfo() {
 
     const fetchData = async () => {
       try {
+        const user = await getUserFromToken();
+        console.log(user);
+        const patients = await getPatientsForCaregiver();
+        console.log(patients);
+
         const userId = await AsyncStorage.getItem('userId');
         const data = await fetchServerData(`/api/programEnrollment/user/${userId}`);
         if (data.error) {
