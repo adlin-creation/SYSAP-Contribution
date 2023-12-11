@@ -8,9 +8,7 @@ export async function getUserFromToken() {
 
     if (token) {
       const parts = token.split('.').map((part) => Buffer.from(part.replace(/-/g, '+').replace(/_/g, '/'),'base64').toString());
-      console.log(parts)
       const user = JSON.parse(parts[1])
-      console.log(user)
 
       return user;
     } else {
