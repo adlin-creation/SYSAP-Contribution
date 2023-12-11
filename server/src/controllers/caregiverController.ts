@@ -4,9 +4,7 @@ import Patient from '../models/Patient';
 
 export default class CaregiverController{
     static getPatientsForCaregiver = async (req: Request, res: Response): Promise<void> => {
-        console.log('helllllllo')
-        const caregiverId: string = req.params.caregiverId; // Assuming caregiverId is a parameter in the route
-        console.log("hello");
+        const caregiverId: string = req.params.caregiverId;
         try {
             const caregiver = await Caregiver.findByPk(caregiverId, {
                 include: [{ model: Patient, through: { attributes: [] }, as: 'Patients' }],
