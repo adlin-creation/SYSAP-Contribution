@@ -86,6 +86,9 @@ const Login = ({ navigation }) => {
         })
         .then(async (responseData) => 
         {
+            const { token, user } = responseData;
+
+
             if(!responseData.token) {
                 throw new Error('missing token');
             }
