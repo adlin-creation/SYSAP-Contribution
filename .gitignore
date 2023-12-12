@@ -1,7 +1,13 @@
 # Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
 
 # dependencies
-node_modules/
+node_modules
+server/package-lock.json
+
+.yarn*
+*/.yarn
+*/.pnp*
+*/yarn.lock
 
 # Expo
 .expo/
@@ -29,7 +35,10 @@ yarn-error.*
 *.pem
 
 # local env files
-.env*.local
+*.env*.local
 
 # typescript
 *.tsbuildinfo
+
+# WebStorm
+.idea

@@ -19,7 +19,12 @@
 
 ## Guide de développement
 
-- Éxécuter la commande:
+Installer les dépendances
+
+``` bash
+yarn install
+```
+Pour démarrer React Native
 
 ``` bash
 yarn start
