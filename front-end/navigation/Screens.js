@@ -19,6 +19,7 @@ import ExerciseDetail from "../screens/ExerciseDetail";
 import EvaluationScreen from "../screens/Evaluation";
 import EmailScreen from '../screens/Email';
 
+import RappelScreen from "../screens/Rappel";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
 const { width } = Dimensions.get("screen");
@@ -171,6 +172,28 @@ function EvaluationStack(props) {
   );
 }
 
+function RappelStack(props) {
+  return (
+    <Stack.Navigator
+      initialRouteName="Rappel"
+      screenOptions={{
+        mode: "card",
+        headerShown: "screen",
+      }}
+    >
+      <Stack.Screen
+        name="RappelScreen"
+        component={RappelScreen}
+        options={{
+          header: ({ navigation, scene }) => (
+            <Header title="Rappel" scene={scene} navigation={navigation} />
+          ),
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
+
 function EmailStack(props) {
   return (
     <Stack.Navigator
@@ -287,6 +310,20 @@ function AppStack(props) {
       <Drawer.Screen
         name="Séance"
         component={SeanceStack}
+        options={{
+          drawerIcon: ({ focused }) => (
+            <Icon
+              size={16}
+              name="heart"
+              family="entypo"
+              color={focused ? "white" : materialTheme.COLORS.MUTED}
+            />
+          ),
+        }}
+      />     
+      <Drawer.Screen
+        name="Rappel"
+        component={RappelStack}
         options={{
           drawerIcon: ({ focused }) => (
             <Icon

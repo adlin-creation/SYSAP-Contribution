@@ -4,7 +4,7 @@ import { sequelize } from '../db/database';
 class Reminder extends Model {
     public idReminder!: number;
     public NextReminder!: Date;
-    public Frequency!: Date;
+    public Frequency!: number;
     public UserId!: number;
 }
 
@@ -20,7 +20,7 @@ Reminder.init(
             allowNull: false,
         },
         Frequency: {
-            type: DataTypes.DATE,
+            type: DataTypes.INTEGER,
             allowNull: false,
         },
         UserId: {

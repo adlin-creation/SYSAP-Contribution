@@ -37,19 +37,23 @@ app.use(
 import exerciseRoutes from './routes/exerciseRoutes';
 import authRoutes from './routes/authRoutes';
 import programRoutes from './routes/programRoutes';
+import reminderRoutes from './routes/reminderRoutes';
 import impressionRoutes from './routes/impressionRoutes';
 import progressRoutes from './routes/progressRoutes';
 import programEnrollment from "./routes/programEnrollmentRoutes";
 import emailRoutes from './routes/emailRoutes'
+import careGiverRoutes from './routes/caregiverRoutes'
 import { seedProgram } from './seeders/seed-program';
 
 app.use('/api/exercises', exerciseRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/programs', programRoutes);
+app.use('/api/reminder', reminderRoutes);
 app.use('/api/print', impressionRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/programEnrollment', programEnrollment);
 app.use('/api/email', emailRoutes);
+app.use('/api/caregivers', careGiverRoutes);
 
 
 

@@ -19,8 +19,7 @@ async function postFetch(apiUrl, data) {
     }
 }
 
-export async function ajouterMarche(minute) {
-    const idPatient = 1;
+export async function ajouterMarche(minute, idPatient) {
     try {
         const body = {
             "idPatient": idPatient,
@@ -33,11 +32,11 @@ export async function ajouterMarche(minute) {
     }
 }
 
-export async function ajouterExercices(DiffMoyenne) {
-    const idPatient = 1;
-    const NbObjectifs = 6;
-    const NumProgramme = 214;
+export async function ajouterExercices(DiffMoyenne, idPatient) {
+    const NbObjectifs = Math.floor(Math.random() * 5) + 3;
     try {
+        const res = await postFetch(`http://localhost:3000/api/programEnrollment/user/${idPatient}`);
+        const NumProgramme = res.data.ProgramName;
         const body = {
             "idPatient": idPatient,
             "DiffMoyenne":DiffMoyenne,

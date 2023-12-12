@@ -7,11 +7,19 @@ import * as SplashScreen from "expo-splash-screen";
 import { materialTheme } from "./constants/";
 import { ProfileProvider } from './ProfileContext';
 import Screens from "./navigation/Screens";
+import * as Notifications from 'expo-notifications';
 
 // Before rendering any navigation stack
 import { enableScreens } from "react-native-screens";
 enableScreens();
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
 
 function cacheImages(images) {
   return images.map((image) => {
