@@ -1,90 +1,70 @@
-import React from "react";
-import {
-  View,
-  StyleSheet,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  ScrollView,
-  Image,
-  Button,
-} from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet, Text, TouchableOpacity, Image } from "react-native";
 import ExerciseService from "../services/ExerciceService";
-import ReactPlayer from "react-player";
+import { Video, ResizeMode } from "expo-av";
 
 const assetsFolderRoot = process.env.ASSETS_FOLDER_ROOT;
 
-export default class ExerciseDetail extends React.Component {
-  state = {
-    exercise: null,
-    steps: [],
-};
+const ExerciseDetail = ({ route, navigation }) => {
+  const [exercise, setExercise] = useState(null);
+  const video = useRef(null);
+  const [status, setStatus] = useState({});
 
+  useEffect(() => {
+    const { idExercise } = route.params;
+    const fetchData = async (id) => {
+      try {
+        const data = await ExerciseService.fetchExerciseById(id);
+        setExercise(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData(idExercise);
+  }, [route.params]);
 
-  async componentDidMount() {
+  if (!exercise) return null;
 
-    const { idExercise } = this.props.route.params;
-    try {
-      await this.fetchData(idExercise);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-
-  }
-
-
-  async fetchData(idExercise) {
-    try {
-      const data = await ExerciseService.fetchExerciseById(idExercise);
-      console.log("1");
-      console.log(data);
-      this.setState({ exercise: data });
-    } catch (error) {
-      console.error(
-        "Une erreur s'est produite lors de la récupération des données.",
-        error
-      );
-    }
-  }
-
-
-  render() {
-    const { exercise, steps } = this.state;
-
-    console.log("3");
-    console.log(exercise);
-
-    if (!exercise) return null;
-
-    return (
-      <View style={styles.mainContainer}>
-          <Text style={styles.exTitle}>{exercise.ExerciseName}</Text>
-          <Image
-            source={{ uri: `${assetsFolderRoot}assets/images/${exercise.ExerciseImageURL}` }}
-            style={styles.exerciseImage}
-          />
-          <Text>{exercise.ExerciseDescription}</Text>
-          <Text>min : {exercise.ExerciseNumberRepetitionsMin}</Text>
-          <Text>max : {exercise.ExerciseNumberRepetitionsMax}</Text>
-          <View style={styles.playerContainer}>
-              <ReactPlayer
-                style={styles.player}
-                url={ `${assetsFolderRoot}assets/videos/${exercise.ExerciseDescriptionURL}` }
-                controls={true}
-                onError={(e) => console.error("ReactPlayer error:", e)}
-              />
-            </View>
-        <TouchableOpacity
-          style={styles.retour}
-          onPress={() => this.props.navigation.goBack()}
-        >
-          <Text style={{ color: "white" }}>Retour</Text>
-        </TouchableOpacity>
+  return (
+    <View style={styles.mainContainer}>
+      <Text style={styles.exTitle}>{exercise.ExerciseName}</Text>
+      <Image
+        source={{
+          uri: `${assetsFolderRoot}assets/images/${exercise.ExerciseImageURL}`,
+        }}
+        style={styles.exerciseImage}
+      />
+      <Text>{exercise.ExerciseDescription}</Text>
+      <Text>min : {exercise.ExerciseNumberRepetitionsMin}</Text>
+      <Text>max : {exercise.ExerciseNumberRepetitionsMax}</Text>
+      <View style={styles.playerContainer}>
+        {/* <ReactPlayer
+          style={styles.player}
+          url={`${assetsFolderRoot}assets/videos/${exercise.ExerciseDescriptionURL}`}
+          controls={true}
+          onError={(e) => console.error("ReactPlayer error:", e)}
+        /> */}
+        <Video
+          ref={video}
+          style={styles.player}
+          source={{
+            uri: `${assetsFolderRoot}assets/videos/${exercise.ExerciseDescriptionURL}`,
+          }}
+          useNativeControls
+          resizeMode={ResizeMode.CONTAIN}
+          onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+          onError={(e) => console.error("Video error:", e)}
+        />
       </View>
+      <TouchableOpacity
+        style={styles.retour}
+        onPress={() => navigation.goBack()}
+      >
+        <Text style={{ color: "white" }}>Retour</Text>
+      </TouchableOpacity>
+    </View>
   );
-  }
-}
-
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -106,7 +86,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 20,
     marginTop: 60,
-    textDecorationLine:"underline",
+    textDecorationLine: "underline",
   },
   exComplete: {
     margin: "3%",
@@ -149,7 +129,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 40,
   },
-
   playTriangle: {
     width: 0,
     height: 0,
@@ -177,3 +156,5 @@ const styles = StyleSheet.create({
     color: "white",
   },
 });
+
+export default ExerciseDetail;
