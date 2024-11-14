@@ -61,50 +61,51 @@ const Login = ({ navigation }) => {
     };
 
     const handleLogin = () => {
-        if (!validateForm()) return;
-        let errors = {};
-        setErrors({});
+        navigation.navigate("App");
+        // if (!validateForm()) return;
+        // let errors = {};
+        // setErrors({});
 
-        const requestBody = {
-            email: email,
-            password: password,
-        };
+        // const requestBody = {
+        //     email: email,
+        //     password: password,
+        // };
 
-        fetch(`${apiUrl}/api/auth/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(requestBody),
-        })
-        .then((response) => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                throw new Error('Request failed');
-            }
-        })
-        .then(async (responseData) => 
-        {
-            const { token, user } = responseData;
+        // fetch(`${apiUrl}/api/auth/login`, {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify(requestBody),
+        // })
+        // .then((response) => {
+        //     if (response.ok) {
+        //         return response.json();
+        //     } else {
+        //         throw new Error('Request failed');
+        //     }
+        // })
+        // .then(async (responseData) => 
+        // {
+        //     const { token, user } = responseData;
 
 
-            if(!responseData.token) {
-                throw new Error('missing token');
-            }
-            await AsyncStorage.setItem('userToken', responseData.token);
+        //     if(!responseData.token) {
+        //         throw new Error('missing token');
+        //     }
+        //     await AsyncStorage.setItem('userToken', responseData.token);
 
-            navigation.navigate('App');
-        })
-        .catch((error) => {
-            if (error.message === 'Failed to fetch') {
-                errors.failed = 'Failed to connect to the server'
-              } else { 
-                errors.failed = 'Connexion échouée'
-            }
-            setErrors(errors);
-            return;
-        });
+        //     navigation.navigate('App');
+        // })
+        // .catch((error) => {
+        //     if (error.message === 'Failed to fetch') {
+        //         errors.failed = 'Failed to connect to the server'
+        //       } else { 
+        //         errors.failed = 'Connexion échouée'
+        //     }
+        //     setErrors(errors);
+        //     return;
+        // });
     };
 
     return (
