@@ -1,0 +1,10 @@
+.menu {
+    /* max-width: 1200px; */
+    margin: 5px auto;
+    background: #E4E9FD;
+    box-shadow: 5px 5px 15px -5px rgba(0, 0, 0, 0.3);
+  
+    padding: 0.3em;
+    border: 1px solid #CCC;
+    border-radius: 0.5em;
+  }

@@ -1,0 +1,22 @@
+meta {
+  name: TestCreateProgramEnrollement
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base_url}}/create-program-enrollement
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "enrollementDate": "2024-11-21T22:23:01.182Z",
+    "startDate": "2023-01-01",
+    "endDate": "2023-12-31",
+    "programEnrollementCode": "ABC123",
+    "ProgramId": 2,
+    "PatientId": 1
+  }
+}

@@ -1,0 +1,24 @@
+Just to make sure that we are on the same wavelength, and until such a time that Hyacinth creates the table that Simon mentioned, here are the different layers of an exercise program:
+ 
+Exercise: things like sit-ups, walking, etc. Exercise descriptions may include things such as number of repetitions or duration, both expressed as ranges. Exercises should have attributes that can be used as filters to select in a dropdown list, including:
+Sitting exercises versus standing up exercises
+Target population (age range, fitness level, etc.)
+Aerobic versus flexibility versus resistance
+Blocs: a bloc is a sequence of exercises to be done in sequence, “in one sitting”. A bloc may consist of “do one series of sit-ups, followed by 2 minutes of rest, followed by 10 minutes of walking, following by two series of push-ups”
+Session: represents the exercise schedule/program for a day. A session consists of 1 or more blocs typically occurring at different times of the day. In case of several ‘blocs’, they can be repeats of the same bloc (‘same recipe) or different blocs (‘different recipes’)
+A weekly cycle: represents the exercise schedule for a week. We can have the same session every day of the week, and require that the patient does that one session 4 days out of seven, or specific days of the week, or do a different session for each day, or three different sessions any three days of the week, etc.
+A program phase: a number of weeks where we repeat the same weekly cycle. Program phases can have fixed duration (e.g. 5 weeks), or have more flexible durations. For example, we can have a program phase terminate when certain conditions are met, regardless of the duration.
+A program is a sequence of program phases. The chaining of phases may depend on specific conditions being met. For example, a program could start with Phase A, and if the patient did well, move them to Phase B when phase A is finished, but if they did poorly, move them to phase C instead.
+ 
+HCPs (Health Care Professionals) will design exercise programs by: 1) drawing upon a library of existing exercises, blocs, sessions, weekly cycles, and program phases, or 2) defining new ones, as needed. So this means (for @Hyacinth Ali) that each of Exercise, Bloc, Session, WeeklyCycle, and ProgramPhase, will be represented as independent entities (not just as associations). So in terms of tables, we need 11:
+EXERCISE_TABLE
+EXERCISE_BLOC_TABLE (association)
+BLOC_TABLE
+BLOC_SESSION_TABLE (association)
+SESSION_TABLE
+SESSION_WEEKLYCYCLE_TABLE (association)
+WEEKLYCYCLE_TABLE
+WEEKLYCYCLE_PROGRAMPHASE_TABLE (association)
+PROGRAMPHASE_TABLE
+PROGRAMPHASE_PROGRAM_TABLE (association)
+PROGRAM_TABLE

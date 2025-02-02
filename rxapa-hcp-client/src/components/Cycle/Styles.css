@@ -1,0 +1,28 @@
+.cycle {
+  background-color: #f0f2f5; /* Couleur de fond plus douce */
+  border-radius: 1rem;
+  padding: 1.5rem; /* Augmenter le padding pour plus d'espace */
+  margin: 1rem; /* Augmenter la marge pour plus d'espace entre les cartes */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ajouter une ombre pour un effet de profondeur */
+  transition: transform 0.3s ease; /* Ajouter une transition pour l'effet de survol */
+}
+
+.cycle:hover {
+  transform: translateY(-5px); /* Légère élévation au survol */
+}
+
+.cycle img {
+  border-radius: 1rem 1rem 0 0; /* Arrondir les coins supérieurs de l'image */
+}
+
+.cycle .ant-btn {
+  margin-right: 0.5rem; /* Espacement entre les boutons */
+}
+
+.cycle .ant-btn:last-child {
+  margin-right: 0; /* Pas de marge pour le dernier bouton */
+}
+
+.session-add-button {
+  margin-top: 1rem;
+}

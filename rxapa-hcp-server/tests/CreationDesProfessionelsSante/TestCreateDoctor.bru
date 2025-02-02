@@ -1,0 +1,22 @@
+meta {
+  name: TestCreateDoctor
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base_url}}/create-professional-user
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "firstname": "DoctorFirstName",
+    "lastname": "DoctorLastName",
+    "phoneNumber": "1234567890",
+    "email": "doctor@example.com",
+    "password": "password123",
+    "role": "doctor"
+  }
+}
