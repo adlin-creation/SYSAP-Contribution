@@ -1,0 +1,22 @@
+meta {
+  name: TestCreateAdmin
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base_url}}/create-professional-user
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "firstname": "AdminFirstName",
+    "lastname": "AdminLastName",
+    "phoneNumber": "1234567890",
+    "email": "admin@example.com",
+    "password": "password123",
+    "role": "admin"
+  }
+}

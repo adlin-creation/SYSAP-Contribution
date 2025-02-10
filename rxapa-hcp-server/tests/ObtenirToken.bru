@@ -1,0 +1,18 @@
+meta {
+  name: ObtenirToken
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base_url}}/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "maiga@gmail.com",
+    "password": "passer"
+  }
+}

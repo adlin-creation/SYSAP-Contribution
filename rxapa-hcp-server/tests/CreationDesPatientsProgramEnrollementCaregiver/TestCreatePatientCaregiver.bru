@@ -1,0 +1,20 @@
+meta {
+  name: TestCreatePatientCaregiver
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{base_url}}/create-patient-caregiver
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "date": "2023-01-01",
+    "ProgramEnrollementId": 1,
+    "CaregiverId": 1,
+    "PatientId": 1
+  }
+}

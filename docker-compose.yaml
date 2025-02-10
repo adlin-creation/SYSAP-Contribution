@@ -1,0 +1,47 @@
+# By default, docker compose creates a network for the contained
+# services. In addition, it removes each container after being stopped.
+# Hence, it is not required to create network and specify --rm
+# However, detached mode (-d) can be specified while running docker compose
+version: "3.4"
+services:
+  postgres:
+    image: "postgres"
+    restart: always
+    volumes:
+      - data:/var/lib/postgresql/data
+    env_file:
+      - ./env/db.env
+  server:
+    build:
+      context: ./rxapa-hcp-server
+      target: development
+    env_file:
+      - ./env/server.env
+    volumes:
+      #bind mount
+      - ./rxapa-hcp-server:/app
+      # anonymous volumes
+      - /app/node_modules
+    ports:
+      - "80:80"
+    depends_on:
+      - postgres
+    # command: npm run dev
+  frontend:
+    build:
+      context: ./rxapa-hcp-client
+      # dockerfile: Dockerfile.production
+    ports:
+      - "3000:3000"
+    volumes:
+      #bind mount
+      - ./rxapa-hcp-client:/app
+      # anonymous volumes
+      - /app/node_modules
+    # -it specification - interactive mode
+    stdin_open: true
+    tty: true
+    depends_on:
+      - server
+volumes:
+  data:

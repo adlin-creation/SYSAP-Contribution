@@ -1,0 +1,197 @@
+import React, { useState } from "react";
+import { PlusOutlined, EditOutlined, DeleteOutlined, ArrowLeftOutlined } from "@ant-design/icons";
+import { Button, Table, Space, Tag, Row, Col, Modal as AntModal, Empty } from "antd";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+import Constants from "../../Utils/Constants";
+import useToken from "../../Authentication/useToken";
+import CreateAdmin from "./CreateAdmin";
+import AdminDetails from "./AdminDetails";
+
+export default function AdminMenu() {
+  const [isCreateAdmin, setIsCreateAdmin] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [selectedAdmin, setSelectedAdmin] = useState(null);
+  
+  const { token } = useToken();
+
+  const adminUrl = `${Constants.SERVER_URL}/professional-users`;
+  const { data: adminList, isLoading, error, refetch: refetchAdmins } = useQuery(
+    ["admins"],
+    () => {
+      return axios
+        .get(adminUrl, {
+          headers: { Authorization: "Bearer " + token }
+        })
+        .then((res) => res.data.filter(user => user.role === 'admin'));
+    }
+  );
+
+  const columns = [
+    {
+      title: 'Name',
+      key: 'name',
+      render: (_, record) => `${record.firstname} ${record.lastname}`,
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
+    },
+    {
+      title: 'Phone',
+      dataIndex: 'phoneNumber',
+      key: 'phoneNumber',
+    },
+    {
+      title: 'Status',
+      key: 'active',
+      dataIndex: 'active',
+      render: (active) => (
+        <Tag color={active ? 'green' : 'red'}>
+          {active ? 'ACTIVE' : 'INACTIVE'}
+        </Tag>
+      ),
+    },
+    {
+      title: 'Actions',
+      key: 'actions',
+      render: (_, record) => (
+        <Space size="middle">
+          <Button type="link" onClick={() => handleEdit(record)}>
+            <EditOutlined /> Edit
+          </Button>
+          <Button type="link" danger onClick={() => handleDelete(record)}>
+            <DeleteOutlined /> Delete
+          </Button>
+        </Space>
+      ),
+    },
+  ];
+
+  const handleEdit = (admin) => {
+    setSelectedAdmin(admin);
+    setIsEditMode(true);
+  };
+
+  const handleDelete = (admin) => {
+    AntModal.confirm({
+      title: 'Are you sure you want to delete this admin?',
+      content: `This will permanently delete ${admin.firstname} ${admin.lastname}`,
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk() {
+        axios
+          .delete(`${Constants.SERVER_URL}/delete-professional-user/${admin.id}`, {
+            headers: { Authorization: "Bearer " + token }
+          })
+          .then(() => {
+            refetchAdmins();
+            openModal("Admin successfully deleted", false);
+          })
+          .catch((err) => openModal(err.response?.data?.message || "Error deleting admin", true));
+      },
+    });
+  };
+
+  const openModal = (message, isError) => {
+    AntModal[isError ? 'error' : 'success']({
+      content: message,
+      okText: 'Close',
+      centered: true,
+    });
+  };
+
+  const renderContent = () => {
+    if (isCreateAdmin) {
+      return <CreateAdmin refetchAdmins={refetchAdmins} />;
+    }
+    
+    if (isEditMode) {
+      return (
+        <AdminDetails
+          admin={selectedAdmin}
+          onClose={() => {
+            setIsEditMode(false);
+            setSelectedAdmin(null);
+          }}
+          refetchAdmins={refetchAdmins}
+          openModal={openModal}
+        />
+      );
+    }
+
+    if (error) {
+      return (
+        <div style={{ textAlign: 'center', marginTop: '20px' }}>
+          <h3>Error loading admins</h3>
+          <Button onClick={() => refetchAdmins()}>Retry</Button>
+        </div>
+      );
+    }
+
+    return (
+      <>
+        <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between' }}>
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => setIsCreateAdmin(true)}
+          >
+            Register an Admin
+          </Button>
+          {adminList?.length > 0 && (
+            <span>Total Admins: {adminList.length}</span>
+          )}
+        </div>
+
+        <Table
+          columns={columns}
+          dataSource={adminList}
+          rowKey="id"
+          loading={isLoading}
+          locale={{
+            emptyText: <Empty description="No admins found" />
+          }}
+          pagination={{
+            pageSize: 10,
+            showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} admins`
+          }}
+        />
+      </>
+    );
+  };
+
+  return (
+    <div>
+      {/* Edit/Create admin form header */}
+      {(isCreateAdmin || isEditMode) && (
+        <Row align="middle" justify="space-between" style={{ marginBottom: '20px' }}>
+          <Col>
+            <Button
+              onClick={() => {
+                setIsCreateAdmin(false);
+                setIsEditMode(false);
+                setSelectedAdmin(null);
+              }}
+              type="primary"
+              icon={<ArrowLeftOutlined />}
+            >
+              Back
+            </Button>
+          </Col>
+          <Col flex="auto" style={{ textAlign: 'center' }}>
+            <h2 style={{ marginBottom: 0 }}>
+              {isCreateAdmin ? 'Register a new admin' : 'Edit admin'}
+            </h2>
+          </Col>
+          <Col span={4} />
+        </Row>
+      )}
+
+      {/* Main content */}
+      {renderContent()}
+    </div>
+  );
+}
