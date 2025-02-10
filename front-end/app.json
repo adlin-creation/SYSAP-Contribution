@@ -1,0 +1,48 @@
+{
+  "expo": {
+    "name": "sysap",
+    "slug": "sysap",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/icon.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon-32x32.png",
+      "bundler": "metro",
+      "build": {
+        "babel": {
+          "include": [
+            "galio-framework"
+          ]
+        }
+      }
+    },
+    "plugins": [
+      "expo-font",
+      "expo-asset",
+      [
+        "expo-av",
+        {
+          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone."
+        }
+      ]
+    ]
+  }
+}
