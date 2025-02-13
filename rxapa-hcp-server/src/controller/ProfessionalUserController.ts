@@ -13,7 +13,7 @@ import { hash } from './UserController';
  * Creates a new professional user.
  */
 exports.createProfessionalUser = async (req: any, res: any, next: any) => {
-  const { firstname, lastname, email, phoneNumber, password, role } = req.body;
+  const { firstname, lastname, email, phoneNumber, password, role, workEnvironment } = req.body;
   const hashedPassword = await hash(password);
   try {
     const newProfessionalUser = await Professional_User.create({
@@ -29,9 +29,9 @@ exports.createProfessionalUser = async (req: any, res: any, next: any) => {
     if (role === 'admin') {
       await Admin.create({ idAdmin: newProfessionalUser.id });
     } else if (role === 'doctor') {
-      await Doctor.create({ idDoctor: newProfessionalUser.id });
+      await Doctor.create({ idDoctor: newProfessionalUser.id, workEnvironment: workEnvironment });
     } else if (role === 'kinesiologist') {
-      await Kinesiologist.create({ idKinesiologist: newProfessionalUser.id });
+      await Doctor.create({ idDoctor: newProfessionalUser.id, workEnvironment: workEnvironment });
     }
 
     res.status(201).json(newProfessionalUser);
