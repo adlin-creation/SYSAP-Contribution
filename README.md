@@ -1,4 +1,3 @@
-<<<<<<< README.md
 # GoldFit Admin Application
 This application allows health care propfessionals to define exercise program for their clients. This repository references two submodules (git repository) - the application server and the frontend application.
 
