@@ -1,0 +1,6 @@
+[submodule "rxapa-mobile-client"]
+	path = rxapa-mobile-client
+	url = https://github.com/abdelnassergit/rxapa-mobile-client.git
+[submodule "rxapa-mobile-server"]
+	path = rxapa-mobile-server
+	url = https://github.com/abdelnassergit/rxapa-mobile-server.git
