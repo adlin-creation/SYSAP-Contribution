@@ -12,7 +12,7 @@ import { hash } from './UserController';
 /**
  * Creates a new professional user.
  */
-exports.createProfessionalUser = async (req: any, res: any, next: any) => {
+export const createProfessionalUser = async (req: any, res: any, next: any) => {
   const { firstname, lastname, email, phoneNumber, password, role, workEnvironment } = req.body;
   const hashedPassword = await hash(password);
   try {
