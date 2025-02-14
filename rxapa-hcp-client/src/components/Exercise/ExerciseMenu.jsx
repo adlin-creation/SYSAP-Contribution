@@ -10,8 +10,10 @@ import ExerciseDetail from "./ExerciseDetail";
 import useToken from "../Authentication/useToken";
 import Modal from "../Modal/Modal";
 import FilterExercise from "./FilterExercise";
+import { useTranslation } from "react-i18next";
 
 export default function ExerciseMenu() {
+  const { t } = useTranslation();
   const [buttonState, setButtonState] = useState({
     isCreateExercise: false,
     isLearnMore: false,
@@ -52,7 +54,7 @@ export default function ExerciseMenu() {
   });
 
   if (isExerciseLoading) {
-    return <h1>Exercise Loading...</h1>;
+    return <h1>{t("Exercise Loading...")}</h1>;
   }
   if (isExerciseLoadingError) {
     return <h1>Sorry, an error occured while loading exercises</h1>;
@@ -159,13 +161,13 @@ export default function ExerciseMenu() {
               type="primary"
               icon={<PlusOutlined />}
             >
-              Create Exercise
+              {t("Create Exercise")}
             </Button>
           </div>
           <Row gutter={[16, 16]}>
             {filteredExercises?.map((exercise) => {
               return (
-                <Col  xs={24} sm={12} md={8} lg={6} xl={4} key={exercise.key}>
+                <Col xs={24} sm={12} md={8} lg={6} xl={4} key={exercise.key}>
                   <Exercise
                     onClick={() => handleButtonState("learn-more")}
                     onSelect={handleSelectExercise}

@@ -2,66 +2,68 @@
 /* .site-layout .site-layout-background {
     background: #fff;
   } */
-  
-  .logo {
-    height: 2rem;
-    margin: 1rem;
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #fff;
-    text-align: center;
-    line-height: 2rem;
-    font-family: cursive;
-  }
-  
-  .header {
-    padding: 0;
-    position: fixed;
-    width: calc(100% - 10rem); /* Adjust this value based on the width of your Sider */
-    z-index: 1;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    right: 0;
-  }
-  
-  .header-content {
-    display: flex;
-    align-items: center;
-    margin-right: 1rem;
-  }
-  
-  .header-button {
-    margin-right: 0.5rem;
-  }
-  
-  .header-avatar {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-  }
-  
-  .header-avatar span {
-    margin-left: 0.5rem;
-    color: #fff;
-  }
-  
-  .sider {
-    position: fixed;
-    height: 100vh;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 15rem; /* Adjust this value based on your design */
-    z-index: 2;
-  }
-  
-  .site-layout {
-    margin-left: 15rem; /* Adjust this value based on the width of your Sider */
-  }
-  
-  .content {
-    padding-top: 4rem; /* Adjust this value based on the height of your Header */
-    margin: 1rem;
-    overflow: initial;
-  }
+
+.logo {
+  height: 2rem;
+  margin: 1rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #fff;
+  text-align: center;
+  line-height: 2rem;
+  font-family: cursive;
+}
+
+.header {
+  padding: 0;
+  position: fixed;
+  width: calc(
+    100% - 10rem
+  ); /* Adjust this value based on the width of your Sider */
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  right: 0;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
+}
+
+.header-button {
+  margin-right: 0.5rem;
+}
+
+.header-avatar {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.header-avatar span {
+  margin-left: 0.5rem;
+  color: #fff;
+}
+
+.sider {
+  position: fixed;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 15rem; /* Adjust this value based on your design */
+  z-index: 2;
+}
+
+.site-layout {
+  margin-left: 15rem; /* Adjust this value based on the width of your Sider */
+}
+
+.content {
+  padding-top: 4rem; /* Adjust this value based on the height of your Header */
+  margin: 1rem;
+  overflow: initial;
+}
