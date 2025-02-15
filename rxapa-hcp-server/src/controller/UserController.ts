@@ -144,7 +144,7 @@ export async function hash(password: string) {
 /**
  * Fonction de vérification du mot de passe haché
  */
-async function verify(password: string, hash: string) {
+export async function verify(password: string, hash: string) {
   const [salt, key] = hash.split(":"); // Séparation du sel et du hash
   const keyBuffer = Buffer.from(key, "hex");
   const derivedKey = await scryptPromise(password, salt, 64); // Hachage du mot de passe entré
