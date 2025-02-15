@@ -13,6 +13,7 @@ import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
 import FilterExercise from "../Exercise/FilterExercise";
 import Modal from "../Modal/Modal";
+import { useTranslation } from "react-i18next";
 
 let exerciseNames = [];
 
@@ -29,6 +30,7 @@ export default function AddExercise({
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isErrorMessage, setIsErrorMessage] = useState(false);
   const [message, setMessage] = useState("");
+  const { t } = useTranslation();
 
   const handleChange = (event) => {
     setIsExerciseRequired(event.target.checked);
@@ -148,7 +150,7 @@ export default function AddExercise({
       ></FilterExercise>
       {/* Dropdown menu to select an exercise to be used in the bloc */}
       <div className="input-element">
-        <h5>Please select an exercise</h5>
+        <h5>{t("Please select an exercise")}</h5>
 
         <Autocomplete
           value={selectedExerciseName}

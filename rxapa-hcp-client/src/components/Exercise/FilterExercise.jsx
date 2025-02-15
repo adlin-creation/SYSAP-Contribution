@@ -38,10 +38,10 @@ export default function FilterExercise({ updateSelectedValues }) {
               allowClear
             >
               <Option value="ALL">{t("ALL")}</Option>
-              <Option value="AEROBIC">{t("AEROBIC")}</Option>
-              <Option value="STRENGHT">{t("STRENGHT")}</Option>
-              <Option value="ENDURANCE">{t("ENDURANCE")}</Option>
-              <Option value="FLEXIBILITY">{t("FLEXIBILITY")}</Option>
+              <Option value="AEROBIC">{t("aerobic")}</Option>
+              <Option value="STRENGTH">{t("strength")}</Option>
+              <Option value="ENDURANCE">{t("endurance")}</Option>
+              <Option value="FLEXIBILITY">{t("flexibility")}</Option>
             </Select>
           </div>
         </Col>
@@ -54,12 +54,12 @@ export default function FilterExercise({ updateSelectedValues }) {
               placeholder="Fitness Level"
               allowClear
             >
-              <Option value="ALL">{t("ALL")}</Option>
-              <Option value="LOW">{t("LOW")}</Option>
-              <Option value="BELOW_AVERAGE">{t("BELOW_AVERAGE")}</Option>
-              <Option value="AVERAGE">{t("AVERAGE")}</Option>
-              <Option value="ABOVE_AVERAGE">{t("ABOVE_AVERAGE")}</Option>
-              <Option value="HIGH">{t("HIGH")}</Option>
+              <Option value="ALL">{t("all")}</Option>
+              <Option value="LOW">{t("low")}</Option>
+              <Option value="BELOW_AVERAGE">{t("below_average")}</Option>
+              <Option value="AVERAGE">{t("average")}</Option>
+              <Option value="ABOVE_AVERAGE">{t("above_average")}</Option>
+              <Option value="HIGH">{t("high")}</Option>
             </Select>
           </div>
         </Col>
@@ -72,18 +72,18 @@ export default function FilterExercise({ updateSelectedValues }) {
               placeholder="Age Group"
               allowClear
             >
-              <Option value="ALL">ALL</Option>
+              <Option value="ALL">{t("all")}</Option>
               <Option value="FIFTY_TO_FIFTY_NINE">
-                {t("FIFTY_TO_FIFTY_NINE")}
+                {t("fifty_to_fifty_nine")}
               </Option>
               <Option value="SIXTY_TO_SIXTY_NINE">
-                {t("SIXTY_TO_SIXTY_NINE")}
+                {t("sixty_to_sixty_nine")}
               </Option>
               <Option value="SEVENTY_TO_SEVENTY_NINE">
-                {t("SEVENTY_TO_SEVENTY_NINE")}
+                {t("seventy_to_seventy_nine")}
               </Option>
               <Option value="EIGHTY_TO_EIGHTY_NINE">
-                {t("EIGHTY_TO_EIGHTY_NINE")}
+                {t("eighty_to_eighty_nine")}
               </Option>
             </Select>
           </div>
