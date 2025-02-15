@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { Row, Col, Select } from "antd";
+import { useTranslation } from "react-i18next";
 
 const { Option } = Select;
 
 export default function FilterExercise({ updateSelectedValues }) {
+  const { t } = useTranslation();
   const [selectedFitnessLevel, setSelectedFitnessLevel] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedAgeGroup, setSelectedAgeGroup] = useState(null);
@@ -35,11 +37,11 @@ export default function FilterExercise({ updateSelectedValues }) {
               placeholder="Category"
               allowClear
             >
-              <Option value="ALL">ALL</Option>
-              <Option value="AEROBIC">AEROBIC</Option>
-              <Option value="STRENGHT">STRENGHT</Option>
-              <Option value="ENDURANCE">ENDURANCE</Option>
-              <Option value="FLEXIBILITY">FLEXIBILITY</Option>
+              <Option value="ALL">{t("ALL")}</Option>
+              <Option value="AEROBIC">{t("AEROBIC")}</Option>
+              <Option value="STRENGHT">{t("STRENGHT")}</Option>
+              <Option value="ENDURANCE">{t("ENDURANCE")}</Option>
+              <Option value="FLEXIBILITY">{t("FLEXIBILITY")}</Option>
             </Select>
           </div>
         </Col>
@@ -52,12 +54,12 @@ export default function FilterExercise({ updateSelectedValues }) {
               placeholder="Fitness Level"
               allowClear
             >
-              <Option value="ALL">ALL</Option>
-              <Option value="LOW">LOW</Option>
-              <Option value="BELOW_AVERAGE">BELOW_AVERAGE</Option>
-              <Option value="AVERAGE">AVERAGE</Option>
-              <Option value="ABOVE_AVERAGE">ABOVE_AVERAGE</Option>
-              <Option value="HIGH">HIGH</Option>
+              <Option value="ALL">{t("ALL")}</Option>
+              <Option value="LOW">{t("LOW")}</Option>
+              <Option value="BELOW_AVERAGE">{t("BELOW_AVERAGE")}</Option>
+              <Option value="AVERAGE">{t("AVERAGE")}</Option>
+              <Option value="ABOVE_AVERAGE">{t("ABOVE_AVERAGE")}</Option>
+              <Option value="HIGH">{t("HIGH")}</Option>
             </Select>
           </div>
         </Col>
@@ -71,10 +73,18 @@ export default function FilterExercise({ updateSelectedValues }) {
               allowClear
             >
               <Option value="ALL">ALL</Option>
-              <Option value="FIFTY_TO_FIFTY_NINE">FIFTY_TO_FIFTY_NINE</Option>
-              <Option value="SIXTY_TO_SIXTY_NINE">SIXTY_TO_SIXTY_NINE</Option>
-              <Option value="SEVENTY_TO_SEVENTY_NINE">SEVENTY_TO_SEVENTY_NINE</Option>
-              <Option value="EIGHTY_TO_EIGHTY_NINE">EIGHTY_TO_EIGHTY_NINE</Option>
+              <Option value="FIFTY_TO_FIFTY_NINE">
+                {t("FIFTY_TO_FIFTY_NINE")}
+              </Option>
+              <Option value="SIXTY_TO_SIXTY_NINE">
+                {t("SIXTY_TO_SIXTY_NINE")}
+              </Option>
+              <Option value="SEVENTY_TO_SEVENTY_NINE">
+                {t("SEVENTY_TO_SEVENTY_NINE")}
+              </Option>
+              <Option value="EIGHTY_TO_EIGHTY_NINE">
+                {t("EIGHTY_TO_EIGHTY_NINE")}
+              </Option>
             </Select>
           </div>
         </Col>
