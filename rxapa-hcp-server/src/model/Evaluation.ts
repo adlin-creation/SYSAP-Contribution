@@ -6,7 +6,7 @@ import { Program } from './Program';
 /**
  * Creates an Evaluation model (Table)
  */
-export const Exercise = sequelize.define("Exercise", {
+export const Evaluation = sequelize.define("Evaluation", {
   id: {
     type: dataTypes.INTEGER,
     autoIncrement: true,
@@ -28,10 +28,11 @@ export const Exercise = sequelize.define("Exercise", {
     type: dataTypes.INTEGER,
     references: {
       model: Kinesiologist,
-      key: 'id',
+      key: 'idKinesiologist',
     },
   },
   idResultProgram: {
+    type: dataTypes.INTEGER,
     references: {
       model: Program,
       key: 'id',
