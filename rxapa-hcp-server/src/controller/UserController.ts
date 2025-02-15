@@ -1,4 +1,5 @@
 import { User } from "../model/User";
+import { Professional_User } from "../model/Professional_User";
 import jwt from "jsonwebtoken";
 
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
@@ -64,6 +65,10 @@ exports.login = async (req: any, res: any) => {
 
   try {
     user = await User.findOne({ where: { email: email } });
+    // Si non trouvé dans User, chercher dans ProfessionalUser
+    if (!user) {
+      user = await Professional_User.findOne({ where: { email: email } });
+    }
     if (!user) {
       return res.status(401).json({ message: "The user doesn't exist" });
     }
@@ -85,12 +90,16 @@ exports.login = async (req: any, res: any) => {
       .json({ message: "Please enter the correct email and password" });
   }
 
+  // Récupérer le rôle de l'utilisateur (par exemple 'user', 'admin', etc.)
+  //const role = user.role || "admin"; // Utiliser "admin" comme valeur par défaut si 'role' n'existe pas
+
   let token = "true";
 
   token = jwt.sign(
     {
       email: user.email,
       key: user.key,
+      role: user.role || "user",  // Inclure le rôle dans le token
     },
     `${process.env.TOKEN_SECRET_KEY}`,
     { expiresIn: "2h" }
@@ -99,6 +108,7 @@ exports.login = async (req: any, res: any) => {
   return res.status(200).json({
     token: token,
     userId: user.key,
+    role: user.role || "user",
     message: "Successfully logged in",
   });
 };
