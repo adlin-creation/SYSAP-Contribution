@@ -135,7 +135,7 @@ exports.logout = (req: any, res: any) => {
 /**
  * Fonction de hachage du mot de passe avec `scrypt`
  */
-async function hash(password: string) {
+export async function hash(password: string) {
   const salt = randomBytes(8).toString("hex"); // Génération d'un sel unique
   const derivedKey = await scryptPromise(password, salt, 64); // Hachage du mot de passe
   return salt + ":" + (derivedKey as Buffer).toString("hex"); // Retourne le mot de passe haché sous format `salt:hash`
