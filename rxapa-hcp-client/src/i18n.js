@@ -80,7 +80,7 @@ const resources = {
 
 i18n.use(initReactI18next).init({
   resources,
-  lng: "en", // default language         localStorage.getIem("i18nextLng") ? localstorage.getItem("i18nextLng") : "en"
+  lng: localStorage.getItem("i18nextLng") || "en", //default language | Si aucune langue dans le localStorage alors "en".
   fallbackLng: "en",
   interpolation: { escapeValue: false },
 });
