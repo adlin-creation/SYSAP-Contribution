@@ -3,7 +3,7 @@ import { Row, Col, Input, Button, Form, Radio, Modal } from "antd";
 
 
 
-function Evaluation({ onSubmit, onClose }) {
+function Evaluation({ onSubmit}) {
   const [formData, setFormData] = useState({
     // Section A
     chairTestSupport: 'with',
@@ -199,6 +199,10 @@ const determineColor = (scoreA, scoreB, scoreC) => {
     return 'MARRON'; // Cas par défaut
 };
 
+const onClose = () => {
+  window.location.reload();
+};
+
   return (
     <Row justify="center">
       <Col span={16}>
@@ -345,7 +349,7 @@ const determineColor = (scoreA, scoreB, scoreC) => {
           </Form.Item>
 
           <Form.Item>
-            <Button onClick={onClose} style={{ marginRight: 8 }}>
+            <Button onClick={() => onClose()} style={{ marginRight: 8 }}>
               Annuler
             </Button>
             <Button type="primary" htmlType="submit">
