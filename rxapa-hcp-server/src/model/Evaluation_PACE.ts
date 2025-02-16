@@ -19,6 +19,10 @@ export const Evaluation_PACE = sequelize.define('Evaluation_PACE', {
     type: dataTypes.INTEGER,
     allowNull: false,
   },
+  scoreA: {
+    type: dataTypes.INTEGER,
+    allowNull:false,
+  },
   // Section B
   balanceFeetTogether: {
     type: dataTypes.INTEGER,
@@ -36,12 +40,34 @@ export const Evaluation_PACE = sequelize.define('Evaluation_PACE', {
     type: dataTypes.INTEGER,
     allowNull: false,
   },
+  scoreB: {
+    type: dataTypes.INTEGER,
+    allowNull: false,
+  },
   // Section C
   frtSitting: {
     type: dataTypes.BOOLEAN,
     allowNull: false,
   },
   frtDistance: {
+    type: dataTypes.INTEGER,
+    allowNull: false,
+  },
+  scoreC: {
+    type: dataTypes.INTEGER,
+    allowNull: false,
+  },
+  // score total
+  scoreTotal: {
+    type: dataTypes.INTEGER,
+    allowNull: false,
+  },
+  // objectif de marche
+  vitesseDeMarche: {
+    type: dataTypes.DOUBLE,
+    allowNull: false,
+  },
+  objectifMarche: {
     type: dataTypes.INTEGER,
     allowNull: false,
   },
