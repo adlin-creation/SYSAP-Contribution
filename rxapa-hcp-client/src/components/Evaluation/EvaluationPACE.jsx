@@ -437,6 +437,17 @@ function EvaluationPACE({ onSubmit }) {
         open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         footer={[
+          <Button
+            key="submit"
+            type="primary"
+            onClick={() => {
+              // Fonction à implémenter
+              console.log("Confirmation clicked");
+              setIsModalVisible(false);
+            }}
+          >
+            Confirmer
+          </Button>,
           <Button key="close" onClick={() => setIsModalVisible(false)}>
             Fermer
           </Button>,
