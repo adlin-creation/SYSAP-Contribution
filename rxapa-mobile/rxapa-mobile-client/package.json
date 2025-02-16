@@ -29,6 +29,7 @@
     "expo-av": "~15.0.1",
     "expo-constants": "~17.0.3",
     "expo-font": "~13.0.1",
+    "expo-linear-gradient": "~14.0.2",
     "expo-linking": "~7.0.2",
     "expo-notifications": "~0.29.12",
     "expo-router": "^4.0.15",
@@ -49,10 +50,10 @@
     "react-native-select-dropdown": "^4.0.1",
     "react-native-vector-icons": "^10.2.0",
     "react-native-web": "~0.19.13",
+    "react-native-web-webview": "^1.0.2",
     "react-native-webview": "^13.12.5",
     "react-native-youtube-iframe": "^2.3.0",
-    "react-navigation": "^5.0.0",
-    "expo-linear-gradient": "~14.0.2"
+    "react-navigation": "^5.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
