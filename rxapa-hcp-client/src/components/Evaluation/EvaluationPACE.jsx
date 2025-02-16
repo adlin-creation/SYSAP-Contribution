@@ -3,7 +3,7 @@ import { Row, Col, Input, Button, Form, Radio, Modal } from "antd";
 
 
 
-function Evaluation({ onSubmit}) {
+function EvaluationPACE({ onSubmit}) {
   const [formData, setFormData] = useState({
     // Section A
     chairTestSupport: 'with',
@@ -374,4 +374,4 @@ const onClose = () => {
   );
 }
 
-export default Evaluation;
+export default EvaluationPACE;

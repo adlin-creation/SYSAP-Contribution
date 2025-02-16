@@ -16,7 +16,7 @@ import DoctorPatients from "./components/ProfessionalUser/Doctor/DoctorPatients"
 import KinesiologistMenu from "./components/ProfessionalUser/Kinesiologist/KinesiologistMenu";
 import KinesiologistPatients from "./components/ProfessionalUser/Kinesiologist/KinesiologistPatients";
 import AdminMenu from "./components/ProfessionalUser/Admin/AdminMenu";
-import Evaluation from "./components/Evaluation/Evaluation";
+import EvaluationPACE from "./components/Evaluation/EvaluationPACE";
 
 import useToken from "./components/Authentication/useToken"; // Import du hook personnalisé
 
@@ -85,9 +85,16 @@ const menuItems = [
     label: <Link to="/patients">Patients</Link>,
   },
   {
-    key: '/evaluation',
+    key: 'Evaluation',
     icon: <FormOutlined />,
-    label: <Link to="/evaluation">Évaluation</Link>,
+    label: 'Évaluation',
+    children: [
+      {
+        key: '/evaluationpace',
+        label: <Link to="/evaluationpace">Évaluation PACE</Link>,
+      },
+    ],
+    
   },
   {
     key: 'healthcare-professional',
@@ -208,7 +215,7 @@ function App() {
             <Route path="kinesiologists" element={<KinesiologistMenu />}></Route>
             <Route path="kinesiologist-patients/:id" element={<KinesiologistPatients />}></Route>
             <Route path="admins" element={<AdminMenu />}></Route>
-            <Route path="evaluation" element={<Evaluation />}></Route>
+            <Route path="evaluationpace" element={<EvaluationPACE />}></Route>
             <Route
               path="*"
               element={
