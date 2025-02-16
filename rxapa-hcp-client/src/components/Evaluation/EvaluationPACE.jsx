@@ -4,7 +4,7 @@ import { Row, Col, Input, Button, Form, Radio, Modal } from "antd";
 function EvaluationPACE({ onSubmit }) {
   const [formData, setFormData] = useState({
     // Section A
-    chairTestSupport: "with",
+    chairTestSupport: true,
     chairTestCount: "",
 
     // Section B
@@ -188,7 +188,7 @@ function EvaluationPACE({ onSubmit }) {
 
   const calculateChairTestScore = () => {
     const count = parseInt(formData.chairTestCount);
-    const withSupport = formData.chairTestSupport === "with";
+    const withSupport = formData.chairTestSupport; // true signifie avec appui
 
     if (count === 0) return 0;
     if (withSupport && count >= 10) return 2;
@@ -301,8 +301,8 @@ function EvaluationPACE({ onSubmit }) {
               value={formData.chairTestSupport}
               onChange={handleChange}
             >
-              <Radio value="with">Avec appui</Radio>
-              <Radio value="without">Sans appui</Radio>
+              <Radio value={true}>Avec appui</Radio>
+              <Radio value={false}>Sans appui</Radio>
             </Radio.Group>
           </Form.Item>
 
