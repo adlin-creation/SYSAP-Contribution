@@ -219,7 +219,7 @@ function KinesiologyEvaluation({ onSubmit, onClose }) {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Position pour le Functional Reach Test (FRT)
+                Functional Reach Test (FRT)
               </label>
               <div className="flex items-center space-x-4 mb-4">
                 <label className="inline-flex items-center">
@@ -244,30 +244,37 @@ function KinesiologyEvaluation({ onSubmit, onClose }) {
                   />
                   <span className="ml-2">Debout</span>
                 </label>
+                <label className="inline-flex items-center">
+                  <input
+                    type="radio"
+                    name="frtPosition"
+                    value="sitting"
+                    checked={formData.frtPosition === 'armNotWorking'}
+                    onChange={handleChange}
+                    className="form-radio"
+                  />
+                  <span className="ml-2">Ne lève pas les bras</span>
+                </label>
               </div>
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Distance FRT
+                Distance (cm)
               </label>
-              <select
-                name="frtDistance"
-                value={formData.frtDistance}
+              <input
+                type="number"
+                name="distanceFRT"
+                value={formData.distanceFRT}
                 onChange={handleChange}
-                className={`w-full md:w-1/2 p-2 border rounded-md ${
-                  errors.frtDistance ? 'border-red-500' : 'border-gray-300'
+                min="0"
+                step="1"
+                className={`${numericInputStyles} ${
+                  errors.distanceFRT ? 'border-red-500' : 'border-gray-300'
                 }`}
-              >
-                <option value="">Sélectionner une distance</option>
-                <option value="no_lift">Ne lève pas les bras</option>
-                <option value="less_15">{'< 15 cm'}</option>
-                <option value="15_26">15 - 26 cm</option>
-                <option value="27_35">27 - 35 cm</option>
-                <option value="more_35">{`> 35 cm`}</option>
-              </select>
-              {errors.frtDistance && (
-                <p className="text-red-500 text-sm mt-1">{errors.frtDistance}</p>
+              />
+              {errors.distanceFRT && (
+                <p className="text-red-500 text-sm mt-1">{errors.distanceFRT}</p>
               )}
             </div>
           </div>
@@ -285,7 +292,7 @@ function KinesiologyEvaluation({ onSubmit, onClose }) {
             type="submit"
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
           >
-            Enregistrer l'évaluation
+            Soumettre
           </button>
         </div>
       </form>
