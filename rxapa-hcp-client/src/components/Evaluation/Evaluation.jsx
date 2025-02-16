@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { Row, Col, Input, Button, Form, Radio } from "antd";
 
-const numericInputStyles = `w-full p-2 border rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`;
+
 
 function Evaluation({ onSubmit, onClose }) {
   const [formData, setFormData] = useState({
@@ -16,7 +17,10 @@ function Evaluation({ onSubmit, onClose }) {
     
     // Section C
     frtPosition: 'sitting',
-    frtDistance: ''
+    frtDistance: '',
+
+    // Section D
+    walkingTime: ''
   });
 
   const [errors, setErrors] = useState({});
@@ -59,6 +63,10 @@ function Evaluation({ onSubmit, onClose }) {
       newErrors.frtDistance = "La distance est requise";
     }
 
+    if (!formData.walkingTime) {
+      newErrors.walkingTime = "Le temps de marche est requis";
+    }
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -68,235 +76,161 @@ function Evaluation({ onSubmit, onClose }) {
   };
 
   return (
-    <div className="container mx-auto p-6">
-      <form onSubmit={handleSubmit} className="space-y-8">
-        {/* Section A: CARDIO-MUSCULAIRE */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold mb-6 text-gray-800">A. CARDIO-MUSCULAIRE</h2>
-          
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Test de la chaise en 30 secondes
-              </label>
-              <div className="flex items-center space-x-4 mb-4">
-                <label className="inline-flex items-center">
-                  <input
-                    type="radio"
-                    name="chairTestSupport"
-                    value="with"
-                    checked={formData.chairTestSupport === 'with'}
-                    onChange={handleChange}
-                    className="form-radio"
-                  />
-                  <span className="ml-2">Avec appui</span>
-                </label>
-                <label className="inline-flex items-center">
-                  <input
-                    type="radio"
-                    name="chairTestSupport"
-                    value="without"
-                    checked={formData.chairTestSupport === 'without'}
-                    onChange={handleChange}
-                    className="form-radio"
-                  />
-                  <span className="ml-2">Sans appui</span>
-                </label>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Nombre de levers
-                </label>
-                <input
-                  type="number"
-                  name="chairTestCount"
-                  value={formData.chairTestCount}
+    <Row justify="center">
+      <Col span={16}>
+        <Form layout="vertical" onFinish={handleSubmit}>
+          {/* Section A: CARDIO-MUSCULAIRE */}
+          <h2>A. CARDIO-MUSCULAIRE</h2>
+          <Form.Item label="Test de la chaise en 30 secondes">
+            <Radio.Group
+              name="chairTestSupport"
+              value={formData.chairTestSupport}
+              onChange={handleChange}
+            >
+              <Radio value="with">Avec appui</Radio>
+              <Radio value="without">Sans appui</Radio>
+            </Radio.Group>
+          </Form.Item>
+
+          <Form.Item 
+            label="Nombre de levers"
+            validateStatus={errors.chairTestCount ? "error" : ""}
+            help={errors.chairTestCount}
+          >
+            <Input
+              name="chairTestCount"
+              value={formData.chairTestCount}
+              onChange={handleChange}
+              placeholder="Entrez le nombre"
+            />
+          </Form.Item>
+
+          {/* Section B: ÉQUILIBRE */}
+          <h2>B. ÉQUILIBRE</h2>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item 
+                label="Temps Pieds joints (secondes)"
+                validateStatus={errors.balanceFeetTogether ? "error" : ""}
+                help={errors.balanceFeetTogether}
+              >
+                <Input
+                  name="balanceFeetTogether"
+                  value={formData.balanceFeetTogether}
                   onChange={handleChange}
-                  min="0"
-                  className={`${numericInputStyles} w-1/3 ${
-                    errors.chairTestCount ? 'border-red-500' : 'border-gray-300'
-                  }`}
+                  placeholder="Entrez le temps"
                 />
-                {errors.chairTestCount && (
-                  <p className="text-red-500 text-sm mt-1">{errors.chairTestCount}</p>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item 
+                label="Temps Semi-tandem (secondes)"
+                validateStatus={errors.balanceSemiTandem ? "error" : ""}
+                help={errors.balanceSemiTandem}
+              >
+                <Input
+                  name="balanceSemiTandem"
+                  value={formData.balanceSemiTandem}
+                  onChange={handleChange}
+                  placeholder="Entrez le temps"
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item 
+                label="Temps Tandem (secondes)"
+                validateStatus={errors.balanceTandem ? "error" : ""}
+                help={errors.balanceTandem}
+              >
+                <Input
+                  name="balanceTandem"
+                  value={formData.balanceTandem}
+                  onChange={handleChange}
+                  placeholder="Entrez le temps"
+                />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item 
+                label="Temps Unipodal (secondes)"
+                validateStatus={errors.balanceOneFooted ? "error" : ""}
+                help={errors.balanceOneFooted}
+              >
+                <Input
+                  name="balanceOneFooted"
+                  value={formData.balanceOneFooted}
+                  onChange={handleChange}
+                  placeholder="Entrez le temps"
+                />
+              </Form.Item>
+            </Col>
+          </Row>
 
-        {/* Section B: ÉQUILIBRE */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold mb-6 text-gray-800">B. ÉQUILIBRE</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Temps Pieds joints (secondes)
-              </label>
-              <input
-                type="number"
-                name="balanceFeetTogether"
-                value={formData.balanceFeetTogether}
-                onChange={handleChange}
-                min="0"
-                step="0.1"
-                className={`${numericInputStyles} ${
-                  errors.balanceFeetTogether ? 'border-red-500' : 'border-gray-300'
-                }`}
-              />
-              {errors.balanceFeetTogether && (
-                <p className="text-red-500 text-sm mt-1">{errors.balanceFeetTogether}</p>
-              )}
-            </div>
+          {/* Section C: MOBILITÉ & STABILITÉ DU TRONC */}
+          <h2>C. MOBILITÉ & STABILITÉ DU TRONC</h2>
+          <Form.Item label="Functional Reach Test (FRT)">
+            <Radio.Group
+              name="frtPosition"
+              value={formData.frtPosition}
+              onChange={handleChange}
+            >
+              <Radio value="sitting">Assis</Radio>
+              <Radio value="standing">Debout</Radio>
+              <Radio value="armNotWorking">Ne lève pas les bras</Radio>
+            </Radio.Group>
+          </Form.Item>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Temps Semi-tandem (secondes)
-              </label>
-              <input
-                type="number"
-                name="balanceSemiTandem"
-                value={formData.balanceSemiTandem}
-                onChange={handleChange}
-                min="0"
-                step="0.1"
-                className={`${numericInputStyles} ${
-                  errors.balanceSemiTandem ? 'border-red-500' : 'border-gray-300'
-                }`}
-              />
-              {errors.balanceSemiTandem && (
-                <p className="text-red-500 text-sm mt-1">{errors.balanceSemiTandem}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Temps Tandem (secondes)
-              </label>
-              <input
-                type="number"
-                name="balanceTandem"
-                value={formData.balanceTandem}
-                onChange={handleChange}
-                min="0"
-                step="0.1"
-                className={`${numericInputStyles} ${
-                  errors.balanceTandem ? 'border-red-500' : 'border-gray-300'
-                }`}
-              />
-              {errors.balanceTandem && (
-                <p className="text-red-500 text-sm mt-1">{errors.balanceTandem}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Temps Unipodal (secondes)
-              </label>
-              <input
-                type="number"
-                name="balanceOneFooted"
-                value={formData.balanceOneFooted}
-                onChange={handleChange}
-                min="0"
-                step="0.1"
-                className={`${numericInputStyles} ${
-                  errors.balanceOneFooted ? 'border-red-500' : 'border-gray-300'
-                }`}
-              />
-              {errors.balanceOneFooted && (
-                <p className="text-red-500 text-sm mt-1">{errors.balanceOneFooted}</p>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Section C: MOBILITÉ & STABILITÉ DU TRONC */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold mb-6 text-gray-800">C. MOBILITÉ & STABILITÉ DU TRONC</h2>
-          
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Functional Reach Test (FRT)
-              </label>
-              <div className="flex items-center space-x-4 mb-4">
-                <label className="inline-flex items-center">
-                  <input
-                    type="radio"
-                    name="frtPosition"
-                    value="sitting"
-                    checked={formData.frtPosition === 'sitting'}
-                    onChange={handleChange}
-                    className="form-radio"
-                  />
-                  <span className="ml-2">Assis</span>
-                </label>
-                <label className="inline-flex items-center">
-                  <input
-                    type="radio"
-                    name="frtPosition"
-                    value="standing"
-                    checked={formData.frtPosition === 'standing'}
-                    onChange={handleChange}
-                    className="form-radio"
-                  />
-                  <span className="ml-2">Debout</span>
-                </label>
-                <label className="inline-flex items-center">
-                  <input
-                    type="radio"
-                    name="frtPosition"
-                    value="sitting"
-                    checked={formData.frtPosition === 'armNotWorking'}
-                    onChange={handleChange}
-                    className="form-radio"
-                  />
-                  <span className="ml-2">Ne lève pas les bras</span>
-                </label>
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Distance (cm)
-              </label>
-              <input
-                type="number"
-                name="distanceFRT"
-                value={formData.distanceFRT}
-                onChange={handleChange}
-                min="0"
-                step="1"
-                className={`${numericInputStyles} ${
-                  errors.distanceFRT ? 'border-red-500' : 'border-gray-300'
-                }`}
-              />
-              {errors.distanceFRT && (
-                <p className="text-red-500 text-sm mt-1">{errors.distanceFRT}</p>
-              )}
-            </div>
-          </div>
-        </div>
-
-        <div className="flex justify-end space-x-4 mt-6">
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+          <Form.Item 
+            label="Distance (cm)"
+            validateStatus={errors.frtDistance ? "error" : ""}
+            help={errors.frtDistance}
           >
-            Annuler
-          </button>
-          <button
-            type="submit"
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            <Input
+              name="frtDistance"
+              value={formData.frtDistance}
+              onChange={handleChange}
+              placeholder="Entrez la distance"
+            />
+          </Form.Item>
+
+          {/* Section D: VITESSE DE MARCHE */}
+          <h2>VITESSE DE MARCHE</h2>
+          <Form.Item 
+            label="Test 4 mètres - Temps nécessaire pour marcher 4-mètres (secondes)"
+            validateStatus={errors.walkingTime ? "error" : ""}
+            help={errors.walkingTime}
           >
-            Soumettre
-          </button>
-        </div>
-      </form>
-    </div>
+            <Input
+              name="walkingTime"
+              value={formData.walkingTime}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value === '' || /^\d*\.?\d*$/.test(value)) {
+                  handleChange(e);
+                }
+              }}
+              placeholder="Entrez le temps en secondes"
+            />
+            {formData.walkingTime && !errors.walkingTime && (
+              <div style={{ marginTop: 8, color: '#666' }}>
+                Vitesse de marche : {(4 / parseFloat(formData.walkingTime)).toFixed(2)} m/s
+              </div>
+            )}
+          </Form.Item>
+
+          <Form.Item>
+            <Button onClick={onClose} style={{ marginRight: 8 }}>
+              Annuler
+            </Button>
+            <Button type="primary" htmlType="submit">
+              Soumettre
+            </Button>
+          </Form.Item>
+        </Form>
+      </Col>
+    </Row>
   );
 }
 
