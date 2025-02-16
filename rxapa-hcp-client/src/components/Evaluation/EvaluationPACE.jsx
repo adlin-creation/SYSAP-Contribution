@@ -437,6 +437,9 @@ function EvaluationPACE({ onSubmit }) {
         open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         footer={[
+          <Button key="close" onClick={() => setIsModalVisible(false)}>
+            Fermer
+          </Button>,
           <Button
             key="submit"
             type="primary"
@@ -447,9 +450,6 @@ function EvaluationPACE({ onSubmit }) {
             }}
           >
             Confirmer
-          </Button>,
-          <Button key="close" onClick={() => setIsModalVisible(false)}>
-            Fermer
           </Button>,
         ]}
       >
