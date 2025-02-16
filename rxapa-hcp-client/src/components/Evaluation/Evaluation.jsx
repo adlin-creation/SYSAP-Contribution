@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Row, Col, Input, Button, Form, Radio } from "antd";
+import { Row, Col, Input, Button, Form, Radio, Modal } from "antd";
 
 
 
@@ -39,11 +39,12 @@ function Evaluation({ onSubmit, onClose }) {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState(null);
+
+  const handleSubmit = () => {  // on utilise directement formData qui est dans l'état
     const newErrors = {};
-    
+   
     // Validation
     if (!formData.chairTestCount) {
       newErrors.chairTestCount = "Le nombre de levers est requis";
@@ -63,22 +64,145 @@ function Evaluation({ onSubmit, onClose }) {
       newErrors.frtDistance = "La distance est requise";
     }
 
-    if (!formData.walkingTime) {
-      newErrors.walkingTime = "Le temps de marche est requis";
-    }
-
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
 
-    onSubmit(formData);
+    const scoreA = calculateChairTestScore();
+    const scoreB = calculateBalanceScore();
+    const scoreC = calculateMobilityScore();
+    
+    const totalScore = scoreA + scoreB + scoreC;
+    const level = determineLevel(totalScore);
+    const color = determineColor(scoreA, scoreB, scoreC);
+
+    setModalMessage(
+      <div className="results-container">
+        <h3 style={{ marginBottom: '20px', borderBottom: '1px solid #eee', paddingBottom: '10px' }}>
+          Résultats de l'évaluation
+        </h3>
+        
+        <div style={{ marginBottom: '15px' }}>
+          <strong>Scores individuels :</strong>
+          <p>A. Cardio-musculaire : {scoreA}/6</p>
+          <p>B. Équilibre : {scoreB}/6</p>
+          <p>C. Mobilité : {scoreC}/6</p>
+        </div>
+
+        <div style={{ marginBottom: '15px' }}>
+          <strong>Score Total : {totalScore}/18</strong>
+        </div>
+
+        <div style={{ marginTop: '20px', backgroundColor: '#f5f5f5', padding: '15px', borderRadius: '5px' }}>
+          <p><strong>Niveau : {level}</strong></p>
+          <p><strong>Programme recommandé : {color} {level}</strong></p>
+        </div>
+      </div>
+    );
+    
+    setIsModalVisible(true);
+
+    onSubmit({
+      ...formData,
+      scores: {
+        cardioMusculaire: scoreA,
+        equilibre: scoreB,
+        mobilite: scoreC,
+        total: totalScore,
+        niveau: level,
+        couleur: color,
+        programme: `${color} ${level}`
+      }
+      });
   };
+
+const calculateChairTestScore = () => {
+    const count = parseInt(formData.chairTestCount);
+    const withSupport = formData.chairTestSupport === 'with';
+
+    if (count === 0) return 0;
+    if (withSupport && count >= 10) return 2;
+    if (withSupport && count >= 1) return 1;
+    if (!withSupport && count >= 16) return 6;
+    if (!withSupport && count >= 13) return 5;
+    if (!withSupport && count >= 10) return 4;
+    if (!withSupport && count >= 5) return 3;
+    if (!withSupport && count >= 1) return 2;
+    return 0;
+};
+
+const calculateBalanceScore = () => {
+    const feetTogether = parseFloat(formData.balanceFeetTogether);
+    const semiTandem = parseFloat(formData.balanceSemiTandem);
+    const tandem = parseFloat(formData.balanceTandem);
+    const oneFooted = parseFloat(formData.balanceOneFooted);
+
+    if (oneFooted >= 10) return 6;
+    if (oneFooted >= 5) return 5;
+    if (tandem >= 10) return 4;
+    if (tandem >= 5) return 3;
+    if (semiTandem >= 10) return 2;
+    if (feetTogether >= 10) return 1;
+    return 0;
+};
+
+const calculateMobilityScore = () => {
+  if (formData.frtPosition === 'armNotWorking') return 0;
+  
+  const distance = parseFloat(formData.frtDistance);
+  const isStanding = formData.frtPosition === 'standing';
+  const balanceScore = calculateBalanceScore();
+  
+  // Position debout (si B ≥ 5 OU Assis = 40 cm)
+  if (isStanding && (balanceScore >= 5)) {
+      if (distance > 35) return 6;
+      if (distance >= 27) return 5;
+      if (distance >= 15) return 4;
+      if (distance > 0) return 3;
+      return 0;
+  } 
+  // Position assise
+  else {
+      if (distance > 35) return 4;
+      if (distance >= 27) return 3;
+      if (distance >= 15) return 2;
+      if (distance < 15 && distance > 0) return 1;
+      return 0;
+  }
+};
+
+const determineLevel = (totalScore) => {
+    if (totalScore >= 16) return 'V';
+    if (totalScore >= 13) return 'IV';
+    if (totalScore >= 9) return 'III';
+    if (totalScore >= 5) return 'II';
+    return 'I';
+};
+
+const determineColor = (scoreA, scoreB, scoreC) => {
+    const min = Math.min(scoreA, scoreB, scoreC);
+    
+    // Si tous les scores sont égaux
+    if (scoreA === scoreB && scoreB === scoreC) return 'MARRON';
+    
+    // Si deux scores sont égaux et minimum
+    if (scoreA === scoreB && scoreA === min) return 'VERT';
+    if (scoreB === scoreC && scoreB === min) return 'ORANGE';
+    if (scoreC === scoreA && scoreC === min) return 'VIOLET';
+    
+    // Si un seul score est minimum
+    if (scoreA === min) return 'BLEU';
+    if (scoreB === min) return 'JAUNE';
+    if (scoreC === min) return 'ROUGE';
+    
+    return 'MARRON'; // Cas par défaut
+};
 
   return (
     <Row justify="center">
       <Col span={16}>
-        <Form layout="vertical" onFinish={handleSubmit}>
+        <Form layout="vertical" onFinish={handleSubmit} initialValues={formData}>
           {/* Section A: CARDIO-MUSCULAIRE */}
           <h2>A. CARDIO-MUSCULAIRE</h2>
           <Form.Item label="Test de la chaise en 30 secondes">
@@ -230,6 +354,18 @@ function Evaluation({ onSubmit, onClose }) {
           </Form.Item>
         </Form>
       </Col>
+      <Modal
+        title="Résultats"
+        open={isModalVisible}
+        onCancel={() => setIsModalVisible(false)}
+        footer={[
+          <Button key="close" onClick={() => setIsModalVisible(false)}>
+            Fermer
+          </Button>
+        ]}
+      >
+        {modalMessage}
+      </Modal>
     </Row>
   );
 }
