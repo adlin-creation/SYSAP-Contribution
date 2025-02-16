@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { Evaluation } from "../model/Evaluation";
 import { Evaluation_PACE } from "../model/Evaluation_PACE";
 import { sequelize } from "../util/database";
+import { Patient } from "../model/Patient";
+import { Op } from "sequelize";
 
 exports.createEvaluation = async (req: any, res: any, next: any) => {
   const {
@@ -233,4 +235,26 @@ exports.deleteEvaluation = async (req: any, res: any, next: any) => {
     res.status(error.statusCode).json({ message: "Error deleting evaluation" });
   }
   return res;
+};
+
+exports.searchPatients = async (req: Request, res: Response) => {
+  try {
+    const { term } = req.query;
+
+    const patients = await Patient.findAll({
+      where: {
+        [Op.or]: [
+          { firstname: { [Op.iLike]: `%${term}%` } },
+          { lastname: { [Op.iLike]: `%${term}%` } },
+        ],
+      },
+    });
+
+    res.status(200).json(patients);
+  } catch (error) {
+    console.error("Erreur lors de la recherche de patients:", error);
+    res
+      .status(500)
+      .json({ message: "Erreur lors de la recherche de patients" });
+  }
 };
