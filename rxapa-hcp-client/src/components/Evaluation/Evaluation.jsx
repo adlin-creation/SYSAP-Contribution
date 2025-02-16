@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 const numericInputStyles = `w-full p-2 border rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`;
 
-function KinesiologyEvaluation({ onSubmit, onClose }) {
+function Evaluation({ onSubmit, onClose }) {
   const [formData, setFormData] = useState({
     // Section A
     chairTestSupport: 'with',
@@ -300,4 +300,4 @@ function KinesiologyEvaluation({ onSubmit, onClose }) {
   );
 }
 
-export default KinesiologyEvaluation;
+export default Evaluation;
