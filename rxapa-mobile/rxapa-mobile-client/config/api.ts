@@ -1,7 +1,7 @@
 //objective: Contains the configuration for the API.
 //objective: Contient la configuration pour l'API.
 export const API_CONFIG = {
-  BASE_URL: 'http://192.168.0.67:3000/api', // Update with the correct IP address for the backend.
+  BASE_URL: 'http://localhost:3000/api', // Update with the correct IP address for the backend.
   ENDPOINTS: {
     AUTH: '/authenticate',
     SESSION_RECORDS: '/session-records',
