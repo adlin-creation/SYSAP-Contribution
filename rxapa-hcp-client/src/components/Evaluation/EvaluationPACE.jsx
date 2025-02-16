@@ -64,6 +64,12 @@ function EvaluationPACE({ onSubmit}) {
       newErrors.frtDistance = "La distance est requise";
     }
 
+    if (!formData.walkingTime) {
+      newErrors.walkingTime = "Le temps de marche est requis";
+    } else if (isNaN(formData.walkingTime) || formData.walkingTime <= 0) {
+      newErrors.walkingTime = "Veuillez entrer un temps de marche valide";
+    }
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -89,15 +95,22 @@ function EvaluationPACE({ onSubmit}) {
           <p>B. Équilibre : {scoreB}/6</p>
           <p>C. Mobilité : {scoreC}/6</p>
         </div>
-
+    
         <div style={{ marginBottom: '15px' }}>
           <strong>Score Total : {totalScore}/18</strong>
         </div>
-
+    
         <div style={{ marginTop: '20px', backgroundColor: '#f5f5f5', padding: '15px', borderRadius: '5px' }}>
           <p><strong>Niveau : {level}</strong></p>
           <p><strong>Programme recommandé : {color} {level}</strong></p>
         </div>
+    
+        {formData.walkingTime && (
+          <div style={{ marginTop: '20px', borderTop: '1px solid #eee', paddingTop: '15px' }}>
+            <p>Vitesse de marche : {(4 / parseFloat(formData.walkingTime)).toFixed(2)} m/s</p>
+            <p><strong>Objectif de marche : {calculateWalkingObjective(formData.walkingTime)} minutes</strong></p>
+          </div>
+        )}
       </div>
     );
     
@@ -112,9 +125,14 @@ function EvaluationPACE({ onSubmit}) {
         total: totalScore,
         niveau: level,
         couleur: color,
-        programme: `${color} ${level}`
+        programme: `${color} ${level}`,
+        marche: formData.walkingTime ? {
+          temps: formData.walkingTime,
+          vitesse: (4 / parseFloat(formData.walkingTime)).toFixed(2),
+          objectif: calculateWalkingObjective(formData.walkingTime)
+        } : null
       }
-      });
+    });
   };
 
 const calculateChairTestScore = () => {
@@ -197,6 +215,19 @@ const determineColor = (scoreA, scoreB, scoreC) => {
     if (scoreC === min) return 'ROUGE';
     
     return 'MARRON'; // Cas par défaut
+};
+
+const calculateWalkingObjective = (walkingTime) => {
+  if (!walkingTime || walkingTime <= 0) return null;
+  
+  const speed = 4 / parseFloat(walkingTime);
+  
+  if (speed < 0.4) return 10;
+  if (speed >= 0.4 && speed < 0.59) return 15;
+  if (speed >= 0.6 && speed < 0.79) return 20;
+  if (speed >= 0.8) return 30;
+  
+  return null;
 };
 
 const onClose = () => {
