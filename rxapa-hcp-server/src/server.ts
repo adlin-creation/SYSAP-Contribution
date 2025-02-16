@@ -20,6 +20,7 @@ import patientRoutes from "./routes/PatientRoute";
 import patientCaregiverRoutes from "./routes/PatientCaregiverRoute";
 import caregiverRoutes from "./routes/CaregiverRoute";
 import professionalUserRoutes from "./routes/ProfessionalUserRoute";
+import evaluationRoutes from "./routes/EvaluationRoute";
 
 import { errorHandler } from "./middleware/errorHandler"; // Import du middleware
 
@@ -45,7 +46,11 @@ const imageStorage = multer.diskStorage({
 
 // filter files to be accepted as an image
 const fileFilter = (req: any, file: any, cb: any) => {
-  if (file.mimetype === "image/png" || file.mimetype === "image/jpg" || file.mimetype === "image/jpeg") {
+  if (
+    file.mimetype === "image/png" ||
+    file.mimetype === "image/jpg" ||
+    file.mimetype === "image/jpeg"
+  ) {
     cb(null, true);
   } else {
     cb(null, false);
@@ -56,10 +61,17 @@ const fileFilter = (req: any, file: any, cb: any) => {
 dotenv.config();
 
 app.use(bodyParser.json());
-app.use(multer({ storage: imageStorage, fileFilter: fileFilter }).single("exerciseImage"));
+app.use(
+  multer({ storage: imageStorage, fileFilter: fileFilter }).single(
+    "exerciseImage"
+  )
+);
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "OPTIONS, GET, POST, PUT, PATCH, DELETE");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "OPTIONS, GET, POST, PUT, PATCH, DELETE"
+  );
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
   next();
 });
@@ -76,6 +88,7 @@ app.use(patientRoutes);
 app.use(patientCaregiverRoutes);
 app.use(caregiverRoutes);
 app.use(professionalUserRoutes);
+app.use(evaluationRoutes);
 
 // app.use("/", programPhaseRoutes);
 

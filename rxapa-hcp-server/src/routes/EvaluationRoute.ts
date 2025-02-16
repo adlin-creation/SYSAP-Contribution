@@ -3,6 +3,11 @@ const router = express.Router();
 
 const evaluationController = require("../controller/EvaluationController");
 
-router.get("/evaluation", evaluationController.evaluation);
+// Routes pour les évaluations PACE
+router.post("/evaluation", evaluationController.createEvaluation);
+router.put("/evaluation/:id", evaluationController.updateEvaluation);
+router.get("/evaluation/:id", evaluationController.getEvaluation);
+router.get("/evaluations", evaluationController.getEvaluations);
+router.delete("/evaluation/:id", evaluationController.deleteEvaluation);
 
 export default router;
