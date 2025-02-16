@@ -14,7 +14,7 @@ function EvaluationPACE({ onSubmit }) {
     balanceOneFooted: "",
 
     // Section C
-    frtPosition: "sitting",
+    frtPosition: true,
     frtDistance: "",
 
     // Section D
@@ -25,10 +25,20 @@ function EvaluationPACE({ onSubmit }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => {
+      if (name === "frtPosition" && value === "armNotWorking") {
+        return {
+          ...prev,
+          [name]: value,
+          frtDistance: "",
+        };
+      }
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
+
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
@@ -63,8 +73,11 @@ function EvaluationPACE({ onSubmit }) {
       }
     });
 
-    if (!formData.frtDistance) {
-      newErrors.frtDistance = "La distance est requise";
+    if (formData.frtPosition !== "armNotWorking") {
+      // Seulement valider si ce n'est pas "Ne lève pas les bras"
+      if (!formData.frtDistance) {
+        newErrors.frtDistance = "La distance est requise";
+      }
     }
 
     if (!formData.walkingTime) {
@@ -207,7 +220,7 @@ function EvaluationPACE({ onSubmit }) {
     if (formData.frtPosition === "armNotWorking") return 0;
 
     const distance = parseFloat(formData.frtDistance);
-    const isStanding = formData.frtPosition === "standing";
+    const isStanding = !formData.frtPosition; // false signifie debout
     const balanceScore = calculateBalanceScore();
 
     // Position debout (si B ≥ 5 OU Assis = 40 cm)
@@ -377,8 +390,8 @@ function EvaluationPACE({ onSubmit }) {
               value={formData.frtPosition}
               onChange={handleChange}
             >
-              <Radio value="sitting">Assis</Radio>
-              <Radio value="standing">Debout</Radio>
+              <Radio value={true}>Assis</Radio>
+              <Radio value={false}>Debout</Radio>
               <Radio value="armNotWorking">Ne lève pas les bras</Radio>
             </Radio.Group>
           </Form.Item>
@@ -393,6 +406,7 @@ function EvaluationPACE({ onSubmit }) {
               value={formData.frtDistance}
               onChange={handleChange}
               placeholder="Entrez la distance"
+              disabled={formData.frtPosition === "armNotWorking"}
             />
           </Form.Item>
 
