@@ -29,6 +29,7 @@ import { Follow_Patient } from "./Follow_Patient";
 import { Diagnostic } from "./Diagnostic";
 
 import { Evaluation } from "./Evaluation";
+import { Evaluation_PACE } from "./Evaluation_PACE";
 
 export function createAssociations() {
   /**
@@ -53,10 +54,7 @@ export function createAssociations() {
   //   // },
   // });
 
-  // ======================
-  // Evaluation Associations
-  // ======================
-
+  // Evaluations
   // Evaluation <> Patient (One-to-Many)
   Evaluation.belongsTo(Patient, {
     foreignKey: "idPatient",
@@ -86,6 +84,18 @@ export function createAssociations() {
     foreignKey: "idResultProgram",
     onDelete: "RESTRICT",
   });
+
+  // Evaluation PACE
+  // Evaluation <> Evaluation_PACE (One-to-One)
+  Evaluation_PACE.belongsTo(Evaluation, {
+    foreignKey: "idPACE",
+    onDelete: "CASCADE",
+  });
+  Evaluation.hasOne(Evaluation_PACE, {
+    foreignKey: "idPACE",
+    onDelete: "CASCADE",
+  });
+
 
   Bloc.hasMany(Exercise_Bloc, {
     onDelete: "RESTRICT",
