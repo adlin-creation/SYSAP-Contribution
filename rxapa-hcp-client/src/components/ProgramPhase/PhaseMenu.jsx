@@ -74,10 +74,10 @@ export default function PhaseMenu() {
   /// PROGRAM PHASE QUERY VALIDATIONS ///
   /////////////////////////////////////
   if (isPhaseLoading) {
-    return <h1>{t("loading_program_phases")}</h1>;
+    return <h1>{t("Phases:loading_program_phases")}</h1>;
   }
   if (isPhaseLoadingError) {
-    return <h1>{t("error_loading_program_phases")}</h1>;
+    return <h1>{t("Phases:error_loading_program_phases")}</h1>;
   }
 
   /**
@@ -156,7 +156,7 @@ export default function PhaseMenu() {
             type="primary"
             icon={<PlusOutlined />}
           >
-            {t("create_phase")}
+            {t("Phases:create_phase")}
           </Button>
 
           {/* Display exisitng cycles */}
@@ -184,14 +184,14 @@ export default function PhaseMenu() {
           type="primary"
           icon={<ArrowLeftOutlined />}
         >
-          {t("back")}
+          {t("Phases:back_button")}
         </Button>
       )}
 
       {/* show create session input elements when create day session is clicked */}
       {buttonState.isCreatePhase && (
         <div>
-          <h3>{t("enter_phase_details")}</h3>
+          <h3>{t("Phases:enter_phase_details")}</h3>
           <CreatePhase refetchPhases={refetchPhases} cycleList={cycleList} />
         </div>
       )}
@@ -203,11 +203,7 @@ export default function PhaseMenu() {
           refetchPhases={refetchPhases}
         />
       )}
-      <Modal
-        open={isOpenModal}
-        onCancel={closeModal}
-        footer={null}
-      >
+      <Modal open={isOpenModal} onCancel={closeModal} footer={null}>
         <p>{message}</p>
       </Modal>
     </div>

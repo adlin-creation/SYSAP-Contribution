@@ -60,7 +60,7 @@ export default function CreateBloc(props) {
     <Row justify="center" align="middle" style={{ minHeight: "50vh" }}>
       <Col span={12}>
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
-          <Form.Item label={t("enter_bloc_name")}>
+          <Form.Item label={t("Blocs:enter_bloc_name")}>
             <Controller
               name={"name"}
               control={control}
@@ -68,14 +68,14 @@ export default function CreateBloc(props) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder={t("exercise_name")}
+                  placeholder={t("Blocs:exercise_name")}
                   required
                 />
               )}
             />
           </Form.Item>
 
-          <Form.Item label={t("enter_bloc_description")}>
+          <Form.Item label={t("Blocs:enter_bloc_description")}>
             <Controller
               name={"description"}
               control={control}
@@ -83,7 +83,7 @@ export default function CreateBloc(props) {
                 <Input.TextArea
                   onChange={onChange}
                   value={value}
-                  placeholder={t("exercise_description")}
+                  placeholder={t("Blocs:exercise_description")}
                   required
                 />
               )}

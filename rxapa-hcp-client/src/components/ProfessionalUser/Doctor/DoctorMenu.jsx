@@ -224,12 +224,14 @@ export default function DoctorMenu() {
               type="primary"
               icon={<ArrowLeftOutlined />}
             >
-              {t("back_button")}
+              {t("Professionals:Doctors:back_button")}
             </Button>
           </Col>
           <Col flex="auto" style={{ textAlign: "center" }}>
             <h2 style={{ marginBottom: 0 }}>
-              {isCreateDoctor ? t("register_doctor_title") : t("edit_doctor")}
+              {isCreateDoctor
+                ? t("Professionnals:Doctors:register_doctor_title")
+                : t("Professionnals:Doctors:edit_doctor")}
             </h2>
           </Col>
           <Col span={4} />

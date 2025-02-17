@@ -124,7 +124,7 @@ export default function BlocMenu() {
             icon={<PlusOutlined />}
             onClick={() => handleButtonState("create-bloc")}
           >
-            {t("create_bloc")}
+            {t("Blocs:create_bloc")}
           </Button>
 
           {/* Display exisitng blocs */}
@@ -163,7 +163,9 @@ export default function BlocMenu() {
           </Col>
           <Col>
             <h2>
-              {buttonState.isCreateBloc ? "Create a new bloc" : "Edit bloc"}
+              {buttonState.isCreateBloc
+                ? t("Blocs:create_new_bloc")
+                : t("Blocs:edit_bloc")}
             </h2>
           </Col>
           <Col span={4} />

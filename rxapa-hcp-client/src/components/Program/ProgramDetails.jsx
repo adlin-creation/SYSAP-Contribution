@@ -8,7 +8,7 @@ import ProgramPhaseTable from "./ProgramPhaseTable";
 import { useQuery } from "@tanstack/react-query";
 import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 
 export default function ProgramDetails({ program }) {
@@ -66,17 +66,17 @@ export default function ProgramDetails({ program }) {
   /// QUERY VALIDATIONS          ///
   //////////////////////////////////
   if (isProgramPhasesLoading) {
-    return <h1>{t("loading_program_phases")}</h1>;
+    return <h1>{t("Programs:loading_program_phases")}</h1>;
   }
   if (isProgramPhasesLoadingError) {
-    return <h1>{t("error_loading_program_phases")}</h1>;
+    return <h1>{t("Programs:error_loading_program_phases")}</h1>;
   }
 
   if (isAllProgramPhasesLoading) {
-    return <h1>{t("loading_all_phases")}</h1>;
+    return <h1>{t("Programs:loading_all_phases")}</h1>;
   }
   if (isAllProgramPhasesLoadingError) {
-    return <h1>{t("error_loading_all_phases")}</h1>;
+    return <h1>{t("Programs:error_loading_all_phases")}</h1>;
   }
 
   function addProgramPhase() {
@@ -121,10 +121,10 @@ export default function ProgramDetails({ program }) {
   }
 
   return (
-    <Row justify="center" align="middle" style={{ minHeight: '50vh' }}>
+    <Row justify="center" align="middle" style={{ minHeight: "50vh" }}>
       <Col span={12}>
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
-          <Form.Item label={t("enter_program_name")}>
+          <Form.Item label={t("Programs:enter_program_name")}>
             <Controller
               name="name"
               control={control}
@@ -132,14 +132,14 @@ export default function ProgramDetails({ program }) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder={t("program_name_placeholder")}
+                  placeholder={t("Programs:program_name_placeholder")}
                   required
                 />
               )}
             />
           </Form.Item>
 
-          <Form.Item label={t("enter_program_description")}>
+          <Form.Item label={t("Programs:enter_program_description")}>
             <Controller
               name="description"
               control={control}
@@ -147,7 +147,7 @@ export default function ProgramDetails({ program }) {
                 <Input.TextArea
                   onChange={onChange}
                   value={value}
-                  placeholder={t("program_description_placeholder")}
+                  placeholder={t("Programs:program_description_placeholder")}
                   rows={4}
                   required
                 />
@@ -155,7 +155,7 @@ export default function ProgramDetails({ program }) {
             />
           </Form.Item>
 
-          <Form.Item label={t("enter_program_duration")}>
+          <Form.Item label={t("Programs:enter_program_duration")}>
             <Controller
               name="duration"
               control={control}
@@ -163,7 +163,7 @@ export default function ProgramDetails({ program }) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder={t("program_duration_placeholder")}
+                  placeholder={t("Programs:program_duration_placeholder")}
                   required
                 />
               )}
@@ -171,12 +171,8 @@ export default function ProgramDetails({ program }) {
           </Form.Item>
 
           <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              icon={<CheckOutlined />}
-            >
-              {t("update")}
+            <Button type="primary" htmlType="submit" icon={<CheckOutlined />}>
+              {t("Programs:update")}
             </Button>
           </Form.Item>
         </Form>
@@ -189,7 +185,7 @@ export default function ProgramDetails({ program }) {
             icon={<PlusOutlined />}
             className="program-add-button"
           >
-            {t("add_program_phase")}
+            {t("Programs:add_program_phase")}
           </Button>
         </div>
 
@@ -211,7 +207,7 @@ export default function ProgramDetails({ program }) {
               </Button>,
             ]}
           >
-            <p style={{ color: isErrorMessage ? 'red' : 'green' }}>{message}</p>
+            <p style={{ color: isErrorMessage ? "red" : "green" }}>{message}</p>
           </Modal>
         )}
       </Col>
@@ -224,6 +220,6 @@ ProgramDetails.propTypes = {
     key: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     description: PropTypes.string,
-    duration: PropTypes.string
-  }).isRequired
+    duration: PropTypes.string,
+  }).isRequired,
 };

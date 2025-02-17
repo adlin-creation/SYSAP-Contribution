@@ -77,62 +77,62 @@ function App() {
     {
       key: "/",
       icon: <HomeOutlined />,
-      label: <Link to="/">{t("Dashboard")}</Link>,
+      label: <Link to="/">{t("App:dashboard")}</Link>,
     },
     {
       key: "/exercises",
       icon: <AppstoreOutlined />,
-      label: <Link to="/exercises">{t("Exercises")}</Link>,
+      label: <Link to="/exercises">{t("App:exercises")}</Link>,
     },
     {
       key: "/blocs",
       icon: <BlockOutlined />,
-      label: <Link to="/blocs">{t("Blocs")}</Link>,
+      label: <Link to="/blocs">{t("App:blocs")}</Link>,
     },
     {
       key: "/sessions",
       icon: <CalendarOutlined />,
-      label: <Link to="/sessions">{t("Sessions")}</Link>,
+      label: <Link to="/sessions">{t("App:sessions")}</Link>,
     },
     {
       key: "/cycles",
       icon: <ClusterOutlined />,
-      label: <Link to="/cycles">{t("Cycles")}</Link>,
+      label: <Link to="/cycles">{t("App:cycles")}</Link>,
     },
     {
       key: "/phases",
       icon: <PartitionOutlined />,
-      label: <Link to="/phases">{t("Phases")}</Link>,
+      label: <Link to="/phases">{t("App:phases")}</Link>,
     },
     {
       key: "/programs",
       icon: <SettingOutlined />,
-      label: <Link to="/programs">{t("Programs")}</Link>,
+      label: <Link to="/programs">{t("App:programs")}</Link>,
     },
     {
       key: "/patients",
       icon: <UserOutlined />,
-      label: <Link to="/patients">{t("Patients")}</Link>,
+      label: <Link to="/patients">{t("App:patients")}</Link>,
     },
     {
       key: "healthcare-professional",
       icon: <UsergroupAddOutlined />,
-      label: t("Professionals"),
+      label: t("App:professionals"),
       children: [
         {
           key: "/doctors",
           icon: <MedicineBoxOutlined />,
-          label: <Link to="/doctors">{t("Doctors")}</Link>,
+          label: <Link to="/doctors">{t("App:doctors")}</Link>,
         },
         {
           key: "/kinesiologists",
           icon: <HeartOutlined />,
-          label: <Link to="/kinesiologists">{t("Kinesiologists")}</Link>,
+          label: <Link to="/kinesiologists">{t("App:kinesiologists")}</Link>,
         },
         {
           key: "/admins",
           icon: <UserOutlined />,
-          label: <Link to="/admins">{t("Admins")}</Link>,
+          label: <Link to="/admins">{t("App:admins")}</Link>,
         },
       ],
     },
@@ -141,15 +141,15 @@ function App() {
   const userMenuItems = [
     {
       key: "1",
-      label: <Link to="/profile">{t("Profile")}</Link>,
+      label: <Link to="/profile">{t("App:profile")}</Link>,
     },
     {
       key: "2",
-      label: <Link to="/settings">{t("Settings")}</Link>,
+      label: <Link to="/settings">{t("App:settings")}</Link>,
     },
     {
       key: "3",
-      label: t("Logout"),
+      label: t("App:logout"),
       onClick: handleLogout, // Ajoutez cette ligne pour la déconnexion
     },
   ];

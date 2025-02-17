@@ -1,0 +1,17 @@
+{
+  "create_program_button": "Creat program",
+  "enter_program_name": "Please enter the name of the program:",
+  "program_name_placeholder": "Program name",
+  "enter_program_description": "Please enter the description of the program:",
+  "program_description_placeholder": "Program description",
+  "enter_program_duration": "Please enter the duration of the program:",
+  "program_duration_placeholder": "Program duration",
+  "add_program_phase": "Add program phase",
+  "loading_program_phases": "Loading program phases...",
+  "error_loading_program_phases": "An error occurred while loading the program phases",
+  "loading_all_phases": "Loading all phases...",
+  "error_loading_all_phases": "An error occurred while loading all phases",
+  "create_program": "Create a program",
+  "submit_button": "SUBMIT",
+  "back_button": "Back"
+}

@@ -107,11 +107,11 @@ function CreatePatient({ refetchPatients, onClose }) {
     <Row justify="center">
       <Col span={16}>
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
-          <h2>{t("patient_informations")}</h2>
+          <h2>{t("Patients:patient_informations")}</h2>
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                label={t("first_name_form")}
+                label={t("Patients:first_name_form")}
                 required
                 validateStatus={errors.patientFirstName ? "error" : ""}
                 help={errors.patientFirstName?.message}
@@ -127,14 +127,17 @@ function CreatePatient({ refetchPatients, onClose }) {
                     },
                   }}
                   render={({ field }) => (
-                    <Input {...field} placeholder={t("first_name_input")} />
+                    <Input
+                      {...field}
+                      placeholder={t("Patients:first_name_input")}
+                    />
                   )}
                 />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
-                label={t("last_name")}
+                label={t("Patients:last_name")}
                 required
                 validateStatus={errors.patientLastName ? "error" : ""}
                 help={errors.patientLastName?.message}
@@ -150,7 +153,10 @@ function CreatePatient({ refetchPatients, onClose }) {
                     },
                   }}
                   render={({ field }) => (
-                    <Input {...field} placeholder={t("last_name_input")} />
+                    <Input
+                      {...field}
+                      placeholder={t("Patients:last_name_input")}
+                    />
                   )}
                 />
               </Form.Item>
@@ -159,14 +165,14 @@ function CreatePatient({ refetchPatients, onClose }) {
 
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item label={t("birthday")}>
+              <Form.Item label={t("Patients:birthday")}>
                 <Controller
                   name="birthday"
                   control={control}
                   render={({ field }) => (
                     <DatePicker
                       {...field}
-                      placeholder={t("birthday_select")}
+                      placeholder={t("Patients:birthday_select")}
                       style={{ width: "100%" }}
                     />
                   )}
@@ -175,7 +181,7 @@ function CreatePatient({ refetchPatients, onClose }) {
             </Col>
             <Col span={12}>
               <Form.Item
-                label={t("phone")}
+                label={t("Patients:phone")}
                 required
                 validateStatus={errors.patientPhone ? "error" : ""}
                 help={errors.patientPhone?.message}
@@ -191,7 +197,10 @@ function CreatePatient({ refetchPatients, onClose }) {
                     },
                   }}
                   render={({ field }) => (
-                    <Input {...field} placeholder={t("phone_number_input")} />
+                    <Input
+                      {...field}
+                      placeholder={t("Patients:phone_number_input")}
+                    />
                   )}
                 />
               </Form.Item>
@@ -201,7 +210,7 @@ function CreatePatient({ refetchPatients, onClose }) {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                label={t("email")}
+                label={t("Patients:email")}
                 required
                 validateStatus={errors.patientEmail ? "error" : ""}
                 help={errors.patientEmail?.message}
@@ -220,7 +229,7 @@ function CreatePatient({ refetchPatients, onClose }) {
                     <Input
                       type="email"
                       {...field}
-                      placeholder={t("email_input")}
+                      placeholder={t("Patients:email_input")}
                     />
                   )}
                 />
@@ -228,7 +237,7 @@ function CreatePatient({ refetchPatients, onClose }) {
             </Col>
             <Col span={12}>
               <Form.Item
-                label={t("email_confirm")}
+                label={t("Patients:email_confirm")}
                 required
                 validateStatus={errors.confirmPatientEmail ? "error" : ""}
                 help={errors.confirmPatientEmail?.message}
@@ -246,7 +255,7 @@ function CreatePatient({ refetchPatients, onClose }) {
                     <Input
                       type="email"
                       {...field}
-                      placeholder={t("email_confirm_info")}
+                      placeholder={t("Patients:email_confirm_info")}
                     />
                   )}
                 />
@@ -256,14 +265,14 @@ function CreatePatient({ refetchPatients, onClose }) {
 
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item label={t("additionnal_information")}>
+              <Form.Item label={t("Patients:additionnal_information")}>
                 <Controller
                   name="otherinfo"
                   control={control}
                   render={({ field }) => (
                     <Input.TextArea
                       {...field}
-                      placeholder={t("additionnal_information_input")}
+                      placeholder={t("Patients:additionnal_information_input")}
                       rows={4}
                     />
                   )}
@@ -272,16 +281,16 @@ function CreatePatient({ refetchPatients, onClose }) {
             </Col>
           </Row>
 
-          <h2>{t("caregiver_information")}</h2>
+          <h2>{t("Patients:caregiver_information")}</h2>
           {caregivers.map((caregiver, index) => (
             <div key={caregiver.id}>
               <h3>
-                {t("caregiver")} {index + 1}
+                {t("Patients:caregiver")} {index + 1}
               </h3>
               <Row gutter={16}>
                 <Col span={8}>
                   <Form.Item
-                    label={t("first_name_form")}
+                    label={t("Patients:first_name_form")}
                     validateStatus={
                       errors[`caregiverFirstName${index + 1}`] ? "error" : ""
                     }
@@ -300,7 +309,7 @@ function CreatePatient({ refetchPatients, onClose }) {
                       render={({ field }) => (
                         <Input
                           {...field}
-                          placeholder={t("caregiver_first_name_input")}
+                          placeholder={t("Patients:caregiver_first_name_input")}
                         />
                       )}
                     />
@@ -308,7 +317,7 @@ function CreatePatient({ refetchPatients, onClose }) {
                 </Col>
                 <Col span={8}>
                   <Form.Item
-                    label={t("last_name")}
+                    label={t("Patients:last_name")}
                     validateStatus={
                       errors[`caregiverLastName${index + 1}`] ? "error" : ""
                     }
@@ -327,7 +336,7 @@ function CreatePatient({ refetchPatients, onClose }) {
                       render={({ field }) => (
                         <Input
                           {...field}
-                          placeholder={t("caregiver_last_name_input")}
+                          placeholder={t("Patients:caregiver_last_name_input")}
                         />
                       )}
                     />
@@ -335,7 +344,7 @@ function CreatePatient({ refetchPatients, onClose }) {
                 </Col>
                 <Col span={8}>
                   <Form.Item
-                    label={t("relationship")}
+                    label={t("Patients:relationship")}
                     validateStatus={
                       errors[`relationship${index + 1}`] ? "error" : ""
                     }
@@ -350,19 +359,19 @@ function CreatePatient({ refetchPatients, onClose }) {
                       render={({ field }) => (
                         <Select
                           {...field}
-                          placeholder={t("relationship_choice")}
+                          placeholder={t("Patients:relationship_choice")}
                         >
                           <Select.Option value="parent">
-                            {t("relation_parent")}
+                            {t("Patients:relation_parent")}
                           </Select.Option>
                           <Select.Option value="sibling">
-                            {t("relation_sibling")}
+                            {t("Patients:relation_sibling")}
                           </Select.Option>
                           <Select.Option value="friend">
-                            {t("relation_friend")}
+                            {t("Patients:relation_friend")}
                           </Select.Option>
                           <Select.Option value="other">
-                            {t("relation_other")}
+                            {t("Patients:relation_other")}
                           </Select.Option>
                         </Select>
                       )}
@@ -374,7 +383,7 @@ function CreatePatient({ refetchPatients, onClose }) {
               <Row gutter={16}>
                 <Col span={12}>
                   <Form.Item
-                    label={t("email")}
+                    label={t("Patients:email")}
                     validateStatus={
                       errors[`caregiverEmail${index + 1}`] ? "error" : ""
                     }
@@ -394,7 +403,7 @@ function CreatePatient({ refetchPatients, onClose }) {
                         <Input
                           type="email"
                           {...field}
-                          placeholder={t("caregiver_email_input")}
+                          placeholder={t("Patients:caregiver_email_input")}
                         />
                       )}
                     />
@@ -402,7 +411,7 @@ function CreatePatient({ refetchPatients, onClose }) {
                 </Col>
                 <Col span={12}>
                   <Form.Item
-                    label={t("phone")}
+                    label={t("Patients:phone")}
                     validateStatus={
                       errors[`caregiverPhone${index + 1}`] ? "error" : ""
                     }
@@ -421,7 +430,7 @@ function CreatePatient({ refetchPatients, onClose }) {
                       render={({ field }) => (
                         <Input
                           {...field}
-                          placeholder={t("caregiver_phone_input")}
+                          placeholder={t("Patients:caregiver_phone_input")}
                         />
                       )}
                     />
@@ -438,13 +447,13 @@ function CreatePatient({ refetchPatients, onClose }) {
               icon={<UserAddOutlined />}
               style={{ marginBottom: 24 }}
             >
-              {t("caregiver_add")}
+              {t("Patients:caregiver_add")}
             </Button>
           )}
 
           <Form.Item>
             <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
-              {t("create_patient")}
+              {t("Patients:create_patient")}
             </Button>
           </Form.Item>
         </Form>
@@ -454,7 +463,7 @@ function CreatePatient({ refetchPatients, onClose }) {
           onCancel={closeModal}
           footer={[
             <Button key="close" onClick={closeModal}>
-              {t("close")}
+              {t("Patients:close")}
             </Button>,
           ]}
         >

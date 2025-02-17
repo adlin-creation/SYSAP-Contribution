@@ -1,0 +1,18 @@
+{
+  "select_cycle": "Please select a cycle",
+  "select_cycle_name": "Select Cycle Name",
+  "select_start_condition_type": "Please select start condition type",
+  "select_end_condition_type": "Please select end condition type",
+  "enter_program_phase_name": "Please enter the name of the program phase",
+  "program_phase_name": "Program Phase Name",
+  "enter_start_condition_value": "Please enter the start condition value",
+  "start_condition_value": "Start Condition Value",
+  "enter_end_condition_value": "Please enter the end condition value",
+  "end_condition_value": "End Condition Value",
+  "enter_frequency": "Please enter the frequency",
+  "frequency": "Frequency",
+  "create_phase": "Create Phase",
+  "enter_phase_details": "Enter the following details and then submit to create a new program phase.",
+  "back_button": "Back",
+  "submit_button": "SUBMIT"
+}

@@ -54,10 +54,10 @@ export default function CreateProgram(props) {
   }
 
   return (
-    <Row justify="center" align="middle" style={{ minHeight: '50vh' }}>
+    <Row justify="center" align="middle" style={{ minHeight: "50vh" }}>
       <Col span={12}>
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
-          <Form.Item label={t("enter_program_name")} >
+          <Form.Item label={t("Programs:enter_program_name")}>
             <Controller
               name="name"
               control={control}
@@ -65,14 +65,14 @@ export default function CreateProgram(props) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder={t("program_name_placeholder")}
+                  placeholder={t("Programs:program_name_placeholder")}
                   required
                 />
               )}
             />
           </Form.Item>
 
-          <Form.Item label={t("enter_program_description")} >
+          <Form.Item label={t("Programs:enter_program_description")}>
             <Controller
               name="description"
               control={control}
@@ -80,7 +80,7 @@ export default function CreateProgram(props) {
                 <Input.TextArea
                   onChange={onChange}
                   value={value}
-                  placeholder={t("program_description_placeholder")}
+                  placeholder={t("Programs:program_description_placeholder")}
                   rows={4}
                   required
                 />
@@ -88,7 +88,7 @@ export default function CreateProgram(props) {
             />
           </Form.Item>
 
-          <Form.Item label={t("enter_program_duration")} >
+          <Form.Item label={t("Programs:enter_program_duration")}>
             <Controller
               name="duration"
               control={control}
@@ -96,20 +96,16 @@ export default function CreateProgram(props) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder={t("program_duration_placeholder")}
+                  placeholder={t("Programs:program_duration_placeholder")}
                   required
                 />
               )}
             />
           </Form.Item>
 
-          <Form.Item >
-            <Button
-              type="primary"
-              htmlType="submit"
-              icon={<SendOutlined />}
-            >
-              {t("submit")}
+          <Form.Item>
+            <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
+              {t("Programs:submit_button")}
             </Button>
           </Form.Item>
         </Form>
@@ -119,11 +115,11 @@ export default function CreateProgram(props) {
             onCancel={closeModal}
             footer={[
               <Button key="close" onClick={closeModal}>
-                {t("close")}
+                {t("Programs:close_button")}
               </Button>,
             ]}
           >
-            <p style={{ color: isErrorMessage ? 'red' : 'green' }}>{message}</p>
+            <p style={{ color: isErrorMessage ? "red" : "green" }}>{message}</p>
           </Modal>
         )}
       </Col>

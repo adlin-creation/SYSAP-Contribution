@@ -81,7 +81,7 @@ export default function PatientMenu() {
       ),
     },
     {
-      title: t("programs"),
+      title: t("Patients:programs"),
       dataIndex: "numberOfPrograms",
       key: "numberOfPrograms",
     },
@@ -163,8 +163,8 @@ export default function PatientMenu() {
           <Col flex="auto" style={{ textAlign: "center" }}>
             <h2 style={{ marginBottom: 0 }}>
               {isCreatePatient
-                ? "Register a new patient"
-                : "Edit patient details"}
+                ? t("Patients:register_new_patient")
+                : t("Patients:edit_patient_details")}
             </h2>
           </Col>
           <Col span={4} />

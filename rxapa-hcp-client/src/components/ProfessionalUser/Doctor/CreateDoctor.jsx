@@ -81,7 +81,7 @@ function CreateDoctor({ refetchDoctors }) {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                label={t("first_name_label")}
+                label={t("Professionals:Doctors:first_name_label")}
                 required
                 validateStatus={errors.firstname ? "error" : ""}
                 help={errors.firstname?.message}
@@ -90,16 +90,22 @@ function CreateDoctor({ refetchDoctors }) {
                   name="firstname"
                   control={control}
                   rules={{
-                    required: t("required_first_name_error"),
+                    required: t(
+                      "Professionals:Doctors:required_first_name_error"
+                    ),
                     minLength: {
                       value: 2,
-                      message: t("first_name_min_length_error"),
+                      message: t(
+                        "Professionals:Doctors:first_name_min_length_error"
+                      ),
                     },
                   }}
                   render={({ field }) => (
                     <Input
                       {...field}
-                      placeholder={t("enter_first_name_placeholder")}
+                      placeholder={t(
+                        "Professionals:Doctors:enter_first_name_placeholder"
+                      )}
                     />
                   )}
                 />
@@ -107,7 +113,7 @@ function CreateDoctor({ refetchDoctors }) {
             </Col>
             <Col span={12}>
               <Form.Item
-                label={t("last_name_label")}
+                label={t("Professionals:Doctors:last_name_label")}
                 required
                 validateStatus={errors.lastname ? "error" : ""}
                 help={errors.lastname?.message}
@@ -116,16 +122,22 @@ function CreateDoctor({ refetchDoctors }) {
                   name="lastname"
                   control={control}
                   rules={{
-                    required: t("required_last_name_error"),
+                    required: t(
+                      "Professionals:Doctors:required_last_name_error"
+                    ),
                     minLength: {
                       value: 2,
-                      message: t("last_name_min_length_error"),
+                      message: t(
+                        "Professionals:Doctors:last_name_min_length_error"
+                      ),
                     },
                   }}
                   render={({ field }) => (
                     <Input
                       {...field}
-                      placeholder={t("enter_last_name_placeholder")}
+                      placeholder={t(
+                        "Professionals:Doctors:enter_last_name_placeholder"
+                      )}
                     />
                   )}
                 />
@@ -136,7 +148,7 @@ function CreateDoctor({ refetchDoctors }) {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                label={t("email")}
+                label={t("Professionals:Doctors:email")}
                 required
                 validateStatus={errors.email ? "error" : ""}
                 help={errors.email?.message}
@@ -145,7 +157,7 @@ function CreateDoctor({ refetchDoctors }) {
                   name="email"
                   control={control}
                   rules={{
-                    required: t("required_email_error"),
+                    required: t("Professionals:Doctors:required_email_error"),
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                       message: t("invalid_email_format_error"),
@@ -154,7 +166,9 @@ function CreateDoctor({ refetchDoctors }) {
                   render={({ field }) => (
                     <Input
                       {...field}
-                      placeholder={t("enter_email_placeholder")}
+                      placeholder={t(
+                        "Professionals:Doctors:enter_email_placeholder"
+                      )}
                     />
                   )}
                 />
@@ -162,7 +176,7 @@ function CreateDoctor({ refetchDoctors }) {
             </Col>
             <Col span={12}>
               <Form.Item
-                label={t("confirm_email_label")}
+                label={t("Professionals:Doctors:confirm_email_label")}
                 required
                 validateStatus={errors.confirmEmail ? "error" : ""}
                 help={errors.confirmEmail?.message}
@@ -171,15 +185,19 @@ function CreateDoctor({ refetchDoctors }) {
                   name="confirmEmail"
                   control={control}
                   rules={{
-                    required: t("required_email_confirmation_error"),
+                    required: t(
+                      "Professionals:Doctors:required_email_confirmation_error"
+                    ),
                     validate: (value) =>
                       value === control._formValues.email ||
-                      t("email_mismatch_error"),
+                      t("Professionals:Doctors:email_mismatch_error"),
                   }}
                   render={({ field }) => (
                     <Input
                       {...field}
-                      placeholder={t("confirm_email_placeholder")}
+                      placeholder={t(
+                        "Professionals:Doctors:confirm_email_placeholder"
+                      )}
                     />
                   )}
                 />
@@ -190,7 +208,7 @@ function CreateDoctor({ refetchDoctors }) {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                label={t("phone_number")}
+                label={t("Professionals:Doctors:phone_number")}
                 required
                 validateStatus={errors.phoneNumber ? "error" : ""}
                 help={errors.phoneNumber?.message}
@@ -199,16 +217,22 @@ function CreateDoctor({ refetchDoctors }) {
                   name="phoneNumber"
                   control={control}
                   rules={{
-                    required: t("required_phone_number_error"),
+                    required: t(
+                      "Professionals:Doctors:required_phone_number_error"
+                    ),
                     pattern: {
                       value: /^[0-9+\s-]{8,}$/,
-                      message: t("invalid_phone_number_error"),
+                      message: t(
+                        "Professionals:Doctors:invalid_phone_number_error"
+                      ),
                     },
                   }}
                   render={({ field }) => (
                     <Input
                       {...field}
-                      placeholder={t("phone_number_placeholder")}
+                      placeholder={t(
+                        "Professionals:Doctors:phone_number_placeholder"
+                      )}
                     />
                   )}
                 />
@@ -219,7 +243,7 @@ function CreateDoctor({ refetchDoctors }) {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                label={t("password_label")}
+                label={t("Professionals:Doctors:password_label")}
                 required
                 validateStatus={errors.password ? "error" : ""}
                 help={errors.password?.message}
@@ -229,10 +253,14 @@ function CreateDoctor({ refetchDoctors }) {
                     name="password"
                     control={control}
                     rules={{
-                      required: t("required_password_error"),
+                      required: t(
+                        "Professionals:Doctors:required_password_error"
+                      ),
                       minLength: {
                         value: 8,
-                        message: t("password_min_length_error"),
+                        message: t(
+                          "Professionals:Doctors:password_min_length_error"
+                        ),
                       },
                       pattern: {
                         value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
@@ -262,7 +290,7 @@ function CreateDoctor({ refetchDoctors }) {
 
           <Form.Item className="submit-button">
             <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
-              {t("create_doctor_button")}
+              {t("Professionals:Doctors:create_doctor_button")}
             </Button>
           </Form.Item>
         </Form>

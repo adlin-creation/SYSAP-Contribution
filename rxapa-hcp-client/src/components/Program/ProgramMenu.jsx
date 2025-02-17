@@ -141,7 +141,7 @@ export default function ProgramMenu() {
             type="primary"
             icon={<PlusOutlined />}
           >
-            Create Program
+            {t("Programs:create_program_button")}
           </Button>
 
           {/* Display existing programs */}
@@ -164,7 +164,11 @@ export default function ProgramMenu() {
 
       {/* Shows the back button if create program button is clicked */}
       {(buttonState.isCreateProgram || buttonState.isEditProgram) && (
-        <Row align="middle" justify="space-between" style={{ marginBottom: '20px' }}>
+        <Row
+          align="middle"
+          justify="space-between"
+          style={{ marginBottom: "20px" }}
+        >
           <Col>
             <Button
               onClick={handleButtonState}
@@ -172,13 +176,13 @@ export default function ProgramMenu() {
               type="primary"
               icon={<ArrowLeftOutlined />}
             >
-              {t("back")}
+              {t("Programs:back_button")}
             </Button>
           </Col>
-          <Col flex="auto" style={{ textAlign: 'center' }}>
+          <Col flex="auto" style={{ textAlign: "center" }}>
             <h2 style={{ marginBottom: 0 }}>
-              {buttonState.isCreateProgram 
-                ? t("create_program")
+              {buttonState.isCreateProgram
+                ? t("Programs:create_program")
                 : `Edit ${selectedProgram?.name}`}
             </h2>
           </Col>
@@ -203,11 +207,11 @@ export default function ProgramMenu() {
           onCancel={closeModal}
           footer={[
             <Button key="close" onClick={closeModal}>
-              {t("close")}
+              {t("Programs:close_button")}
             </Button>,
           ]}
         >
-          <p style={{ color: isErrorMessage ? 'red' : 'green' }}>{message}</p>
+          <p style={{ color: isErrorMessage ? "red" : "green" }}>{message}</p>
         </Modal>
       )}
     </div>

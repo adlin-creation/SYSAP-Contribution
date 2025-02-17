@@ -1,0 +1,15 @@
+{
+  "create_cycle_button": "Créer un cycle",
+  "enter_cycle_name": "Veuillez entrer le nom du cycle : ",
+  "update_cycle_name": "Entrez un autre nom pour mettre à jour le nom du cycle",
+  "enter_cycle_description": "Veuillez entrer la description du cycle : ",
+  "update_cycle_description": "Entrez une autre valeur pour modifier la description",
+  "create_new_cycle": "Créer un nouveau cycle",
+  "select_session": "Sélectionnez une session",
+  "weekly_cycle_name_placeholder": "Nom du cycle hebdomadaire",
+  "cycle_description_label": "Veuillez entrer la description du cycle : ",
+  "weekly_cycle_description_placeholder": "Description du cycle hebdomadaire",
+  "back_button": "Retour",
+  "close_button": "Fermer",
+  "submit_button": "SOUMETTRE"
+}

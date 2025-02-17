@@ -91,7 +91,7 @@ export default function CreatePhase(props) {
   return (
     <div>
       <div className="input-element">
-        <h5>{t("select_cycle")}</h5>
+        <h5>{t("Phases:select_cycle")}</h5>
 
         <Autocomplete
           // className="input-element"
@@ -106,12 +106,12 @@ export default function CreatePhase(props) {
           options={cycleNames}
           // sx={{ width: 400 }}
           renderInput={(params) => (
-            <TextField {...params} label={t("select_cycle_name")} />
+            <TextField {...params} label={t("Phases:select_cycle_name")} />
           )}
         />
       </div>
       <div className="input-element">
-        <h5>{t("select_start_condition_type")}</h5>
+        <h5>{t("Phases:select_start_condition_type")}</h5>
 
         <Autocomplete
           // className="input-element"
@@ -126,7 +126,10 @@ export default function CreatePhase(props) {
           options={["TimeElapsed", "PerformanceGoal"]}
           // sx={{ width: 400 }}
           renderInput={(params) => (
-            <TextField {...params} label={t("select_start_condition_type")} />
+            <TextField
+              {...params}
+              label={t("Phases:select_start_condition_type")}
+            />
           )}
         />
       </div>
@@ -146,14 +149,17 @@ export default function CreatePhase(props) {
           options={["TimeElapsed", "PerformanceGoal"]}
           // sx={{ width: 400 }}
           renderInput={(params) => (
-            <TextField {...params} label={t("select_end_condition_type")} />
+            <TextField
+              {...params}
+              label={t("Phases:select_end_condition_type")}
+            />
           )}
         />
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="input-element">
-          <h5>{t("enter_program_phase_name")}</h5>
+          <h5>{t("Phases:enter_program_phase_name")}</h5>
           <Controller
             name={"name"}
             control={control}
@@ -161,7 +167,7 @@ export default function CreatePhase(props) {
               <TextField
                 onChange={onChange}
                 value={value}
-                label={t("program_phase_name")}
+                label={t("Phases:program_phase_name")}
                 variant="outlined"
                 color="secondary"
                 fullWidth
@@ -173,7 +179,7 @@ export default function CreatePhase(props) {
         </div>
 
         <div className="input-element">
-          <h5>{t("enter_start_condition_value")}</h5>
+          <h5>{t("Phases:enter_start_condition_value")}</h5>
           <Controller
             name={"startConditionValue"}
             control={control}
@@ -181,7 +187,7 @@ export default function CreatePhase(props) {
               <TextField
                 onChange={onChange}
                 value={value}
-                label={t("start_condition_value")}
+                label={t("Phases:start_condition_value")}
                 variant="outlined"
                 color="secondary"
                 fullWidth
@@ -193,7 +199,7 @@ export default function CreatePhase(props) {
         </div>
 
         <div className="input-element">
-          <h5>{t("enter_end_condition_value")}</h5>
+          <h5>{t("Phases:enter_end_condition_value")}</h5>
           <Controller
             name={"endConditionValue"}
             control={control}
@@ -201,7 +207,7 @@ export default function CreatePhase(props) {
               <TextField
                 onChange={onChange}
                 value={value}
-                label={t("end_condition_value")}
+                label={t("Phases:end_condition_value")}
                 variant="outlined"
                 color="secondary"
                 fullWidth
@@ -212,7 +218,7 @@ export default function CreatePhase(props) {
         </div>
 
         <div className="input-element">
-          <h5>{t("enter_frequency")}</h5>
+          <h5>{t("Phases:enter_frequency")}</h5>
           <Controller
             name={"frequency"}
             control={control}
@@ -220,7 +226,7 @@ export default function CreatePhase(props) {
               <TextField
                 onChange={onChange}
                 value={value}
-                label={t("frequency")}
+                label={t("Phases:frequency")}
                 variant="outlined"
                 color="secondary"
                 fullWidth
@@ -232,7 +238,7 @@ export default function CreatePhase(props) {
 
         <div className="input-element">
           <AppButton
-            displayText={"SUBMIT"}
+            displayText={t("Phases:submit_button")}
             variant={"contained"}
             endIcon={<SendIcon />}
             type={"submit"}

@@ -1,0 +1,10 @@
+{
+  "create_bloc": "Create bloc",
+  "create_new_bloc": "Create a new bloc",
+  "edit_bloc": "Edit bloc",
+  "enter_bloc_name": "Please enter the name of the bloc : ",
+  "exercise_name": "Exercise Name",
+  "enter_bloc_description": "Please enter the description of the bloc : ",
+  "exercise_description": "Exercise Description",
+  "submit_button": "SUBMIT"
+}

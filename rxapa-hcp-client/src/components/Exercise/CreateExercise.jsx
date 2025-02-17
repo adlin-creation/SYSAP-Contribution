@@ -207,7 +207,7 @@ export default function CreateExercise(props) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder={t("exercise_video")}
+                  placeholder={t("exercise_video_placeholder")}
                 />
               )}
             />

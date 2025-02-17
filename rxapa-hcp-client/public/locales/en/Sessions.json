@@ -1,0 +1,12 @@
+{
+  "create_session": "Create session",
+  "back_button": "Back",
+  "session_details_title": "Enter the following details and then submit to create a new session",
+  "enter_day_session": "Please enter the name of the day session",
+  "day_session_name": "Day Session Name",
+  "enter_day_session_description": "Please enter the description of the day session",
+  "day_session_description": "Day Session Description",
+  "enter_constraints_day_session": "Please enter the constraints of the day session",
+  "day_session_constraints": "Day Session Constraints",
+  "submit_button": "SUBMIT"
+}

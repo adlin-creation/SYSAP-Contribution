@@ -55,10 +55,10 @@ export default function CreateCycle(props) {
   }
 
   return (
-    <Row justify="center" align="middle" style={{ minHeight: '50vh' }}>
+    <Row justify="center" align="middle" style={{ minHeight: "50vh" }}>
       <Col span={12}>
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
-          <Form.Item label="Please enter the name of the cycle : ">
+          <Form.Item label={t("Cycles:enter_cycle_name")}>
             <Controller
               name="cycleName"
               control={control}
@@ -66,14 +66,14 @@ export default function CreateCycle(props) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder="Weekly Cycle Name"
+                  placeholder={t("Cycles:weekly_cycle_name_placeholder")}
                   required
                 />
               )}
             />
           </Form.Item>
 
-          <Form.Item label="Please enter the description of the cycle : ">
+          <Form.Item label={t("Cycles:cycle_description_label")}>
             <Controller
               name="cycleDescription"
               control={control}
@@ -81,7 +81,7 @@ export default function CreateCycle(props) {
                 <Input.TextArea
                   onChange={onChange}
                   value={value}
-                  placeholder="Weekly Cycle Description"
+                  placeholder={t("Cycles:weekly_cycle_description_placeholder")}
                   rows={4}
                   required
                 />
@@ -90,12 +90,8 @@ export default function CreateCycle(props) {
           </Form.Item>
 
           <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              icon={<SendOutlined />}
-            >
-             {t("submit")}
+            <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
+              {t("Cycles:submit_button")}
             </Button>
           </Form.Item>
         </Form>
@@ -105,11 +101,11 @@ export default function CreateCycle(props) {
             onCancel={closeModal}
             footer={[
               <Button key="close" onClick={closeModal}>
-                {t("close")}
+                {t("Cycles:close_button")}
               </Button>,
             ]}
           >
-            <p style={{ color: isErrorMessage ? 'red' : 'green' }}>{message}</p>
+            <p style={{ color: isErrorMessage ? "red" : "green" }}>{message}</p>
           </Modal>
         )}
       </Col>
