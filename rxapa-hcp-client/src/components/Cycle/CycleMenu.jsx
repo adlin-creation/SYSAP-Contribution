@@ -9,8 +9,10 @@ import Constants from "../Utils/Constants";
 import Modal from "../Modal/Modal";
 import CycleDetails from "./CycleDetails";
 import useToken from "../Authentication/useToken";
+import { useTranslation } from "react-i18next";
 
 export default function CycleMenu() {
+  const { t } = useTranslation();
   // tracks the state of two buttons: create a cycle and edit a cycle
   const [buttonState, setButtonState] = useState({
     isCreateCycle: false,
@@ -128,7 +130,7 @@ export default function CycleMenu() {
             type="primary"
             icon={<PlusOutlined />}
           >
-            Create Cycle
+            {t("create_cycle")}
           </Button>
 
           {/* Display exisitng cycles */}
@@ -159,13 +161,13 @@ export default function CycleMenu() {
               type="primary"
               icon={<ArrowLeftOutlined />}
             >
-              Back
+              {t("back")}
             </Button>
           </Col>
           <Col flex="auto" style={{ textAlign: 'center' }}>
             <h2 style={{ marginBottom: 0 }}>
               {buttonState.isCreateCycle 
-                ? "Create a new cycle"
+                ? t("create_new_cycle")
                 : `Edit ${selectedCycle?.name}`}
             </h2>
           </Col>
@@ -191,7 +193,7 @@ export default function CycleMenu() {
           onCancel={closeModal}
           footer={[
             <Button key="close" onClick={closeModal}>
-              Close
+              {t("close")}
             </Button>,
           ]}
           style={{ 

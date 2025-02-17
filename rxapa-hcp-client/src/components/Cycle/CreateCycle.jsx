@@ -7,8 +7,10 @@ import "./Styles.css";
 import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 export default function CreateCycle(props) {
+  const { t } = useTranslation();
   const { handleSubmit, control } = useForm();
   const { token } = useToken();
 
@@ -93,7 +95,7 @@ export default function CreateCycle(props) {
               htmlType="submit"
               icon={<SendOutlined />}
             >
-              SUBMIT
+             {t("submit")}
             </Button>
           </Form.Item>
         </Form>
@@ -103,7 +105,7 @@ export default function CreateCycle(props) {
             onCancel={closeModal}
             footer={[
               <Button key="close" onClick={closeModal}>
-                Close
+                {t("close")}
               </Button>,
             ]}
           >

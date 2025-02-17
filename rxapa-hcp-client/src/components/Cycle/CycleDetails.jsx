@@ -9,8 +9,10 @@ import { useQuery } from "@tanstack/react-query";
 import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 export default function CycleDetails({ cycle, refetchCycles }) {
+  const { t } = useTranslation();
   const { handleSubmit, control } = useForm();
   const [isAddSession, setIsAddSession] = useState(false);
   const { token } = useToken();
@@ -121,7 +123,7 @@ export default function CycleDetails({ cycle, refetchCycles }) {
     <Row justify="center" align="middle" style={{ minHeight: '50vh' }}>
       <Col span={12}>
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
-          <Form.Item label="Please enter the name of the cycle : ">
+          <Form.Item label={t("enter_cycle_name")}>
             <Controller
               name="name"
               control={control}
@@ -129,14 +131,14 @@ export default function CycleDetails({ cycle, refetchCycles }) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder="Enter another name to update the cycle name"
+                  placeholder={t("update_cycle_name")}
                   required
                 />
               )}
             />
           </Form.Item>
 
-          <Form.Item label="Please enter the description of the cycle : ">
+          <Form.Item label={t("enter_cycle_description")}>
             <Controller
               name="description"
               control={control}
@@ -144,7 +146,7 @@ export default function CycleDetails({ cycle, refetchCycles }) {
                 <Input.TextArea
                   onChange={onChange}
                   value={value}
-                  placeholder="Enter another value to edit the description"
+                  placeholder={t("update_cycle_description")}
                   rows={4}
                   required
                 />
@@ -158,7 +160,7 @@ export default function CycleDetails({ cycle, refetchCycles }) {
               htmlType="submit"
               icon={<CheckOutlined />}
             >
-              UPDATE
+              {t("update")}
             </Button>
           </Form.Item>
         </Form>
@@ -171,7 +173,7 @@ export default function CycleDetails({ cycle, refetchCycles }) {
             icon={<PlusOutlined />}
             className="session-add-button"
           >
-            ADD SESSION
+            {t("add_session")}
           </Button>
         </div>
 
@@ -191,7 +193,7 @@ export default function CycleDetails({ cycle, refetchCycles }) {
             onCancel={closeModal}
             footer={[
               <Button key="close" onClick={closeModal}>
-                Close
+                {t("close")}
               </Button>,
             ]}
           >

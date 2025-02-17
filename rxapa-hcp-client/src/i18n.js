@@ -159,6 +159,15 @@ const resources = {
       password_min_length_error: "Password must be at least 8 characters long",
       password_requirements_error:
         "Password must contain at least one letter and one number",
+
+      /* *********** CYCLES *************** */
+      enter_cycle_name: "Please enter the name of the cycle : ",
+      update_cycle_name: "Enter another name to update the cycle name",
+      enter_cycle_description: "Please enter the description of the cycle : ",
+      update_cycle_description: "Enter another value to edit the description",
+      create_new_cycle: "Create a new cycle",
+      select_session: "Select a session",
+      /* *********** CYCLES FIN *************** */
     },
   },
   fr: {
@@ -319,6 +328,15 @@ const resources = {
         "Le mot de passe doit contenir au moins 8 caractères",
       password_requirements_error:
         "Le mot de passe doit contenir au moins une lettre et un chiffre",
+      /* *********** CYCLES *************** */
+      enter_cycle_name: "Veuillez entrer le nom du cycle : ",
+      update_cycle_name: "Entrez un autre nom pour mettre à jour le nom du cycle",
+      enter_cycle_description: "Veuillez entrer la description du cycle : ",
+      update_cycle_description: "Entrez une autre valeur pour modifier la description",
+      create_new_cycle: "Créer un nouveau cycle",
+      select_session: "Sélectionner une séance"
+      /* *********** CYCLES FIN *************** */
+
     },
   },
 };
