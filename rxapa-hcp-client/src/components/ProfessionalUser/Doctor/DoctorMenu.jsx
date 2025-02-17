@@ -224,7 +224,7 @@ export default function DoctorMenu() {
               type="primary"
               icon={<ArrowLeftOutlined />}
             >
-              {t("back")}
+              {t("back_button")}
             </Button>
           </Col>
           <Col flex="auto" style={{ textAlign: "center" }}>

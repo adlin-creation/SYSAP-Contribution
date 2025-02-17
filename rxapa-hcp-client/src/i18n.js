@@ -63,7 +63,7 @@ const resources = {
       enter_bloc_description: "Please enter the description of the bloc : ",
       // Session
       create_session: "Create session",
-      back: "Back",
+      back_button: "Back",
       session_details_title:
         "Enter the following details and then submit to create a new session",
       enter_day_session: "Please enter the name of the day session",
@@ -126,7 +126,7 @@ const resources = {
       create_patient: "Create Patient",
       // /patient/patientMenu.jsx
       programs: "Programs",
-      // Doctor
+      // CreateDoctor.jsx
       register_doctor: "Register a Doctor",
       name: "Name",
       status: "Status",
@@ -159,15 +159,6 @@ const resources = {
       password_min_length_error: "Password must be at least 8 characters long",
       password_requirements_error:
         "Password must contain at least one letter and one number",
-
-      /* *********** CYCLES *************** */
-      enter_cycle_name: "Please enter the name of the cycle : ",
-      update_cycle_name: "Enter another name to update the cycle name",
-      enter_cycle_description: "Please enter the description of the cycle : ",
-      update_cycle_description: "Enter another value to edit the description",
-      create_new_cycle: "Create a new cycle",
-      select_session: "Select a session",
-      /* *********** CYCLES FIN *************** */
     },
   },
   fr: {
@@ -226,13 +217,15 @@ const resources = {
       exercise_image: "Image de l'exercice :",
       seating_exercise: "Exercice assis",
       submit: "Soumettre",
+
       // bloc
       create_bloc: "Créer un bloc",
       enter_bloc_name: "Veuillez entrer le nom du bloc :",
       enter_bloc_description: "Veuillez entrer la description du bloc :",
+
       // Session
       create_session: "Créer une session",
-      back: "retourner",
+      back_button: "retourner",
       session_details_title:
         "Entrez les détails suivants puis soumettez pour créer une nouvelle session",
       enter_day_session: "Veuillez entrer le nom de la session de jour",
@@ -243,9 +236,11 @@ const resources = {
       enter_constraints_day_session:
         "Veuillez entrer les contraintes de la session de jour",
       day_session_constraints: "Contraintes de la session de jour",
+
       // Patient/CreateEnrollement.jsx
       enrollment_creation_success: "L'inscription a été créée avec succès!",
       enrollment_creation_failed: "Erreur lors de la création de l'inscription",
+
       // Patient/CreatePatient.jsx
       close: "Fermer",
       choice_required: "Veuillez choisir une option",
@@ -291,9 +286,11 @@ const resources = {
       relation_friend: "Ami(e)",
       relation_other: "Autre",
       create_patient: "Créer un patient",
+
       // /patient/patientMenu.jsx
       programs: "Programmes",
-      // Doctor
+
+      // CreateDoctor.jsx
       register_doctor: "Enregistrer un médecin",
       name: "Nom",
       status: "Statut",
@@ -328,15 +325,6 @@ const resources = {
         "Le mot de passe doit contenir au moins 8 caractères",
       password_requirements_error:
         "Le mot de passe doit contenir au moins une lettre et un chiffre",
-      /* *********** CYCLES *************** */
-      enter_cycle_name: "Veuillez entrer le nom du cycle : ",
-      update_cycle_name: "Entrez un autre nom pour mettre à jour le nom du cycle",
-      enter_cycle_description: "Veuillez entrer la description du cycle : ",
-      update_cycle_description: "Entrez une autre valeur pour modifier la description",
-      create_new_cycle: "Créer un nouveau cycle",
-      select_session: "Sélectionner une séance"
-      /* *********** CYCLES FIN *************** */
-
     },
   },
 };

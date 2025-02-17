@@ -262,7 +262,7 @@ function CreateDoctor({ refetchDoctors }) {
 
           <Form.Item className="submit-button">
             <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
-              Create Doctor
+              {t("create_doctor_button")}
             </Button>
           </Form.Item>
         </Form>
