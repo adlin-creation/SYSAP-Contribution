@@ -10,6 +10,7 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import BlocDetails from "./BlocDetails";
 import useToken from "../Authentication/useToken";
+import { t } from "i18next";
 
 export default function BlocMenu() {
   // tracks the state of two buttons: create a bloc and edit a bloc
@@ -123,7 +124,7 @@ export default function BlocMenu() {
             icon={<PlusOutlined />}
             onClick={() => handleButtonState("create-bloc")}
           >
-            Create Bloc
+            {t("create_bloc")}
           </Button>
 
           {/* Display exisitng blocs */}
@@ -146,7 +147,11 @@ export default function BlocMenu() {
 
       {/* Shows the back button if create bloc button is clicked */}
       {(buttonState.isCreateBloc || buttonState.isEditBloc) && (
-        <Row align="middle" justify="space-between" style={{ marginBottom: '20px' }}>
+        <Row
+          align="middle"
+          justify="space-between"
+          style={{ marginBottom: "20px" }}
+        >
           <Col>
             <Button
               type="primary"
@@ -155,12 +160,12 @@ export default function BlocMenu() {
             >
               Back
             </Button>
-            </Col>
-            <Col>
-              <h2>
-                {buttonState.isCreateBloc ? "Create a new bloc" : "Edit bloc"}
-              </h2>
-            </Col>
+          </Col>
+          <Col>
+            <h2>
+              {buttonState.isCreateBloc ? "Create a new bloc" : "Edit bloc"}
+            </h2>
+          </Col>
           <Col span={4} />
         </Row>
       )}

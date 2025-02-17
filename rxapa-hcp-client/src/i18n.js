@@ -4,6 +4,7 @@ import { initReactI18next } from "react-i18next";
 const resources = {
   en: {
     translation: {
+      // Page d'accueil
       change_language: "Change Language",
       Dashboard: "Dashboard",
       Exercises: "Exercises",
@@ -19,11 +20,11 @@ const resources = {
       Profile: "Profile",
       Settings: "Settings",
       Logout: "Logout",
-      // Tous les libellés du composant Dashbord ici
+      //  Dashbord
 
-      // Tous les libellés du composant ExerciceMenu | Creation d'exercices ...etc ici
-      "Exercise Loading...": "Exercise Loading",
-      "Create Exercise": "Create Exercise",
+      // Composant exercises
+      exercice_loading: "Exercise Loading",
+      create_exercise: "Create Exercise",
       all: "ALL",
       aerobic: "AEROBIC",
       strength: "STRENGTH",
@@ -55,10 +56,27 @@ const resources = {
       exercise_image: "Exercise Image :",
       seating_exercise: "Seating Exercise",
       submit: "SUBMIT",
+      // Blocs
+      create_bloc: "Create bloc",
+      enter_bloc_name: "Please enter the name of the bloc : ",
+      enter_bloc_description: "Please enter the description of the bloc : ",
+      // Session
+      create_session: "Create session",
+      session_details_title:
+        "Enter the following details and then submit to create a new session",
+      enter_day_session: "Please enter the name of the day session",
+      day_session_name: "Day Session Name",
+      enter_day_session_description:
+        "Please enter the description of the day session",
+      day_session_description: "Day Session Description",
+      enter_constraints_day_session:
+        "Please enter the constraints of the day session",
+      day_session_constraints: "Day Session Constraints",
     },
   },
   fr: {
     translation: {
+      // Page d'accueil
       change_language: "Changer de langue",
       Dashboard: "Tableau de bord",
       Exercises: "Exercices",
@@ -74,9 +92,11 @@ const resources = {
       Profile: "Profile",
       Settings: "Paramètres",
       Logout: "Déconnexion",
-      // Les traductions des libellés du composant exercice ici
-      "Exercise Loading...": "Chargement de l'exercice...",
-      "Create Exercise": "Créer un exercice",
+      //Dashboard
+
+      // Composant exercises
+      exercice_loading: "Chargement de l'exercice...",
+      create_exercise: "Créer un exercice",
       all: "Tous",
       aerobic: "Aérobie",
       strength: "Force",
@@ -108,6 +128,21 @@ const resources = {
       exercise_image: "Image de l'exercice :",
       seating_exercise: "Exercice assis",
       submit: "Soumettre",
+      // bloc
+      create_bloc: "Créer un bloc",
+      enter_bloc_name: "Veuillez entrer le nom du bloc :",
+      enter_bloc_description: "Veuillez entrer la description du bloc :",
+      create_session: "Créer une session",
+      session_details_title:
+        "Entrez les détails suivants puis soumettez pour créer une nouvelle session",
+      enter_day_session: "Veuillez entrer le nom de la session de jour",
+      day_session_name: "Nom de la session de jour",
+      enter_day_session_description:
+        "Veuillez entrer la description de la session de jour",
+      day_session_description: "Description de la session de jour",
+      enter_constraints_day_session:
+        "Veuillez entrer les contraintes de la session de jour",
+      day_session_constraints: "Contraintes de la session de jour",
     },
   },
 };

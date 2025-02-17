@@ -9,8 +9,10 @@ import Constants from "../Utils/Constants";
 import "../MainMenu/MainMenu.css";
 import SessionDetails from "./SessionDetails";
 import useToken from "../Authentication/useToken";
+import { useTranslation } from "react-i18next";
 
 export default function SessionList(props) {
+  const { t } = useTranslation();
   // tracks the state of two buttons: create a session and edit a day session
   const [buttonState, setButtonState] = useState({
     isCreateSession: false,
@@ -136,7 +138,7 @@ export default function SessionList(props) {
             type="primary"
             icon={<PlusOutlined />}
           >
-            Create Session
+            {t("create_session")}
           </Button>
 
           {/* Display exisitng sessions */}
@@ -171,9 +173,7 @@ export default function SessionList(props) {
       {/* show create session input elements when create day session is clicked */}
       {buttonState.isCreateSession && (
         <div>
-          <h3>
-            Enter the following details and then submit to create a new session
-          </h3>
+          <h3>{t("session_details_title")}</h3>
           <CreateSession refetchSessions={refetchSessions} />
         </div>
       )}
@@ -182,11 +182,7 @@ export default function SessionList(props) {
       {buttonState.isEditSession && (
         <SessionDetails sessionKey={selectedSession.key} />
       )}
-      <Modal
-        open={isOpenModal}
-        onCancel={closeModal}
-        footer={null}
-      >
+      <Modal open={isOpenModal} onCancel={closeModal} footer={null}>
         <p>{message}</p>
       </Modal>
     </div>

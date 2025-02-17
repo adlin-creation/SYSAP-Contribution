@@ -7,8 +7,10 @@ import { SendOutlined } from "@ant-design/icons";
 import "./Styles.css";
 import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
+import { useTranslation } from "react-i18next";
 
 export default function CreateSession(props) {
+  const { t } = useTranslation();
   const { handleSubmit, control } = useForm();
 
   // feedback message states
@@ -56,7 +58,7 @@ export default function CreateSession(props) {
       <Row>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="input-element">
-            <h5>Please enter the name of the day session</h5>
+            <h5>{t("enter_day_session")}</h5>
             <Controller
               name={"name"}
               control={control}
@@ -64,7 +66,7 @@ export default function CreateSession(props) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder="Day Session Name"
+                  placeholder={t("day_session_name")}
                   required
                 />
               )}
@@ -72,7 +74,7 @@ export default function CreateSession(props) {
           </div>
 
           <div className="input-element">
-            <h5>Please enter the description of the day session</h5>
+            <h5>{t("enter_day_session_description")}</h5>
             <Controller
               name={"description"}
               control={control}
@@ -80,7 +82,7 @@ export default function CreateSession(props) {
                 <Input.TextArea
                   onChange={onChange}
                   value={value}
-                  placeholder="Day Session Description"
+                  placeholder={t("day_session_description")}
                   required
                 />
               )}
@@ -88,7 +90,7 @@ export default function CreateSession(props) {
           </div>
 
           <div className="input-element">
-            <h5>Please enter the constraints of the day session</h5>
+            <h5>{t("enter_constraints_day_session")}</h5>
             <Controller
               name={"constraints"}
               control={control}
@@ -96,7 +98,7 @@ export default function CreateSession(props) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder="Day Session Constraints"
+                  placeholder={t("day_session_constraints")}
                   required
                 />
               )}
@@ -105,18 +107,14 @@ export default function CreateSession(props) {
 
           <div className="input-element">
             <AppButton
-              displayText={"SUBMIT"}
+              displayText={t("submit")}
               variant={"contained"}
               endIcon={<SendOutlined />}
               type={"submit"}
             />
           </div>
         </form>
-        <Modal
-          open={isOpenModal}
-          onCancel={closeModal}
-          footer={null}
-        >
+        <Modal open={isOpenModal} onCancel={closeModal} footer={null}>
           <p>{message}</p>
         </Modal>
       </Row>

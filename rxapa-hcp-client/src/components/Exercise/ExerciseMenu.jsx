@@ -54,7 +54,7 @@ export default function ExerciseMenu() {
   });
 
   if (isExerciseLoading) {
-    return <h1>{t("Exercise Loading...")}</h1>;
+    return <h1>{t("exercise_loading")}</h1>;
   }
   if (isExerciseLoadingError) {
     return <h1>Sorry, an error occured while loading exercises</h1>;
@@ -161,7 +161,7 @@ export default function ExerciseMenu() {
               type="primary"
               icon={<PlusOutlined />}
             >
-              {t("Create Exercise")}
+              {t("create_exercise")}
             </Button>
           </div>
           <Row gutter={[16, 16]}>
