@@ -74,8 +74,7 @@ const resources = {
       enter_constraints_day_session:
         "Please enter the constraints of the day session",
       day_session_constraints: "Day Session Constraints",
-<<<<<<< HEAD
-      // Patient/CreateEnrollement.jsx 
+      // Patient/CreateEnrollement.jsx
       enrollment_creation_success: "Enrollment created successfully!",
       enrollment_creation_failed: "Error creating enrollment",
       // Patient/CreatePatient.jsx
@@ -86,12 +85,14 @@ const resources = {
       patient_informations: "Patient Information",
       first_name_form: "First Name",
       first_name_required: "The first name is required",
-      first_name_required_info: "The first name must be at least 2 characters long",
+      first_name_required_info:
+        "The first name must be at least 2 characters long",
       first_name_input: "Enter patient's first name",
       last_name: "Last Name",
       email_format_failed: "Invalid email format",
       last_name_required: "The last name is required",
-      last_name_required_info: "The last name must be at least 2 characters long",
+      last_name_required_info:
+        "The last name must be at least 2 characters long",
       last_name_input: "Enter patient's last name",
       birthday: "Birthday",
       birthday_select: "Select birth date",
@@ -106,7 +107,7 @@ const resources = {
       email_confirm: "Confirm Email",
       email_confirm_required: "Email confirmation is required.",
       email_confirm_invalid: "The email address does not match.",
-      email_confirm_info: "Confirm email address", 
+      email_confirm_info: "Confirm email address",
       additionnal_information: "Additional Information",
       additionnal_information_input: "Enter any additional information",
       caregiver: "Caregiver",
@@ -123,12 +124,11 @@ const resources = {
       relation_friend: "Friend",
       relation_other: "Other",
       create_patient: "Create Patient",
-=======
+      // /patient/patientMenu.jsx
+      programs: "Programs",
       // Doctor
       register_doctor: "Register a Doctor",
       name: "Name",
-      email: "Email",
-      phone: "Phone",
       status: "Status",
       actions: "Actions",
       register_doctor_title: "Register a new doctor",
@@ -159,7 +159,6 @@ const resources = {
       password_min_length_error: "Password must be at least 8 characters long",
       password_requirements_error:
         "Password must contain at least one letter and one number",
->>>>>>> 956d73d (Added new translation keys for Doctors)
     },
   },
   fr: {
@@ -235,8 +234,7 @@ const resources = {
       enter_constraints_day_session:
         "Veuillez entrer les contraintes de la session de jour",
       day_session_constraints: "Contraintes de la session de jour",
-<<<<<<< HEAD
-      // Patient/CreateEnrollement.jsx 
+      // Patient/CreateEnrollement.jsx
       enrollment_creation_success: "L'inscription a été créée avec succès!",
       enrollment_creation_failed: "Erreur lors de la création de l'inscription",
       // Patient/CreatePatient.jsx
@@ -264,10 +262,10 @@ const resources = {
       email_needed: "Le courriel est obligatoire",
       email_invalid: "Format de courriel invalide",
       email_input: "Entrez l'adresse courriel",
-      email_confirm: "Confirmer l'adresse courriel", 
+      email_confirm: "Confirmer l'adresse courriel",
       email_confirm_required: "La confirmation du courriel est obligatoire",
       email_confirm_invalid: "L'adresse courriel ne correspond pas",
-      email_confirm_info: "Confirmer l'adresse courriel", 
+      email_confirm_info: "Confirmer l'adresse courriel",
       additionnal_information: "Informations supplémentaires",
       additionnal_information_input: "Entrez toute information supplémentaire",
       caregiver: "Proche aidant",
@@ -284,12 +282,11 @@ const resources = {
       relation_friend: "Ami(e)",
       relation_other: "Autre",
       create_patient: "Créer un patient",
-=======
+      // /patient/patientMenu.jsx
+      programs: "Programmes",
       // Doctor
       register_doctor: "Enregistrer un médecin",
       name: "Nom",
-      email: "Courriel",
-      phone: "Téléphone",
       status: "Statut",
       actions: "Actions",
       register_doctor_title: "Enregistrer un nouveau médecin",
@@ -322,7 +319,6 @@ const resources = {
         "Le mot de passe doit contenir au moins 8 caractères",
       password_requirements_error:
         "Le mot de passe doit contenir au moins une lettre et un chiffre",
->>>>>>> 956d73d (Added new translation keys for Doctors)
     },
   },
 };
