@@ -166,7 +166,7 @@ export default function SessionList(props) {
           type="primary"
           icon={<ArrowLeftOutlined />}
         >
-          Back
+          {t("back")}
         </Button>
       )}
 

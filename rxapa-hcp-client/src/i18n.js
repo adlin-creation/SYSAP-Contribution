@@ -24,6 +24,7 @@ const resources = {
 
       // Composant exercises
       exercice_loading: "Exercise Loading",
+      exercise_loding_error: "Sorry, an error occured while loading exercises",
       create_exercise: "Create Exercise",
       all: "ALL",
       aerobic: "AEROBIC",
@@ -62,6 +63,7 @@ const resources = {
       enter_bloc_description: "Please enter the description of the bloc : ",
       // Session
       create_session: "Create session",
+      back: "Back",
       session_details_title:
         "Enter the following details and then submit to create a new session",
       enter_day_session: "Please enter the name of the day session",
@@ -72,6 +74,7 @@ const resources = {
       enter_constraints_day_session:
         "Please enter the constraints of the day session",
       day_session_constraints: "Day Session Constraints",
+<<<<<<< HEAD
       // Patient/CreateEnrollement.jsx 
       enrollment_creation_success: "Enrollment created successfully!",
       enrollment_creation_failed: "Error creating enrollment",
@@ -120,6 +123,43 @@ const resources = {
       relation_friend: "Friend",
       relation_other: "Other",
       create_patient: "Create Patient",
+=======
+      // Doctor
+      register_doctor: "Register a Doctor",
+      name: "Name",
+      email: "Email",
+      phone: "Phone",
+      status: "Status",
+      actions: "Actions",
+      register_doctor_title: "Register a new doctor",
+      edit_doctor: "Edit doctor",
+      first_name_label: "First name",
+      last_name_label: "Last name",
+      required_first_name_error: "First name is required",
+      first_name_min_length_error:
+        "First name must be at least 2 characters long",
+      enter_first_name_placeholder: "Enter first name",
+      required_last_name_error: "Last name is required",
+      last_name_min_length_error:
+        "Last name must be at least 2 characters long",
+      enter_last_name: "Enter last name",
+      required_email_error: "Email is required",
+      invalid_email_format_error: "Invalid email format",
+      enter_email_placeholder: "Enter email address",
+      confirm_email_label: "Confirm Email",
+      required_email_confirmation_error: "Email confirmation is required",
+      email_mismatch_error: "Emails do not match",
+      confirm_email_placeholder: "Confirm email address",
+      phone_number: "Phone Number",
+      required_phone_number_error: "Phone number is required",
+      invalid_phone_number_error: "Invalid phone number format",
+      phone_number_placeholder: "Enter phone number",
+      password_label: "Password",
+      required_password_error: "Password is required",
+      password_min_length_error: "Password must be at least 8 characters long",
+      password_requirements_error:
+        "Password must contain at least one letter and one number",
+>>>>>>> 956d73d (Added new translation keys for Doctors)
     },
   },
   fr: {
@@ -144,6 +184,8 @@ const resources = {
 
       // Composant exercises
       exercice_loading: "Chargement de l'exercice...",
+      exercise_loading_error:
+        "Désolé, une erreur s'est produite lors du chargement des exercices",
       create_exercise: "Créer un exercice",
       all: "Tous",
       aerobic: "Aérobie",
@@ -180,7 +222,9 @@ const resources = {
       create_bloc: "Créer un bloc",
       enter_bloc_name: "Veuillez entrer le nom du bloc :",
       enter_bloc_description: "Veuillez entrer la description du bloc :",
+      // Session
       create_session: "Créer une session",
+      back: "retourner",
       session_details_title:
         "Entrez les détails suivants puis soumettez pour créer une nouvelle session",
       enter_day_session: "Veuillez entrer le nom de la session de jour",
@@ -191,6 +235,7 @@ const resources = {
       enter_constraints_day_session:
         "Veuillez entrer les contraintes de la session de jour",
       day_session_constraints: "Contraintes de la session de jour",
+<<<<<<< HEAD
       // Patient/CreateEnrollement.jsx 
       enrollment_creation_success: "L'inscription a été créée avec succès!",
       enrollment_creation_failed: "Erreur lors de la création de l'inscription",
@@ -239,6 +284,45 @@ const resources = {
       relation_friend: "Ami(e)",
       relation_other: "Autre",
       create_patient: "Créer un patient",
+=======
+      // Doctor
+      register_doctor: "Enregistrer un médecin",
+      name: "Nom",
+      email: "Courriel",
+      phone: "Téléphone",
+      status: "Statut",
+      actions: "Actions",
+      register_doctor_title: "Enregistrer un nouveau médecin",
+      edit_doctor: "Modifier le médecin",
+      first_name_label: "Prénom",
+      last_name_label: "nom",
+      required_first_name_error: "Le prénom est obligatoire",
+      first_name_min_length_error:
+        "Le prénom doit contenir au moins 2 caractères",
+      enter_first_name_placeholder: "Entrez le prénom",
+      required_last_name_error: "Le nom de famille est obligatoire",
+      last_name_min_length_error:
+        "Le nom de famille doit contenir au moins 2 caractères",
+      enter_last_name_placeholder: "Entrez le nom de famille",
+      required_email_error: "Le courriel est obligatoire",
+      invalid_email_format_error: "Format du courriel invalide",
+      enter_email_placeholder: "Entrez l'adresse email",
+      confirm_email_label: "Confirmez le courriel",
+      required_email_confirmation_error:
+        "La confirmation du courriel est obligatoire",
+      email_mismatch_error: "Les courriels ne correspondent pas",
+      confirm_email_placeholder: "Confirmez l'adresse courriel",
+      phone_number: "Numéro de téléphone",
+      required_phone_number_error: "Le numéro de téléphone est obligatoire",
+      invalid_phone_number_error: "Format de numéro de téléphone invalide",
+      phone_number_placeholder: "Entrez le numéro de téléphone",
+      password_label: "Mot de passe",
+      required_password_error: "Le mot de passe est obligatoire",
+      password_min_length_error:
+        "Le mot de passe doit contenir au moins 8 caractères",
+      password_requirements_error:
+        "Le mot de passe doit contenir au moins une lettre et un chiffre",
+>>>>>>> 956d73d (Added new translation keys for Doctors)
     },
   },
 };

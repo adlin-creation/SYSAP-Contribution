@@ -57,7 +57,7 @@ export default function ExerciseMenu() {
     return <h1>{t("exercise_loading")}</h1>;
   }
   if (isExerciseLoadingError) {
-    return <h1>Sorry, an error occured while loading exercises</h1>;
+    return <h1>{t("exercise_loading_error")}</h1>;
   }
 
   function openModal(message, isError) {
