@@ -8,9 +8,11 @@ import useToken from "../Authentication/useToken";
 import dayjs from 'dayjs';
 import { useQuery } from "@tanstack/react-query";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 
 function CreateEnrollement({ refetchPatients }) {
+  const { t } = useTranslation(); 
   const { handleSubmit, control, formState: { errors } } = useForm();
   const { token } = useToken();
   const [caregivers, setCaregivers] = useState([{ id: 1 }]);
@@ -72,9 +74,9 @@ function CreateEnrollement({ refetchPatients }) {
       })
       .then((res) => {
         refetchPatients(); // Rafraîchir la liste des patients
-        openModal("Enrollment created successfully!", false);
+        openModal(t("enrollment_creation_success"), false);
       })
-      .catch((err) => openModal(err.response?.data?.error || "Error creating enrollment", true));
+      .catch((err) => openModal(err.response?.data?.error || t("enrollment_creation_failed"), true));
   };
 
   const openModal = (message, isError) => {

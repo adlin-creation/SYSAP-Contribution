@@ -6,8 +6,10 @@ import axios from "axios";
 import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 function CreatePatient({ refetchPatients, onClose }) {
+  const { t } = useTranslation(); 
   const { handleSubmit, control, formState: { errors } } = useForm();
   const { token } = useToken();
   const [caregivers, setCaregivers] = useState([{ id: 1 }]);
@@ -50,9 +52,9 @@ function CreatePatient({ refetchPatients, onClose }) {
       })
       .then((res) => {
         refetchPatients();
-        openModal("Patient created successfully!", false);
+        openModal(t("create_patient_success"), false);
       })
-      .catch((err) => openModal(err.response?.data?.error || "Error creating patient", true));
+      .catch((err) => openModal(err.response?.data?.error || t("create_patient_failed"), true));
   };
 
   const openModal = (message, isError) => {
@@ -78,42 +80,15 @@ function CreatePatient({ refetchPatients, onClose }) {
     setIsErrorMessage(false);
   };
 
-  const validateCaregiverFields = (index) => ({
-    validate: {
-      required: (value) => {
-        const firstName = control._formValues[`caregiverFirstName${index + 1}`];
-        const lastName = control._formValues[`caregiverLastName${index + 1}`];
-        const email = control._formValues[`caregiverEmail${index + 1}`];
-        const phone = control._formValues[`caregiverPhone${index + 1}`];
-        if (firstName || lastName || email || phone) {
-          return !!value || "Ce champ est obligatoire";
-        }
-        return true;
-      },
-      minLength: (value) => {
-        if (value && value.length < 2) {
-          return "Le prénom doit contenir au moins 2 caractères";
-        }
-        return true;
-      },
-      pattern: (value) => {
-        if (value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) {
-          return "Format d'email invalide";
-        }
-        return true;
-      },
-    },
-  });
-
   return (
     <Row justify="center">
       <Col span={16}>
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
-          <h2>Patient Information</h2>
+          <h2>{t("patient_informations")}</h2>
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item 
-                label="First Name"
+                label={t("first_name_form")}
                 required
                 validateStatus={errors.patientFirstName ? "error" : ""}
                 help={errors.patientFirstName?.message}
@@ -122,19 +97,19 @@ function CreatePatient({ refetchPatients, onClose }) {
                   name="patientFirstName"
                   control={control}
                   rules={{ 
-                    required: "Le prénom est obligatoire",
+                    required: t("first_name_required"),
                     minLength: {
                       value: 2,
-                      message: "Le prénom doit contenir au moins 2 caractères"
+                      message: t("first_name_required_info")
                     }
                   }}
-                  render={({ field }) => <Input {...field} placeholder="Enter patient's first name" />}
+                  render={({ field }) => <Input {...field} placeholder={t("first_name_input")} />}
                 />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item 
-                label="Last Name"
+                label={t("last_name")}
                 required
                 validateStatus={errors.patientLastName ? "error" : ""}
                 help={errors.patientLastName?.message}
@@ -143,13 +118,13 @@ function CreatePatient({ refetchPatients, onClose }) {
                   name="patientLastName"
                   control={control}
                   rules={{ 
-                    required: "Le nom est obligatoire",
+                    required: t("last_name_required"),
                     minLength: {
                       value: 2,
-                      message: "Le nom doit contenir au moins 2 caractères"
+                      message: t("last_name_required_info")
                     }
                   }}
-                  render={({ field }) => <Input {...field} placeholder="Enter patient's last name" />}
+                  render={({ field }) => <Input {...field} placeholder={t("last_name_input")} />}
                 />
               </Form.Item>
             </Col>
@@ -157,17 +132,17 @@ function CreatePatient({ refetchPatients, onClose }) {
 
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item label="Birthday">
+              <Form.Item label={t("birthday")}>
                 <Controller
                   name="birthday"
                   control={control}
-                  render={({ field }) => <DatePicker {...field} placeholder="Select birth date" style={{ width: '100%' }} />}
+                  render={({ field }) => <DatePicker {...field} placeholder={t("birthday_select")} style={{ width: '100%' }} />}
                 />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item 
-                label="Phone"
+                label={t("phone")}
                 required
                 validateStatus={errors.patientPhone ? "error" : ""}
                 help={errors.patientPhone?.message}
@@ -176,13 +151,13 @@ function CreatePatient({ refetchPatients, onClose }) {
                   name="patientPhone"
                   control={control}
                   rules={{ 
-                    required: "Le numéro de téléphone est obligatoire",
+                    required: t("phone_required"),
                     pattern: {
                       value: /^[0-9+\s-]{8,}$/,
-                      message: "Format de numéro de téléphone invalide"
+                      message: t("phone_number_invalid")
                     }
                   }}
-                  render={({ field }) => <Input {...field} placeholder="Enter phone number" />}
+                  render={({ field }) => <Input {...field} placeholder={t("phone_number_input")} />}
                 />
               </Form.Item>
             </Col>
@@ -191,7 +166,7 @@ function CreatePatient({ refetchPatients, onClose }) {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item 
-                label="Email"
+                label={t("email")}
                 required
                 validateStatus={errors.patientEmail ? "error" : ""}
                 help={errors.patientEmail?.message}
@@ -200,19 +175,19 @@ function CreatePatient({ refetchPatients, onClose }) {
                   name="patientEmail"
                   control={control}
                   rules={{ 
-                    required: "L'email est obligatoire",
+                    required: t("email_needed"),
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: "Format d'email invalide"
+                      message: t("email_invalid")
                     }
                   }}
-                  render={({ field }) => <Input type="email" {...field} placeholder="Enter email address" />}
+                  render={({ field }) => <Input type="email" {...field} placeholder={t("email_input")} />}
                 />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item 
-                label="Confirm Email"
+                label={t("email_confirm")}
                 required
                 validateStatus={errors.confirmPatientEmail ? "error" : ""}
                 help={errors.confirmPatientEmail?.message}
@@ -221,10 +196,10 @@ function CreatePatient({ refetchPatients, onClose }) {
                   name="confirmPatientEmail"
                   control={control}
                   rules={{
-                    required: "La confirmation de l'email est obligatoire",
-                    validate: value => value === control._formValues.patientEmail || "Les emails ne correspondent pas"
+                    required: t("email_confirm_required"),
+                    validate: value => value === control._formValues.patientEmail || t("email_confirm_invalid")
                   }}
-                  render={({ field }) => <Input type="email" {...field} placeholder="Confirm email address" />}
+                  render={({ field }) => <Input type="email" {...field} placeholder={t("email_confirm_info")} />}
                 />
               </Form.Item>
             </Col>
@@ -232,60 +207,78 @@ function CreatePatient({ refetchPatients, onClose }) {
 
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item label="Additional Information">
+              <Form.Item label={t("additionnal_information")}>
                 <Controller
                   name="otherinfo"
                   control={control}
-                  render={({ field }) => <Input.TextArea {...field} placeholder="Enter any additional information" rows={4} />}
+                  render={({ field }) => <Input.TextArea {...field} placeholder={t("additionnal_information_input")} rows={4} />}
                 />
               </Form.Item>
             </Col>
           </Row>
 
-          <h2>Caregivers Information</h2>
+          <h2>{t("caregiver_information")}</h2>
           {caregivers.map((caregiver, index) => (
             <div key={caregiver.id}>
-              <h3>Caregiver {index + 1}</h3>
+              <h3>{t("caregiver")} {index + 1}</h3>
               <Row gutter={16}>
                 <Col span={8}>
                   <Form.Item 
-                    label="First Name"
+                    label={t("first_name_form")}
                     validateStatus={errors[`caregiverFirstName${index + 1}`] ? "error" : ""}
                     help={errors[`caregiverFirstName${index + 1}`]?.message}
                   >
                     <Controller
                       name={`caregiverFirstName${index + 1}`}
                       control={control}
-                      rules={validateCaregiverFields(index)}
-                      render={({ field }) => <Input {...field} placeholder="Enter caregiver's first name" />}
+                      rules={{
+                        required: t("first_name_required"),
+                        minLength: {
+                          value: 2,
+                          message: t("first_name_required_info")
+                        }
+                      }}
+                      render={({ field }) => <Input {...field} placeholder={t("caregiver_first_name_input")} />}
                     />
                   </Form.Item>
                 </Col>
                 <Col span={8}>
                   <Form.Item 
-                    label="Last Name"
+                    label={t("last_name")}
                     validateStatus={errors[`caregiverLastName${index + 1}`] ? "error" : ""}
                     help={errors[`caregiverLastName${index + 1}`]?.message}
                   >
                     <Controller
                       name={`caregiverLastName${index + 1}`}
                       control={control}
-                      rules={validateCaregiverFields(index)}
-                      render={({ field }) => <Input {...field} placeholder="Enter caregiver's last name" />}
+                      rules={{
+                        required: t("last_name_required"),
+                        minLength: {
+                          value: 2,
+                          message: t("last_name_required_info")
+                        }
+                      }}
+                      render={({ field }) => <Input {...field} placeholder={t("caregiver_last_name_input")} />}
                     />
                   </Form.Item>
                 </Col>
                 <Col span={8}>
-                  <Form.Item label="Relationship">
+                  <Form.Item label={t("relationship")}
+                   validateStatus={errors[`relationship${index + 1}`] ? "error" : ""}
+                   help={errors[`relationship${index + 1}`]?.message}
+                  >
                     <Controller
                       name={`relationship${index + 1}`}
                       control={control}
+                      rules={{
+                        required: t("choice_required")
+                      }}
                       render={({ field }) => (
-                        <Select {...field} placeholder="Select relationship">
-                          <Select.Option value="parent">Parent</Select.Option>
-                          <Select.Option value="sibling">Sibling</Select.Option>
-                          <Select.Option value="friend">Friend</Select.Option>
-                          <Select.Option value="other">Other</Select.Option>
+                        <Select {...field} placeholder={t("relationship_choice")}>
+                          <Select.Option value="parent">{t("relation_parent")}</Select.Option>
+                          <Select.Option value="sibling">{t("relation_sibling")}</Select.Option>
+                          <Select.Option value="friend">{t("relation_friend")}</Select.Option>
+                          <Select.Option value="other">{t("relation_other")}</Select.Option>
                         </Select>
                       )}
                     />
@@ -296,29 +289,41 @@ function CreatePatient({ refetchPatients, onClose }) {
               <Row gutter={16}>
                 <Col span={12}>
                   <Form.Item 
-                    label="Email"
+                    label={t("email")}
                     validateStatus={errors[`caregiverEmail${index + 1}`] ? "error" : ""}
                     help={errors[`caregiverEmail${index + 1}`]?.message}
                   >
                     <Controller
                       name={`caregiverEmail${index + 1}`}
                       control={control}
-                      rules={validateCaregiverFields(index)}
-                      render={({ field }) => <Input type="email" {...field} placeholder="Enter caregiver's email" />}
+                      rules={{
+                        required: t("email_needed"),
+                        pattern: {
+                          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                          message: t("email_invalid")
+                        }
+                      }}
+                      render={({ field }) => <Input type="email" {...field} placeholder={t("caregiver_email_input")} />}
                     />
                   </Form.Item>
                 </Col>
                 <Col span={12}>
                   <Form.Item 
-                    label="Phone"
+                    label={t("phone")}
                     validateStatus={errors[`caregiverPhone${index + 1}`] ? "error" : ""}
                     help={errors[`caregiverPhone${index + 1}`]?.message}
                   >
                     <Controller
                       name={`caregiverPhone${index + 1}`}
                       control={control}
-                      rules={validateCaregiverFields(index)}
-                      render={({ field }) => <Input {...field} placeholder="Enter caregiver's phone" />}
+                      rules={{ 
+                        required: t("phone_required"),
+                        pattern: {
+                          value: /^[0-9+\s-]{8,}$/,
+                          message: t("phone_number_invalid")
+                        }
+                      }}
+                      render={({ field }) => <Input {...field} placeholder={t("caregiver_phone_input")} />}
                     />
                   </Form.Item>
                 </Col>
@@ -333,13 +338,13 @@ function CreatePatient({ refetchPatients, onClose }) {
               icon={<UserAddOutlined />}
               style={{ marginBottom: 24 }}
             >
-              Add Caregiver
+              {t("caregiver_add")}
             </Button>
           )}
 
           <Form.Item>
             <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
-              Create Patient
+              {t("create_patient")}
             </Button>
           </Form.Item>
         </Form>
@@ -349,7 +354,7 @@ function CreatePatient({ refetchPatients, onClose }) {
           onCancel={closeModal}
           footer={[
             <Button key="close" onClick={closeModal}>
-              Close
+              {t("close")}
             </Button>
           ]}
         >
