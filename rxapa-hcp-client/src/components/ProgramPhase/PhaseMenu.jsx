@@ -9,6 +9,7 @@ import Constants from "../Utils/Constants";
 import "../MainMenu/MainMenu.css";
 import PhaseDetails from "./PhaseDetails";
 import useToken from "../Authentication/useToken";
+import { useTranslation } from "react-i18next";
 
 export default function PhaseMenu() {
   // tracks the state of two buttons: create a cycle and edit a cycle
@@ -22,6 +23,7 @@ export default function PhaseMenu() {
   const [message, setMessage] = useState("");
 
   const { token } = useToken();
+  const { t } = useTranslation();
 
   // selected program phase to be edited
   const [selectedPhase, setSelectedPhase] = useState(null);
@@ -72,10 +74,10 @@ export default function PhaseMenu() {
   /// PROGRAM PHASE QUERY VALIDATIONS ///
   /////////////////////////////////////
   if (isPhaseLoading) {
-    return <h1>Program Phases Loading...</h1>;
+    return <h1>{t("loading_program_phases")}</h1>;
   }
   if (isPhaseLoadingError) {
-    return <h1>Sorry, an error occured while loading program phases</h1>;
+    return <h1>{t("error_loading_program_phases")}</h1>;
   }
 
   /**
@@ -154,7 +156,7 @@ export default function PhaseMenu() {
             type="primary"
             icon={<PlusOutlined />}
           >
-            Create Phase
+            {t("create_phase")}
           </Button>
 
           {/* Display exisitng cycles */}
@@ -182,17 +184,14 @@ export default function PhaseMenu() {
           type="primary"
           icon={<ArrowLeftOutlined />}
         >
-          Back
+          {t("back")}
         </Button>
       )}
 
       {/* show create session input elements when create day session is clicked */}
       {buttonState.isCreatePhase && (
         <div>
-          <h3>
-            Enter the following details and then submit to create a new program
-            phase
-          </h3>
+          <h3>{t("enter_phase_details")}</h3>
           <CreatePhase refetchPhases={refetchPhases} cycleList={cycleList} />
         </div>
       )}

@@ -186,13 +186,32 @@ const resources = {
 
       /* *********** PROGRAMME FIN *************** */
 
-       // boutton
-       back: "Back",
-       edit: "Edit",
-       delete: "Delete",
-       update: "Update",
-       add_session: "Add Session",
-       create_cycle: "Create Cycle",
+      // boutton
+      back: "Back",
+      edit: "Edit",
+      delete: "Delete",
+      update: "Update",
+      add_session: "Add Session",
+      create_cycle: "Create Cycle",
+
+      /* *********** PHASE FIN *************** */
+      select_cycle: "Please select a cycle",
+      select_cycle_name: "Select Cycle Name",
+      select_start_condition_type: "Please select start condition type",
+      select_end_condition_type: "Please select end condition type",
+      enter_program_phase_name: "Please enter the name of the program phase",
+      program_phase_name: "Program Phase Name",
+      enter_start_condition_value: "Please enter the start condition value",
+      start_condition_value: "Start Condition Value",
+      enter_end_condition_value: "Please enter the end condition value",
+      end_condition_value: "End Condition Value",
+      enter_frequency: "Please enter the frequency",
+      frequency: "Frequency",
+      loading_program_phases: "Program Phases Loading...",
+      error_loading_program_phases: "Sorry, an error occurred while loading program phases.",
+      create_phase: "Create Phase",
+      enter_phase_details: "Enter the following details and then submit to create a new program phase."
+      /* *********** PHASE FIN *************** */
 
 
     },
@@ -394,7 +413,26 @@ const resources = {
       delete: "Supprimer",
       update: "Mettre à jour",
       add_session: "Ajouter une session",
-      create_cycle: "Créer un cycle"
+      create_cycle: "Créer un cycle",
+
+      /* *********** PHASE *************** */
+      select_cycle: "Veuillez sélectionner un cycle",
+      select_cycle_name: "Sélectionnez un nom de cycle",
+      select_start_condition_type: "Veuillez sélectionner un type de condition de départ",
+      select_end_condition_type: "Veuillez sélectionner un type de condition de fin",
+      enter_program_phase_name: "Veuillez entrer le nom de la phase du programme",
+      program_phase_name: "Nom de la phase du programme",
+      enter_start_condition_value: "Veuillez entrer la valeur de la condition de départ",
+      start_condition_value: "Valeur de la condition de départ",
+      enter_end_condition_value: "Veuillez entrer la valeur de la condition de fin",
+      end_condition_value: "Valeur de la condition de fin",
+      enter_frequency: "Veuillez entrer la fréquence",
+      frequency: "Fréquence",
+      loading_program_phases: "Chargement des phases du programme...",
+      error_loading_program_phases: "Une erreur s'est produite lors du chargement des phases du programme.",
+      create_phase: "Créer une phase",
+      enter_phase_details: "Entrez les détails suivants puis soumettez pour créer une nouvelle phase du programme."
+      /* *********** PHASE FIN *************** */
 
 
 
