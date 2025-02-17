@@ -169,6 +169,32 @@ const resources = {
       select_session: "Select a session",
       /* *********** CYCLES FIN *************** */
 
+      /* *********** PROGRAMME *************** */
+      
+      enter_program_name: "Please enter the name of the program:",
+      program_name_placeholder: "Program name",
+      enter_program_description: "Please enter the description of the program:",
+      program_description_placeholder: "Program description",
+      enter_program_duration: "Please enter the duration of the program:",
+      program_duration_placeholder: "Program duration",
+      add_program_phase: "Add program phase",
+      loading_program_phases: "Loading program phases...",
+      error_loading_program_phases: "An error occurred while loading the program phases",
+      loading_all_phases: "Loading all phases...",
+      error_loading_all_phases: "An error occurred while loading all phases",
+      create_program: "Create a program",
+
+      /* *********** PROGRAMME FIN *************** */
+
+       // boutton
+       back: "Back",
+       edit: "Edit",
+       delete: "Delete",
+       update: "Update",
+       add_session: "Add Session",
+       create_cycle: "Create Cycle",
+
+
     },
   },
   fr: {
@@ -342,8 +368,35 @@ const resources = {
       enter_cycle_description: "Veuillez entrer la description du cycle : ",
       update_cycle_description: "Entrez une autre valeur pour modifier la description",
       create_new_cycle: "Créer un nouveau cycle",
-      select_session: "Sélectionner une séance"
+      select_session: "Sélectionner une séance",
       /* *********** CYCLES FIN *************** */
+
+      /* *********** PROGRAMME *************** */
+      
+      enter_program_name: "Veuillez entrer le nom du programme :",
+      program_name_placeholder: "Nom du programme",
+      enter_program_description: "Veuillez entrer la description du programme :",
+      program_description_placeholder: "Description du programme",
+      enter_program_duration: "Veuillez entrer la durée du programme :",
+      program_duration_placeholder: "Durée du programme",
+      add_program_phase: "Ajouter une phase du programme",
+      loading_program_phases: "Chargement des phases du programme...",
+      error_loading_program_phases: "Erreur lors du chargement des phases du programme",
+      loading_all_phases: "Chargement de toutes les phases...",
+      error_loading_all_phases: "Erreur lors du chargement de toutes les phases",
+      create_program: "Créer un programme",
+      /* *********** PROGRAMME FIN *************** */
+
+
+      // boutton
+      back: "Retour",
+      edit: "Modifier",
+      delete: "Supprimer",
+      update: "Mettre à jour",
+      add_session: "Ajouter une session",
+      create_cycle: "Créer un cycle"
+
+
 
     },
   },

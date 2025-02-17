@@ -8,6 +8,7 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
+import { useTranslation } from "react-i18next";
 
 export default function ProgramMenu() {
   // tracks the state of two buttons: create a program and edit a program
@@ -22,7 +23,7 @@ export default function ProgramMenu() {
   const [message, setMessage] = useState("");
 
   const { token } = useToken();
-
+  const { t } = useTranslation();
   // selected program to be edited
   const [selectedProgram, setSelectedProgram] = useState(null);
 
@@ -171,13 +172,13 @@ export default function ProgramMenu() {
               type="primary"
               icon={<ArrowLeftOutlined />}
             >
-              Back
+              {t("back")}
             </Button>
           </Col>
           <Col flex="auto" style={{ textAlign: 'center' }}>
             <h2 style={{ marginBottom: 0 }}>
               {buttonState.isCreateProgram 
-                ? "Create a program"
+                ? t("create_program")
                 : `Edit ${selectedProgram?.name}`}
             </h2>
           </Col>
@@ -202,7 +203,7 @@ export default function ProgramMenu() {
           onCancel={closeModal}
           footer={[
             <Button key="close" onClick={closeModal}>
-              Close
+              {t("close")}
             </Button>,
           ]}
         >

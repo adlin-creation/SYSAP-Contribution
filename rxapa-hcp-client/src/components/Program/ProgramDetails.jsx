@@ -9,11 +9,13 @@ import { useQuery } from "@tanstack/react-query";
 import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
 import PropTypes from 'prop-types';
+import { useTranslation } from "react-i18next";
 
 export default function ProgramDetails({ program }) {
   const { handleSubmit, control } = useForm();
   const [isAddProgramPhase, setIsAddProgramPhase] = useState(false);
   const { token } = useToken();
+  const { t } = useTranslation();
 
   // feedback message hooks
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -64,17 +66,17 @@ export default function ProgramDetails({ program }) {
   /// QUERY VALIDATIONS          ///
   //////////////////////////////////
   if (isProgramPhasesLoading) {
-    return <h1>List of program phases loading...</h1>;
+    return <h1>{t("loading_program_phases")}</h1>;
   }
   if (isProgramPhasesLoadingError) {
-    return <h1>Sorry, an error occurred while loading the program phases</h1>;
+    return <h1>{t("error_loading_program_phases")}</h1>;
   }
 
   if (isAllProgramPhasesLoading) {
-    return <h1>All program phases loading...</h1>;
+    return <h1>{t("loading_all_phases")}</h1>;
   }
   if (isAllProgramPhasesLoadingError) {
-    return <h1>Sorry, an error occurred while loading all program phases</h1>;
+    return <h1>{t("error_loading_all_phases")}</h1>;
   }
 
   function addProgramPhase() {
@@ -122,7 +124,7 @@ export default function ProgramDetails({ program }) {
     <Row justify="center" align="middle" style={{ minHeight: '50vh' }}>
       <Col span={12}>
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
-          <Form.Item label="Please enter the name of the program : ">
+          <Form.Item label={t("enter_program_name")}>
             <Controller
               name="name"
               control={control}
@@ -130,14 +132,14 @@ export default function ProgramDetails({ program }) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder="Program Name"
+                  placeholder={t("program_name_placeholder")}
                   required
                 />
               )}
             />
           </Form.Item>
 
-          <Form.Item label="Please enter the description of the program : ">
+          <Form.Item label={t("enter_program_description")}>
             <Controller
               name="description"
               control={control}
@@ -145,7 +147,7 @@ export default function ProgramDetails({ program }) {
                 <Input.TextArea
                   onChange={onChange}
                   value={value}
-                  placeholder="Program Description"
+                  placeholder={t("program_description_placeholder")}
                   rows={4}
                   required
                 />
@@ -153,7 +155,7 @@ export default function ProgramDetails({ program }) {
             />
           </Form.Item>
 
-          <Form.Item label="Please enter the duration of the program : ">
+          <Form.Item label={t("enter_program_duration")}>
             <Controller
               name="duration"
               control={control}
@@ -161,7 +163,7 @@ export default function ProgramDetails({ program }) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder="Program Duration"
+                  placeholder={t("program_duration_placeholder")}
                   required
                 />
               )}
@@ -174,7 +176,7 @@ export default function ProgramDetails({ program }) {
               htmlType="submit"
               icon={<CheckOutlined />}
             >
-              UPDATE
+              {t("update")}
             </Button>
           </Form.Item>
         </Form>
@@ -187,7 +189,7 @@ export default function ProgramDetails({ program }) {
             icon={<PlusOutlined />}
             className="program-add-button"
           >
-            ADD PROGRAM PHASE
+            {t("add_program_phase")}
           </Button>
         </div>
 
