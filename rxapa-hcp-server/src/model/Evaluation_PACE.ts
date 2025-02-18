@@ -1,13 +1,13 @@
-import { sequelize, dataTypes } from "../util/database";
-import { Evaluation } from "./Evaluation";
+import { sequelize, dataTypes } from '../util/database';
+import { Evaluation } from './Evaluation';
 
-export const Evaluation_PACE = sequelize.define("Evaluation_PACE", {
+export const Evaluation_PACE = sequelize.define('Evaluation_PACE', {
   idPACE: {
     type: dataTypes.INTEGER,
     primaryKey: true,
     references: {
       model: Evaluation,
-      key: "id",
+      key: 'id',
     },
   },
   // Section A
@@ -21,7 +21,7 @@ export const Evaluation_PACE = sequelize.define("Evaluation_PACE", {
   },
   scoreA: {
     type: dataTypes.INTEGER,
-    allowNull: false,
+    allowNull:false,
   },
   // Section B
   balanceFeetTogether: {
@@ -44,11 +44,10 @@ export const Evaluation_PACE = sequelize.define("Evaluation_PACE", {
     type: dataTypes.INTEGER,
     allowNull: false,
   },
-  // Section C - Modification pour supporter plus d'états
-  frtPosition: {
-    type: dataTypes.STRING,
+  // Section C
+  frtSitting: {
+    type: dataTypes.BOOLEAN,
     allowNull: false,
-    // Valeurs possibles: 'sitting', 'standing', 'armNotWorking'
   },
   frtDistance: {
     type: dataTypes.INTEGER,

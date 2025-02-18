@@ -7,8 +7,8 @@ import { Op } from "sequelize";
 
 exports.createEvaluation = async (req: any, res: any, next: any) => {
   const {
-    idPatient,
-    idKinesiologist,
+    //idPatient,
+    //idKinesiologist,
     chairTestSupport,
     chairTestCount,
     balanceFeetTogether,
@@ -24,60 +24,40 @@ exports.createEvaluation = async (req: any, res: any, next: any) => {
   const t = await sequelize.transaction();
 
   try {
-    // Vérifier si les données essentielles sont présentes
-    if (!scores) {
-      return res.status(400).json({ 
-        message: "Données incomplètes: l'objet scores est requis",
-        receivedData: req.body 
-      });
-    }
-
-    // Créer l'évaluation
     const evaluation = await Evaluation.create(
       {
-        idPatient: idPatient || null,
-        idKinesiologist: idKinesiologist || null,
-        idResultProgram: scores.programme || null, // Maintenant une chaîne de caractères
+        //idPatient,
+        //idKinesiologist,
+        idResultProgram: scores.programme,
       },
       { transaction: t }
     );
 
-    // Calculer la vitesse et l'objectif de marche
-    const walkingTimeFloat = parseFloat(walkingTime);
-    const vitesse = !isNaN(walkingTimeFloat) && walkingTimeFloat > 0 
-      ? 4 / walkingTimeFloat 
-      : 0;
-      
+    const vitesse = walkingTime ? 4 / parseFloat(walkingTime) : 0;
     let objectifMarche = 1; // 10 min par défaut
     if (vitesse >= 0.8) objectifMarche = 4; // 30 min
-    else if (vitesse >= 0.6) objectifMarche = 3; // 20 min
+    else if (vitesse > 0.6) objectifMarche = 3; // 20 min
     else if (vitesse >= 0.4) objectifMarche = 2; // 15 min
-
-    // Déterminer la valeur de frtSitting en fonction de frtPosition
-    let frtSitting = false;
-    if (frtPosition === true || frtPosition === "sitting") {
-      frtSitting = true;
-    }
 
     await Evaluation_PACE.create(
       {
         // Section A
         idPACE: evaluation.id,
-        chairTestSupport: chairTestSupport === true,
-        chairTestCount: parseInt(chairTestCount) || 0,
-        scoreA: scores.cardioMusculaire || 0,
+        chairTestSupport: chairTestSupport === "with",
+        chairTestCount: parseInt(chairTestCount),
+        scoreA: scores.cardioMusculaire,
         // Section B
-        balanceFeetTogether: parseInt(balanceFeetTogether) || 0,
-        balanceSemiTandem: parseInt(balanceSemiTandem) || 0,
-        balanceTandem: parseInt(balanceTandem) || 0,
-        balanceOneFooted: parseInt(balanceOneFooted) || 0,
-        scoreB: scores.equilibre || 0,
+        balanceFeetTogether: parseFloat(balanceFeetTogether),
+        balanceSemiTandem: parseFloat(balanceSemiTandem),
+        balanceTandem: parseFloat(balanceTandem),
+        balanceOneFooted: parseFloat(balanceOneFooted),
+        scoreB: scores.equilibre,
         // Section C
-        frtSitting: frtSitting,
-        frtDistance: parseInt(frtDistance) || 0,
-        scoreC: scores.mobilite || 0,
+        frtSitting: frtPosition === "sitting",
+        frtDistance: parseFloat(frtDistance),
+        scoreC: scores.mobilite,
         // Scores et vitesse
-        scoreTotal: scores.total || 0,
+        scoreTotal: scores.total,
         vitesseDeMarche: vitesse,
         objectifMarche: objectifMarche,
       },
@@ -85,28 +65,17 @@ exports.createEvaluation = async (req: any, res: any, next: any) => {
     );
 
     await t.commit();
-    res.status(201).json({ 
-      evaluation, 
-      scores, 
-      objectifMarche,
-      message: "Évaluation créée avec succès" 
-    });
+    res.status(201).json({ evaluation, scores, objectifMarche });
   } catch (error: any) {
     await t.rollback();
-    console.error("Erreur détaillée:", error);
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({ 
-      message: "Error creating evaluation", 
-      error: error.message,
-      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
-    });
+    res.status(error.statusCode).json({ message: "Error creating evaluation" });
   }
   return res;
 };
 
-// Mise à jour similaire pour updateEvaluation
 exports.updateEvaluation = async (req: any, res: any, next: any) => {
   const evaluationId = req.params.id;
   const {
@@ -135,41 +104,28 @@ exports.updateEvaluation = async (req: any, res: any, next: any) => {
       return res.status(404).json({ message: "PACE evaluation not found" });
     }
 
-    // Mettre à jour l'évaluation de base
-    await evaluation.update(
-      {
-        idResultProgram: scores?.programme || evaluation.idResultProgram,
-      },
-      { transaction: t }
-    );
-
     const vitesse = walkingTime ? 4 / parseFloat(walkingTime) : 0;
     let objectifMarche = 1;
     if (vitesse >= 0.8) objectifMarche = 4;
     else if (vitesse > 0.6) objectifMarche = 3;
     else if (vitesse >= 0.4) objectifMarche = 2;
 
-    // Déterminer la valeur de frtSitting en fonction de frtPosition
-    let frtSitting = false;
-    if (frtPosition === true || frtPosition === "sitting") {
-      frtSitting = true;
-    }
-
     // Update PACE evaluation
+
     await paceEvaluation.update(
       {
-        chairTestSupport: chairTestSupport === true,
-        chairTestCount: parseInt(chairTestCount) || 0,
-        scoreA: scores.cardioMusculaire || 0,
-        balanceFeetTogether: parseInt(balanceFeetTogether) || 0,
-        balanceSemiTandem: parseInt(balanceSemiTandem) || 0,
-        balanceTandem: parseInt(balanceTandem) || 0,
-        balanceOneFooted: parseInt(balanceOneFooted) || 0,
-        scoreB: scores.equilibre || 0,
-        frtSitting: frtSitting,
-        frtDistance: parseInt(frtDistance || "0") || 0,
-        scoreC: scores.mobilite || 0,
-        scoreTotal: scores.total || 0,
+        chairTestSupport: chairTestSupport,
+        chairTestCount: parseInt(chairTestCount),
+        scoreA: scores.cardioMusculaire,
+        balanceFeetTogether: parseFloat(balanceFeetTogether),
+        balanceSemiTandem: parseFloat(balanceSemiTandem),
+        balanceTandem: parseFloat(balanceTandem),
+        balanceOneFooted: parseFloat(balanceOneFooted),
+        scoreB: scores.equilibre,
+        frtSitting: frtPosition === true,
+        frtDistance: parseFloat(frtDistance || "0"),
+        scoreC: scores.mobilite,
+        scoreTotal: scores.total,
         vitesseDeMarche: vitesse,
         objectifMarche: objectifMarche,
       },
@@ -182,19 +138,13 @@ exports.updateEvaluation = async (req: any, res: any, next: any) => {
       evaluation,
       paceEvaluation,
       scores,
-      message: "Évaluation mise à jour avec succès"
     });
   } catch (error: any) {
     await t.rollback();
-    console.error("Erreur détaillée:", error);
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({
-      message: "Error updating evaluation",
-      error: error.message,
-      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
-    });
+    res.status(error.statusCode).json({ message: "Error updating evaluation" });
   }
   return res;
 };
