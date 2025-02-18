@@ -5,51 +5,74 @@ import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
 
 function EvaluationSearch() {
-    const { token } = useToken();
-    const [searchTerm, setSearchTerm] = useState("");
-    const [patients, setPatients] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
+    const { token } = useToken(); // Récupération du token d'authentification
+    const [searchTerm, setSearchTerm] = useState(""); // Stocke la valeur de la recherche
+    const [patients, setPatients] = useState([]); // Liste des patients récupérés
+    const [loading, setLoading] = useState(false); // Indicateur de chargement
+    const [errorMessage, setErrorMessage] = useState(""); // Message d'erreur
 
+    /**
+     * Fonction pour effectue une recherche de patient par ID ou par nom
+     */
     const handleSearch = async () => {
-        if (!searchTerm.trim()) {
+        if (!searchTerm.trim()) { // Vérifie si l'entrée est vide
             message.warning("Veuillez entrer un ID ou un nom.");
             return;
         }
-
+    
         setLoading(true);
         setPatients([]);
         setErrorMessage("");
-
+    
         try {
-            const response = await fetch(`${Constants.SERVER_URL}/patients/search?term=${searchTerm}`, {
+            let endpoint;
+            
+            // Vérifie si l'entrée est un ID ( uniqument des chiffres)
+            if (/^\d+$/.test(searchTerm)) {
+                endpoint = `/patient/${searchTerm}`;
+            } else {
+                endpoint = `/patients/search?term=${searchTerm}`;
+            }
+    
+            console.log(`Envoi de la requête: ${Constants.SERVER_URL}${endpoint}`);
+    
+            const response = await fetch(`${Constants.SERVER_URL}${endpoint}`, {
                 headers: { Authorization: "Bearer " + token },
             });
-
+    
             if (!response.ok) {
                 throw new Error("Erreur lors de la récupération des patients");
             }
-
+    
             const data = await response.json();
-            if (data.length === 0) {
-                setErrorMessage("Aucun patient trouvé.");
+            console.log("Données reçues:", data); // Debug : afficher la réponse de l'API
+    
+            if (!data || (Array.isArray(data) && data.length === 0)) {
+                setErrorMessage("Aucun patient trouvé."); // Message si aucun résultat
             } else {
-                setPatients(data);
+                // Si l'API retourne un seul objet patient, on le convertit en tableau
+                setPatients(Array.isArray(data) ? data : [data]);
             }
         } catch (error) {
-            console.error("Erreur lors de la recherche:", error);
+            console.error(" Erreur lors de la recherche:", error);
             setErrorMessage("Erreur lors de la recherche. Veuillez réessayer.");
         } finally {
-            setLoading(false);
+            setLoading(false); // Arrêter le chargement une fois la requête terminée
         }
     };
 
+    /**
+     * Fonction pour réinitialiser la recherche
+     */
     const clearSearch = () => {
         setSearchTerm("");
         setPatients([]);
         setErrorMessage("");
     };
 
+    /**
+     * Définition des colonnes du tableau d'affichage des patients
+     */
     const columns = [
         {
             title: "ID",
@@ -71,6 +94,7 @@ function EvaluationSearch() {
             key: "actions",
             render: (_, patient) => (
                 <div className="space-x-2">
+                    {/* Bouton pour accéder à l'évaluation du patient */}
                     <Button 
                         type="primary"
                         onClick={() => window.location.href = `/evaluation-pace/${patient.id}`}
@@ -78,6 +102,7 @@ function EvaluationSearch() {
                     >
                         Évaluation PACE
                     </Button>
+                    {/* Boutons désactivés pour les autres deux types d'évaluations */}
                     <Button type="dashed" disabled>Évaluation PATH</Button>
                     <Button type="dashed" disabled>Évaluation MATCH</Button>
                 </div>
@@ -90,6 +115,7 @@ function EvaluationSearch() {
             <Card title="Recherche de patient pour évaluation" className="shadow-sm">
                 <div className="mb-6">
                     <div className="flex gap-4">
+                        {/* Champs de recherche*/}
                         <Input
                             placeholder="Rechercher un patient par ID ou nom"
                             value={searchTerm}
@@ -99,6 +125,7 @@ function EvaluationSearch() {
                             suffix={searchTerm && <Button onClick={clearSearch} size="small" icon={<CloseOutlined />} />}
                             className="flex-grow"
                         />
+                        {/* Bouton de recherche */}
                         <Button 
                             type="primary" 
                             onClick={handleSearch} 
@@ -109,9 +136,11 @@ function EvaluationSearch() {
                     </div>
                 </div>
 
+                {/* Affichage messages d'erreur */}
                 {errorMessage ? (
                     <div className="text-center py-8 text-red-500">{errorMessage}</div>
                 ) : (
+                    // Tableau d'affichage des patientss
                     <Table
                         columns={columns}
                         dataSource={patients}
