@@ -107,7 +107,7 @@ export default function PatientMenu() {
 
   const handleDelete = (patient) => {
     AntModal.confirm({
-      title: "Are you sure you want to delete this patient?",
+      title: t("Patients:delete_patient_alert"),
       icon: <ExclamationCircleOutlined />,
       content: `${patient.firstname} ${patient.lastname}`,
       okText: "Yes",
