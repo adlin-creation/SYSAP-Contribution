@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { Row, Col, Input, Button, Form, Radio, Modal } from "antd";
+import axios from "axios";
+import useToken from "../Authentication/useToken";
+import Constants from "../Utils/Constants";
 
 function EvaluationPACE({ onSubmit }) {
   const [formData, setFormData] = useState({
@@ -20,8 +23,9 @@ function EvaluationPACE({ onSubmit }) {
     // Section D
     walkingTime: "",
   });
-
+  const { token } = useToken();
   const [errors, setErrors] = useState({});
+  const [submissionData, setSubmissionData] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -164,31 +168,80 @@ function EvaluationPACE({ onSubmit }) {
     );
 
     setIsModalVisible(true);
+    setIsModalVisible(true); // Ouvre la modale
+  };
 
-    onSubmit({
-      ...formData,
+  const handleConfirm = async () => {
+    // Créer directement le payload avant l'envoi
+    const payload = {
+      chairTestSupport: formData.chairTestSupport ? "with" : "without",
+      chairTestCount: parseInt(formData.chairTestCount, 10),
+      balanceFeetTogether: parseInt(formData.balanceFeetTogether, 10),
+      balanceSemiTandem: parseInt(formData.balanceSemiTandem, 10),
+      balanceTandem: parseInt(formData.balanceTandem, 10),
+      balanceOneFooted: parseInt(formData.balanceOneFooted, 10),
+      frtSitting: formData.frtPosition === true ? "sitting" : 
+                  formData.frtPosition === false ? "standing" : 
+                  "not_working",
+      frtDistance: formData.frtPosition === "armNotWorking" ? 0 : parseInt(formData.frtDistance, 10),
+      walkingTime: parseFloat(formData.walkingTime),
       scores: {
-        cardioMusculaire: scoreA,
-        equilibre: scoreB,
-        mobilite: scoreC,
-        total: totalScore,
-        niveau: level,
-        couleur: color,
-        programme: `${color} ${level}`,
-        marche: formData.walkingTime
-          ? {
-              temps: formData.walkingTime,
-              vitesse: (4 / parseFloat(formData.walkingTime)).toFixed(2),
-              objectif: calculateWalkingObjective(formData.walkingTime),
-            }
-          : null,
-      },
-    });
+        cardioMusculaire: calculateChairTestScore(),
+        equilibre: calculateBalanceScore(),
+        mobilite: calculateMobilityScore(),
+        total: calculateChairTestScore() + calculateBalanceScore() + calculateMobilityScore()
+      }
+    };
+  
+    if (!payload) {
+      console.error("Aucune donnée à envoyer");
+      return;
+    }
+    const endpoint = "/create-evaluation";
+    
+    try {
+      console.log("Payload envoyé :", JSON.stringify(payload, null, 2));
+      
+      const response = await axios.post(
+        `${Constants.SERVER_URL}${endpoint}`, 
+        payload, // Utilisez directement le payload ici
+        {
+          headers: { 
+            Authorization: "Bearer " + token,
+            'Content-Type': 'application/json'
+          },
+        }
+      );
+      
+      // Gérer le succès 
+      Modal.success({
+        title: "Succès",
+        content: "Évaluation enregistrée avec succès"
+      });
+      
+      // Recharger la page
+      window.location.reload();
+    } catch (error) {
+      console.error("Erreur détaillée :", {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message,
+        payload: payload
+      });
+      
+      Modal.error({
+        title: "Erreur",
+        content: error.response?.data?.message || 
+                 error.response?.data || 
+                 error.message || 
+                 "Échec de l'enregistrement des données"
+      });
+    }
   };
 
   const calculateChairTestScore = () => {
     const count = parseInt(formData.chairTestCount);
-    const withSupport = formData.chairTestSupport; // true signifie avec appui
+    const withSupport = formData.chairTestSupport;
 
     if (count === 0) return 0;
     if (withSupport && count >= 10) return 2;
@@ -457,11 +510,8 @@ function EvaluationPACE({ onSubmit }) {
           <Button
             key="submit"
             type="primary"
-            onClick={() => {
-              // Fonction à implémenter
-              console.log("Confirmation clicked");
-              setIsModalVisible(false);
-            }}
+            onClick={handleConfirm}
+            disabled={false}
           >
             Confirmer
           </Button>,

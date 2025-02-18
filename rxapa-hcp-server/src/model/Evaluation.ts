@@ -17,25 +17,4 @@ export const Evaluation = sequelize.define("Evaluation", {
     type: dataTypes.UUID,
     defaultValue: dataTypes.UUIDV4,
   },
-  idPatient: {
-    type: dataTypes.INTEGER,
-    references: {
-      model: Patient,
-      key: 'id',
-    },
-  },
-  idKinesiologist: {
-    type: dataTypes.INTEGER,
-    references: {
-      model: Kinesiologist,
-      key: 'idKinesiologist',
-    },
-  },
-  idResultProgram: {
-    type: dataTypes.INTEGER,
-    references: {
-      model: Program,
-      key: 'id',
-    },
-  },
 });

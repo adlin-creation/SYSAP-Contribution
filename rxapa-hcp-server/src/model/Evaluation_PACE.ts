@@ -12,7 +12,7 @@ export const Evaluation_PACE = sequelize.define('Evaluation_PACE', {
   },
   // Section A
   chairTestSupport: {
-    type: dataTypes.BOOLEAN,
+    type: dataTypes.STRING,
     allowNull: false,
   },
   chairTestCount: {
@@ -46,7 +46,7 @@ export const Evaluation_PACE = sequelize.define('Evaluation_PACE', {
   },
   // Section C
   frtSitting: {
-    type: dataTypes.BOOLEAN,
+    type: dataTypes.STRING,
     allowNull: false,
   },
   frtDistance: {

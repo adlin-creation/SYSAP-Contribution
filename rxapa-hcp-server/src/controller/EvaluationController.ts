@@ -6,6 +6,7 @@ import { Patient } from "../model/Patient";
 import { Op } from "sequelize";
 
 exports.createEvaluation = async (req: any, res: any, next: any) => {
+  console.log("Requête reçue :", req.body);
   const {
     //idPatient,
     //idKinesiologist,
@@ -15,7 +16,7 @@ exports.createEvaluation = async (req: any, res: any, next: any) => {
     balanceSemiTandem,
     balanceTandem,
     balanceOneFooted,
-    frtPosition,
+    frtSitting,
     frtDistance,
     walkingTime,
     scores,
@@ -28,7 +29,7 @@ exports.createEvaluation = async (req: any, res: any, next: any) => {
       {
         //idPatient,
         //idKinesiologist,
-        idResultProgram: scores.programme,
+        //idResultProgram: scores.programme,
       },
       { transaction: t }
     );
@@ -53,7 +54,7 @@ exports.createEvaluation = async (req: any, res: any, next: any) => {
         balanceOneFooted: parseFloat(balanceOneFooted),
         scoreB: scores.equilibre,
         // Section C
-        frtSitting: frtPosition === "sitting",
+        frtSitting: frtSitting === "sitting",
         frtDistance: parseFloat(frtDistance),
         scoreC: scores.mobilite,
         // Scores et vitesse
@@ -67,11 +68,17 @@ exports.createEvaluation = async (req: any, res: any, next: any) => {
     await t.commit();
     res.status(201).json({ evaluation, scores, objectifMarche });
   } catch (error: any) {
+    console.error("ERREUR COMPLETE SERVEUR :", error);
+    
     await t.rollback();
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({ message: "Error creating evaluation" });
+    res.status(error.statusCode).json({ 
+      message: "Error creating evaluation",
+      errorDetails: error.toString(),
+      stack: error.stack
+    });
   }
   return res;
 };
@@ -85,7 +92,7 @@ exports.updateEvaluation = async (req: any, res: any, next: any) => {
     balanceSemiTandem,
     balanceTandem,
     balanceOneFooted,
-    frtPosition,
+    frtSitting,
     frtDistance,
     walkingTime,
     scores,
@@ -122,7 +129,7 @@ exports.updateEvaluation = async (req: any, res: any, next: any) => {
         balanceTandem: parseFloat(balanceTandem),
         balanceOneFooted: parseFloat(balanceOneFooted),
         scoreB: scores.equilibre,
-        frtSitting: frtPosition === true,
+        frtSitting: frtSitting === true,
         frtDistance: parseFloat(frtDistance || "0"),
         scoreC: scores.mobilite,
         scoreTotal: scores.total,
