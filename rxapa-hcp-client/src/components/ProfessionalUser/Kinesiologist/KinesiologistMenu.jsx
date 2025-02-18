@@ -50,22 +50,22 @@ export default function KinesiologistMenu() {
 
   const columns = [
     {
-      title: t("Professionals:Kenisiologist:name"),
+      title: t("Professionals:Kinesiologist:name"),
       key: "name",
       render: (_, record) => `${record.firstname} ${record.lastname}`,
     },
     {
-      title: t("Professionals:Kenisiologist:email"),
+      title: t("Professionals:Kinesiologist:email"),
       dataIndex: "email",
       key: "email",
     },
     {
-      title: t("Professionals:Kenisiologist:phone"),
+      title: t("Professionals:Kinesiologist:phone"),
       dataIndex: "phoneNumber",
       key: "phoneNumber",
     },
     {
-      title: t("Professionals:Kenisiologist:status"),
+      title: t("Professionals:Kinesiologist:status"),
       key: "active",
       dataIndex: "active",
       render: (active) => (
@@ -75,7 +75,7 @@ export default function KinesiologistMenu() {
       ),
     },
     {
-      title: t("Professionals:Kenisiologist:actions"),
+      title: t("Professionals:Kinesiologist:actions"),
       key: "actions",
       render: (_, record) => (
         <Space size="middle">
@@ -182,7 +182,7 @@ export default function KinesiologistMenu() {
             icon={<PlusOutlined />}
             onClick={() => setIsCreateKinesiologist(true)}
           >
-            {t("Professionals:Kenisiologist:register_kenisiologist_button")}
+            {t("Professionals:Kinesiologist:register_kenisiologist_button")}
           </Button>
           {kinesiologistList?.length > 0 && (
             <span>Total Kinesiologists: {kinesiologistList.length}</span>
@@ -226,14 +226,14 @@ export default function KinesiologistMenu() {
               type="primary"
               icon={<ArrowLeftOutlined />}
             >
-              {t("Professionals:Kenisiologist:back_button")}
+              {t("Professionals:Kinesiologist:back_button")}
             </Button>
           </Col>
           <Col flex="auto" style={{ textAlign: "center" }}>
             <h2 style={{ marginBottom: 0 }}>
               {isCreateKinesiologist
-                ? t("Professionals:Kenisiologist:register_new_kinesiologist")
-                : t("Professionals:Kenisiologist:edit_kinesiologist")}
+                ? t("Professionals:Kinesiologist:register_new_kinesiologist")
+                : t("Professionals:Kinesiologist:edit_kinesiologist")}
             </h2>
           </Col>
           <Col span={4} />

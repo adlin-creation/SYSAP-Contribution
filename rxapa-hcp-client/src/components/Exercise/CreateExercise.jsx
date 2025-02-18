@@ -238,7 +238,7 @@ export default function CreateExercise(props) {
               htmlType="submit"
               icon={<SendOutlined />} // Utilisation de l'icône Ant Design
             >
-              {t("Exercises:submit")}
+              {t("Exercises:submit_button")}
             </Button>
           </Form.Item>
         </Form>

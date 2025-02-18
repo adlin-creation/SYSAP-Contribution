@@ -187,7 +187,7 @@ export default function ExerciseMenu() {
           type="primary"
           icon={<ArrowLeftOutlined />}
         >
-          Back
+          {t("Exercises:back_button")}
         </Button>
       )}
 

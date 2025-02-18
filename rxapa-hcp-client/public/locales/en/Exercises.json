@@ -1,5 +1,5 @@
 {
-  "exercice_loading": "Exercise Loading",
+  "exercise_loading": "Exercise Loading...",
   "exercise_loding_error": "Sorry, an error occured while loading exercises",
   "create_exercise": "Create Exercise",
   "all": "ALL",
@@ -29,5 +29,6 @@
   "exercise_video_placeholder": "Exercise Instructional Video",
   "exercise_image": "Exercise Image :",
   "seating_exercise": "Seating Exercise",
+  "back_button": "Back",
   "submit": "SUBMIT"
 }

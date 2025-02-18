@@ -92,7 +92,7 @@ export default function CreateBloc(props) {
 
           <Form.Item>
             <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
-              {t("submit")}
+              {t("Blocs:submit_button")}
             </Button>
           </Form.Item>
         </Form>

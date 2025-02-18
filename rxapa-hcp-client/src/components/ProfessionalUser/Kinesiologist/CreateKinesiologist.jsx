@@ -43,12 +43,12 @@ function CreateKinesiologist({ refetchKinesiologists }) {
       )
       .then((res) => {
         refetchKinesiologists();
-        openModal(t("Professionals:Kenisiologist:creating_success_msg"), false);
+        openModal(t("Professionals:Kinesiologist:creating_success_msg"), false);
       })
       .catch((err) =>
         openModal(
           err.response?.data?.message ||
-            t("Professionals:Kenisiologist:creating_error_msg"),
+            t("Professionals:Kinesiologist:creating_error_msg"),
           true
         )
       );
@@ -80,7 +80,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
       reset({ ...control._formValues, password: generatedPassword });
     } catch (err) {
       openModal(
-        t("Professionals:Kenisiologist:generating_password_error_msg"),
+        t("Professionals:Kinesiologist:generating_password_error_msg"),
         true
       );
     }
@@ -93,7 +93,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Kenisiologist:first_name_label")}
+                label={t("Professionals:Kinesiologist:first_name_label")}
                 required
                 validateStatus={errors.firstname ? "error" : ""}
                 help={errors.firstname?.message}
@@ -103,12 +103,12 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                   control={control}
                   rules={{
                     required: t(
-                      "Professionals:Kenisiologist:required_first_name_error"
+                      "Professionals:Kinesiologist:required_first_name_error"
                     ),
                     minLength: {
                       value: 2,
                       message: t(
-                        "Professionals:Kenisiologist:first_name_min_length_error"
+                        "Professionals:Kinesiologist:first_name_min_length_error"
                       ),
                     },
                   }}
@@ -116,7 +116,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                     <Input
                       {...field}
                       placeholder={t(
-                        "Professionals:Kenisiologist:enter_first_name_placeholder"
+                        "Professionals:Kinesiologist:enter_first_name_placeholder"
                       )}
                     />
                   )}
@@ -125,7 +125,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
             </Col>
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Kenisiologist:last_name_label")}
+                label={t("Professionals:Kinesiologist:last_name_label")}
                 required
                 validateStatus={errors.lastname ? "error" : ""}
                 help={errors.lastname?.message}
@@ -135,12 +135,12 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                   control={control}
                   rules={{
                     required: t(
-                      "Professionals:Kenisiologist:required_last_name_error"
+                      "Professionals:Kinesiologist:required_last_name_error"
                     ),
                     minLength: {
                       value: 2,
                       message: t(
-                        "Professionals:Kenisiologist:last_name_min_length_error"
+                        "Professionals:Kinesiologist:last_name_min_length_error"
                       ),
                     },
                   }}
@@ -148,7 +148,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                     <Input
                       {...field}
                       placeholder={t(
-                        "Professionals:Kenisiologist:enter_last_name"
+                        "Professionals:Kinesiologist:enter_last_name"
                       )}
                     />
                   )}
@@ -160,7 +160,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Kenisiologist:email")}
+                label={t("Professionals:Kinesiologist:email")}
                 required
                 validateStatus={errors.email ? "error" : ""}
                 help={errors.email?.message}
@@ -170,12 +170,12 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                   control={control}
                   rules={{
                     required: t(
-                      "Professionals:Kenisiologist:required_email_error"
+                      "Professionals:Kinesiologist:required_email_error"
                     ),
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                       message: t(
-                        "Professionals:Kenisiologist:invalid_email_format_error"
+                        "Professionals:Kinesiologist:invalid_email_format_error"
                       ),
                     },
                   }}
@@ -183,7 +183,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                     <Input
                       {...field}
                       placeholder={t(
-                        "Professionals:Kenisiologist:enter_email_placeholder"
+                        "Professionals:inesiologist:enter_email_placeholder"
                       )}
                     />
                   )}
@@ -192,7 +192,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
             </Col>
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Kenisiologist:confirm_email_label")}
+                label={t("Professionals:Kinesiologist:confirm_email_label")}
                 required
                 validateStatus={errors.confirmEmail ? "error" : ""}
                 help={errors.confirmEmail?.message}
@@ -202,7 +202,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                   control={control}
                   rules={{
                     required: t(
-                      "Professionals:Kenisiologist:required_email_confirmation_error"
+                      "Professionals:Kinesiologist:required_email_confirmation_error"
                     ),
                     validate: (value) =>
                       value === control._formValues.email ||
@@ -212,7 +212,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                     <Input
                       {...field}
                       placeholder={t(
-                        "Professionals:Kenisiologist:confirm_email_placeholder"
+                        "Professionals:Kinesiologist:confirm_email_placeholder"
                       )}
                     />
                   )}
@@ -224,7 +224,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Kenisiologist:phone_number")}
+                label={t("Professionals:Kinesiologist:phone_number")}
                 required
                 validateStatus={errors.phoneNumber ? "error" : ""}
                 help={errors.phoneNumber?.message}
@@ -234,12 +234,12 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                   control={control}
                   rules={{
                     required: t(
-                      "Professionals:Kenisiologist:required_phone_number_error"
+                      "Professionals:Kinesiologist:required_phone_number_error"
                     ),
                     pattern: {
                       value: /^[0-9+\s-]{8,}$/,
                       message: t(
-                        "Professionals:Kenisiologist:invalid_phone_number_error"
+                        "Professionals:Kinesiologist:invalid_phone_number_error"
                       ),
                     },
                   }}
@@ -247,7 +247,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                     <Input
                       {...field}
                       placeholder={t(
-                        "Professionals:Kenisiologist:phone_number_placeholder"
+                        "Professionals:Kinesiologist:phone_number_placeholder"
                       )}
                     />
                   )}
@@ -259,7 +259,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Kenisiologist:password_label")}
+                label={t("Professionals:Kinesiologist:password_label")}
                 required
                 validateStatus={errors.password ? "error" : ""}
                 help={errors.password?.message}
@@ -270,18 +270,18 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                     control={control}
                     rules={{
                       required: t(
-                        "Professionals:Kenisiologist:required_password_error"
+                        "Professionals:Kinesiologist:required_password_error"
                       ),
                       minLength: {
                         value: 8,
                         message: t(
-                          "Professionals:Kenisiologist:password_min_length_error"
+                          "Professionals:Kinesiologist:password_min_length_error"
                         ),
                       },
                       pattern: {
                         value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
                         message: t(
-                          "Professionals:Kenisiologist:password_requirements_error"
+                          "ProfessionalsKinesiologist:password_requirements_error"
                         ),
                       },
                     }}
@@ -290,7 +290,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                         <Input.Password
                           {...field}
                           placeholder={t(
-                            "Professionals:Kenisiologist:password_placeholder"
+                            "Professionals:Kinesiologist:password_placeholder"
                           )}
                           style={{ width: "calc(100% - 40px)" }}
                         />
@@ -310,7 +310,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
 
           <Form.Item className="submit-button">
             <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
-              {t("Professionals:Kenisiologist:create_kenisiologist_button")}
+              {t("Professionals:Kinesiologist:create_kenisiologist_button")}
             </Button>
           </Form.Item>
         </Form>
