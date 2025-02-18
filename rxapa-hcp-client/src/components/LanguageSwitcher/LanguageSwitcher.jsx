@@ -37,13 +37,10 @@ const LanguageSwitcher = () => {
         open={Boolean(anchorEl)}
         onClose={() => handleClose(null)}
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        transformOrigin={{ vertical: "top", horizontal: "right" }}
-        disablePortal
-        PaperProps={{
-          sx: {
-            position: "fixed", // Fixe le menu à l'écran
-          },
-        }}
+        transformOrigin={{ vertical: "top", horizontal: "left" }}
+        marginThreshold={0}
+        sx={{ mt: 0.3, ml: -2 }} // Rapproche le menu du bouton
+        disableScrollLock // empêche la disparition du Scroll lors de l'affichage de ce Menu
       >
         <MenuItem onClick={() => handleClose("en")}>
           <img
