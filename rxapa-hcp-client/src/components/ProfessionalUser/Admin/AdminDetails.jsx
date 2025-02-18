@@ -6,9 +6,16 @@ import axios from "axios";
 import Constants from "../../Utils/Constants";
 import useToken from "../../Authentication/useToken";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
-  const { handleSubmit, control, setValue, formState: { errors } } = useForm();
+  const { t } = useTranslation();
+  const {
+    handleSubmit,
+    control,
+    setValue,
+    formState: { errors },
+  } = useForm();
   const { token } = useToken();
 
   // Pré-remplir le formulaire avec les données de l'administrateur
@@ -25,30 +32,35 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
   const onSubmit = (data) => {
     const adminData = {
       ...data,
-      role: 'admin'
+      role: "admin",
     };
 
     axios
-      .put(`${Constants.SERVER_URL}/update-professional-user/${admin.id}`, adminData, {
-        headers: { Authorization: "Bearer " + token },
-      })
+      .put(
+        `${Constants.SERVER_URL}/update-professional-user/${admin.id}`,
+        adminData,
+        {
+          headers: { Authorization: "Bearer " + token },
+        }
+      )
       .then(() => {
         refetchAdmins();
         AntModal.success({
-          content: "Admin updated successfully!",
-          okText: 'Close',
+          content: t("updating_success_msg"),
+          okText: "Close",
           centered: true,
           onOk: () => {
             onClose();
-          }
+          },
         });
       })
       .catch((err) => {
-        const errorMessage = err.response?.data?.message || "Error updating admin";
+        const errorMessage =
+          err.response?.data?.message || t("updating_admin_error_msg");
         AntModal.error({
           content: errorMessage,
-          okText: 'Close',
-          centered: true
+          okText: "Close",
+          centered: true,
         });
       });
   };
@@ -60,8 +72,8 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
           <Row gutter={16}>
             {/* First Name and Last Name fields */}
             <Col span={12}>
-              <Form.Item 
-                label="First Name" 
+              <Form.Item
+                label={t("first_name_label")}
                 required
                 validateStatus={errors.firstname ? "error" : ""}
                 help={errors.firstname?.message}
@@ -69,20 +81,20 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
                 <Controller
                   name="firstname"
                   control={control}
-                  rules={{ 
-                    required: "Le prénom est obligatoire",
+                  rules={{
+                    required: "required_first_name_error",
                     minLength: {
                       value: 2,
-                      message: "Le prénom doit contenir au moins 2 caractères"
-                    }
+                      message: "first_name_min_length_error",
+                    },
                   }}
                   render={({ field }) => <Input {...field} />}
                 />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item 
-                label="Last Name" 
+              <Form.Item
+                label="last_name_label"
                 required
                 validateStatus={errors.lastname ? "error" : ""}
                 help={errors.lastname?.message}
@@ -90,12 +102,12 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
                 <Controller
                   name="lastname"
                   control={control}
-                  rules={{ 
-                    required: "Le nom est obligatoire",
+                  rules={{
+                    required: "required_last_name_error",
                     minLength: {
                       value: 2,
-                      message: "Le nom doit contenir au moins 2 caractères"
-                    }
+                      message: "last_name_min_length_error",
+                    },
                   }}
                   render={({ field }) => <Input {...field} />}
                 />
@@ -106,8 +118,8 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
           <Row gutter={16}>
             {/* Email and Phone Number fields */}
             <Col span={12}>
-              <Form.Item 
-                label="Email" 
+              <Form.Item
+                label="Email"
                 required
                 validateStatus={errors.email ? "error" : ""}
                 help={errors.email?.message}
@@ -119,16 +131,16 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
                     required: "L'email est obligatoire",
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: "Format d'email invalide"
-                    }
+                      message: "Format d'email invalide",
+                    },
                   }}
                   render={({ field }) => <Input type="email" {...field} />}
                 />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item 
-                label="Phone Number" 
+              <Form.Item
+                label="Phone Number"
                 required
                 validateStatus={errors.phoneNumber ? "error" : ""}
                 help={errors.phoneNumber?.message}
@@ -136,12 +148,12 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
                 <Controller
                   name="phoneNumber"
                   control={control}
-                  rules={{ 
+                  rules={{
                     required: "Le numéro de téléphone est obligatoire",
                     pattern: {
                       value: /^[0-9+\s-]{8,}$/,
-                      message: "Format de numéro de téléphone invalide"
-                    }
+                      message: "Format de numéro de téléphone invalide",
+                    },
                   }}
                   render={({ field }) => <Input {...field} />}
                 />

@@ -1,4 +1,12 @@
-import { Row, Col, Input, Button, Form, Modal as AntModal, Tooltip } from "antd";
+import {
+  Row,
+  Col,
+  Input,
+  Button,
+  Form,
+  Modal as AntModal,
+  Tooltip,
+} from "antd";
 import { SendOutlined, KeyOutlined } from "@ant-design/icons";
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
@@ -6,16 +14,22 @@ import Constants from "../../Utils/Constants";
 import useToken from "../../Authentication/useToken";
 import PropTypes from "prop-types";
 import "./Styles.css";
+import { t } from "i18next";
 
 function CreateAdmin({ refetchAdmins }) {
-  const { handleSubmit, control, reset, formState: { errors } } = useForm();
+  const {
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm();
   const { token } = useToken();
 
   const onSubmit = (data) => {
     const adminData = {
       ...data,
-      role: 'admin',
-      active: true
+      role: "admin",
+      active: true,
     };
 
     axios
@@ -24,34 +38,43 @@ function CreateAdmin({ refetchAdmins }) {
       })
       .then((res) => {
         refetchAdmins();
-        openModal("Admin created successfully!", false);
+        openModal(t("Professionals:Admins:creating_success_msg"), false);
       })
-      .catch((err) => openModal(err.response?.data?.message || "Error creating admin", true));
+      .catch((err) =>
+        openModal(
+          err.response?.data?.message ||
+            t("Professionals:Admins:creating_error_msg"),
+          true
+        )
+      );
   };
 
   const openModal = (message, isError) => {
-    AntModal[isError ? 'error' : 'success']({
+    AntModal[isError ? "error" : "success"]({
       content: message,
-      okText: 'Close',
+      okText: "Close",
       centered: true,
       onOk: () => {
         if (!isError) {
           reset();
         }
-      }
+      },
     });
   };
 
   const generatePassword = async () => {
     try {
-      const response = await axios.get(`${Constants.SERVER_URL}/generate-password`, {
-        headers: { Authorization: "Bearer " + token },
-      });
+      const response = await axios.get(
+        `${Constants.SERVER_URL}/generate-password`,
+        {
+          headers: { Authorization: "Bearer " + token },
+        }
+      );
       const generatedPassword = response.data.password;
       // Met à jour le champ password avec le mot de passe généré
       reset({ ...control._formValues, password: generatedPassword });
     } catch (err) {
-      openModal("Error generating password", true);
+      openModal(t("Professionals:Admins:generating_password_error_msg"), true);
     }
   };
 
@@ -61,8 +84,8 @@ function CreateAdmin({ refetchAdmins }) {
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item 
-                label="First Name" 
+              <Form.Item
+                label={t("Professionals:Admins:first_name_label")}
                 required
                 validateStatus={errors.firstname ? "error" : ""}
                 help={errors.firstname?.message}
@@ -70,20 +93,31 @@ function CreateAdmin({ refetchAdmins }) {
                 <Controller
                   name="firstname"
                   control={control}
-                  rules={{ 
-                    required: "Le prénom est obligatoire",
+                  rules={{
+                    required: t(
+                      "Professionals:Admins:required_first_name_error"
+                    ),
                     minLength: {
                       value: 2,
-                      message: "Le prénom doit contenir au moins 2 caractères"
-                    }
+                      message: t(
+                        "Professionals:Admins:first_name_min_length_error"
+                      ),
+                    },
                   }}
-                  render={({ field }) => <Input {...field} placeholder="Entrez le prénom" />}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      placeholder={t(
+                        "Professionals:Admins:enter_first_name_placeholder"
+                      )}
+                    />
+                  )}
                 />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item 
-                label="Last Name" 
+              <Form.Item
+                label={t("Professionals:Admins:last_name_label")}
                 required
                 validateStatus={errors.lastname ? "error" : ""}
                 help={errors.lastname?.message}
@@ -91,14 +125,23 @@ function CreateAdmin({ refetchAdmins }) {
                 <Controller
                   name="lastname"
                   control={control}
-                  rules={{ 
-                    required: "Le nom est obligatoire",
+                  rules={{
+                    required: t(
+                      "Professionals:Admins:required_last_name_error"
+                    ),
                     minLength: {
                       value: 2,
-                      message: "Le nom doit contenir au moins 2 caractères"
-                    }
+                      message: t(
+                        "Professionals:Admins:last_name_min_length_error"
+                      ),
+                    },
                   }}
-                  render={({ field }) => <Input {...field} placeholder="Entrez le nom" />}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      placeholder={t("Professionals:Admins:enter_last_name")}
+                    />
+                  )}
                 />
               </Form.Item>
             </Col>
@@ -106,8 +149,8 @@ function CreateAdmin({ refetchAdmins }) {
 
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item 
-                label="Email" 
+              <Form.Item
+                label={t("Professionals:Admins:email")}
                 required
                 validateStatus={errors.email ? "error" : ""}
                 help={errors.email?.message}
@@ -116,19 +159,28 @@ function CreateAdmin({ refetchAdmins }) {
                   name="email"
                   control={control}
                   rules={{
-                    required: "L'email est obligatoire",
+                    required: t("Professionals:Admins:required_email_error"),
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: "Format d'email invalide"
-                    }
+                      message: t(
+                        "Professionals:Admins:invalid_email_format_error"
+                      ),
+                    },
                   }}
-                  render={({ field }) => <Input {...field} placeholder="Entrez l'adresse email" />}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      placeholder={t(
+                        "Professionals:Admins:enter_email_placeholder"
+                      )}
+                    />
+                  )}
                 />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item 
-                label="Confirm Email" 
+              <Form.Item
+                label={t("Professionals:Admins:confirm_email_label")}
                 required
                 validateStatus={errors.confirmEmail ? "error" : ""}
                 help={errors.confirmEmail?.message}
@@ -137,10 +189,21 @@ function CreateAdmin({ refetchAdmins }) {
                   name="confirmEmail"
                   control={control}
                   rules={{
-                    required: "La confirmation de l'email est obligatoire",
-                    validate: value => value === control._formValues.email || "Les emails ne correspondent pas"
+                    required: t(
+                      "Professionals:Admins:required_email_confirmation_error"
+                    ),
+                    validate: (value) =>
+                      value === control._formValues.email ||
+                      t("Professionals:Admins:email_mismatch_error"),
                   }}
-                  render={({ field }) => <Input {...field} placeholder="Confirmez l'adresse email" />}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      placeholder={t(
+                        "Professionals:Admins:confirm_email_placeholder"
+                      )}
+                    />
+                  )}
                 />
               </Form.Item>
             </Col>
@@ -148,8 +211,8 @@ function CreateAdmin({ refetchAdmins }) {
 
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item 
-                label="Phone Number" 
+              <Form.Item
+                label={t("Professionals:Admins:phone_number")}
                 required
                 validateStatus={errors.phoneNumber ? "error" : ""}
                 help={errors.phoneNumber?.message}
@@ -157,14 +220,25 @@ function CreateAdmin({ refetchAdmins }) {
                 <Controller
                   name="phoneNumber"
                   control={control}
-                  rules={{ 
-                    required: "Le numéro de téléphone est obligatoire",
+                  rules={{
+                    required: t(
+                      "Professionals:Admins:required_phone_number_error"
+                    ),
                     pattern: {
                       value: /^[0-9+\s-]{8,}$/,
-                      message: "Format de numéro de téléphone invalide"
-                    }
+                      message: t(
+                        "Professionals:Admins:invalid_phone_number_error"
+                      ),
+                    },
                   }}
-                  render={({ field }) => <Input {...field} placeholder="Entrez le numéro de téléphone" />}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      placeholder={t(
+                        "Professionals:Admins:phone_number_placeholder"
+                      )}
+                    />
+                  )}
                 />
               </Form.Item>
             </Col>
@@ -172,8 +246,8 @@ function CreateAdmin({ refetchAdmins }) {
 
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item 
-                label="Password" 
+              <Form.Item
+                label={t("Professionals:Admins:password_label")}
                 required
                 validateStatus={errors.password ? "error" : ""}
                 help={errors.password?.message}
@@ -182,26 +256,34 @@ function CreateAdmin({ refetchAdmins }) {
                   <Controller
                     name="password"
                     control={control}
-                    rules={{ 
-                      required: "Le mot de passe est obligatoire",
+                    rules={{
+                      required: t(
+                        "Professionals:Admins:required_password_error"
+                      ),
                       minLength: {
                         value: 8,
-                        message: "Le mot de passe doit contenir au moins 8 caractères"
+                        message: t(
+                          "Professionals:Admins:password_min_length_errors"
+                        ),
                       },
                       pattern: {
                         value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-                        message: "Le mot de passe doit contenir au moins une lettre et un chiffre"
-                      }
+                        message: t(
+                          "Professionals:Admins:password_requirements_error"
+                        ),
+                      },
                     }}
                     render={({ field }) => (
                       <>
-                        <Input.Password 
-                          {...field} 
-                          placeholder="Entrez le mot de passe" 
-                          style={{ width: 'calc(100% - 40px)' }}
+                        <Input.Password
+                          {...field}
+                          placeholder={t(
+                            "Professionals:Admins:password_placeholder"
+                          )}
+                          style={{ width: "calc(100% - 40px)" }}
                         />
                         <Tooltip title="Générer un mot de passe">
-                          <Button 
+                          <Button
                             icon={<KeyOutlined />}
                             onClick={generatePassword}
                           />
@@ -216,7 +298,7 @@ function CreateAdmin({ refetchAdmins }) {
 
           <Form.Item className="submit-button">
             <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
-              Create Admin
+              {t("Professionals:Admins:create_admin_button")}
             </Button>
           </Form.Item>
         </Form>

@@ -264,14 +264,18 @@ function CreateDoctor({ refetchDoctors }) {
                       },
                       pattern: {
                         value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-                        message: t("password_requirements_error"),
+                        message: t(
+                          "Professionals:Doctors:password_requirements_error"
+                        ),
                       },
                     }}
                     render={({ field }) => (
                       <>
                         <Input.Password
                           {...field}
-                          placeholder="Entrez le mot de passe"
+                          placeholder={t(
+                            "Professionals:Doctors:password_placeholder"
+                          )}
                           style={{ width: "calc(100% - 40px)" }}
                         />
                         <Tooltip title="Générer un mot de passe">
