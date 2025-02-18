@@ -53,7 +53,7 @@ export default function CreateExercise(props) {
       name: name,
       description: description,
       instructionalVideo: " ",
-      isSeating: isSeatingExercise,
+      isSeating: false,
       category: selectedExerciseCategory,
       targetAgeRange: " ",
       fitnessLevel: selectedFitnessLevel,
@@ -173,10 +173,11 @@ export default function CreateExercise(props) {
             />
           </Form.Item>
           */}
-          <Form.Item label="Exercise Image : " className="input-element">
+          
+          <Form.Item label="Image de l'exercice: " className="input-element">
             <input type="file" accept="image/*" onChange={onChangeImage} />
           </Form.Item>
-
+          {/*
           <Form.Item className="input-element">
             <Checkbox
               checked={isSeatingExercise}
@@ -185,7 +186,7 @@ export default function CreateExercise(props) {
               Seating Exercise
             </Checkbox>
           </Form.Item>
-
+          */}
           <Form.Item className="input-element">
             <Button
               type="primary"
