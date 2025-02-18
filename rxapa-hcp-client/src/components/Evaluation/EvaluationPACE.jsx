@@ -1,244 +1,97 @@
+import { SendOutlined } from "@ant-design/icons";
 import React, { useState } from "react";
-import { Row, Col, Input, Button, Form, Radio, Modal } from "antd";
+import {
+  Row,
+  Col,
+  Input,
+  Button,
+  Form,
+  Modal as AntModal,
+  Radio,
+  message,
+} from "antd";
+import { Controller, useForm } from "react-hook-form";
+import axios from "axios";
+import Constants from "../Utils/Constants";
+import useToken from "../Authentication/useToken";
+import PropTypes from "prop-types";
 
 function EvaluationPACE({ onSubmit }) {
-  const [formData, setFormData] = useState({
-    // Section A
-    chairTestSupport: true,
-    chairTestCount: "",
-
-    // Section B
-    balanceFeetTogether: "",
-    balanceSemiTandem: "",
-    balanceTandem: "",
-    balanceOneFooted: "",
-
-    // Section C
-    frtPosition: true,
-    frtDistance: "",
-
-    // Section D
-    walkingTime: "",
+  const { handleSubmit, control, getValues } = useForm({
+    defaultValues: {
+      // Section A
+      chairTestSupport: true,
+      chairTestCount: "",
+      // Section B
+      balanceFeetTogether: "",
+      balanceSemiTandem: "",
+      balanceTandem: "",
+      balanceOneFooted: "",
+      // Section C
+      frtPosition: true,
+      frtDistance: "",
+      // Section D
+      walkingTime: "",
+    },
   });
+  const { token } = useToken();
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [modalContent, setModalContent] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [errors, setErrors] = useState({});
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => {
-      if (name === "frtPosition" && value === "armNotWorking") {
-        return {
-          ...prev,
-          [name]: value,
-          frtDistance: "",
-        };
-      }
-      return {
-        ...prev,
-        [name]: value,
-      };
-    });
-
-    if (errors[name]) {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: "",
-      }));
+  const calculateChairTestScore = (support, count) => {
+    const cnt = parseInt(count, 10);
+    if (cnt === 0) return 0;
+    if (support) {
+      return cnt >= 10 ? 2 : 1;
+    } else {
+      if (cnt >= 16) return 6;
+      if (cnt >= 13) return 5;
+      if (cnt >= 10) return 4;
+      if (cnt >= 5) return 3;
+      if (cnt >= 1) return 2;
+      return 0;
     }
   };
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [modalMessage, setModalMessage] = useState(null);
-
-  const handleSubmit = () => {
-    const newErrors = {};
-
-    // Validation
-    if (!formData.chairTestCount) {
-      newErrors.chairTestCount = "Le nombre de levers est requis";
-    } else if (isNaN(formData.chairTestCount) || formData.chairTestCount < 0) {
-      newErrors.chairTestCount = "Veuillez entrer un nombre valide";
-    }
-
-    [
-      "balanceFeetTogether",
-      "balanceSemiTandem",
-      "balanceTandem",
-      "balanceOneFooted",
-    ].forEach((field) => {
-      if (!formData[field]) {
-        newErrors[field] = "Le temps est requis";
-      } else if (isNaN(formData[field]) || formData[field] < 0) {
-        newErrors[field] = "Veuillez entrer un temps valide";
-      }
-    });
-
-    if (formData.frtPosition !== "armNotWorking") {
-      // Seulement valider si ce n'est pas "Ne lève pas les bras"
-      if (!formData.frtDistance) {
-        newErrors.frtDistance = "La distance est requise";
-      }
-    }
-
-    if (!formData.walkingTime) {
-      newErrors.walkingTime = "Le temps de marche est requis";
-    } else if (isNaN(formData.walkingTime) || formData.walkingTime <= 0) {
-      newErrors.walkingTime = "Veuillez entrer un temps de marche valide";
-    }
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-
-    const scoreA = calculateChairTestScore();
-    const scoreB = calculateBalanceScore();
-    const scoreC = calculateMobilityScore();
-
-    const totalScore = scoreA + scoreB + scoreC;
-    const level = determineLevel(totalScore);
-    const color = determineColor(scoreA, scoreB, scoreC);
-
-    setModalMessage(
-      <div className="results-container">
-        <h3
-          style={{
-            marginBottom: "20px",
-            borderBottom: "1px solid #eee",
-            paddingBottom: "10px",
-          }}
-        >
-          Résultats de l'évaluation
-        </h3>
-
-        <div style={{ marginBottom: "15px" }}>
-          <strong>Scores individuels :</strong>
-          <p>A. Cardio-musculaire : {scoreA}/6</p>
-          <p>B. Équilibre : {scoreB}/6</p>
-          <p>C. Mobilité : {scoreC}/6</p>
-        </div>
-
-        <div style={{ marginBottom: "15px" }}>
-          <strong>Score Total : {totalScore}/18</strong>
-        </div>
-
-        <div
-          style={{
-            marginTop: "20px",
-            backgroundColor: "#f5f5f5",
-            padding: "15px",
-            borderRadius: "5px",
-          }}
-        >
-          <p>
-            <strong>Niveau : {level}</strong>
-          </p>
-          <p>
-            <strong>
-              Programme recommandé : {color} {level}
-            </strong>
-          </p>
-        </div>
-
-        {formData.walkingTime && (
-          <div
-            style={{
-              marginTop: "20px",
-              borderTop: "1px solid #eee",
-              paddingTop: "15px",
-            }}
-          >
-            <p>
-              Vitesse de marche :{" "}
-              {(4 / parseFloat(formData.walkingTime)).toFixed(2)} m/s
-            </p>
-            <p>
-              <strong>
-                Objectif de marche :{" "}
-                {calculateWalkingObjective(formData.walkingTime)} minutes
-              </strong>
-            </p>
-          </div>
-        )}
-      </div>
-    );
-
-    setIsModalVisible(true);
-
-    onSubmit({
-      ...formData,
-      scores: {
-        cardioMusculaire: scoreA,
-        equilibre: scoreB,
-        mobilite: scoreC,
-        total: totalScore,
-        niveau: level,
-        couleur: color,
-        programme: `${color} ${level}`,
-        marche: formData.walkingTime
-          ? {
-              temps: formData.walkingTime,
-              vitesse: (4 / parseFloat(formData.walkingTime)).toFixed(2),
-              objectif: calculateWalkingObjective(formData.walkingTime),
-            }
-          : null,
-      },
-    });
-  };
-
-  const calculateChairTestScore = () => {
-    const count = parseInt(formData.chairTestCount);
-    const withSupport = formData.chairTestSupport; // true signifie avec appui
-
-    if (count === 0) return 0;
-    if (withSupport && count >= 10) return 2;
-    if (withSupport && count >= 1) return 1;
-    if (!withSupport && count >= 16) return 6;
-    if (!withSupport && count >= 13) return 5;
-    if (!withSupport && count >= 10) return 4;
-    if (!withSupport && count >= 5) return 3;
-    if (!withSupport && count >= 1) return 2;
+  const calculateBalanceScore = (
+    feetTogether,
+    semiTandem,
+    tandem,
+    oneFooted
+  ) => {
+    const ft = parseFloat(feetTogether) || 0;
+    const st = parseFloat(semiTandem) || 0;
+    const td = parseFloat(tandem) || 0;
+    const of = parseFloat(oneFooted) || 0;
+    if (of >= 10) return 6;
+    if (of >= 5) return 5;
+    if (td >= 10) return 4;
+    if (td >= 5) return 3;
+    if (st >= 10) return 2;
+    if (ft >= 10) return 1;
     return 0;
   };
 
-  const calculateBalanceScore = () => {
-    const feetTogether = parseFloat(formData.balanceFeetTogether);
-    const semiTandem = parseFloat(formData.balanceSemiTandem);
-    const tandem = parseFloat(formData.balanceTandem);
-    const oneFooted = parseFloat(formData.balanceOneFooted);
-
-    if (oneFooted >= 10) return 6;
-    if (oneFooted >= 5) return 5;
-    if (tandem >= 10) return 4;
-    if (tandem >= 5) return 3;
-    if (semiTandem >= 10) return 2;
-    if (feetTogether >= 10) return 1;
-    return 0;
-  };
-
-  const calculateMobilityScore = () => {
-    if (formData.frtPosition === "armNotWorking") return 0;
-
-    const distance = parseFloat(formData.frtDistance);
-    const isStanding = !formData.frtPosition; // false signifie debout
-    const balanceScore = calculateBalanceScore();
-
-    // Position debout (si B ≥ 5 OU Assis = 40 cm)
-    if (isStanding && balanceScore >= 5) {
+  const calculateMobilityScore = (frtPosition, frtDistance) => {
+    // Si l'utilisateur ne lève pas les bras
+    if (frtPosition === "armNotWorking") return 0;
+    const distance = parseFloat(frtDistance) || 0;
+    if (frtPosition === "standing") {
       if (distance > 35) return 6;
       if (distance >= 27) return 5;
       if (distance >= 15) return 4;
       if (distance > 0) return 3;
       return 0;
     }
-    // Position assise
-    else {
+    if (frtPosition === "sitting") {
       if (distance > 35) return 4;
       if (distance >= 27) return 3;
       if (distance >= 15) return 2;
-      if (distance < 15 && distance > 0) return 1;
+      if (distance > 0) return 1;
       return 0;
     }
+    return 0;
   };
 
   const determineLevel = (totalScore) => {
@@ -251,226 +104,356 @@ function EvaluationPACE({ onSubmit }) {
 
   const determineColor = (scoreA, scoreB, scoreC) => {
     const min = Math.min(scoreA, scoreB, scoreC);
-
-    // Si tous les scores sont égaux
     if (scoreA === scoreB && scoreB === scoreC) return "MARRON";
-
-    // Si deux scores sont égaux et minimum
     if (scoreA === scoreB && scoreA === min) return "VERT";
     if (scoreB === scoreC && scoreB === min) return "ORANGE";
     if (scoreC === scoreA && scoreC === min) return "VIOLET";
-
-    // Si un seul score est minimum
     if (scoreA === min) return "BLEU";
     if (scoreB === min) return "JAUNE";
     if (scoreC === min) return "ROUGE";
-
-    return "MARRON"; // Cas par défaut
+    return "MARRON";
   };
 
   const calculateWalkingObjective = (walkingTime) => {
-    if (!walkingTime || walkingTime <= 0) return null;
-
-    const speed = 4 / parseFloat(walkingTime);
-
+    const time = parseFloat(walkingTime);
+    const speed = 4 / time;
     if (speed < 0.4) return 10;
-    if (speed >= 0.4 && speed < 0.59) return 15;
-    if (speed >= 0.6 && speed < 0.79) return 20;
+    if (speed < 0.59) return 15;
+    if (speed < 0.79) return 20;
     if (speed >= 0.8) return 30;
-
     return null;
   };
 
-  const onClose = () => {
-    window.location.reload();
+  const onFormSubmit = (data) => {
+    const support = data.chairTestSupport;
+    const count = data.chairTestCount;
+    const scoreA = calculateChairTestScore(support, count);
+
+    const scoreB = calculateBalanceScore(
+      data.balanceFeetTogether,
+      data.balanceSemiTandem,
+      data.balanceTandem,
+      data.balanceOneFooted
+    );
+
+    let position;
+    if (data.frtPosition === true) position = true;
+    else if (data.frtPosition === false) position = false;
+    else position = data.frtPosition;
+
+    const scoreC = calculateMobilityScore(position, data.frtDistance);
+    const totalScore = scoreA + scoreB + scoreC;
+    const level = determineLevel(totalScore);
+    const color = determineColor(scoreA, scoreB, scoreC);
+    const walkingSpeed = (4 / parseFloat(data.walkingTime)).toFixed(2);
+    const walkingObjective = calculateWalkingObjective(data.walkingTime);
+
+    const payload = {
+      chairTestSupport: support ? true : false,
+      chairTestCount: parseInt(data.chairTestCount, 10),
+      balanceFeetTogether: parseInt(data.balanceFeetTogether, 10) || 0,
+      balanceSemiTandem: parseInt(data.balanceSemiTandem, 10) || 0,
+      balanceTandem: parseInt(data.balanceTandem, 10),
+      balanceOneFooted: parseInt(data.balanceOneFooted, 10),
+      frtPosition: position,
+      frtDistance: parseInt(data.frtDistance, 10),
+      walkingTime: data.walkingTime,
+      scores: {
+        cardioMusculaire: scoreA,
+        equilibre: scoreB,
+        mobilite: scoreC,
+        total: totalScore,
+        programme: `${color} ${level}`,
+      },
+    };
+
+    const content = (
+      <div>
+        <h3>Confirmation des résultats</h3>
+        <p>
+          <strong>Score Total :</strong> {totalScore} / 18
+        </p>
+        <p>
+          <strong>Niveau :</strong> {level}
+        </p>
+        <p>
+          <strong>Programme recommandé :</strong> {color} {level}
+        </p>
+        <p>
+          <strong>Vitesse de marche :</strong> {walkingSpeed} m/s
+        </p>
+        <p>
+          <strong>Objectif de marche :</strong> {walkingObjective} minutes
+        </p>
+        <p>Voulez-vous enregistrer ces résultats ?</p>
+      </div>
+    );
+
+    setModalContent(() => content);
+    setIsOpenModal(true);
+  };
+
+  const confirmSubmit = async () => {
+    setIsSubmitting(true);
+    setIsOpenModal(false);
+    const data = getValues();
+
+    // Conversion de frtPosition pour correspondre au backend
+    let position;
+    if (data.frtPosition === true) {
+      position = "sitting";
+    } else if (data.frtPosition === false) {
+      position = "standing";
+    } else {
+      position = "armNotWorking";
+    }
+
+    // Calcul des scores
+    const support = data.chairTestSupport;
+    const scoreA = calculateChairTestScore(support, data.chairTestCount);
+    const scoreB = calculateBalanceScore(
+      data.balanceFeetTogether,
+      data.balanceSemiTandem,
+      data.balanceTandem,
+      data.balanceOneFooted
+    );
+    const scoreC = calculateMobilityScore(position, data.frtDistance);
+    const totalScore = scoreA + scoreB + scoreC;
+    const level = determineLevel(totalScore);
+    const color = determineColor(scoreA, scoreB, scoreC);
+    const walkingSpeed = parseFloat(data.walkingTime)
+      ? (4 / parseFloat(data.walkingTime)).toFixed(2)
+      : "0.00";
+    const walkingObjective = calculateWalkingObjective(data.walkingTime);
+
+    const payload = {
+      // chairTestSupport reste un booléen - le backend l'acceptera
+      chairTestSupport: support,
+      chairTestCount: parseInt(data.chairTestCount, 10) || 0,
+      balanceFeetTogether: parseInt(data.balanceFeetTogether, 10) || 0,
+      balanceSemiTandem: parseInt(data.balanceSemiTandem, 10) || 0,
+      balanceTandem: parseInt(data.balanceTandem, 10) || 0,
+      balanceOneFooted: parseInt(data.balanceOneFooted, 10) || 0,
+      frtPosition: position,
+      frtDistance: parseInt(data.frtDistance, 10) || 0,
+      walkingTime: data.walkingTime,
+      scores: {
+        cardioMusculaire: scoreA,
+        equilibre: scoreB,
+        mobilite: scoreC,
+        total: totalScore,
+        programme: `${color} ${level}`,
+      },
+    };
+
+    try {
+      console.log("Envoi des données:", payload);
+      const response = await axios.post(
+        `${Constants.SERVER_URL}/evaluation`,
+        payload,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (response.status === 201) {
+        message.success("Évaluation enregistrée avec succès !");
+        if (onSubmit) onSubmit(payload);
+      }
+    } catch (error) {
+      console.error(
+        "Erreur lors de l'envoi des données :",
+        error.response?.data || error
+      );
+      message.error(
+        error.response?.data?.message ||
+          "Échec de l'enregistrement, veuillez réessayer."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <Row justify="center">
       <Col span={16}>
-        <Form
-          layout="vertical"
-          onFinish={handleSubmit}
-          initialValues={formData}
-        >
-          {/* Section A: CARDIO-MUSCULAIRE */}
-          <h2>A. CARDIO-MUSCULAIRE</h2>
+        <Form layout="vertical" onFinish={handleSubmit(onFormSubmit)}>
+          <h2>A. CARDIO – MUSCULAIRE</h2>
           <Form.Item label="Test de la chaise en 30 secondes">
-            <Radio.Group
+            <Controller
               name="chairTestSupport"
-              value={formData.chairTestSupport}
-              onChange={handleChange}
-            >
-              <Radio value={true}>Avec appui</Radio>
-              <Radio value={false}>Sans appui</Radio>
-            </Radio.Group>
+              control={control}
+              render={({ field }) => (
+                <Radio.Group {...field}>
+                  <Radio value={true}>Avec appui</Radio>
+                  <Radio value={false}>Sans appui</Radio>
+                </Radio.Group>
+              )}
+            />
           </Form.Item>
-
           <Form.Item
             label="Nombre de levers"
-            validateStatus={errors.chairTestCount ? "error" : ""}
-            help={errors.chairTestCount}
+            rules={[{ required: true, message: "Requis" }]}
           >
-            <Input
+            <Controller
               name="chairTestCount"
-              value={formData.chairTestCount}
-              onChange={handleChange}
-              placeholder="Entrez le nombre"
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <Input
+                  {...field}
+                  placeholder="Entrez le nombre"
+                  status={error ? "error" : ""}
+                />
+              )}
             />
           </Form.Item>
 
-          {/* Section B: ÉQUILIBRE */}
           <h2>B. ÉQUILIBRE</h2>
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                label="Temps Pieds joints (secondes)"
-                validateStatus={errors.balanceFeetTogether ? "error" : ""}
-                help={errors.balanceFeetTogether}
-              >
+          <Form.Item
+            label="Temps Pieds joints (secondes)"
+            rules={[{ required: true, message: "Requis" }]}
+          >
+            <Controller
+              name="balanceFeetTogether"
+              control={control}
+              render={({ field, fieldState: { error } }) => (
                 <Input
-                  name="balanceFeetTogether"
-                  value={formData.balanceFeetTogether}
-                  onChange={handleChange}
+                  {...field}
                   placeholder="Entrez le temps"
+                  status={error ? "error" : ""}
                 />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                label="Temps Semi-tandem (secondes)"
-                validateStatus={errors.balanceSemiTandem ? "error" : ""}
-                help={errors.balanceSemiTandem}
-              >
+              )}
+            />
+          </Form.Item>
+          <Form.Item
+            label="Temps Semi-tandem (secondes)"
+            rules={[{ required: true, message: "Requis" }]}
+          >
+            <Controller
+              name="balanceSemiTandem"
+              control={control}
+              render={({ field, fieldState: { error } }) => (
                 <Input
-                  name="balanceSemiTandem"
-                  value={formData.balanceSemiTandem}
-                  onChange={handleChange}
+                  {...field}
                   placeholder="Entrez le temps"
+                  status={error ? "error" : ""}
                 />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                label="Temps Tandem (secondes)"
-                validateStatus={errors.balanceTandem ? "error" : ""}
-                help={errors.balanceTandem}
-              >
+              )}
+            />
+          </Form.Item>
+          <Form.Item
+            label="Temps Tandem (secondes)"
+            rules={[{ required: true, message: "Requis" }]}
+          >
+            <Controller
+              name="balanceTandem"
+              control={control}
+              render={({ field, fieldState: { error } }) => (
                 <Input
-                  name="balanceTandem"
-                  value={formData.balanceTandem}
-                  onChange={handleChange}
+                  {...field}
                   placeholder="Entrez le temps"
+                  status={error ? "error" : ""}
                 />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                label="Temps Unipodal (secondes)"
-                validateStatus={errors.balanceOneFooted ? "error" : ""}
-                help={errors.balanceOneFooted}
-              >
+              )}
+            />
+          </Form.Item>
+          <Form.Item
+            label="Temps Unipodal (secondes)"
+            rules={[{ required: true, message: "Requis" }]}
+          >
+            <Controller
+              name="balanceOneFooted"
+              control={control}
+              render={({ field, fieldState: { error } }) => (
                 <Input
-                  name="balanceOneFooted"
-                  value={formData.balanceOneFooted}
-                  onChange={handleChange}
+                  {...field}
                   placeholder="Entrez le temps"
+                  status={error ? "error" : ""}
                 />
-              </Form.Item>
-            </Col>
-          </Row>
+              )}
+            />
+          </Form.Item>
 
-          {/* Section C: MOBILITÉ & STABILITÉ DU TRONC */}
           <h2>C. MOBILITÉ & STABILITÉ DU TRONC</h2>
           <Form.Item label="Functional Reach Test (FRT)">
-            <Radio.Group
+            <Controller
               name="frtPosition"
-              value={formData.frtPosition}
-              onChange={handleChange}
-            >
-              <Radio value={true}>Assis</Radio>
-              <Radio value={false}>Debout</Radio>
-              <Radio value="armNotWorking">Ne lève pas les bras</Radio>
-            </Radio.Group>
+              control={control}
+              render={({ field }) => (
+                <Radio.Group {...field}>
+                  <Radio value={true}>Assis</Radio>
+                  <Radio value={false}>Debout</Radio>
+                  <Radio value="armNotWorking">Ne lève pas les bras</Radio>
+                </Radio.Group>
+              )}
+            />
           </Form.Item>
-
           <Form.Item
             label="Distance (cm)"
-            validateStatus={errors.frtDistance ? "error" : ""}
-            help={errors.frtDistance}
+            rules={[{ required: true, message: "Requis" }]}
           >
-            <Input
+            <Controller
               name="frtDistance"
-              value={formData.frtDistance}
-              onChange={handleChange}
-              placeholder="Entrez la distance"
-              disabled={formData.frtPosition === "armNotWorking"}
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <Input
+                  {...field}
+                  placeholder="Entrez la distance"
+                  disabled={field.value === "armNotWorking"}
+                  status={error ? "error" : ""}
+                />
+              )}
             />
           </Form.Item>
 
-          {/* Section D: VITESSE DE MARCHE */}
-          <h2>VITESSE DE MARCHE</h2>
+          <h2>D. VITESSE DE MARCHE</h2>
           <Form.Item
-            label="Test 4 mètres - Temps nécessaire pour marcher 4-mètres (secondes)"
-            validateStatus={errors.walkingTime ? "error" : ""}
-            help={errors.walkingTime}
+            label="Temps pour marcher 4m (secondes)"
+            rules={[{ required: true, message: "Requis" }]}
           >
-            <Input
+            <Controller
               name="walkingTime"
-              value={formData.walkingTime}
-              onChange={(e) => {
-                const value = e.target.value;
-                if (value === "" || /^\d*\.?\d*$/.test(value)) {
-                  handleChange(e);
-                }
-              }}
-              placeholder="Entrez le temps en secondes"
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <Input
+                  {...field}
+                  placeholder="Temps en secondes"
+                  status={error ? "error" : ""}
+                />
+              )}
             />
-            {formData.walkingTime && !errors.walkingTime && (
-              <div style={{ marginTop: 8, color: "#666" }}>
-                Vitesse de marche :{" "}
-                {(4 / parseFloat(formData.walkingTime)).toFixed(2)} m/s
-              </div>
-            )}
           </Form.Item>
 
           <Form.Item>
-            <Button onClick={() => onClose()} style={{ marginRight: 8 }}>
-              Annuler
-            </Button>
-            <Button type="primary" htmlType="submit">
+            <Button
+              type="primary"
+              htmlType="submit"
+              icon={<SendOutlined />}
+              disabled={isSubmitting}
+            >
               Soumettre
             </Button>
           </Form.Item>
         </Form>
+
+        <AntModal
+          open={isOpenModal}
+          onCancel={() => setIsOpenModal(false)}
+          footer={[
+            <Button key="close" onClick={() => setIsOpenModal(false)}>
+              Fermer
+            </Button>,
+            <Button key="submit" type="primary" onClick={confirmSubmit}>
+              Confirmer l'envoi
+            </Button>,
+          ]}
+        >
+          {modalContent}
+        </AntModal>
       </Col>
-      <Modal
-        title="Résultats"
-        open={isModalVisible}
-        onCancel={() => setIsModalVisible(false)}
-        footer={[
-          <Button key="close" onClick={() => setIsModalVisible(false)}>
-            Fermer
-          </Button>,
-          <Button
-            key="submit"
-            type="primary"
-            onClick={() => {
-              // Fonction à implémenter
-              console.log("Confirmation clicked");
-              setIsModalVisible(false);
-            }}
-          >
-            Confirmer
-          </Button>,
-        ]}
-      >
-        {modalMessage}
-      </Modal>
     </Row>
   );
 }
+
+EvaluationPACE.propTypes = {
+  onSubmit: PropTypes.func,
+};
 
 export default EvaluationPACE;
