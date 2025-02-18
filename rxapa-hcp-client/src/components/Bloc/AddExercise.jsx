@@ -150,7 +150,7 @@ export default function AddExercise({
       ></FilterExercise>
       {/* Dropdown menu to select an exercise to be used in the bloc */}
       <div className="input-element">
-        <h5>{t("Please select an exercise")}</h5>
+        <h5>{t("Blocs:please_select_exercise")}</h5>
 
         <Autocomplete
           value={selectedExerciseName}
@@ -169,7 +169,7 @@ export default function AddExercise({
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="input-element">
-          <h5>Please enter the the number of series</h5>
+          <h5>{t("Blocs:please_enter_number_of_series")}</h5>
           <Controller
             name={"numberOfSeries"}
             control={control}
@@ -178,7 +178,7 @@ export default function AddExercise({
                 onChange={onChange}
                 value={value}
                 type="number"
-                label="Number of series"
+                label={t("Blocs:number_of_series_label")}
                 variant="outlined"
                 color="secondary"
                 fullWidth
@@ -189,7 +189,7 @@ export default function AddExercise({
         </div>
 
         <div className="input-element">
-          <h5>Please enter the the number of repetition</h5>
+          <h5>{t("Blocs:please_enter_number_of_repetitions")}</h5>
           <Controller
             name={"numberOfRepetition"}
             control={control}
@@ -198,7 +198,7 @@ export default function AddExercise({
                 onChange={onChange}
                 value={value}
                 type="number"
-                label="Number of repetition"
+                label={t("Blocs:number_of_repetitions_label")}
                 variant="outlined"
                 color="secondary"
                 fullWidth
@@ -209,7 +209,7 @@ export default function AddExercise({
         </div>
 
         <div className="input-element">
-          <h5>Please enter the the number of minutes</h5>
+          <h5>{t("Blocs:please_enter_number_of_minutes")}</h5>
           <Controller
             name={"minutes"}
             control={control}
@@ -218,7 +218,7 @@ export default function AddExercise({
                 onChange={onChange}
                 value={value}
                 type="number"
-                label="Number of minutes"
+                label={t("Blocs:number_of_minutes_label")}
                 variant="outlined"
                 color="secondary"
                 fullWidth
@@ -229,7 +229,7 @@ export default function AddExercise({
         </div>
 
         <div className="input-element">
-          <h5>Describe the resting instruction</h5>
+          <h5>{t("Blocs:describe_resting_instruction")}</h5>
           <Controller
             name={"restingInstruction"}
             control={control}
@@ -238,7 +238,7 @@ export default function AddExercise({
                 onChange={onChange}
                 value={value}
                 type="string"
-                label="Describe the resting instruction"
+                label={t("Blocs:describe_resting_instruction_label")}
                 variant="outlined"
                 color="secondary"
                 fullWidth
@@ -259,13 +259,13 @@ export default function AddExercise({
                 size={"large"}
               />
             }
-            label="Required"
+            label={t("Blocs:required_label")}
             labelPlacement="end"
           />
         </div>
         <div className="input-element">
           <AppButton
-            displayText={"CANCEL"}
+            displayText={t("Blocs:cancel_button")}
             variant={"contained"}
             endIcon={<ClearSharpIcon />}
             color={"secondary"}
@@ -274,7 +274,7 @@ export default function AddExercise({
           />
 
           <AppButton
-            displayText={"SUBMIT"}
+            displayText={t("Blocs:submit_button")}
             variant={"contained"}
             endIcon={<SendIcon />}
             type={"submit"}

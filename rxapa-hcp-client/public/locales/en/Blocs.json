@@ -6,5 +6,26 @@
   "exercise_name": "Exercise Name",
   "enter_bloc_description": "Please enter the description of the bloc : ",
   "exercise_description": "Exercise Description",
-  "submit_button": "SUBMIT"
+  "submit_button": "SUBMIT",
+
+  "edit_button": "EDIT",
+  "delete_button": "DELETE",
+  "new_bloc_name": "New Bloc Name",
+  "enter_new_bloc_name": "Enter a new name for the bloc",
+  "new_description_label": "New Description",
+  "enter_new_description_placeholder": "Enter a new description",
+  "update_button": "Update",
+  "add_exercise_button": "Add Exercise",
+
+  "please_select_exercise": "Please select an exercise",
+  "please_enter_number_of_series": "Please enter the number of series",
+  "number_of_series_label": "Number of series",
+  "please_enter_number_of_repetitions": "Please enter the number of repetitions",
+  "number_of_repetitions_label": "Number of repetitions",
+  "please_enter_number_of_minutes": "Please enter the number of minutes",
+  "number_of_minutes_label": "Number of minutes",
+  "describe_resting_instruction": "Describe the resting instruction",
+  "describe_resting_instruction_label": "Describe the resting instruction",
+  "required_label": "Required",
+  "cancel_button": "CANCEL"
 }

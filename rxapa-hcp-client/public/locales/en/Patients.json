@@ -1,4 +1,5 @@
 {
+  "register_patient": "Register a Patient",
   "register_new_patient": "Register a new patient",
   "edit_patient_details": "Edit patient details",
   "enrollment_creation_success": "Enrollment created successfully!",

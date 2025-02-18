@@ -180,7 +180,7 @@ export default function PatientMenu() {
               icon={<PlusOutlined />}
               onClick={() => setIsCreatePatient(true)}
             >
-              Register a Patient
+              {t("Patients:register_patient")}
             </Button>
           </div>
 
