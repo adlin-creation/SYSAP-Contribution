@@ -59,7 +59,7 @@ exports.createExercise = async (req: any, res: any, next: any) => {
       imageUrl: imageUrl,
     });
     res.status(201).json({
-      message: "Successfully created an Exercise",
+      message: "Exercice créé avec succès.",
     });
   } catch (error: any) {
     if (!error.statusCode) {
@@ -76,15 +76,15 @@ exports.createExercise = async (req: any, res: any, next: any) => {
 
     if (error.name == "SequelizeUniqueConstraintError") {
       res.json({
-        messageTitle: "An exercise with the same name already exists.",
+        messageTitle: "Un exercice avec le meme nom existe déja ! ",
         message:
-          "Please modify the name of the exercise and then submit again.",
+          "Erreur ! Le nom existe déja dans la base de donnée !",
       });
     } else {
       res.json({
-        messageTitle: "Failed to create an Exercise",
+        messageTitle: "Erreur lors de la création de l'exercice ! ",
         message:
-          "Please contact the developer with a brief description of how this error can be reproduced.",
+          "Erreur ! Il manque un champ à remplir !",
       });
     }
   }
@@ -146,12 +146,12 @@ exports.updateExercise = async (req: any, res: any, next: any) => {
     if (error.name == "SequelizeUniqueConstraintError") {
       res.json({
         message:
-          "Please modify the name of the exercise and then submit again.",
+          "Erreur ! Le nom existe déja dans la base de donnée !",
       });
     } else {
       res.json({
         message:
-          "Error - Please contact the developer with a brief description of how this error can be reproduced.",
+          "Erreur ! Il manque un champ à remplir !",
       });
     }
   }

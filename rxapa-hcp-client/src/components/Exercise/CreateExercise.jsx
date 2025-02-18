@@ -17,8 +17,8 @@ export default function CreateExercise(props) {
   const [selectedExerciseCategory, setSelectedExerciseCategory] = useState(null);
   //const [displayedExerciseCategory, setDisplayedExerciseCategory] = useState("");
 
-  const [selectedTargetAgeRange, setSelectedTargetAgeRange] = useState(null);
   //const [displayedTargetAgeRange, setDisplayedTargetAgeRange] = useState("");
+  ///const [selectedTargetAgeRange, setSelectedTargetAgeRange] = useState(null);
 
   const [selectedFitnessLevel, setSelectedFitnessLevel] = useState(null); // Assurez-vous que la valeur initiale est null
   //const [displayedFitnessLevel, setDisplayedFitnessLevel] = useState("");
@@ -52,13 +52,14 @@ export default function CreateExercise(props) {
     const combinedData = {
       name: name,
       description: description,
-      instructionalVideo: instructionalVideo,
+      instructionalVideo: " ",
       isSeating: isSeatingExercise,
       category: selectedExerciseCategory,
-      targetAgeRange: selectedTargetAgeRange,
+      targetAgeRange: " ",
       fitnessLevel: selectedFitnessLevel,
       exerciseImage: exerciseImage,
     };
+    console.log("Submitting Data:", combinedData); 
     console.log("The exercise object", combinedData);
     formData.append("image", exerciseImage);
     // formData.append("name", combinedData.name);
@@ -95,60 +96,8 @@ export default function CreateExercise(props) {
     <div className="form-container">
       <Col span={12}>
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
-          <Form.Item label="Please select the category : " className="input-element">
-            <Select
-              value={selectedExerciseCategory}
-              onChange={(value) => setSelectedExerciseCategory(value)}
-              placeholder="Select Exercise Category"
-              style={{ width: '100%' }}
-              allowClear
-            >
-              {["AEROBIC", "STRENGTH", "ENDURANCE", "FLEXIBILITY"].map((category) => (
-                <Select.Option key={category} value={category}>
-                  {category}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
 
-          <Form.Item label="Please select the desired age group : " className="input-element">
-            <Select
-              value={selectedTargetAgeRange}
-              onChange={(value) => setSelectedTargetAgeRange(value)}
-              placeholder="Select Target Age Range"
-              style={{ width: '100%' }}
-              allowClear
-            >
-              {[
-                "FIFTY_TO_FIFTY_NINE",
-                "SIXTY_TO_SIXTY_NINE",
-                "SEVENTY_TO_SEVENTY_NINE",
-                "EIGHTY_TO_EIGHTY_NINE",
-              ].map((ageRange) => (
-                <Select.Option key={ageRange} value={ageRange}>
-                  {ageRange}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
-
-          <Form.Item label="Please select the expected fitness level : " className="input-element">
-            <Select
-              value={selectedFitnessLevel}
-              onChange={(value) => setSelectedFitnessLevel(value)}
-              placeholder="Select Fitness Level"
-              style={{ width: '100%' }}
-              allowClear
-            >
-              {["LOW", "BELOW_AVERAGE", "AVERAGE", "ABOVE_AVERAGE", "HIGH"].map((level) => (
-                <Select.Option key={level} value={level}>
-                  {level}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
-
-          <Form.Item label="Please enter the name of the exercise : " className="input-element">
+          <Form.Item label="Veuillez entrer le nom de l'exercice : " className="input-element">
             <Controller
               name="name"
               control={control}
@@ -156,14 +105,46 @@ export default function CreateExercise(props) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder="Exercise Name"
+                  placeholder="Nom de l'exercice"
                   required
                 />
               )}
             />
           </Form.Item>
 
-          <Form.Item label="Please enter the description of the exercise : " className="input-element">
+          <Form.Item label="Veuillez sélectionner la catégorie : " className="input-element">
+            <Select
+              value={selectedExerciseCategory}
+              onChange={(value) => setSelectedExerciseCategory(value)}
+              placeholder="Sélectionnez la catégorie"
+              style={{ width: '100%' }}
+              allowClear
+            >
+              {["Aérobic", "Endurance", "Force", "Flexibilité", "Équilibre"].map((category) => (
+                <Select.Option key={category} value={category}>
+                  {category}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+
+          <Form.Item label="Veuillez sélectionner le niveau de forme physique attendu : " className="input-element">
+            <Select
+              value={selectedFitnessLevel}
+              onChange={(value) => setSelectedFitnessLevel(value)}
+              placeholder="Niveau de forme physique attendu"
+              style={{ width: '100%' }}
+              allowClear
+            >
+              {["Facile","Intermédiaire","Avancé"].map((level) => (
+                <Select.Option key={level} value={level}>
+                  {level}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+
+          <Form.Item label="Veuillez entrer la description de l'exercice : " className="input-element">
             <Controller
               name="description"
               control={control}
@@ -171,13 +152,13 @@ export default function CreateExercise(props) {
                 <Input.TextArea
                   onChange={onChange}
                   value={value}
-                  placeholder="Exercise Description"
+                  placeholder="Description de l'exercice"
                   rows={4}
                 />
               )}
             />
           </Form.Item>
-
+          {/* 
           <Form.Item label="Please enter the instructional video of the exercise : " className="input-element">
             <Controller
               name="instructionalVideo"
@@ -191,7 +172,7 @@ export default function CreateExercise(props) {
               )}
             />
           </Form.Item>
-
+          */}
           <Form.Item label="Exercise Image : " className="input-element">
             <input type="file" accept="image/*" onChange={onChangeImage} />
           </Form.Item>
