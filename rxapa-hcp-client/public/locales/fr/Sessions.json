@@ -1,4 +1,9 @@
 {
+  "blocs_list_load": "Chargement de la liste des blocs...",
+  "blocs_list_loading_error": "Désolé, une erreur s'est produite lors du chargement des blocs",
+  "sessions_loading_error_msg": "Désolé, une erreur s'est produite lors du chargement des sessions",
+  "sessions_loading": "Chargement des sessions...",
+  "update_session_placeholder": "Entrez le nom de la session à mettre à jour",
   "create_session": "Créer une session",
   "back_button": "retourner",
   "session_details_title": "Entrez les détails suivants puis soumettez pour créer une nouvelle session",

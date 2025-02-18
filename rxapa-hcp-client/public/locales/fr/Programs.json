@@ -8,7 +8,7 @@
   "program_duration_placeholder": "Durée du programme",
   "add_program_phase": "Ajouter une phase du programme",
   "loading_program_phases": "Chargement des phases du programme...",
-  "error_loading_program_phases": "Erreur lors du chargement des phases du programme",
+  "loading_program_phases_error": "Erreur lors du chargement des phases du programme",
   "loading_all_phases": "Chargement de toutes les phases...",
   "error_loading_all_phases": "Erreur lors du chargement de toutes les phases",
   "create_program": "Créer un programme",

@@ -3,6 +3,7 @@
   "edit_patient_details": "Edit patient details",
   "enrollment_creation_success": "Enrollment created successfully!",
   "enrollment_creation_failed": "Error creating enrollment",
+  "patient_information_title": "Patient Informations",
   "close": "Close",
   "choice_required": "Please choose an option.",
   "create_patient_success": "Patient created successfully!",
@@ -19,11 +20,15 @@
   "last_name_input": "Enter patient's last name",
   "birthday": "Birthday",
   "birthday_select": "Select birth date",
+  "name": "Name",
+  "email": "Email",
   "phone": "Phone",
+  "status": "Status",
+  "programs": "Programs",
+  "actions": "Actions",
   "phone_required": "The phone number is required",
   "phone_number_invalid": "Invalid phone number format",
   "phone_number_input": "Enter phone number",
-  "email": "Email",
   "email_needed": "The email is required",
   "email_invalid": "Invalid email format",
   "email_input": "Enter email address",
@@ -46,6 +51,5 @@
   "reltion_sibling": "Sibling",
   "relation_friend": "Friend",
   "relation_other": "Other",
-  "create_patient": "Create Patient",
-  "programs": "Programs"
+  "create_patient": "Create Patient"
 }

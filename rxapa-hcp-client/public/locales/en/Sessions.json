@@ -1,4 +1,9 @@
 {
+  "blocs_list_load": "List of blocs Loading...",
+  "blocs_list_loading_error": "Sorry, an error occured while loading the blocs",
+  "sessions_loading_error_msg": "Sorry, an error occured while loading sessions",
+  "sessions_loding": "Sessions Loading...",
+  "update_session_placeholder": "Enter session name to update",
   "create_session": "Create session",
   "back_button": "Back",
   "session_details_title": "Enter the following details and then submit to create a new session",

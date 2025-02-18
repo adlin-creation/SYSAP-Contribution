@@ -9,8 +9,10 @@ import BlocTable from "./BlocTable";
 import AddBloc from "./AddBloc";
 import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
+import { useTranslation } from "react-i18next";
 
 export default function SessionDetails({ sessionKey }) {
+  const { t } = useTranslation();
   const { handleSubmit, control } = useForm();
   const [isAddBloc, setIsAddBloc] = useState(false);
 
@@ -71,17 +73,17 @@ export default function SessionDetails({ sessionKey }) {
   /// QUERY VALIDATIONS          ///
   //////////////////////////////////
   if (isBlockListLoading) {
-    return <h1>List of blocs Loading...</h1>;
+    return <h1>{t("Sessions:blocs_list_load")}</h1>;
   }
   if (isBlockListLoadingError) {
-    return <h1>Sorry, an error occured while loading the blocs</h1>;
+    return <h1>{t("Sessions:blocs_list_loading_error")}</h1>;
   }
 
   if (isSessionLoading) {
-    return <h1>Sessions Loading...</h1>;
+    return <h1>{t("Sessions:sessions_loading")}</h1>;
   }
   if (isSessionLoadingError) {
-    return <h1>Sorry, an error occured while loading sessions</h1>;
+    return <h1>{t("Sessions:sessions_loading_error_msg")}</h1>;
   }
 
   /**
@@ -135,7 +137,7 @@ export default function SessionDetails({ sessionKey }) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder="Enter session name to update"
+                  placeholder={t("Sessions:update_session_placeholder")}
                   // required
                 />
               )}
@@ -204,11 +206,7 @@ export default function SessionDetails({ sessionKey }) {
             refetchSession={refetchSession}
           />
         )}
-        <Modal
-          open={isOpenModal}
-          onCancel={closeModal}
-          footer={null}
-        >
+        <Modal open={isOpenModal} onCancel={closeModal} footer={null}>
           <p>{message}</p>
         </Modal>
       </Row>

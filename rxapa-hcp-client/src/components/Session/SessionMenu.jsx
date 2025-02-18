@@ -56,10 +56,10 @@ export default function SessionList(props) {
   /// SESSION QUERY VALIDATIONS ///
   /////////////////////////////////////
   if (isSessionLoading) {
-    return <h1>Sessions Loading...</h1>;
+    return <h1>{t("Sessions:sessions_loading")}</h1>;
   }
   if (isSessionLoadingError) {
-    return <h1>Sorry, an error occured while loading sessions</h1>;
+    return <h1>{t("Sessions:sessions_loading_error_msg")}</h1>;
   }
 
   /**

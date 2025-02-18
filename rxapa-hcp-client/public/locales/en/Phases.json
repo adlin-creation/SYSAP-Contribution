@@ -1,4 +1,6 @@
 {
+  "loading_program_phases": "Loading program phases...",
+  "error_loading_program_phases": "Sorry, an error occurred while loading program phases",
   "select_cycle": "Please select a cycle",
   "select_cycle_name": "Select Cycle Name",
   "select_start_condition_type": "Please select start condition type",

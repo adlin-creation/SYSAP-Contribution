@@ -107,25 +107,28 @@ export default function CreateExercise(props) {
             <Select
               value={selectedExerciseCategory}
               onChange={(value) => setSelectedExerciseCategory(value)}
-              placeholder={t("exercise_category")}
+              placeholder={t("Exercises:exercise_category")}
               style={{ width: "100%" }}
               allowClear
             >
               {["aerobic", "strength", "endurance", "flexibility"].map(
                 (category) => (
                   <Select.Option key={category} value={category}>
-                    {t(category)}
+                    {t(`Exercises:${category}`)}
                   </Select.Option>
                 )
               )}
             </Select>
           </Form.Item>
 
-          <Form.Item label={t("desired_age_group")} className="input-element">
+          <Form.Item
+            label={t("Exercises:desired_age_group")}
+            className="input-element"
+          >
             <Select
               value={selectedTargetAgeRange}
               onChange={(value) => setSelectedTargetAgeRange(value)}
-              placeholder={t("select_target_age_range")}
+              placeholder={t("Exercises:select_target_age_range")}
               style={{ width: "100%" }}
               allowClear
             >
@@ -143,13 +146,13 @@ export default function CreateExercise(props) {
           </Form.Item>
 
           <Form.Item
-            label={t("select_expected_fitness_level")}
+            label={t("Exercises:select_expected_fitness_level")}
             className="input-element"
           >
             <Select
               value={selectedFitnessLevel}
               onChange={(value) => setSelectedFitnessLevel(value)}
-              placeholder={t("select_fitness_level")}
+              placeholder={t("Exercises:select_fitness_level")}
               style={{ width: "100%" }}
               allowClear
             >
@@ -163,7 +166,10 @@ export default function CreateExercise(props) {
             </Select>
           </Form.Item>
 
-          <Form.Item label={t("enter_exercise_name")} className="input-element">
+          <Form.Item
+            label={t("Exercises:enter_exercise_name")}
+            className="input-element"
+          >
             <Controller
               name="name"
               control={control}
@@ -171,7 +177,7 @@ export default function CreateExercise(props) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder={t("exercise_name")}
+                  placeholder={t("Exercises:exercise_name")}
                   required
                 />
               )}
@@ -179,7 +185,7 @@ export default function CreateExercise(props) {
           </Form.Item>
 
           <Form.Item
-            label={t("enter_exercise_description")}
+            label={t("Exercises:enter_exercise_description")}
             className="input-element"
           >
             <Controller
@@ -189,7 +195,7 @@ export default function CreateExercise(props) {
                 <Input.TextArea
                   onChange={onChange}
                   value={value}
-                  placeholder={t("exercise_description")}
+                  placeholder={t("Exercises:exercise_description")}
                   rows={4}
                 />
               )}
@@ -197,7 +203,7 @@ export default function CreateExercise(props) {
           </Form.Item>
 
           <Form.Item
-            label={t("enter_exercise_video")}
+            label={t("Exercises:enter_exercise_video")}
             className="input-element"
           >
             <Controller
@@ -207,19 +213,22 @@ export default function CreateExercise(props) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder={t("exercise_video_placeholder")}
+                  placeholder={t("Exercises:exercise_video_placeholder")}
                 />
               )}
             />
           </Form.Item>
 
-          <Form.Item label={t("exercise_image")} className="input-element">
+          <Form.Item
+            label={t("Exercises:exercise_image")}
+            className="input-element"
+          >
             <input type="file" accept="image/*" onChange={onChangeImage} />
           </Form.Item>
 
           <Form.Item className="input-element">
             <Checkbox checked={isSeatingExercise} onChange={handleChange}>
-              {t("seating_exercise")}
+              {t("Exercises:seating_exercise")}
             </Checkbox>
           </Form.Item>
 
@@ -229,7 +238,7 @@ export default function CreateExercise(props) {
               htmlType="submit"
               icon={<SendOutlined />} // Utilisation de l'icône Ant Design
             >
-              {t("submit")}
+              {t("Exercises:submit")}
             </Button>
           </Form.Item>
         </Form>

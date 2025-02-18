@@ -54,10 +54,10 @@ export default function ExerciseMenu() {
   });
 
   if (isExerciseLoading) {
-    return <h1>{t("exercise_loading")}</h1>;
+    return <h1>{t("Exercises:exercise_loading")}</h1>;
   }
   if (isExerciseLoadingError) {
-    return <h1>{t("exercise_loading_error")}</h1>;
+    return <h1>{t("Exercises:exercise_loading_error")}</h1>;
   }
 
   function openModal(message, isError) {
@@ -161,7 +161,7 @@ export default function ExerciseMenu() {
               type="primary"
               icon={<PlusOutlined />}
             >
-              {t("create_exercise")}
+              {t("Exercises:create_exercise")}
             </Button>
           </div>
           <Row gutter={[16, 16]}>

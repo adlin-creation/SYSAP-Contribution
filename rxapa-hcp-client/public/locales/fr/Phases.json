@@ -1,4 +1,6 @@
 {
+  "loading_program_phases": "Chargement des phases du programme...",
+  "error_loading_program_phases": "Désolé, une erreur s'est produite lors du chargement des phases du programme",
   "select_cycle": "Veuillez sélectionner un cycle",
   "select_cycle_name": "Sélectionnez un nom de cycle",
   "select_start_condition_type": "Veuillez sélectionner un type de condition de départ",

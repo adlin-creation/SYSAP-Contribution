@@ -84,7 +84,7 @@ function CreateEnrollement({ refetchPatients }) {
       })
       .catch((err) =>
         openModal(
-          err.response?.data?.error || t("enrollment_creation_failed"),
+          err.response?.data?.error || t("Patients:enrollment_creation_failed"),
           true
         )
       );
@@ -106,7 +106,7 @@ function CreateEnrollement({ refetchPatients }) {
     <Row justify="center">
       <Col span={16}>
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
-          <h2>Patient Information</h2>
+          <h2>{t("Patient:patient_information_title")}</h2>
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item

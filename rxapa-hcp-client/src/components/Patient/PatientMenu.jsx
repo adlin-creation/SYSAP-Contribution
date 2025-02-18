@@ -56,22 +56,22 @@ export default function PatientMenu() {
 
   const columns = [
     {
-      title: t("name"),
+      title: t("Patients:name"),
       key: "name",
       render: (_, record) => `${record.firstname} ${record.lastname}`,
     },
     {
-      title: t("email"),
+      title: t("Patients:email"),
       dataIndex: "email",
       key: "email",
     },
     {
-      title: t("phone"),
+      title: t("Patients:phone"),
       dataIndex: "phoneNumber",
       key: "phoneNumber",
     },
     {
-      title: t("status"),
+      title: t("Patients:status"),
       key: "status",
       dataIndex: "status",
       render: (status) => (
@@ -86,7 +86,7 @@ export default function PatientMenu() {
       key: "numberOfPrograms",
     },
     {
-      title: t("actions"),
+      title: t("Patients:actions"),
       key: "actions",
       render: (_, record) => (
         <Space size="middle">

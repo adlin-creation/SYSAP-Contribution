@@ -50,22 +50,22 @@ export default function DoctorMenu() {
 
   const columns = [
     {
-      title: t("name"),
+      title: t("Professionals:Doctors:name"),
       key: "name",
       render: (_, record) => `${record.firstname} ${record.lastname}`,
     },
     {
-      title: t("email"),
+      title: t("Professionals:Doctors:email"),
       dataIndex: "email",
       key: "email",
     },
     {
-      title: t("phone"),
+      title: t("Professionals:Doctors:phone"),
       dataIndex: "phoneNumber",
       key: "phoneNumber",
     },
     {
-      title: t("status"),
+      title: t("Professionals:Doctors:status"),
       key: "active",
       dataIndex: "active",
       render: (active) => (
@@ -75,7 +75,7 @@ export default function DoctorMenu() {
       ),
     },
     {
-      title: t("actions"),
+      title: t("Professionals:Doctors:actions"),
       key: "actions",
       render: (_, record) => (
         <Space size="middle">
@@ -180,7 +180,7 @@ export default function DoctorMenu() {
             icon={<PlusOutlined />}
             onClick={() => setIsCreateDoctor(true)}
           >
-            {t("register_doctor")}
+            {t("Professionals:Doctors:register_doctor")}
           </Button>
           {doctorList?.length > 0 && (
             <span>Total Doctors: {doctorList.length}</span>
@@ -230,8 +230,8 @@ export default function DoctorMenu() {
           <Col flex="auto" style={{ textAlign: "center" }}>
             <h2 style={{ marginBottom: 0 }}>
               {isCreateDoctor
-                ? t("Professionnals:Doctors:register_doctor_title")
-                : t("Professionnals:Doctors:edit_doctor")}
+                ? t("Professionals:Doctors:register_doctor_title")
+                : t("Professionals:Doctors:edit_doctor")}
             </h2>
           </Col>
           <Col span={4} />

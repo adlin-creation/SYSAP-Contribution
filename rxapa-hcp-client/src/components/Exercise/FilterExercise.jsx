@@ -37,11 +37,11 @@ export default function FilterExercise({ updateSelectedValues }) {
               placeholder="Category"
               allowClear
             >
-              <Option value="ALL">{t("ALL")}</Option>
-              <Option value="AEROBIC">{t("aerobic")}</Option>
-              <Option value="STRENGTH">{t("strength")}</Option>
-              <Option value="ENDURANCE">{t("endurance")}</Option>
-              <Option value="FLEXIBILITY">{t("flexibility")}</Option>
+              <Option value="ALL">{t("Exercises:ALL")}</Option>
+              <Option value="AEROBIC">{t("Exercises:aerobic")}</Option>
+              <Option value="STRENGTH">{t("Exercises:strength")}</Option>
+              <Option value="ENDURANCE">{t("Exercises:endurance")}</Option>
+              <Option value="FLEXIBILITY">{t("Exercises:flexibility")}</Option>
             </Select>
           </div>
         </Col>
@@ -54,12 +54,16 @@ export default function FilterExercise({ updateSelectedValues }) {
               placeholder="Fitness Level"
               allowClear
             >
-              <Option value="ALL">{t("all")}</Option>
-              <Option value="LOW">{t("low")}</Option>
-              <Option value="BELOW_AVERAGE">{t("below_average")}</Option>
-              <Option value="AVERAGE">{t("average")}</Option>
-              <Option value="ABOVE_AVERAGE">{t("above_average")}</Option>
-              <Option value="HIGH">{t("high")}</Option>
+              <Option value="ALL">{t("Exercises:Exall")}</Option>
+              <Option value="LOW">{t("Exercises:low")}</Option>
+              <Option value="BELOW_AVERAGE">
+                {t("Exercises:below_average")}
+              </Option>
+              <Option value="AVERAGE">{t("Exercises:average")}</Option>
+              <Option value="ABOVE_AVERAGE">
+                {t("Exercises:above_average")}
+              </Option>
+              <Option value="HIGH">{t("Exercises:high")}</Option>
             </Select>
           </div>
         </Col>
@@ -72,18 +76,18 @@ export default function FilterExercise({ updateSelectedValues }) {
               placeholder="Age Group"
               allowClear
             >
-              <Option value="ALL">{t("all")}</Option>
+              <Option value="ALL">{t("Exercises:all")}</Option>
               <Option value="FIFTY_TO_FIFTY_NINE">
-                {t("fifty_to_fifty_nine")}
+                {t("Exercises:fifty_to_fifty_nine")}
               </Option>
               <Option value="SIXTY_TO_SIXTY_NINE">
-                {t("sixty_to_sixty_nine")}
+                {t("Exercises:sixty_to_sixty_nine")}
               </Option>
               <Option value="SEVENTY_TO_SEVENTY_NINE">
-                {t("seventy_to_seventy_nine")}
+                {t("Exercises:seventy_to_seventy_nine")}
               </Option>
               <Option value="EIGHTY_TO_EIGHTY_NINE">
-                {t("eighty_to_eighty_nine")}
+                {t("Exercises:eighty_to_eighty_nine")}
               </Option>
             </Select>
           </div>

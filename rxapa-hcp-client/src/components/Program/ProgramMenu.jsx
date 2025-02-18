@@ -53,10 +53,10 @@ export default function ProgramMenu() {
   /// PROGRAM QUERY VALIDATIONS ///
   /////////////////////////////////////
   if (isProgramLoading) {
-    return <h1>Program Loading...</h1>;
+    return <h1>{t("Programs:loading_program_phases")}</h1>;
   }
   if (isProgramLoadingError) {
-    return <h1>Sorry, an error occurred while loading program</h1>;
+    return <h1>{t("Programs:loading_program_phases_error")}</h1>;
   }
 
   /**

@@ -12,7 +12,7 @@ i18n
       "App",
       "Blocs",
       "Cycles",
-      "Exercices",
+      "Exercises",
       "Patients",
       "Phases",
       "Professionals",

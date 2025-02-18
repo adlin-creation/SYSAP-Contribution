@@ -50,22 +50,22 @@ export default function KinesiologistMenu() {
 
   const columns = [
     {
-      title: "Name",
+      title: t("Professionals:Kenisiologist:name"),
       key: "name",
       render: (_, record) => `${record.firstname} ${record.lastname}`,
     },
     {
-      title: "Email",
+      title: t("Professionals:Kenisiologist:email"),
       dataIndex: "email",
       key: "email",
     },
     {
-      title: "Phone",
+      title: t("Professionals:Kenisiologist:phone"),
       dataIndex: "phoneNumber",
       key: "phoneNumber",
     },
     {
-      title: "Status",
+      title: t("Professionals:Kenisiologist:status"),
       key: "active",
       dataIndex: "active",
       render: (active) => (
@@ -75,7 +75,7 @@ export default function KinesiologistMenu() {
       ),
     },
     {
-      title: "Actions",
+      title: t("Professionals:Kenisiologist:actions"),
       key: "actions",
       render: (_, record) => (
         <Space size="middle">
@@ -182,7 +182,7 @@ export default function KinesiologistMenu() {
             icon={<PlusOutlined />}
             onClick={() => setIsCreateKinesiologist(true)}
           >
-            Register a Kinesiologist
+            {t("Professionals:Kenisiologist:register_kenisiologist_button")}
           </Button>
           {kinesiologistList?.length > 0 && (
             <span>Total Kinesiologists: {kinesiologistList.length}</span>
@@ -226,14 +226,14 @@ export default function KinesiologistMenu() {
               type="primary"
               icon={<ArrowLeftOutlined />}
             >
-              {t("back_button")}
+              {t("Professionals:Kenisiologist:back_button")}
             </Button>
           </Col>
           <Col flex="auto" style={{ textAlign: "center" }}>
             <h2 style={{ marginBottom: 0 }}>
               {isCreateKinesiologist
-                ? "Register a new kinesiologist"
-                : "Edit kinesiologist"}
+                ? t("Professionals:Kenisiologist:register_new_kinesiologist")
+                : t("Professionals:Kenisiologist:edit_kinesiologist")}
             </h2>
           </Col>
           <Col span={4} />

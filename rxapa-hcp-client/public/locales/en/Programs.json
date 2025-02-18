@@ -8,7 +8,7 @@
   "program_duration_placeholder": "Program duration",
   "add_program_phase": "Add program phase",
   "loading_program_phases": "Loading program phases...",
-  "error_loading_program_phases": "An error occurred while loading the program phases",
+  "loading_program_phases_error": "An error occurred while loading the program phases",
   "loading_all_phases": "Loading all phases...",
   "error_loading_all_phases": "An error occurred while loading all phases",
   "create_program": "Create a program",
