@@ -111,7 +111,7 @@ function CreatePatient({ refetchPatients, onClose }) {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                label={t("Patients:first_name_form")}
+                label={t("Patients:first_name")}
                 required
                 validateStatus={errors.patientFirstName ? "error" : ""}
                 help={errors.patientFirstName?.message}
@@ -120,10 +120,10 @@ function CreatePatient({ refetchPatients, onClose }) {
                   name="patientFirstName"
                   control={control}
                   rules={{
-                    required: t("first_name_required"),
+                    required: t("Patients:first_name_required"),
                     minLength: {
                       value: 2,
-                      message: t("first_name_required_info"),
+                      message: t("Patients:first_name_required_info"),
                     },
                   }}
                   render={({ field }) => (
@@ -146,10 +146,10 @@ function CreatePatient({ refetchPatients, onClose }) {
                   name="patientLastName"
                   control={control}
                   rules={{
-                    required: t("last_name_required"),
+                    required: t("Patients:last_name_required"),
                     minLength: {
                       value: 2,
-                      message: t("last_name_required_info"),
+                      message: t("Patients:last_name_required_info"),
                     },
                   }}
                   render={({ field }) => (
@@ -181,7 +181,7 @@ function CreatePatient({ refetchPatients, onClose }) {
             </Col>
             <Col span={12}>
               <Form.Item
-                label={t("Patients:phone")}
+                label={t("Patients:phone_number")}
                 required
                 validateStatus={errors.patientPhone ? "error" : ""}
                 help={errors.patientPhone?.message}
@@ -190,10 +190,10 @@ function CreatePatient({ refetchPatients, onClose }) {
                   name="patientPhone"
                   control={control}
                   rules={{
-                    required: t("phone_required"),
+                    required: t("Patients:phone_number_required"),
                     pattern: {
                       value: /^[0-9+\s-]{8,}$/,
-                      message: t("phone_number_invalid"),
+                      message: t("Patients:phone_number_invalid"),
                     },
                   }}
                   render={({ field }) => (
@@ -219,7 +219,7 @@ function CreatePatient({ refetchPatients, onClose }) {
                   name="patientEmail"
                   control={control}
                   rules={{
-                    required: t("email_needed"),
+                    required: t("Patients:email_needed"),
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                       message: t("email_invalid"),
@@ -246,10 +246,10 @@ function CreatePatient({ refetchPatients, onClose }) {
                   name="confirmPatientEmail"
                   control={control}
                   rules={{
-                    required: t("email_confirm_required"),
+                    required: t("Patients:email_confirm_required"),
                     validate: (value) =>
                       value === control._formValues.patientEmail ||
-                      t("email_confirm_invalid"),
+                      t("Patients:email_confirm_invalid"),
                   }}
                   render={({ field }) => (
                     <Input
@@ -290,7 +290,7 @@ function CreatePatient({ refetchPatients, onClose }) {
               <Row gutter={16}>
                 <Col span={8}>
                   <Form.Item
-                    label={t("Patients:first_name_form")}
+                    label={t("Patients:first_name")}
                     validateStatus={
                       errors[`caregiverFirstName${index + 1}`] ? "error" : ""
                     }
@@ -300,10 +300,10 @@ function CreatePatient({ refetchPatients, onClose }) {
                       name={`caregiverFirstName${index + 1}`}
                       control={control}
                       rules={{
-                        required: t("first_name_required"),
+                        required: t("Patients:first_name_required"),
                         minLength: {
                           value: 2,
-                          message: t("first_name_required_info"),
+                          message: t("Patients:first_name_required_info")
                         },
                       }}
                       render={({ field }) => (
@@ -327,11 +327,11 @@ function CreatePatient({ refetchPatients, onClose }) {
                       name={`caregiverLastName${index + 1}`}
                       control={control}
                       rules={{
-                        required: t("last_name_required"),
+                        required: t("Patients:last_name_required"),
                         minLength: {
                           value: 2,
-                          message: t("last_name_required_info"),
-                        },
+                          message: t("Patients:last_name_required_info")
+                        }
                       }}
                       render={({ field }) => (
                         <Input
@@ -354,7 +354,7 @@ function CreatePatient({ refetchPatients, onClose }) {
                       name={`relationship${index + 1}`}
                       control={control}
                       rules={{
-                        required: t("choice_required"),
+                        required: t("Patients:choice_required"),
                       }}
                       render={({ field }) => (
                         <Select
@@ -393,10 +393,10 @@ function CreatePatient({ refetchPatients, onClose }) {
                       name={`caregiverEmail${index + 1}`}
                       control={control}
                       rules={{
-                        required: t("email_needed"),
+                        required: t("Patients:email_needed"),
                         pattern: {
                           value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                          message: t("email_invalid"),
+                          message: t("Patients:email_invalid")
                         },
                       }}
                       render={({ field }) => (
@@ -411,7 +411,7 @@ function CreatePatient({ refetchPatients, onClose }) {
                 </Col>
                 <Col span={12}>
                   <Form.Item
-                    label={t("Patients:phone")}
+                    label={t("Patients:phone_number")}
                     validateStatus={
                       errors[`caregiverPhone${index + 1}`] ? "error" : ""
                     }
@@ -421,10 +421,10 @@ function CreatePatient({ refetchPatients, onClose }) {
                       name={`caregiverPhone${index + 1}`}
                       control={control}
                       rules={{
-                        required: t("phone_required"),
+                        required: t("Patients:phone_number_required"),
                         pattern: {
                           value: /^[0-9+\s-]{8,}$/,
-                          message: t("phone_number_invalid"),
+                          message: t("Patients:phone_number_invalid"),
                         },
                       }}
                       render={({ field }) => (
@@ -463,7 +463,7 @@ function CreatePatient({ refetchPatients, onClose }) {
           onCancel={closeModal}
           footer={[
             <Button key="close" onClick={closeModal}>
-              {t("Patients:close")}
+              {t("Patients:close_button")}
             </Button>,
           ]}
         >

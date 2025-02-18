@@ -110,7 +110,7 @@ function CreateEnrollement({ refetchPatients }) {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                label="First Name"
+                label={t("Patients:first_name")}
                 required
                 validateStatus={errors.patientFirstName ? "error" : ""}
                 help={errors.patientFirstName?.message}
@@ -119,16 +119,16 @@ function CreateEnrollement({ refetchPatients }) {
                   name="patientFirstName"
                   control={control}
                   rules={{
-                    required: "Le prénom est obligatoire",
+                    required: t("Patients:first_name_required"),
                     minLength: {
                       value: 2,
-                      message: "Le prénom doit contenir au moins 2 caractères",
+                      message: t("Patients:first_name_required_info"),
                     },
                   }}
                   render={({ field }) => (
                     <Input
                       {...field}
-                      placeholder="Enter patient's first name"
+                      placeholder={t("Patients:first_name_input")}
                     />
                   )}
                 />
@@ -136,7 +136,7 @@ function CreateEnrollement({ refetchPatients }) {
             </Col>
             <Col span={12}>
               <Form.Item
-                label="Last Name"
+                label={t("Patients:last_name")}
                 required
                 validateStatus={errors.patientLastName ? "error" : ""}
                 help={errors.patientLastName?.message}
@@ -145,14 +145,14 @@ function CreateEnrollement({ refetchPatients }) {
                   name="patientLastName"
                   control={control}
                   rules={{
-                    required: "Le nom est obligatoire",
+                    required: t("Patients:last_name_required"),
                     minLength: {
                       value: 2,
-                      message: "Le nom doit contenir au moins 2 caractères",
+                      message: t("Patients:last_name_required_info"),
                     },
                   }}
                   render={({ field }) => (
-                    <Input {...field} placeholder="Enter patient's last name" />
+                    <Input {...field} placeholder={t("last_name_input")} />
                   )}
                 />
               </Form.Item>
@@ -161,14 +161,14 @@ function CreateEnrollement({ refetchPatients }) {
 
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item label="Birthday">
+              <Form.Item label={t("Patients:birthday")}>
                 <Controller
                   name="birthday"
                   control={control}
                   render={({ field }) => (
                     <DatePicker
                       {...field}
-                      placeholder="Select birth date"
+                      placeholder={t("Patients:birthday_select")}
                       style={{ width: "100%" }}
                     />
                   )}
@@ -177,7 +177,7 @@ function CreateEnrollement({ refetchPatients }) {
             </Col>
             <Col span={12}>
               <Form.Item
-                label="Phone"
+                label={t("Patients:phone_number")}
                 required
                 validateStatus={errors.patientPhone ? "error" : ""}
                 help={errors.patientPhone?.message}
@@ -186,14 +186,14 @@ function CreateEnrollement({ refetchPatients }) {
                   name="patientPhone"
                   control={control}
                   rules={{
-                    required: "Le numéro de téléphone est obligatoire",
+                    required: t("Patients:phone_number_required"),
                     pattern: {
                       value: /^[0-9+\s-]{8,}$/,
-                      message: "Format de numéro de téléphone invalide",
-                    },
+                      message: t("Patients:phone_number_invalid")
+                    }
                   }}
                   render={({ field }) => (
-                    <Input {...field} placeholder="Enter phone number" />
+                    <Input {...field} placeholder={t("Patients:caregiver_phone_input")}/>
                   )}
                 />
               </Form.Item>
@@ -203,7 +203,7 @@ function CreateEnrollement({ refetchPatients }) {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                label="Email"
+                label={t("Patients:email")}
                 required
                 validateStatus={errors.patientEmail ? "error" : ""}
                 help={errors.patientEmail?.message}
@@ -212,17 +212,17 @@ function CreateEnrollement({ refetchPatients }) {
                   name="patientEmail"
                   control={control}
                   rules={{
-                    required: "L'email est obligatoire",
+                    required: t("Patients:email_needed"),
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: "Format d'email invalide",
+                      message: t("Patients:email_invalid"),
                     },
                   }}
                   render={({ field }) => (
                     <Input
                       type="email"
                       {...field}
-                      placeholder="Enter email address"
+                      placeholder={t("Patients:email_input")}
                     />
                   )}
                 />
@@ -230,7 +230,7 @@ function CreateEnrollement({ refetchPatients }) {
             </Col>
             <Col span={12}>
               <Form.Item
-                label="Confirm Email"
+                label={t("Patients:email_confirm")}
                 required
                 validateStatus={errors.confirmPatientEmail ? "error" : ""}
                 help={errors.confirmPatientEmail?.message}
@@ -239,16 +239,16 @@ function CreateEnrollement({ refetchPatients }) {
                   name="confirmPatientEmail"
                   control={control}
                   rules={{
-                    required: "La confirmation de l'email est obligatoire",
+                    required: t("Patients:email_confirm_required"),
                     validate: (value) =>
                       value === control._formValues.patientEmail ||
-                      "Les emails ne correspondent pas",
+                    t("Patients:email_confirm_invalid"),
                   }}
                   render={({ field }) => (
                     <Input
                       type="email"
                       {...field}
-                      placeholder="Confirm email address"
+                      placeholder={t("Patients:email_confirm_info")}
                     />
                   )}
                 />
@@ -258,14 +258,14 @@ function CreateEnrollement({ refetchPatients }) {
 
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item label="Additional Information">
+              <Form.Item label={t("Patients:additionnal_information")}>
                 <Controller
                   name="otherinfo"
                   control={control}
                   render={({ field }) => (
                     <Input.TextArea
                       {...field}
-                      placeholder="Enter any additional information"
+                      placeholder={t("Patients:additionnal_information_input")}
                       rows={4}
                     />
                   )}
@@ -281,7 +281,7 @@ function CreateEnrollement({ refetchPatients }) {
               <Row gutter={16}>
                 <Col span={8}>
                   <Form.Item
-                    label="First Name"
+                    label={t("Patients:first_name")}
                     required
                     validateStatus={
                       errors[`caregiverFirstName${index + 1}`] ? "error" : ""
@@ -292,17 +292,16 @@ function CreateEnrollement({ refetchPatients }) {
                       name={`caregiverFirstName${index + 1}`}
                       control={control}
                       rules={{
-                        required: "Le prénom est obligatoire",
+                        required: t("Patients:first_name_required"),
                         minLength: {
                           value: 2,
-                          message:
-                            "Le prénom doit contenir au moins 2 caractères",
+                          message: t("Patients:first_name_required_info")
                         },
                       }}
                       render={({ field }) => (
                         <Input
                           {...field}
-                          placeholder="Enter caregiver's first name"
+                          placeholder={t("Patients:caregiver_first_name_input")}
                         />
                       )}
                     />
@@ -310,7 +309,7 @@ function CreateEnrollement({ refetchPatients }) {
                 </Col>
                 <Col span={8}>
                   <Form.Item
-                    label="Last Name"
+                    label={t("Patients:last_name")}
                     required
                     validateStatus={
                       errors[`caregiverLastName${index + 1}`] ? "error" : ""
@@ -321,32 +320,40 @@ function CreateEnrollement({ refetchPatients }) {
                       name={`caregiverLastName${index + 1}`}
                       control={control}
                       rules={{
-                        required: "Le nom est obligatoire",
+                        required: t("Patients:last_name_required"),
                         minLength: {
                           value: 2,
-                          message: "Le nom doit contenir au moins 2 caractères",
+                          message: t("Patients:last_name_required_info")
                         },
                       }}
                       render={({ field }) => (
                         <Input
                           {...field}
-                          placeholder="Enter caregiver's last name"
+                          placeholder={t("Patients:caregiver_last_name_input")}
                         />
                       )}
                     />
                   </Form.Item>
                 </Col>
                 <Col span={8}>
-                  <Form.Item label="Relationship">
+                  <Form.Item label={t("Patients:relationship")}>
                     <Controller
                       name={`relationship${index + 1}`}
                       control={control}
                       render={({ field }) => (
-                        <Select {...field} placeholder="Select relationship">
-                          <Select.Option value="parent">Parent</Select.Option>
-                          <Select.Option value="sibling">Sibling</Select.Option>
-                          <Select.Option value="friend">Friend</Select.Option>
-                          <Select.Option value="other">Other</Select.Option>
+                        <Select {...field} placeholder={t("Patients:relationship_choice")}>
+                          <Select.Option value="parent">
+                            {t("Patients:relation_parent")}
+                          </Select.Option>
+                          <Select.Option value="sibling">
+                            {t("Patients:relation_sibling")}
+                          </Select.Option>
+                          <Select.Option value="friend">
+                            {t("Patients:relation_friend")}
+                          </Select.Option>
+                          <Select.Option value="other">
+                            {t("Patients:relation_other")}
+                          </Select.Option>
                         </Select>
                       )}
                     />
@@ -357,7 +364,7 @@ function CreateEnrollement({ refetchPatients }) {
               <Row gutter={16}>
                 <Col span={12}>
                   <Form.Item
-                    label="Email"
+                    label={t("Patients:email")}
                     required
                     validateStatus={
                       errors[`caregiverEmail${index + 1}`] ? "error" : ""
@@ -368,17 +375,17 @@ function CreateEnrollement({ refetchPatients }) {
                       name={`caregiverEmail${index + 1}`}
                       control={control}
                       rules={{
-                        required: "L'email est obligatoire",
+                        required:  t("Patients:email_needed"),
                         pattern: {
                           value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                          message: "Format d'email invalide",
+                          message: t("Patients:email_invalid")
                         },
                       }}
                       render={({ field }) => (
                         <Input
                           type="email"
                           {...field}
-                          placeholder="Enter caregiver's email"
+                          placeholder={t("Patients:caregiver_email_input")}
                         />
                       )}
                     />
@@ -386,7 +393,7 @@ function CreateEnrollement({ refetchPatients }) {
                 </Col>
                 <Col span={12}>
                   <Form.Item
-                    label="Phone"
+                    label={t("Patients:phone_number")}
                     required
                     validateStatus={
                       errors[`caregiverPhone${index + 1}`] ? "error" : ""
@@ -397,16 +404,16 @@ function CreateEnrollement({ refetchPatients }) {
                       name={`caregiverPhone${index + 1}`}
                       control={control}
                       rules={{
-                        required: "Le numéro de téléphone est obligatoire",
+                        required: t("Patients:phone_number_required"),
                         pattern: {
                           value: /^[0-9+\s-]{8,}$/,
-                          message: "Format de numéro de téléphone invalide",
+                          message: t("Patients:phone_number_invalid"),
                         },
                       }}
                       render={({ field }) => (
                         <Input
                           {...field}
-                          placeholder="Enter caregiver's phone"
+                          placeholder={t("Patients:caregiver_phone_input")}
                         />
                       )}
                     />
@@ -423,15 +430,15 @@ function CreateEnrollement({ refetchPatients }) {
               icon={<UserAddOutlined />}
               style={{ marginBottom: 24 }}
             >
-              Add Caregiver
+              {t("Patients:caregiver_add")}
             </Button>
           )}
 
-          <h2>Program Enrollment</h2>
+          <h2>{t("Patients:program_enrollment")}</h2>
           <Row gutter={16}>
             <Col span={8}>
               <Form.Item
-                label="Select Program"
+                label={t("Patients:program_select")}
                 required
                 validateStatus={errors.programId ? "error" : ""}
                 help={errors.programId?.message}
@@ -440,12 +447,12 @@ function CreateEnrollement({ refetchPatients }) {
                   name="programId"
                   control={control}
                   rules={{
-                    required: "La sélection du programme est obligatoire",
+                    required: t("Patients:program_select_required"),
                   }}
                   render={({ field }) => (
                     <Select
                       {...field}
-                      placeholder="Select a program"
+                      placeholder={t("Patients:program_select")}
                       style={{ width: "100%" }}
                     >
                       {programList?.map((program) => (
@@ -461,7 +468,7 @@ function CreateEnrollement({ refetchPatients }) {
 
             <Col span={8}>
               <Form.Item
-                label="Program Code"
+                label={t("Patients:program_code")}
                 required
                 validateStatus={errors.programCode ? "error" : ""}
                 help={errors.programCode?.message}
@@ -469,9 +476,11 @@ function CreateEnrollement({ refetchPatients }) {
                 <Controller
                   name="programCode"
                   control={control}
-                  rules={{ required: "Le code du programme est obligatoire" }}
+                  rules={{ 
+                    required: t("Patients:program_code_required"),
+                  }}
                   render={({ field }) => (
-                    <Input {...field} placeholder="Enter program code" />
+                    <Input {...field} placeholder={t("Patients:program_code_input")} />
                   )}
                 />
               </Form.Item>
@@ -479,7 +488,7 @@ function CreateEnrollement({ refetchPatients }) {
 
             <Col span={8}>
               <Form.Item
-                label="Program Duration"
+                label={t("Patients:program_duration")}
                 required
                 validateStatus={errors.programDates ? "error" : ""}
                 help={errors.programDates?.message}
@@ -487,13 +496,15 @@ function CreateEnrollement({ refetchPatients }) {
                 <Controller
                   name="programDates"
                   control={control}
-                  rules={{ required: "La durée du programme est obligatoire" }}
+                  rules={{ 
+                    required: t("Patients:program_duration_required"),
+                  }}
                   render={({ field }) => (
                     <RangePicker
                       {...field}
                       style={{ width: "100%" }}
                       format="YYYY-MM-DD"
-                      placeholder={["Start Date", "End Date"]}
+                      placeholder={[t("Patients:date_start"), t("Patients:date_end")]}
                     />
                   )}
                 />
@@ -503,7 +514,7 @@ function CreateEnrollement({ refetchPatients }) {
 
           <Form.Item>
             <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
-              Create Enrollment
+              {t("create_enrollement")}
             </Button>
           </Form.Item>
         </Form>
@@ -513,7 +524,7 @@ function CreateEnrollement({ refetchPatients }) {
           onCancel={closeModal}
           footer={[
             <Button key="close" onClick={closeModal}>
-              Close
+              {t("close_button")}
             </Button>,
           ]}
         >
