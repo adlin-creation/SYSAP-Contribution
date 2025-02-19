@@ -15,25 +15,11 @@ export default function CreateExercise(props) {
   const [message, setMessage] = useState("");
 
   const [selectedExerciseCategory, setSelectedExerciseCategory] = useState(null);
-  //const [displayedExerciseCategory, setDisplayedExerciseCategory] = useState("");
-
-  //const [displayedTargetAgeRange, setDisplayedTargetAgeRange] = useState("");
-  ///const [selectedTargetAgeRange, setSelectedTargetAgeRange] = useState(null);
-
   const [selectedFitnessLevel, setSelectedFitnessLevel] = useState(null); // Assurez-vous que la valeur initiale est null
-  //const [displayedFitnessLevel, setDisplayedFitnessLevel] = useState("");
-
-  //const [isSeatingExercise, setIsSeatingExercise] = useState(false);
-
   const [exerciseImage, setExerciseImage] = useState(null);
 
   // destructure custom use hook
   const { token } = useToken();
-
-  //const handleChange = (event) => {
-  //  setIsSeatingExercise(event.target.checked);
-  //};
-
   function openModal(message, isError) {
     setMessage(message);
     setIsErrorMessage(isError);

@@ -41,22 +41,24 @@ export default function Exercise({
             icon={<DeleteOutlined />}
             onClick={() => deleteExercise(exercise)}
           >
-            DELETE
+            Suprimmer
           </Button>,
+          
           <Button
-            type="link"
+            type="primary"
             onClick={(event) => {
               onClick(event);
               onSelect(exercise);
             }}
           >
             Modifier
-          </Button>,
+          </Button>
+
         ]}
       >
         <Meta
           title={exercise.name}
-          description={exercise.fitnessLevel}
+          description={`${exercise.fitnessLevel} | ${exercise.category}`}
         />
       </Card>
     </>
