@@ -29,8 +29,8 @@
 }
 
 .filter-container {
-  display: flex;
-  /* flex-grow: 1; Permet au conteneur de prendre toute la largeur disponible */
+  
+  flex-grow: 0.4; /*Permet au conteneur de prendre toute la largeur disponible */
   gap: 1rem; /* Espace entre les filtres */
   flex-wrap: nowrap; /* Empêche les filtres de passer à la ligne suivante */
   align-items: center; /* Aligne les filtres verticalement au centre */
@@ -53,8 +53,13 @@
 }
 
 .exercise-card {
-  width: 100%; /* Ajustez la largeur selon vos besoins */
+  width:100%;/* Ajustez la largeur selon vos besoins */
   max-width: 250px; /* Limite la largeur maximale */
   margin-right: 16px; /* Ajoutez des marges pour espacer les cartes */
   
 }
+.exercise-card button{
+  max-width: 80px; /* Limite la largeur maximale */
+  margin-right: 10px; /* Ajoutez des marges pour espacer les cartes */
+  margin-left: 1px; 
+} 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from 'prop-types'; // Import de PropTypes
-import { Col, Input, Button, Form, Modal, Select, Checkbox } from "antd";
+import { Col, Input, Button, Form, Modal, Select } from "antd";
 import { Controller, useForm } from "react-hook-form";
 import { SendOutlined } from '@ant-design/icons'; // Import de l'icône
 import "./Styles.css";
@@ -23,16 +23,16 @@ export default function CreateExercise(props) {
   const [selectedFitnessLevel, setSelectedFitnessLevel] = useState(null); // Assurez-vous que la valeur initiale est null
   //const [displayedFitnessLevel, setDisplayedFitnessLevel] = useState("");
 
-  const [isSeatingExercise, setIsSeatingExercise] = useState(false);
+  //const [isSeatingExercise, setIsSeatingExercise] = useState(false);
 
   const [exerciseImage, setExerciseImage] = useState(null);
 
   // destructure custom use hook
   const { token } = useToken();
 
-  const handleChange = (event) => {
-    setIsSeatingExercise(event.target.checked);
-  };
+  //const handleChange = (event) => {
+  //  setIsSeatingExercise(event.target.checked);
+  //};
 
   function openModal(message, isError) {
     setMessage(message);
@@ -47,7 +47,7 @@ export default function CreateExercise(props) {
   }
 
   const onSubmit = (data) => {
-    const { name, description, instructionalVideo } = data;
+    const { name, description} = data;
     let formData = new FormData();
     const combinedData = {
       name: name,
@@ -61,14 +61,16 @@ export default function CreateExercise(props) {
     };
     console.log("Submitting Data:", combinedData); 
     console.log("The exercise object", combinedData);
-    formData.append("image", exerciseImage);
-    // formData.append("name", combinedData.name);
-    // formData.append("description", combinedData.description);
-    // formData.append("instructionalVideo", combinedData.instructionalVideo);
-    // formData.append("isSeating", combinedData.isSeating);
-    // formData.append("category", combinedData.category);
-    // formData.append("targetAgeRange", combinedData.targetAgeRange);
-    // formData.append("fitnessLevel", combinedData.fitnessLevel);
+    if (exerciseImage) {
+      formData.append("image", exerciseImage);
+    }
+    formData.append("name", combinedData.name);
+    formData.append("description", combinedData.description);
+    formData.append("instructionalVideo", combinedData.instructionalVideo);
+    formData.append("isSeating", combinedData.isSeating);
+    formData.append("category", combinedData.category);
+    formData.append("targetAgeRange", combinedData.targetAgeRange);
+    formData.append("fitnessLevel", combinedData.fitnessLevel);
     axios
       .post(`${Constants.SERVER_URL}/create-exercise`, combinedData, {
         headers: {
@@ -158,42 +160,18 @@ export default function CreateExercise(props) {
               )}
             />
           </Form.Item>
-          {/* 
-          <Form.Item label="Please enter the instructional video of the exercise : " className="input-element">
-            <Controller
-              name="instructionalVideo"
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <Input
-                  onChange={onChange}
-                  value={value}
-                  placeholder="Exercise Instructional Video"
-                />
-              )}
-            />
-          </Form.Item>
-          */}
           
           <Form.Item label="Image de l'exercice: " className="input-element">
             <input type="file" accept="image/*" onChange={onChangeImage} />
           </Form.Item>
-          {/*
-          <Form.Item className="input-element">
-            <Checkbox
-              checked={isSeatingExercise}
-              onChange={handleChange}
-            >
-              Seating Exercise
-            </Checkbox>
-          </Form.Item>
-          */}
+          
           <Form.Item className="input-element">
             <Button
               type="primary"
               htmlType="submit"
               icon={<SendOutlined />} // Utilisation de l'icône Ant Design
             >
-              SUBMIT
+              Soumettre
             </Button>
           </Form.Item>
         </Form>

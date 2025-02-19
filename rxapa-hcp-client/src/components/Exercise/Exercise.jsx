@@ -50,13 +50,13 @@ export default function Exercise({
               onSelect(exercise);
             }}
           >
-            Learn More
+            Modifier
           </Button>,
         ]}
       >
         <Meta
           title={exercise.name}
-          description={exercise.description}
+          description={exercise.fitnessLevel}
         />
       </Card>
     </>
