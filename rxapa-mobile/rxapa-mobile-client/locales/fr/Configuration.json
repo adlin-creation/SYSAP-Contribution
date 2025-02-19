@@ -1,0 +1,22 @@
+{
+    "permission_refusee": "Permission refusée",
+    "activer_notifications_svp": "Activez les notifications pour recevoir les rappels.",
+    "erreur": "Erreur",
+    "entrer_heure_et_titre_svp": "Veuillez sélectionner une heure et un titre.",
+    "rappel": "Rappel",
+    "faire_votre_seance": "Il est temps de faire votre séance !",
+    "rappel_ajoute": "Rappel ajouté",
+    "rappel_rajoute_a": "Rappel ajouté à",
+    "err_rappel": "Impossible de programmer le rappel.",
+    "rappel_supprime": "Rappel supprimé",
+    "rappel_supprime_confirmation": "Le rappel a été supprimé.",
+    "rappels_programmes": "Rappels programmés",
+    "aucun_rappel": "Aucun rappel pour l'instant.",
+    "supprimer": "Supprimer",
+    "ajouter_un_rappel": "Ajouter un rappel",
+    "nouveau_rappel": "Nouveau Rappel",
+    "titre_du_rappel": "Titre du rappel",
+    "selectionner_heure": "Sélectionnez l'heure",
+    "planifier": "Planifier",
+    "annuler": "Annuler"
+}

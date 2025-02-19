@@ -1,0 +1,14 @@
+{
+    "entrer_code": "Please enter a code.",
+    "entrer_votre_code": "Enter your code",
+    "erreur_code_incorrect": "The entered code is incorrect. Please try again.",
+    "authentification": "AUTHENTICATION",
+    "saisir_code_personnel": "Please enter your personal code",
+    "connexion": "LOGIN",
+    "aucun_code_perso": "I don't have a personal code",
+    "question_besoin_aide": "Need help?",
+    "contact_aide_code": "If you don't have the personal code or have forgotten it, please contact:",
+    "contact_it": "The IT department:",
+    "contact_kine": "Your kinesiologist to obtain a valid code.",
+    "fermer": "Close"
+}
