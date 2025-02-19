@@ -134,7 +134,7 @@ export default function MaProgressionScreen() {
       </Card>
 
       <Card style={styles.card}>
-        <Text style={styles.cardTitle}>{isAllPeriod ? 'Statistiques depuis le début' : 'Statistiques de la semaine'}</Text>
+        <Text style={styles.cardTitle}>{isAllPeriod ? t('Progression:statistiques_depuis_debut') : t('Progression:statistiques_de_la_semaine')}</Text>
         <View style={styles.statsContainer}>
           <View style={styles.statsRow}>
             <Text style={styles.statsLabel}>⚙️ {t('Progression:difficulte_moyenne')} :</Text>

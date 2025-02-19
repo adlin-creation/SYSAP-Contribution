@@ -8,5 +8,7 @@
     "douleur_moyenne": "Douleur Moyenne",
     "satisfaction_moyenne": "Satisfaction Moyenne",
     "temps_marche": "Temps de Marche",
-    "total_exercices": "Total Exercices"
+    "total_exercices": "Total Exercices",
+    "statistiques_depuis_debut": "Statistiques depuis le début",
+    "statistiques_de_la_semaine": "Statistiques de la semaine"
 }
