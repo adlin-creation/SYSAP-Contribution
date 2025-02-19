@@ -46,12 +46,6 @@
   width: 100%; /* Ajustez la largeur selon vos besoins */
 }
 
-.cards-container {
-  display: flex;
-  flex-wrap: wrap; /* Permet aux cartes de passer à la ligne suivante si nécessaire */
-  justify-content: space-between; /* Assure un espacement égal entre les cartes */
-}
-
 .exercise-card {
   width:100%;/* Ajustez la largeur selon vos besoins */
   max-width: 250px; /* Limite la largeur maximale */
@@ -59,7 +53,7 @@
   
 }
 .exercise-card button{
-  max-width: 80px; /* Limite la largeur maximale */
-  margin-right: 10px; /* Ajoutez des marges pour espacer les cartes */
-  margin-left: 1px; 
+  width:100%;/* Ajustez la largeur selon vos besoins */
+  max-width: 125px; /* Limite la largeur maximale */
+  margin-right: 16px; /* Ajoutez des marges pour espacer les cartes */
 } 
