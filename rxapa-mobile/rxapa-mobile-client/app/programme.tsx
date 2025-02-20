@@ -3,6 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTranslation } from 'react-i18next';
+import '../utils/i18n';
+
+const { t, i18n } = useTranslation();
 
 export default function ProgrammeScreen() {
   const [fullName, setFullName] = useState('');
@@ -39,19 +43,19 @@ export default function ProgrammeScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.greeting}>Bonjour, {fullName}!</Text>
+      <Text style={styles.greeting}>{t('Programme:bonjour')}, {fullName}!</Text>
       <Text style={styles.programName}>{programName}</Text>
       <View style={styles.dayContainer}>
         <TouchableOpacity style={styles.dayButton} onPress={decrementDay}>
           <Text style={styles.buttonText}>-</Text>
         </TouchableOpacity>
-        <Text style={styles.dayText}>Jour {currentDay}</Text>
+        <Text style={styles.dayText}>{t('Programme:jour')} {currentDay}</Text>
         <TouchableOpacity style={styles.dayButton} onPress={incrementDay}>
           <Text style={styles.buttonText}>+</Text>
         </TouchableOpacity>
       </View>
       <TouchableOpacity style={styles.startButton}>
-        <Text style={styles.startButtonText}>Ma séance d'aujourd'hui</Text>
+        <Text style={styles.startButtonText}>{t('Programme:ma_seance_aujourdhui')}</Text>
       </TouchableOpacity>
     </View>
   );
