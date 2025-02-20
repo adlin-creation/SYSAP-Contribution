@@ -7,7 +7,7 @@ stages:
   - test
 
 job_build:
-  image: node:lts-alpine 
+  image: node:lts-alpine
   stage: build
   script:
     - echo "Building the project"
@@ -15,11 +15,11 @@ job_build:
     - echo "Build completed"
 
 job_test:
-  image: node:lts-alpine  
+  image: node:lts-alpine
   stage: test
 
   script:
     - echo "Running tests for backend"
-    - cd rxapa-hcp-server && npm install && npm test  
-    - echo "Tests completed successfully"
-
+    - cd rxapa-hcp-server && npm install && npm test
+    - echo "Running tests for frontend"
+    - cd ../rxapa-hcp-client && npm install && npm test
