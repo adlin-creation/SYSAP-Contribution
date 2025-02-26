@@ -1,15 +1,19 @@
 // objective: create a layout for the application
 // objective: créer une mise en page pour l'application
 import { Stack } from 'expo-router';
+import { useTranslation } from 'react-i18next';
+import '../utils/i18n';
+
+const { t, i18n } = useTranslation();
 
 export default function Layout() {
   return (
     <Stack>
-      <Stack.Screen name="index" options={{ title: 'Authentification' }} />
+      <Stack.Screen name="index" options={{ title: t('Layout:authentification') }} />
       <Stack.Screen
   name="home"
   options={{
-    title: 'Déconnexion',
+    title: t('Layout:deconnexion'),
     headerTitleStyle: {
       color: 'red', 
       fontSize: 20, 
@@ -17,11 +21,11 @@ export default function Layout() {
     },
   }}
 />
-      <Stack.Screen name="programme" options={{ title: 'Mon Programme' }} />
-      <Stack.Screen name="seance" options={{ title: 'Ma Séance' }} />
-      <Stack.Screen name="progression" options={{ title: 'Ma Progression' }} />
-      <Stack.Screen name="configuration" options={{ title: 'Configuration' }} />
-      <Stack.Screen name="cahier-de-suivie" options={{ title: 'Cahier de Suivie' }} />
+      <Stack.Screen name="programme" options={{ title: t('Layout:mon_programme') }} />
+      <Stack.Screen name="seance" options={{ title: t('Layout:ma_seance') }} />
+      <Stack.Screen name="progression" options={{ title: t('Layout:ma_progression') }} />
+      <Stack.Screen name="configuration" options={{ title: t('Layout:configuration') }} />
+      <Stack.Screen name="cahier-de-suivie" options={{ title: t('Layout:cahier_de_suivi') }} />
     </Stack>
   );
 }
