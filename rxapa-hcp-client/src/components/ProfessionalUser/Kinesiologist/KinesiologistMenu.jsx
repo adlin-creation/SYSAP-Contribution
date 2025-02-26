@@ -70,7 +70,9 @@ export default function KinesiologistMenu() {
       dataIndex: "active",
       render: (active) => (
         <Tag color={active ? "green" : "red"}>
-          {active ? "ACTIVE" : "INACTIVE"}
+          {active
+            ? t("Professionals:Kinesiologist:active_status")
+            : t("Professionals:Kinesiologist:inactive_status")}
         </Tag>
       ),
     },
@@ -83,13 +85,13 @@ export default function KinesiologistMenu() {
             type="link"
             onClick={() => navigate(`/kinesiologist-patients/${record.id}`)}
           >
-            <UserOutlined /> Patients
+            <UserOutlined /> {t("Professionals:Kinesiologist:patients_button")}
           </Button>
           <Button type="link" onClick={() => handleEdit(record)}>
-            <EditOutlined /> Edit
+            <EditOutlined /> {t("Professionals:Kinesiologist:edit_button")}
           </Button>
           <Button type="link" danger onClick={() => handleDelete(record)}>
-            <DeleteOutlined /> Delete
+            <DeleteOutlined /> {t("Professionals:Kinesiologist:delete_button")}
           </Button>
         </Space>
       ),
@@ -185,7 +187,10 @@ export default function KinesiologistMenu() {
             {t("Professionals:Kinesiologist:register_kenisiologist_button")}
           </Button>
           {kinesiologistList?.length > 0 && (
-            <span>Total Kinesiologists: {kinesiologistList.length}</span>
+            <span>
+              {t("Professionals:Kinesiologist:total_kinesiologists")}:{" "}
+              {kinesiologistList.length}
+            </span>
           )}
         </div>
 
@@ -200,7 +205,9 @@ export default function KinesiologistMenu() {
           pagination={{
             pageSize: 10,
             showTotal: (total, range) =>
-              `${range[0]}-${range[1]} of ${total} kinesiologists`,
+              `${range[0]}-${range[1]} ${t(
+                "Professionals:Kinesiologist:of"
+              )} ${total} ${t("Professionals:Kinesiologist:kinesiologists")}`,
           }}
         />
       </>

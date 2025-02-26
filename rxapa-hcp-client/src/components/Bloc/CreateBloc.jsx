@@ -102,7 +102,7 @@ export default function CreateBloc(props) {
             onCancel={closeModal}
             footer={[
               <Button key="close" onClick={closeModal}>
-                Close
+                {t("Blocs:close_button")}
               </Button>,
             ]}
           >

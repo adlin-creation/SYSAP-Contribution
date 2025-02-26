@@ -23,6 +23,7 @@ i18n
     backend: {
       loadPath: "/locales/{{lng}}/{{ns}}.json", // Où chercher les fichiers JSON
     },
+
     interpolation: { escapeValue: false }, // Pour échaper les caractères spéciaux (limite XSS attacks) exemple : les balises
   }); // sont interprétés pas affichées
 

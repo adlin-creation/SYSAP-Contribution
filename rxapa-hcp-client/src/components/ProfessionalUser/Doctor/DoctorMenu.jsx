@@ -70,7 +70,9 @@ export default function DoctorMenu() {
       dataIndex: "active",
       render: (active) => (
         <Tag color={active ? "green" : "red"}>
-          {active ? "ACTIVE" : "INACTIVE"}
+          {active
+            ? t("Professionals:Doctors:active_status")
+            : t("Professionals:Doctors:inactive_status")}
         </Tag>
       ),
     },
@@ -83,13 +85,14 @@ export default function DoctorMenu() {
             type="link"
             onClick={() => navigate(`/doctor-patients/${record.id}`)}
           >
-            <UserOutlined /> Patients
+            <UserOutlined />
+            {t("Professionals:Doctors:patients_button")}
           </Button>
           <Button type="link" onClick={() => handleEdit(record)}>
-            <EditOutlined /> Edit
+            <EditOutlined /> {t("Professionals:Doctors:edit_button")}
           </Button>
           <Button type="link" danger onClick={() => handleDelete(record)}>
-            <DeleteOutlined /> Delete
+            <DeleteOutlined /> {t("Professionals:Doctors:delete_button")}
           </Button>
         </Space>
       ),
@@ -183,7 +186,9 @@ export default function DoctorMenu() {
             {t("Professionals:Doctors:register_doctor")}
           </Button>
           {doctorList?.length > 0 && (
-            <span>Total Doctors: {doctorList.length}</span>
+            <span>
+              {t("Professionals:Doctors:total_doctors")}: {doctorList.length}
+            </span>
           )}
         </div>
 
@@ -198,7 +203,9 @@ export default function DoctorMenu() {
           pagination={{
             pageSize: 10,
             showTotal: (total, range) =>
-              `${range[0]}-${range[1]} of ${total} doctors`,
+              `${range[0]}-${range[1]} ${t(
+                "Professionals:Doctors:of"
+              )} ${total} ${t("Professionals:Doctors:doctors")}`,
           }}
         />
       </>

@@ -24,13 +24,13 @@ export default function Exercise({
             <ReactPlayer
               url={exercise.instructionalVideo}
               width="100%"
-              height="90px" 
+              height="90px"
             />
           ) : exercise.imageUrl ? (
             <img
               src={`${Constants.SERVER_URL}/${exercise.imageUrl}`}
               alt="Exercise"
-              style={{ height: '90px', objectFit: 'cover' }}
+              style={{ height: "90px", objectFit: "cover" }}
             />
           ) : null
         }
@@ -54,10 +54,7 @@ export default function Exercise({
           </Button>,
         ]}
       >
-        <Meta
-          title={exercise.name}
-          description={exercise.description}
-        />
+        <Meta title={exercise.name} description={exercise.description} />
       </Card>
     </>
   );

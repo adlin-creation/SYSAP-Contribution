@@ -13,5 +13,6 @@
   "error_loading_all_phases": "An error occurred while loading all phases",
   "create_program": "Create a program",
   "submit_button": "SUBMIT",
-  "back_button": "Back"
+  "back_button": "Back",
+  "close_button": "Close"
 }

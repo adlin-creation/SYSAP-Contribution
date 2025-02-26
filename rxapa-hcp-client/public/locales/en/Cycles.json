@@ -9,7 +9,16 @@
   "weekly_cycle_name_placeholder": "Weekly Cycle Name",
   "cycle_description_label": "Please enter the description of the cycle : ",
   "weekly_cycle_description_placeholder": "Weekly Cycle Description",
+  "sessions_loading_title": "All sessions Loading...",
+  "sessions_loading_error_message": "Sorry, an error occured while loading the sessions",
+  "cycle_sessions_loading_title": "Cycle sessions Loading...",
+  "cycle_sessions_loading_error_msg": "Sorry, an error occured while loading cycle sessions",
+
   "back_button": "Back",
   "close_button": "Close",
-  "submit_button": "SUBMIT"
+  "submit_button": "SUBMIT",
+  "edit_button": "Edit",
+  "delete_button": "Delete",
+  "update_button": "Update",
+  "add_session_button": "Add session"
 }

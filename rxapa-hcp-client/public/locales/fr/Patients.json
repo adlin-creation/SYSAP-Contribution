@@ -24,6 +24,7 @@
   "name": "Nom",
   "email": "Courriel",
   "phone": "Téléphone",
+  "phone_number": "Numéro de téléphone",
   "status": "Statut",
   "programs": "Programmes",
   "actions": "Actions",

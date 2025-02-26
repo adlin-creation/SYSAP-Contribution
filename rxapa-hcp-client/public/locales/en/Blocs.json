@@ -27,5 +27,6 @@
   "describe_resting_instruction": "Describe the resting instruction",
   "describe_resting_instruction_label": "Describe the resting instruction",
   "required_label": "Required",
-  "cancel_button": "CANCEL"
+  "cancel_button": "CANCEL",
+  "close_button": "Close"
 }

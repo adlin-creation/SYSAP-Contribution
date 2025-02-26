@@ -34,10 +34,10 @@ export default function FilterExercise({ updateSelectedValues }) {
               value={selectedCategory}
               onChange={handleCategoryChange}
               className="select-wide"
-              placeholder="Category"
+              placeholder={t("Exercises:category_placeholder")}
               allowClear
             >
-              <Option value="ALL">{t("Exercises:ALL")}</Option>
+              <Option value="ALL">{t("Exercises:all")}</Option>
               <Option value="AEROBIC">{t("Exercises:aerobic")}</Option>
               <Option value="STRENGTH">{t("Exercises:strength")}</Option>
               <Option value="ENDURANCE">{t("Exercises:endurance")}</Option>
@@ -51,10 +51,10 @@ export default function FilterExercise({ updateSelectedValues }) {
               value={selectedFitnessLevel}
               onChange={handleFitnessLevelChange}
               className="select-wide"
-              placeholder="Fitness Level"
+              placeholder={t("Exercises:fitness_level_placeholder")}
               allowClear
             >
-              <Option value="ALL">{t("Exercises:Exall")}</Option>
+              <Option value="ALL">{t("Exercises:all")}</Option>
               <Option value="LOW">{t("Exercises:low")}</Option>
               <Option value="BELOW_AVERAGE">
                 {t("Exercises:below_average")}
@@ -73,7 +73,7 @@ export default function FilterExercise({ updateSelectedValues }) {
               value={selectedAgeGroup}
               onChange={handleAgeGroupChange}
               className="select-wide"
-              placeholder="Age Group"
+              placeholder={t("Exercises:age_groupe_placeholder")}
               allowClear
             >
               <Option value="ALL">{t("Exercises:all")}</Option>

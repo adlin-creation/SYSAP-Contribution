@@ -9,7 +9,16 @@
   "weekly_cycle_name_placeholder": "Nom du cycle hebdomadaire",
   "cycle_description_label": "Veuillez entrer la description du cycle : ",
   "weekly_cycle_description_placeholder": "Description du cycle hebdomadaire",
+  "sessions_loading_title": "Chargement de toutes les sessions...",
+  "sessions_loading_error_message": "Désolé, une erreur est survenue lors du chargement des sessions",
+  "cycle_sessions_loading_title": "Chargement des sessions du cycle...",
+  "cycle_sessions_loading_error_msg": "Désolé, une erreur est survenue lors du chargement des sessions du cycle",
+
   "back_button": "Retour",
   "close_button": "Fermer",
-  "submit_button": "SOUMETTRE"
+  "submit_button": "SOUMETTRE",
+  "edit_button": "Modifier",
+  "delete_button": "Supprimer",
+  "update_button": "Mettre à jour",
+  "add_session_button": "Ajouter La session"
 }

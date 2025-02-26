@@ -1,4 +1,4 @@
-import { PlusOutlined, CheckOutlined } from '@ant-design/icons';
+import { PlusOutlined, CheckOutlined } from "@ant-design/icons";
 import { Row, Col, Input, Button, Form, Modal } from "antd";
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
@@ -64,17 +64,17 @@ export default function CycleDetails({ cycle, refetchCycles }) {
   /// QUERY VALIDATIONS          ///
   //////////////////////////////////
   if (isAllSessionsLoading) {
-    return <h1>All sessions Loading...</h1>;
+    return <h1>{t("Cycles:sessions_loading_title")}</h1>;
   }
   if (isAllSessionLoadingError) {
-    return <h1>Sorry, an error occured while loading the sessions</h1>;
+    return <h1>{t("Cycles:sessions_loading_error_msg")}</h1>;
   }
 
   if (isCycleSessionsLoading) {
-    return <h1>Cycle sessions Loading...</h1>;
+    return <h1>{t("Cycles:cycle_sessions_loading_title")}</h1>;
   }
   if (isCycleSessionsLoadingError) {
-    return <h1>Sorry, an error occured while loading cycle sessions</h1>;
+    return <h1>{t("Cycles:cycle_sessions_loading_error_msg")}</h1>;
   }
 
   function addSession() {
@@ -120,10 +120,10 @@ export default function CycleDetails({ cycle, refetchCycles }) {
   }
 
   return (
-    <Row justify="center" align="middle" style={{ minHeight: '50vh' }}>
+    <Row justify="center" align="middle" style={{ minHeight: "50vh" }}>
       <Col span={12}>
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
-          <Form.Item label={t("enter_cycle_name")}>
+          <Form.Item label={t("Cycles:enter_cycle_name")}>
             <Controller
               name="name"
               control={control}
@@ -131,14 +131,14 @@ export default function CycleDetails({ cycle, refetchCycles }) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder={t("update_cycle_name")}
+                  placeholder={t("Cycles:update_cycle_name")}
                   required
                 />
               )}
             />
           </Form.Item>
 
-          <Form.Item label={t("enter_cycle_description")}>
+          <Form.Item label={t("Cycles:enter_cycle_description")}>
             <Controller
               name="description"
               control={control}
@@ -146,7 +146,7 @@ export default function CycleDetails({ cycle, refetchCycles }) {
                 <Input.TextArea
                   onChange={onChange}
                   value={value}
-                  placeholder={t("update_cycle_description")}
+                  placeholder={t("Cycles:update_cycle_description")}
                   rows={4}
                   required
                 />
@@ -155,12 +155,8 @@ export default function CycleDetails({ cycle, refetchCycles }) {
           </Form.Item>
 
           <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              icon={<CheckOutlined />}
-            >
-              {t("update")}
+            <Button type="primary" htmlType="submit" icon={<CheckOutlined />}>
+              {t("Cycles:update_button")}
             </Button>
           </Form.Item>
         </Form>
@@ -173,7 +169,7 @@ export default function CycleDetails({ cycle, refetchCycles }) {
             icon={<PlusOutlined />}
             className="session-add-button"
           >
-            {t("add_session")}
+            {t("Cycles:add_session_button")}
           </Button>
         </div>
 
@@ -197,7 +193,7 @@ export default function CycleDetails({ cycle, refetchCycles }) {
               </Button>,
             ]}
           >
-            <p style={{ color: isErrorMessage ? 'red' : 'green' }}>{message}</p>
+            <p style={{ color: isErrorMessage ? "red" : "green" }}>{message}</p>
           </Modal>
         )}
       </Col>
@@ -209,7 +205,7 @@ CycleDetails.propTypes = {
   cycle: PropTypes.shape({
     key: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    description: PropTypes.string
+    description: PropTypes.string,
   }).isRequired,
-  refetchCycles: PropTypes.func.isRequired
+  refetchCycles: PropTypes.func.isRequired,
 };

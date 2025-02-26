@@ -13,5 +13,10 @@
   "day_session_description": "Day Session Description",
   "enter_constraints_day_session": "Please enter the constraints of the day session",
   "day_session_constraints": "Day Session Constraints",
-  "submit_button": "SUBMIT"
+  "submit_button": "SUBMIT",
+  "session_name": "Name",
+  "session_description": "Description",
+  "session_constraints": "Constraints",
+  "edit_button": "Edit",
+  "delete_button": "Delete"
 }

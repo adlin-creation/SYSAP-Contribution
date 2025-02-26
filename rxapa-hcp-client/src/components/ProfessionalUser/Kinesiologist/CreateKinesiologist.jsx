@@ -183,7 +183,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                     <Input
                       {...field}
                       placeholder={t(
-                        "Professionals:inesiologist:enter_email_placeholder"
+                        "Professionals:Kinesiologist:enter_email_placeholder"
                       )}
                     />
                   )}
@@ -206,7 +206,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                     ),
                     validate: (value) =>
                       value === control._formValues.email ||
-                      t("email_mismatch_error"),
+                      t("Professionals:Kinesiologist:email_mismatch_error"),
                   }}
                   render={({ field }) => (
                     <Input

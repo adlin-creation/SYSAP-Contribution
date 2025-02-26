@@ -46,8 +46,8 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
       .then(() => {
         refetchAdmins();
         AntModal.success({
-          content: t("updating_success_msg"),
-          okText: "Close",
+          content: t("Professionals:Admins:updating_success_msg"),
+          okText: t("Professionals:Admins:close_button"),
           centered: true,
           onOk: () => {
             onClose();
@@ -56,10 +56,11 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
       })
       .catch((err) => {
         const errorMessage =
-          err.response?.data?.message || t("updating_admin_error_msg");
+          err.response?.data?.message ||
+          t("Professionals:Admins:updating_admin_error_msg");
         AntModal.error({
           content: errorMessage,
-          okText: "Close",
+          okText: t("Professionals:Admins:close_button"),
           centered: true,
         });
       });
@@ -73,7 +74,7 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
             {/* First Name and Last Name fields */}
             <Col span={12}>
               <Form.Item
-                label={t("first_name_label")}
+                label={t("Professionals:Admins:first_name_label")}
                 required
                 validateStatus={errors.firstname ? "error" : ""}
                 help={errors.firstname?.message}
@@ -94,7 +95,7 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
             </Col>
             <Col span={12}>
               <Form.Item
-                label="last_name_label"
+                label={t("Professionals:Admins:last_name_label")}
                 required
                 validateStatus={errors.lastname ? "error" : ""}
                 help={errors.lastname?.message}
@@ -119,7 +120,7 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
             {/* Email and Phone Number fields */}
             <Col span={12}>
               <Form.Item
-                label="Email"
+                label={t("Professionals:Admins:email")}
                 required
                 validateStatus={errors.email ? "error" : ""}
                 help={errors.email?.message}
@@ -140,7 +141,7 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
             </Col>
             <Col span={12}>
               <Form.Item
-                label="Phone Number"
+                label={t("Professionals:Admins:phone_number")}
                 required
                 validateStatus={errors.phoneNumber ? "error" : ""}
                 help={errors.phoneNumber?.message}
@@ -164,7 +165,7 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
           <Row gutter={16}>
             {/* Status field */}
             <Col span={12}>
-              <Form.Item label="Status">
+              <Form.Item label={t("Professionals:Admins:status")}>
                 <Controller
                   name="active"
                   control={control}
@@ -172,8 +173,10 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
                     <Switch
                       checked={value}
                       onChange={onChange}
-                      checkedChildren="Active"
-                      unCheckedChildren="Inactive"
+                      checkedChildren={t("Professionals:Admins:active_status")}
+                      unCheckedChildren={t(
+                        "Professionals:Admins:inactive_status"
+                      )}
                     />
                   )}
                 />
@@ -183,7 +186,7 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
 
           <Form.Item>
             <Button type="primary" htmlType="submit" icon={<SaveOutlined />}>
-              Update Admin
+              {t("Professionals:Admins:update_admin_button")}
             </Button>
           </Form.Item>
         </Form>

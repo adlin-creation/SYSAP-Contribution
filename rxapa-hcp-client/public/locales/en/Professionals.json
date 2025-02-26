@@ -8,6 +8,7 @@
     "register_doctor": "Register a Doctor",
     "register_doctor_title": "Register a new doctor",
     "edit_doctor": "Edit doctor",
+    "updating_success_msg": "Doctor updated successfully!",
     "first_name_label": "First name",
     "required_first_name_error": "First name is required",
     "first_name_min_length_error": "First name must be at least 2 characters long",
@@ -33,7 +34,17 @@
     "password_requirements_error": "Password must contain at least one letter and one number",
     "password_placeholder": "Enter password",
     "back_button": "Back",
-    "create_doctor_button": "Create doctor"
+    "create_doctor_button": "Create doctor",
+    "total_doctors": "Total doctors",
+    "active_status": "Active",
+    "inactive_status": "Inactive",
+    "patients_button": "Patients",
+    "edit_button": "Edit",
+    "delete_button": "Delete",
+    "close_button": "Close",
+    "of": "of",
+    "doctors": "Doctors",
+    "update_doctor_button": "Update Doctor"
   },
   "Kinesiologist": {
     "name": "Name",
@@ -44,6 +55,7 @@
     "register_kenisiologist_button": "Register a Kinesiologist",
     "register_new_kinesiologist": "Register a new kinesiologist",
     "edit_kinesiologist": "Edit kinesiologist",
+    "updating_success_msg": "Kinesiologist updated successfully!",
     "creating_success_msg": "Kinesiologist created successfully!",
     "creating_error_msg": "Error creating kinesiologist",
     "generating_password_error_msg": "Error generating password",
@@ -72,7 +84,17 @@
     "password_requirements_error": "Password must contain at least one letter and one number",
     "password_placeholder": "Enter password",
     "back_button": "Back",
-    "create_kenisiologist_button": "Create Kinesiologist"
+    "create_kenisiologist_button": "Create Kinesiologist",
+    "total_kinesiologists": "Total kinesiologist",
+    "active_status": "Active",
+    "inactive_status": "Inactive",
+    "patients_button": "Patients",
+    "edit_button": "Edit",
+    "delete_button": "Delete",
+    "close_button": "Close",
+    "of": "of",
+    "kinesiologists": "Kinesiologists",
+    "update_kinesiologist_button": "Update kinesiologist"
   },
   "Admins": {
     "name": "Name",
@@ -113,6 +135,16 @@
     "password_requirements_error": "Password must contain at least one letter and one number",
     "password_placeholder": "Enter password",
     "back_button": "Back",
-    "create_admin_button": "Create Admin"
+    "create_admin_button": "Create Admin",
+    "total_admins": "Total kinesiologist",
+    "active_status": "Active",
+    "inactive_status": "Inactive",
+    "edit_button": "Edit",
+    "edit_Admin_title": "Edit Admin",
+    "delete_button": "Delete",
+    "close_button": "Close",
+    "of": "of",
+    "admins": "Admins",
+    "update_admin_button": "Update admin"
   }
 }

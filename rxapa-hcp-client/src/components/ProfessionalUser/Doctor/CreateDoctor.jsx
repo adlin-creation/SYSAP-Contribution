@@ -160,7 +160,9 @@ function CreateDoctor({ refetchDoctors }) {
                     required: t("Professionals:Doctors:required_email_error"),
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: t("invalid_email_format_error"),
+                      message: t(
+                        "Professionals:Doctors:invalid_email_format_error"
+                      ),
                     },
                   }}
                   render={({ field }) => (

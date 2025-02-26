@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Menu, MenuItem, IconButton } from "@mui/material";
 import LanguageIcon from "@mui/icons-material/Language";
-import gbFlag from "../../images/flags/gb.svg";
-import frFlag from "../../images/flags/fr.svg";
+import Flag from "react-world-flags";
 
 const LanguageSwitcher = () => {
   const { i18n } = useTranslation();
@@ -43,21 +42,17 @@ const LanguageSwitcher = () => {
         disableScrollLock // empêche la disparition du Scroll lors de l'affichage de ce Menu
       >
         <MenuItem onClick={() => handleClose("en")}>
-          <img
-            src={gbFlag}
-            alt="English"
-            width="20"
-            style={{ marginRight: 8 }}
-          />
+          <Flag
+            code="GB"
+            style={{ width: 26, height: "auto", marginRight: 10 }}
+          />{" "}
           English
         </MenuItem>
         <MenuItem onClick={() => handleClose("fr")}>
-          <img
-            src={frFlag}
-            alt="Français"
-            width="20"
-            style={{ marginRight: 8 }}
-          />
+          <Flag
+            code="FR"
+            style={{ width: 26, height: "auto", marginRight: 10 }}
+          />{" "}
           Français
         </MenuItem>
       </Menu>

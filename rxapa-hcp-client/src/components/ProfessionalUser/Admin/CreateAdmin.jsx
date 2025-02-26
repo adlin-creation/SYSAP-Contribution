@@ -52,7 +52,7 @@ function CreateAdmin({ refetchAdmins }) {
   const openModal = (message, isError) => {
     AntModal[isError ? "error" : "success"]({
       content: message,
-      okText: "Close",
+      okText: t("Professionals:Admins:close_button"),
       centered: true,
       onOk: () => {
         if (!isError) {
@@ -263,7 +263,7 @@ function CreateAdmin({ refetchAdmins }) {
                       minLength: {
                         value: 8,
                         message: t(
-                          "Professionals:Admins:password_min_length_errors"
+                          "Professionals:Admins:password_min_length_error"
                         ),
                       },
                       pattern: {

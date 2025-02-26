@@ -23,15 +23,15 @@ export default function Cycle({ onClick, onSelect, cycle, deleteCycle }) {
             // Create a synthetic event object
             const event = {
               currentTarget: {
-                name: "edit-cycle"
-              }
+                name: "edit-cycle",
+              },
             };
             onClick(event);
-            onSelect(cycle); 
+            onSelect(cycle);
           }}
           type="primary"
         >
-          {t("edit")}
+          {t("Cycles:edit_button")}
         </Button>
         <Button
           onClick={() => {
@@ -43,7 +43,7 @@ export default function Cycle({ onClick, onSelect, cycle, deleteCycle }) {
           icon={<DeleteOutlined />}
           style={{ marginLeft: 8 }}
         >
-          {t("delete")}
+          {t("Cycles:delete_button")}
         </Button>
       </div>
     </Card>

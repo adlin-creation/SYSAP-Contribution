@@ -66,7 +66,9 @@ export default function AdminMenu() {
       dataIndex: "active",
       render: (active) => (
         <Tag color={active ? "green" : "red"}>
-          {active ? "ACTIVE" : "INACTIVE"}
+          {active
+            ? t("Professionals:Admins:active_status")
+            : t("Professionals:Admins:inactive_status")}
         </Tag>
       ),
     },
@@ -76,10 +78,10 @@ export default function AdminMenu() {
       render: (_, record) => (
         <Space size="middle">
           <Button type="link" onClick={() => handleEdit(record)}>
-            <EditOutlined /> Edit
+            <EditOutlined /> {t("Professionals:Admins:edit_button")}
           </Button>
           <Button type="link" danger onClick={() => handleDelete(record)}>
-            <DeleteOutlined /> Delete
+            <DeleteOutlined /> {t("Professionals:Admins:delete_button")}
           </Button>
         </Space>
       ),
@@ -173,7 +175,9 @@ export default function AdminMenu() {
             {t("Professionals:Admins:register_admin_button")}
           </Button>
           {adminList?.length > 0 && (
-            <span>Total Admins: {adminList.length}</span>
+            <span>
+              {t("Professionals:Admins:total_admins")}: {adminList.length}
+            </span>
           )}
         </div>
 
@@ -188,7 +192,9 @@ export default function AdminMenu() {
           pagination={{
             pageSize: 10,
             showTotal: (total, range) =>
-              `${range[0]}-${range[1]} of ${total} admins`,
+              `${range[0]}-${range[1]} ${t(
+                "Professionals:Admins:of"
+              )} ${total} ${t("Professionals:Admins:admins")}`,
           }}
         />
       </>
@@ -221,7 +227,7 @@ export default function AdminMenu() {
             <h2 style={{ marginBottom: 0 }}>
               {isCreateAdmin
                 ? t("Professionals:Admins:register_new_admin")
-                : t("Professionals:Admins:edit_Admin")}
+                : t("Professionals:Admins:edit_Admin_title")}
             </h2>
           </Col>
           <Col span={4} />

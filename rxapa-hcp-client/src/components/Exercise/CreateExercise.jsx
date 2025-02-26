@@ -139,7 +139,7 @@ export default function CreateExercise(props) {
                 "EIGHTY_TO_EIGHTY_NINE",
               ].map((ageRange) => (
                 <Select.Option key={ageRange} value={ageRange}>
-                  {ageRange}
+                  {t(`Exercises:${ageRange.toLowerCase()}`)}
                 </Select.Option>
               ))}
             </Select>
@@ -159,7 +159,7 @@ export default function CreateExercise(props) {
               {["LOW", "BELOW_AVERAGE", "AVERAGE", "ABOVE_AVERAGE", "HIGH"].map(
                 (level) => (
                   <Select.Option key={level} value={level}>
-                    {level}
+                    {t(`Exercises:${level.toLowerCase()}`)}
                   </Select.Option>
                 )
               )}
@@ -213,7 +213,7 @@ export default function CreateExercise(props) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder={t("Exercises:exercise_video_placeholder")}
+                  placeholder={t("Exercises:exercise_video")}
                 />
               )}
             />

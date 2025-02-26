@@ -135,7 +135,7 @@ export default function CreatePhase(props) {
       </div>
 
       <div className="input-element">
-        <h5>Please select end condition type</h5>
+        <h5>{t("Phases:select_end_condition_type")}</h5>
 
         <Autocomplete
           value={selectedEndConditionType}

@@ -27,5 +27,6 @@
   "describe_resting_instruction": "Décrivez les consignes de repos",
   "describe_resting_instruction_label": "Décrivez les consignes de repos",
   "required_label": "Obligatoire",
-  "cancel_button": "ANNULER"
+  "cancel_button": "ANNULER",
+  "close_button": "Fermer"
 }

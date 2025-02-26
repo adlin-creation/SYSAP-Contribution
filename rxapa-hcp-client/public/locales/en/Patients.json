@@ -24,6 +24,7 @@
   "name": "Name",
   "email": "Email",
   "phone": "Phone",
+  "phone_number": "Phone number",
   "actions": "Actions",
   "phone_required": "The phone number is required",
   "phone_number_invalid": "Invalid phone number format",

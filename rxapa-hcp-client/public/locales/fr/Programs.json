@@ -13,5 +13,6 @@
   "error_loading_all_phases": "Erreur lors du chargement de toutes les phases",
   "create_program": "Créer un programme",
   "submit_button": "SOUMETTRE",
-  "back_button": "Retourner"
+  "back_button": "Retourner",
+  "close_button": "Fermer"
 }
