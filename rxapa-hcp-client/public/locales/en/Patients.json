@@ -79,5 +79,7 @@
   "date_start": "Start Date",
   "date_end": "End Date",
   "create_enrollement": "Create Enrollment",
-  "back_button": "Back"
+  "back_button": "Back",
+  "edit_button": "Edit",
+  "delete_button": "Delete"
 }

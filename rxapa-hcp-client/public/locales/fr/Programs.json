@@ -14,5 +14,18 @@
   "create_program": "Créer un programme",
   "submit_button": "SOUMETTRE",
   "back_button": "Retourner",
-  "close_button": "Fermer"
+  "close_button": "Fermer",
+  "edit_button": "Modifier",
+  "delete_button": "Supprimer",
+  "name_title": "Nom",
+  "description_title": "Description",
+  "duration_title": "Durée",
+  "update_button": "Mettre à jour",
+  "phase_name_label": "Nom de la phase",
+  "start_condition_type_label": "Type de condition de début",
+  "start_condition_value_label": "Valeur de condition de début",
+  "end_condition_type_label": "Type de condition de fin",
+  "end_condition_value_label": "Valeur de condition de fin",
+  "frequency_label": "Fréquence",
+  "edit_title": "Modifier"
 }

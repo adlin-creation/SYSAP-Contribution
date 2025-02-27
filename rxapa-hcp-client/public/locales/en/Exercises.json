@@ -34,5 +34,8 @@
   "seating_exercise": "Seating Exercise",
   "back_button": "Back",
   "submit_button": "SUBMIT",
-  "close_button": "Close"
+  "close_button": "Close",
+  "delete_button": "Delete",
+  "learn_more_button": "Learn more",
+  "update_button": "Update"
 }

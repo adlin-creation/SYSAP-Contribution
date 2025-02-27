@@ -158,7 +158,7 @@ export default function BlocMenu() {
               icon={<ArrowLeftOutlined />}
               onClick={handleButtonState}
             >
-              Back
+              {t("Blocs:back_button")}
             </Button>
           </Col>
           <Col>

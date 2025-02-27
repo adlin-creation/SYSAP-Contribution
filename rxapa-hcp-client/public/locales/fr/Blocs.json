@@ -32,5 +32,6 @@
   "describe_resting_instruction_label": "Décrivez l'instruction de repos",
   "required_label": "Obligatoire",
   "cancel_button": "ANNULER",
-  "close_button": "Fermer"
+  "close_button": "Fermer",
+  "back_button": "Retourner"
 }

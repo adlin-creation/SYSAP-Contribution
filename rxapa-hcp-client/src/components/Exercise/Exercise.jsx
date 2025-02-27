@@ -5,6 +5,7 @@ import { DeleteOutlined } from "@ant-design/icons";
 import Constants from "../Utils/Constants";
 
 import "./Styles.css";
+import { useTranslation } from "react-i18next";
 
 const { Meta } = Card;
 
@@ -14,6 +15,7 @@ export default function Exercise({
   onSelect,
   deleteExercise,
 }) {
+  const { t } = useTranslation();
   return (
     <>
       <Card
@@ -41,7 +43,7 @@ export default function Exercise({
             icon={<DeleteOutlined />}
             onClick={() => deleteExercise(exercise)}
           >
-            DELETE
+            {t("Exercises:delete_button")}
           </Button>,
           <Button
             type="link"
@@ -50,7 +52,7 @@ export default function Exercise({
               onSelect(exercise);
             }}
           >
-            Learn More
+            {t("Exercises:learn_more_button")}
           </Button>,
         ]}
       >

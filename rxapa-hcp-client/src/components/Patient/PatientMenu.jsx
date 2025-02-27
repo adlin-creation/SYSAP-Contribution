@@ -91,10 +91,10 @@ export default function PatientMenu() {
       render: (_, record) => (
         <Space size="middle">
           <Button type="link" onClick={() => handleEdit(record)}>
-            <EditOutlined /> Edit
+            <EditOutlined /> {t("Patients:edit_button")}
           </Button>
           <Button type="link" danger onClick={() => handleDelete(record)}>
-            <DeleteOutlined /> Delete
+            <DeleteOutlined /> {t("Patients:delete_button")}
           </Button>
         </Space>
       ),

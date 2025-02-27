@@ -124,7 +124,9 @@ export default function SessionDetails({ sessionKey }) {
     <Col span={18}>
       <Row>
         <div className="input-element">
-          <h4>Edit {session.name}</h4>
+          <h4>
+            {t("Sessions:edit")} {session.name}
+          </h4>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -169,7 +171,7 @@ export default function SessionDetails({ sessionKey }) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder="Enter session constraints to update"
+                  placeholder={t("Sessions:session_constraints_placeholder")}
                   // required
                 />
               )}
@@ -179,7 +181,7 @@ export default function SessionDetails({ sessionKey }) {
           <div className="input-element">
             <AppButton
               onClick={updateSession}
-              displayText={"UPDATE"}
+              displayText={t("Sessions:update_button")}
               variant={"contained"}
               endIcon={<CheckOutlined />}
               type={"submit"}
@@ -191,7 +193,7 @@ export default function SessionDetails({ sessionKey }) {
           <BlocTable blocs={session?.Bloc_Sessions} />
           <AppButton
             onClick={addBloc}
-            displayText={"ADD BLOC"}
+            displayText={t("Sessions:add_bloc_button")}
             variant={"contained"}
             endIcon={<PlusOutlined />}
             type={"button"}

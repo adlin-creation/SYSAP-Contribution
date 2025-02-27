@@ -172,7 +172,7 @@ export default function ProgramDetails({ program }) {
 
           <Form.Item>
             <Button type="primary" htmlType="submit" icon={<CheckOutlined />}>
-              {t("Programs:update")}
+              {t("Programs:update_button")}
             </Button>
           </Form.Item>
         </Form>

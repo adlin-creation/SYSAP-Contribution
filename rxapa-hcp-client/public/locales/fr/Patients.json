@@ -79,5 +79,7 @@
   "date_start": "Date de début",
   "date_end": "Date de fin",
   "create_enrollement": "Créer l'inscription",
-  "back_button": "Retourner"
+  "back_button": "Retourner",
+  "edit_button": "Modifier",
+  "delete_button": "Supprimer"
 }

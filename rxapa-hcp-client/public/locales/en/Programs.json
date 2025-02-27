@@ -14,5 +14,18 @@
   "create_program": "Create a program",
   "submit_button": "SUBMIT",
   "back_button": "Back",
-  "close_button": "Close"
+  "close_button": "Close",
+  "edit_button": "Edit",
+  "delete_button": "Delete",
+  "name_title": "Name",
+  "description_title": "Description",
+  "duration_title": "Duration",
+  "update_button": "Update",
+  "phase_name_label": "Phase Name",
+  "start_condition_type_label": "Start Condition Type",
+  "start_condition_value_label": "Start Condition Value",
+  "end_condition_type_label": "End Condition Type",
+  "end_condition_value_label": "End Condition Value",
+  "frequency_label": "Frequency",
+  "edit_title": "Edit"
 }

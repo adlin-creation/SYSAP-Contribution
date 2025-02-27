@@ -32,5 +32,6 @@
   "describe_resting_instruction_label": "Describe the resting instruction",
   "required_label": "Required",
   "cancel_button": "CANCEL",
-  "close_button": "Close"
+  "close_button": "Close",
+  "back_button": "Back"
 }

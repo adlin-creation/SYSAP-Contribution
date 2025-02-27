@@ -183,7 +183,7 @@ export default function ProgramMenu() {
             <h2 style={{ marginBottom: 0 }}>
               {buttonState.isCreateProgram
                 ? t("Programs:create_program")
-                : `Edit ${selectedProgram?.name}`}
+                : t("Programs:edit_title") + " " + `${selectedProgram?.name}`}
             </h2>
           </Col>
           <Col span={4} />

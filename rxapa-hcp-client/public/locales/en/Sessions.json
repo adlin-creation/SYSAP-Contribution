@@ -13,10 +13,18 @@
   "day_session_description": "Day Session Description",
   "enter_constraints_day_session": "Please enter the constraints of the day session",
   "day_session_constraints": "Day Session Constraints",
+  "session_constraints_placeholder": "Enter session constraints to update",
   "submit_button": "SUBMIT",
   "session_name": "Name",
   "session_description": "Description",
   "session_constraints": "Constraints",
   "edit_button": "Edit",
-  "delete_button": "Delete"
+  "delete_button": "Delete",
+  "update_button": "Update",
+  "edit": "Edit",
+  "name_label": "Name",
+  "description_label": "Description",
+  "day_time_label": "Day Time",
+  "required_label": "Required",
+  "add_bloc_button": "Add bloc"
 }

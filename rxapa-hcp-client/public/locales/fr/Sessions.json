@@ -13,10 +13,18 @@
   "day_session_description": "Description de la session de jour",
   "enter_constraints_day_session": "Veuillez entrer les contraintes de la session de jour",
   "day_session_constraints": "Contraintes de la session de jour",
+  "session_constraints_placeholder": "Entrez les contraintes de la session pour mettre à jour",
   "submit_button": "SOUMETTRE",
   "session_name": "Nom",
   "session_description": "Description",
   "session_constraints": "Contraintes",
   "edit_button": "Modifier",
-  "delete_button": "Supprimer"
+  "delete_button": "Supprimer",
+  "update_button": "Mettre à jour",
+  "edit": "Modifier",
+  "name_label": "Nom",
+  "description_label": "Description",
+  "day_time_label": "Jour et heure",
+  "required_label": "Obligatoire",
+  "add_bloc_button": "Ajouter un bloc"
 }

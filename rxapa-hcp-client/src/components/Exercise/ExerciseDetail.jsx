@@ -118,7 +118,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
 
           <Form.Item>
             <Button type="primary" htmlType="submit" icon={<CheckOutlined />}>
-              UPDATE
+              {t("Exercises:update_button")}
             </Button>
           </Form.Item>
         </Form>

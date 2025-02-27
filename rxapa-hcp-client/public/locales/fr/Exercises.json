@@ -34,5 +34,8 @@
   "seating_exercise": "Exercice assis",
   "back_button": "Retourner",
   "submit_button": "SOUMETTRE",
-  "close_button": "Fermer"
+  "close_button": "Fermer",
+  "delete_button": "Supprimer",
+  "learn_more_button": "En savoir plus",
+  "update_button": "Mettre à jour"
 }
