@@ -33,5 +33,6 @@
   "exercise_image": "Exercise Image :",
   "seating_exercise": "Seating Exercise",
   "back_button": "Back",
-  "submit": "SUBMIT"
+  "submit_button": "SUBMIT",
+  "close_button": "Close"
 }

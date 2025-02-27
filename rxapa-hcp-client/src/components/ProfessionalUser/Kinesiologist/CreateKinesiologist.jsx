@@ -281,7 +281,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                       pattern: {
                         value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
                         message: t(
-                          "ProfessionalsKinesiologist:password_requirements_error"
+                          "Professionals:Kinesiologist:password_requirements_error"
                         ),
                       },
                     }}

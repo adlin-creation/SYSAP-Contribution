@@ -189,11 +189,14 @@ function CreateEnrollement({ refetchPatients }) {
                     required: t("Patients:phone_number_required"),
                     pattern: {
                       value: /^[0-9+\s-]{8,}$/,
-                      message: t("Patients:phone_number_invalid")
-                    }
+                      message: t("Patients:phone_number_invalid"),
+                    },
                   }}
                   render={({ field }) => (
-                    <Input {...field} placeholder={t("Patients:caregiver_phone_input")}/>
+                    <Input
+                      {...field}
+                      placeholder={t("Patients:caregiver_phone_input")}
+                    />
                   )}
                 />
               </Form.Item>
@@ -242,7 +245,7 @@ function CreateEnrollement({ refetchPatients }) {
                     required: t("Patients:email_confirm_required"),
                     validate: (value) =>
                       value === control._formValues.patientEmail ||
-                    t("Patients:email_confirm_invalid"),
+                      t("Patients:email_confirm_invalid"),
                   }}
                   render={({ field }) => (
                     <Input
@@ -295,7 +298,7 @@ function CreateEnrollement({ refetchPatients }) {
                         required: t("Patients:first_name_required"),
                         minLength: {
                           value: 2,
-                          message: t("Patients:first_name_required_info")
+                          message: t("Patients:first_name_required_info"),
                         },
                       }}
                       render={({ field }) => (
@@ -323,7 +326,7 @@ function CreateEnrollement({ refetchPatients }) {
                         required: t("Patients:last_name_required"),
                         minLength: {
                           value: 2,
-                          message: t("Patients:last_name_required_info")
+                          message: t("Patients:last_name_required_info"),
                         },
                       }}
                       render={({ field }) => (
@@ -341,7 +344,10 @@ function CreateEnrollement({ refetchPatients }) {
                       name={`relationship${index + 1}`}
                       control={control}
                       render={({ field }) => (
-                        <Select {...field} placeholder={t("Patients:relationship_choice")}>
+                        <Select
+                          {...field}
+                          placeholder={t("Patients:relationship_choice")}
+                        >
                           <Select.Option value="parent">
                             {t("Patients:relation_parent")}
                           </Select.Option>
@@ -375,10 +381,10 @@ function CreateEnrollement({ refetchPatients }) {
                       name={`caregiverEmail${index + 1}`}
                       control={control}
                       rules={{
-                        required:  t("Patients:email_needed"),
+                        required: t("Patients:email_needed"),
                         pattern: {
                           value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                          message: t("Patients:email_invalid")
+                          message: t("Patients:email_invalid"),
                         },
                       }}
                       render={({ field }) => (
@@ -476,11 +482,14 @@ function CreateEnrollement({ refetchPatients }) {
                 <Controller
                   name="programCode"
                   control={control}
-                  rules={{ 
+                  rules={{
                     required: t("Patients:program_code_required"),
                   }}
                   render={({ field }) => (
-                    <Input {...field} placeholder={t("Patients:program_code_input")} />
+                    <Input
+                      {...field}
+                      placeholder={t("Patients:program_code_input")}
+                    />
                   )}
                 />
               </Form.Item>
@@ -496,7 +505,7 @@ function CreateEnrollement({ refetchPatients }) {
                 <Controller
                   name="programDates"
                   control={control}
-                  rules={{ 
+                  rules={{
                     required: t("Patients:program_duration_required"),
                   }}
                   render={({ field }) => (
@@ -504,7 +513,10 @@ function CreateEnrollement({ refetchPatients }) {
                       {...field}
                       style={{ width: "100%" }}
                       format="YYYY-MM-DD"
-                      placeholder={[t("Patients:date_start"), t("Patients:date_end")]}
+                      placeholder={[
+                        t("Patients:date_start"),
+                        t("Patients:date_end"),
+                      ]}
                     />
                   )}
                 />

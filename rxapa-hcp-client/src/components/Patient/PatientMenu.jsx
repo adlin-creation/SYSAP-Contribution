@@ -157,7 +157,7 @@ export default function PatientMenu() {
               type="primary"
               icon={<ArrowLeftOutlined />}
             >
-              Back
+              {t("Patients:back_button")}
             </Button>
           </Col>
           <Col flex="auto" style={{ textAlign: "center" }}>

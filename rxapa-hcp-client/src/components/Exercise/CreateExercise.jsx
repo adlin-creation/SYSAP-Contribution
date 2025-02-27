@@ -10,11 +10,11 @@ import Constants from "../Utils/Constants";
 import { useTranslation } from "react-i18next";
 
 export default function CreateExercise(props) {
-  const { t } = useTranslation();
   const { handleSubmit, control } = useForm();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isErrorMessage, setIsErrorMessage] = useState(false);
   const [message, setMessage] = useState("");
+  const { t } = useTranslation();
 
   const [selectedExerciseCategory, setSelectedExerciseCategory] =
     useState(null);
@@ -111,10 +111,10 @@ export default function CreateExercise(props) {
               style={{ width: "100%" }}
               allowClear
             >
-              {["aerobic", "strength", "endurance", "flexibility"].map(
+              {["AEROBIC", "STRENGTH", "ENDURANCE", "FLEXIBILITY"].map(
                 (category) => (
                   <Select.Option key={category} value={category}>
-                    {t(`Exercises:${category}`)}
+                    {t(`Exercises:${category.toLowerCase()}`)}
                   </Select.Option>
                 )
               )}
@@ -152,7 +152,7 @@ export default function CreateExercise(props) {
             <Select
               value={selectedFitnessLevel}
               onChange={(value) => setSelectedFitnessLevel(value)}
-              placeholder={t("Exercises:select_fitness_level")}
+              placeholder={t("Exercises:select_expected_fitness_level")}
               style={{ width: "100%" }}
               allowClear
             >
@@ -248,7 +248,7 @@ export default function CreateExercise(props) {
             onCancel={closeModal}
             footer={[
               <Button key="close" onClick={closeModal}>
-                Close
+                {t("Exercises:close_button")}
               </Button>,
             ]}
           >

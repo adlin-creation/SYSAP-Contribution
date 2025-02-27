@@ -44,7 +44,9 @@
     "close_button": "Close",
     "of": "of",
     "doctors": "Doctors",
-    "update_doctor_button": "Update Doctor"
+    "update_doctor_button": "Update Doctor",
+    "back_to_doctors_button": "Back to Doctors",
+    "doctor_patients_title": "Doctor's patients"
   },
   "Kinesiologist": {
     "name": "Name",
@@ -94,7 +96,9 @@
     "close_button": "Close",
     "of": "of",
     "kinesiologists": "Kinesiologists",
-    "update_kinesiologist_button": "Update kinesiologist"
+    "update_kinesiologist_button": "Update kinesiologist",
+    "back_to_kinesiologists_button": "Back to kinesiologists",
+    "kinesiologist_patients_title": "kinesiologist's patients"
   },
   "Admins": {
     "name": "Name",
