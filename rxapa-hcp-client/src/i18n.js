@@ -19,7 +19,7 @@ i18n
       "Programs",
       "Sessions",
     ], // un tableau de namespace (ou chercher)
-    defaultNS: "welcome",
+    defaultNS: "App", // Il faut envisager un defaultNS App ne contient que les clé pour le fichier App
     backend: {
       loadPath: "/locales/{{lng}}/{{ns}}.json", // Où chercher les fichiers JSON
     },
