@@ -8,9 +8,11 @@ import Constants from "../Utils/Constants";
 import ExerciseTable from "./ExerciseTable";
 import AddExercise from "./AddExercise";
 import useToken from "../Authentication/useToken";
+import { useTranslation } from "react-i18next";
 // import ExerciseTable2 from "./ExerciseTable2";
 
 export default function BlocDetails({ blocKey, refetchBlocs }) {
+  const { t } = useTranslation();
   const { handleSubmit, control } = useForm();
   const [isAddExercise, setIsAddExercise] = useState(false);
   const { token } = useToken();
@@ -116,10 +118,10 @@ export default function BlocDetails({ blocKey, refetchBlocs }) {
   };
 
   return (
-    <Row justify="center" align="middle" style={{ minHeight: '50vh' }}>
+    <Row justify="center" align="middle" style={{ minHeight: "50vh" }}>
       <Col span={12}>
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
-          <Form.Item label="New Bloc Name">
+          <Form.Item label={t("Blocs:new_bloc_name")}>
             <Controller
               name="name"
               control={control}
@@ -128,14 +130,14 @@ export default function BlocDetails({ blocKey, refetchBlocs }) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder="Enter a new name for the bloc"
+                  placeholder={t("Blocs:enter_new_bloc_name")}
                   allowClear
                 />
               )}
             />
           </Form.Item>
 
-          <Form.Item label="New Description">
+          <Form.Item label={t("Blocs:new_description_label")}>
             <Controller
               name="description"
               control={control}
@@ -144,7 +146,7 @@ export default function BlocDetails({ blocKey, refetchBlocs }) {
                 <Input.TextArea
                   onChange={onChange}
                   value={value}
-                  placeholder="Enter a new description"
+                  placeholder={t("Blocs:enter_new_description_placeholder")}
                   allowClear
                   rows={4}
                 />
@@ -153,12 +155,8 @@ export default function BlocDetails({ blocKey, refetchBlocs }) {
           </Form.Item>
 
           <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              icon={<CheckOutlined />}
-            >
-              Update
+            <Button type="primary" htmlType="submit" icon={<CheckOutlined />}>
+              {t("Blocs:update_button")}
             </Button>
           </Form.Item>
         </Form>
@@ -169,9 +167,9 @@ export default function BlocDetails({ blocKey, refetchBlocs }) {
             type="primary"
             onClick={addExercise}
             icon={<PlusOutlined />}
-            style={{ marginTop: '16px' }}
+            style={{ marginTop: "16px" }}
           >
-            Add Exercise
+            {t("Blocs:add_exercise_button")}
           </Button>
         </div>
 

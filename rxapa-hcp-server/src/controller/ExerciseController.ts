@@ -78,13 +78,13 @@ exports.createExercise = async (req: any, res: any, next: any) => {
       res.json({
         messageTitle: "An exercise with the same name already exists.",
         message:
-          "Please modify the name of the exercise and then submit again.",
+            "Please modify the name of the exercise and then submit again.",
       });
     } else {
       res.json({
         messageTitle: "Failed to create an Exercise",
         message:
-          "Please contact the developer with a brief description of how this error can be reproduced.",
+            "Please contact the developer with a brief description of how this error can be reproduced.",
       });
     }
   }
@@ -146,12 +146,12 @@ exports.updateExercise = async (req: any, res: any, next: any) => {
     if (error.name == "SequelizeUniqueConstraintError") {
       res.json({
         message:
-          "Please modify the name of the exercise and then submit again.",
+            "Please modify the name of the exercise and then submit again.",
       });
     } else {
       res.json({
         message:
-          "Error - Please contact the developer with a brief description of how this error can be reproduced.",
+            "Error - Please contact the developer with a brief description of how this error can be reproduced.",
       });
     }
   }
@@ -289,8 +289,8 @@ exports.addExerciseVersion = async (req: any, res: any, next: any) => {
     variant = await createVariant(exerciseVersion.id, exercise.id, level);
 
     res
-      .status(201)
-      .json({ message: "Added an exercise version to an exercise" });
+        .status(201)
+        .json({ message: "Added an exercise version to an exercise" });
   } catch (error: any) {
     res.status(500);
     if (!error.statusCode) {
@@ -312,12 +312,12 @@ exports.addExerciseVersion = async (req: any, res: any, next: any) => {
  * @author Hyacinth Ali
  */
 const createVariant = async (
-  /**
-   * @todo verify which id comes first
-   */
-  versionId: Number,
-  exerciseId: Number,
-  level: any
+    /**
+     * @todo verify which id comes first
+     */
+    versionId: Number,
+    exerciseId: Number,
+    level: any
 ) => {
   // Use sequelize (Database Framework) to create the component
   try {
@@ -347,16 +347,16 @@ exports.deleteExercise = async (req: any, res: any) => {
     });
     if (exercise == null) {
       return res
-        .status(500)
-        .json({ message: "The exercise doesn't exist in the database" });
+          .status(500)
+          .json({ message: "The exercise doesn't exist in the database" });
     }
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
     return res
-      .status(error.statusCode)
-      .json({ message: "The exercise doesn't exist in the database" });
+        .status(error.statusCode)
+        .json({ message: "The exercise doesn't exist in the database" });
   }
   try {
     await exercise.destroy();
@@ -364,14 +364,14 @@ exports.deleteExercise = async (req: any, res: any) => {
       fileHelper.deleteFile(exercise.imageUrl);
     }
     return res
-      .status(200)
-      .json({ message: "Successfully deleted the exercise" });
+        .status(200)
+        .json({ message: "Successfully deleted the exercise" });
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
     return res
-      .status(error.statusCode)
-      .json({ message: "Failed to delete the exercise" });
+        .status(error.statusCode)
+        .json({ message: "Failed to delete the exercise" });
   }
 };
