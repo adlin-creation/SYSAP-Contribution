@@ -8,7 +8,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import axios from "axios";
-import "./i18n";
+
 import ExerciseMenu from "./components/Exercise/ExerciseMenu";
 import ProgramMenu from "./components/Program/ProgramMenu";
 import Home from "./components/Home/Home";
@@ -23,13 +23,12 @@ import DoctorPatients from "./components/ProfessionalUser/Doctor/DoctorPatients"
 import KinesiologistMenu from "./components/ProfessionalUser/Kinesiologist/KinesiologistMenu";
 import KinesiologistPatients from "./components/ProfessionalUser/Kinesiologist/KinesiologistPatients";
 import AdminMenu from "./components/ProfessionalUser/Admin/AdminMenu";
+
 import useToken from "./components/Authentication/useToken"; // Import du hook personnalisé
+
 import Constants from "./components/Utils/Constants";
-import LanguageSwitcher from "./components/LanguageSwitcher/LanguageSwitcher";
-import { useTranslation } from "react-i18next";
 
 import { Layout, Menu, Button, Avatar, Dropdown } from "antd";
-
 import {
   HomeOutlined,
   AppstoreOutlined,
@@ -49,16 +48,106 @@ import "./App.css";
 
 const { Header, Sider, Content } = Layout;
 
+const menuItems = [
+  {
+    key: "/",
+    icon: <HomeOutlined />,
+    label: <Link to="/">Dashboard</Link>,
+  },
+  {
+    key: "/exercises",
+    icon: <AppstoreOutlined />,
+    label: <Link to="/exercises">Exercises</Link>,
+  },
+  {
+    key: "/blocs",
+    icon: <BlockOutlined />,
+    label: <Link to="/blocs">Blocs</Link>,
+  },
+  {
+    key: "/sessions",
+    icon: <CalendarOutlined />,
+    label: <Link to="/sessions">Sessions</Link>,
+  },
+  {
+    key: "/cycles",
+    icon: <ClusterOutlined />,
+    label: <Link to="/cycles">Cycles</Link>,
+  },
+  {
+    key: "/phases",
+    icon: <PartitionOutlined />,
+    label: <Link to="/phases">Phases</Link>,
+  },
+  {
+    key: "/programs",
+    icon: <SettingOutlined />,
+    label: <Link to="/programs">Programs</Link>,
+  },
+  {
+    key: "/patients",
+    icon: <UserOutlined />,
+    label: <Link to="/patients">Patients</Link>,
+  },
+  {
+    key: "healthcare-professional",
+    icon: <UsergroupAddOutlined />,
+    label: "Professionals",
+    children: [
+      {
+        key: "/doctors",
+        icon: <MedicineBoxOutlined />,
+        label: <Link to="/doctors">Doctors</Link>,
+      },
+      {
+        key: "/kinesiologists",
+        icon: <HeartOutlined />,
+        label: <Link to="/kinesiologists">Kinesiologists</Link>,
+      },
+      {
+        key: "/admins",
+        icon: <UserOutlined />,
+        label: <Link to="/admins">Admins</Link>,
+      },
+    ],
+  },
+  // Ajoutez d'autres éléments de menu si nécessaire
+];
+
 function App() {
-  const { t } = useTranslation(); // la fonction qu'on doit appliquer a la traduction
   const location = useLocation();
   const navigate = useNavigate();
   const { token, setToken } = useToken(); // Utilisation du hook personnalisé pour gérer le token
   const [selectedKey, setSelectedKey] = useState(location.pathname);
+  const [role, setRole] = useState("");
+  const [filteredMenuItems, setFilteredMenuItems] = useState(menuItems);
 
   useEffect(() => {
     setSelectedKey(location.pathname);
   }, [location.pathname]);
+
+  useEffect(() => {
+    if (location.state?.role) {
+      setRole(location.state.role);
+      const filterMenuItems = (items) => {
+        return items
+          .map((item) => {
+            if (item.children) {
+              return {
+                ...item,
+                children: filterMenuItems(item.children),
+              };
+            }
+            if (location.state.role === "admin" && item.key === "/admins") {
+              return null;
+            }
+            return item;
+          })
+          .filter((item) => item !== null);
+      };
+      setFilteredMenuItems(filterMenuItems(menuItems));
+    }
+  }, [location.state]);
 
   const handleLogout = async () => {
     try {
@@ -73,83 +162,19 @@ function App() {
       console.error("Failed to logout:", error);
     }
   };
-  const menuItems = [
-    {
-      key: "/",
-      icon: <HomeOutlined />,
-      label: <Link to="/">{t("App:dashboard")}</Link>,
-    },
-    {
-      key: "/exercises",
-      icon: <AppstoreOutlined />,
-      label: <Link to="/exercises">{t("App:exercises")}</Link>,
-    },
-    {
-      key: "/blocs",
-      icon: <BlockOutlined />,
-      label: <Link to="/blocs">{t("App:blocs")}</Link>,
-    },
-    {
-      key: "/sessions",
-      icon: <CalendarOutlined />,
-      label: <Link to="/sessions">{t("App:sessions")}</Link>,
-    },
-    {
-      key: "/cycles",
-      icon: <ClusterOutlined />,
-      label: <Link to="/cycles">{t("App:cycles")}</Link>,
-    },
-    {
-      key: "/phases",
-      icon: <PartitionOutlined />,
-      label: <Link to="/phases">{t("App:phases")}</Link>,
-    },
-    {
-      key: "/programs",
-      icon: <SettingOutlined />,
-      label: <Link to="/programs">{t("App:programs")}</Link>,
-    },
-    {
-      key: "/patients",
-      icon: <UserOutlined />,
-      label: <Link to="/patients">{t("App:patients")}</Link>,
-    },
-    {
-      key: "healthcare-professional",
-      icon: <UsergroupAddOutlined />,
-      label: t("App:professionals"),
-      children: [
-        {
-          key: "/doctors",
-          icon: <MedicineBoxOutlined />,
-          label: <Link to="/doctors">{t("App:doctors")}</Link>,
-        },
-        {
-          key: "/kinesiologists",
-          icon: <HeartOutlined />,
-          label: <Link to="/kinesiologists">{t("App:kinesiologists")}</Link>,
-        },
-        {
-          key: "/admins",
-          icon: <UserOutlined />,
-          label: <Link to="/admins">{t("App:admins")}</Link>,
-        },
-      ],
-    },
-    // Ajoutez d'autres éléments de menu si nécessaire
-  ];
+
   const userMenuItems = [
     {
       key: "1",
-      label: <Link to="/profile">{t("App:profile")}</Link>,
+      label: <Link to="/profile">Profile</Link>,
     },
     {
       key: "2",
-      label: <Link to="/settings">{t("App:settings")}</Link>,
+      label: <Link to="/settings">Settings</Link>,
     },
     {
       key: "3",
-      label: t("App:logout"),
+      label: "Logout",
       onClick: handleLogout, // Ajoutez cette ligne pour la déconnexion
     },
   ];
@@ -180,7 +205,6 @@ function App() {
         <Header className="header site-layout-background">
           <div></div> {/* Empty div to align items to the right */}
           <div className="header-content">
-            <LanguageSwitcher />
             <Button icon={<SettingOutlined />} className="header-button" />
             <Button icon={<BellOutlined />} className="header-button" />
             <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
@@ -219,7 +243,7 @@ function App() {
               path="*"
               element={
                 <main style={{ padding: "1rem" }}>
-                  <p>{t("There's nothing here!")}</p>
+                  <p>There's nothing here!</p>
                 </main>
               }
             />
