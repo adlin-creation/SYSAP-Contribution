@@ -224,7 +224,10 @@ function App() {
             <Route path="cycles" element={<CycleMenu />}></Route>
             <Route path="phases" element={<PhaseMenu />}></Route>
             <Route path="programs" element={<ProgramMenu />}></Route>
-            <Route path="patients" element={<PatientMenu />}></Route>
+            <Route
+              path="patients"
+              element={<PatientMenu role={role} />}
+            ></Route>
             <Route path="doctors" element={<DoctorMenu />}></Route>
             <Route
               path="doctor-patients/:id"

@@ -1,11 +1,6 @@
+
 import React, { useState } from "react";
-import {
-  PlusOutlined,
-  EditOutlined,
-  DeleteOutlined,
-  ArrowLeftOutlined,
-  ExclamationCircleOutlined,
-} from "@ant-design/icons";
+import { PlusOutlined, EditOutlined, DeleteOutlined, ArrowLeftOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import { Button, Table, Space, Tag, Row, Col, Modal as AntModal } from "antd";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
@@ -13,10 +8,8 @@ import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
 import CreatePatient from "./CreatePatient";
 import PatientDetails from "./PatientDetails";
-import { useTranslation } from "react-i18next";
 
-export default function PatientMenu() {
-  const { t } = useTranslation();
+export default function PatientMenu({ role }) {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isErrorMessage, setIsErrorMessage] = useState(false);
   const [message, setMessage] = useState("");
@@ -28,73 +21,78 @@ export default function PatientMenu() {
   const patientUrl = `${Constants.SERVER_URL}/patients`;
   const { data: patientList, refetch: refetchPatients } = useQuery(
     ["patients"],
-    () => {
-      return axios
+    async () => {
+      const res = await axios
         .get(patientUrl, {
-          headers: { Authorization: "Bearer " + token },
-        })
-        .then((res) => res.data);
+          headers: { Authorization: "Bearer " + token }
+        });
+      return res.data;
     }
+
   );
 
   const getStatusColor = (status) => {
     switch (status) {
-      case "active":
-        return "green";
-      case "paused":
-        return "orange";
-      case "waiting":
-        return "blue";
-      case "completed":
-        return "purple";
-      case "abort":
-        return "red";
+      case 'active':
+        return 'green';
+      case 'paused':
+        return 'orange';
+      case 'waiting':
+        return 'blue';
+      case 'completed':
+        return 'purple';
+      case 'abort':
+        return 'red';
       default:
-        return "grey";
+        return 'grey';
     }
   };
 
   const columns = [
     {
-      title: t("Patients:name"),
-      key: "name",
+      title: 'Name',
+      key: 'name',
       render: (_, record) => `${record.firstname} ${record.lastname}`,
     },
     {
-      title: t("Patients:email"),
-      dataIndex: "email",
-      key: "email",
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
     },
     {
-      title: t("Patients:phone"),
-      dataIndex: "phoneNumber",
-      key: "phoneNumber",
+      title: 'Phone',
+      dataIndex: 'phoneNumber',
+      key: 'phoneNumber',
     },
     {
-      title: t("Patients:status"),
-      key: "status",
-      dataIndex: "status",
+      title: 'Status',
+      key: 'status',
+      dataIndex: 'status',
       render: (status) => (
-        <Tag color={getStatusColor(status) || "grey"}>
-          {status ? status.toUpperCase() : "UNKNOWN"}
+        <Tag color={getStatusColor(status) || 'grey'}>
+          {status ? status.toUpperCase() : 'UNKNOWN'}
         </Tag>
       ),
     },
     {
-      title: t("Patients:programs"),
-      dataIndex: "numberOfPrograms",
-      key: "numberOfPrograms",
+      title: 'Programs',
+      dataIndex: 'numberOfPrograms',
+      key: 'numberOfPrograms',
     },
     {
-      title: t("Patients:actions"),
-      key: "actions",
+      title: 'Actions',
+      key: 'actions',
       render: (_, record) => (
         <Space size="middle">
-          <Button type="link" onClick={() => handleEdit(record)}>
-            <EditOutlined /> {t("Patients:edit_button")}
+          <Button type="link" onClick={() => handleEdit(record)}
+            style={{ display: role === 'admin' ? 'none' : 'inline-block' }}
+          >
+            <EditOutlined /> Edit
           </Button>
-          <Button type="link" danger onClick={() => handleDelete(record)}>
-            <DeleteOutlined /> {t("Patients:delete_button")}
+          <Button type="link" danger onClick={() => handleDelete(record)}
+            style={{ display: role === 'admin' ? 'none' : 'inline-block' }}
+          >
+            <DeleteOutlined /> Delete
           </Button>
         </Space>
       ),
@@ -107,23 +105,23 @@ export default function PatientMenu() {
 
   const handleDelete = (patient) => {
     AntModal.confirm({
-      title: t("Patients:delete_patient_alert"),
+      title: 'Are you sure you want to delete this patient?',
       icon: <ExclamationCircleOutlined />,
       content: `${patient.firstname} ${patient.lastname}`,
-      okText: "Yes",
-      okType: "danger",
-      cancelText: "No",
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
       onOk: () => {
         axios
           .delete(`${Constants.SERVER_URL}/delete-patient/${patient.id}`, {
-            headers: { Authorization: "Bearer " + token },
+            headers: { Authorization: "Bearer " + token }
           })
           .then((res) => {
             refetchPatients();
             openModal(res.data.message, false);
           })
           .catch((err) => openModal(err.response.data.message, true));
-      },
+      }
     });
   };
 
@@ -143,11 +141,7 @@ export default function PatientMenu() {
     <div>
       {/* Affiche le bouton Back et le titre si on est en mode création ou édition */}
       {(isCreatePatient || selectedPatient) && (
-        <Row
-          align="middle"
-          justify="space-between"
-          style={{ marginBottom: "20px" }}
-        >
+        <Row align="middle" justify="space-between" style={{ marginBottom: '20px' }}>
           <Col>
             <Button
               onClick={() => {
@@ -157,14 +151,12 @@ export default function PatientMenu() {
               type="primary"
               icon={<ArrowLeftOutlined />}
             >
-              {t("Patients:back_button")}
+              Back
             </Button>
           </Col>
-          <Col flex="auto" style={{ textAlign: "center" }}>
+          <Col flex="auto" style={{ textAlign: 'center' }}>
             <h2 style={{ marginBottom: 0 }}>
-              {isCreatePatient
-                ? t("Patients:register_new_patient")
-                : t("Patients:edit_patient_details")}
+              {isCreatePatient ? "Register a new patient" : "Edit patient details"}
             </h2>
           </Col>
           <Col span={4} />
@@ -172,25 +164,29 @@ export default function PatientMenu() {
       )}
 
       {/* Affiche soit la liste des patients soit le formulaire de création ou d'édition */}
-      {!isCreatePatient && !selectedPatient ? (
+      {!isCreatePatient && !selectedPatient && role ? (
         <>
           <div style={{ marginBottom: 16 }}>
             <Button
               type="primary"
               icon={<PlusOutlined />}
               onClick={() => setIsCreatePatient(true)}
+              style={{ display: role === 'admin' ? 'none' : 'inline-block' }}
             >
-              {t("Patients:register_patient")}
+              Register a Patient
             </Button>
           </div>
 
-          <Table columns={columns} dataSource={patientList} rowKey="key" />
+          <Table
+            columns={columns}
+            dataSource={patientList}
+            rowKey="key"
+          />
         </>
       ) : isCreatePatient ? (
         <CreatePatient
           refetchPatients={refetchPatients}
-          onClose={() => setIsCreatePatient(false)}
-        />
+          onClose={() => setIsCreatePatient(false)} />
       ) : (
         <PatientDetails
           patient={selectedPatient}
@@ -211,7 +207,7 @@ export default function PatientMenu() {
             </Button>,
           ]}
           style={{
-            color: isErrorMessage ? "#ff4d4f" : "#52c41a",
+            color: isErrorMessage ? '#ff4d4f' : '#52c41a'
           }}
         >
           <p>{message}</p>
