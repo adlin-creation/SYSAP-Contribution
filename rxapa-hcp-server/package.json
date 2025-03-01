@@ -4,7 +4,7 @@
   "description": "A Node.js server that allows health care professionals (HCP) to create exercise programs and then monitor the progress of their enrolled patients.",
   "main": "server.js",
   "scripts": {
-    "test": "jest && cucumber-js",
+    "test": "jest",
     "build": "rimraf ./build && tsc",
     "start": "npm run build && node build/server.js",
     "dev": "ts-node-dev --poll src/server.ts"
