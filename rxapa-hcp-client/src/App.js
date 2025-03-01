@@ -198,7 +198,7 @@ function App() {
           theme="dark"
           selectedKeys={[selectedKey]}
           mode="inline"
-          items={menuItems}
+          items={filteredMenuItems}
         />
       </Sider>
       <Layout className="site-layout">
@@ -210,7 +210,7 @@ function App() {
             <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
               <div className="header-avatar">
                 <Avatar icon={<UserOutlined />} />
-                <span>John Doe</span>
+                <span>{role}</span>
               </div>
             </Dropdown>
           </div>
