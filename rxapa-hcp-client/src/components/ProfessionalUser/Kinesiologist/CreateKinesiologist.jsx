@@ -1,12 +1,5 @@
-import {
-  Row,
-  Col,
-  Input,
-  Button,
-  Form,
-  Modal as AntModal,
-  Tooltip,
-} from "antd";
+
+import { Row, Col, Input, Button, Form, Modal as AntModal, Tooltip } from "antd";
 import { SendOutlined, KeyOutlined } from "@ant-design/icons";
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
@@ -14,75 +7,72 @@ import Constants from "../../Utils/Constants";
 import useToken from "../../Authentication/useToken";
 import PropTypes from "prop-types";
 import "./Styles.css";
-import { useTranslation } from "react-i18next";
 
 function CreateKinesiologist({ refetchKinesiologists }) {
-  const { t } = useTranslation();
-  const {
-    handleSubmit,
-    control,
-    reset,
-    formState: { errors },
-  } = useForm();
+  const { handleSubmit, control, reset, formState: { errors } } = useForm();
   const { token } = useToken();
 
   const onSubmit = (data) => {
     const kinesiologistData = {
       ...data,
-      role: "kinesiologist",
-      active: true,
+      role: 'kinesiologist',
+      active: true
     };
 
     axios
-      .post(
-        `${Constants.SERVER_URL}/create-professional-user`,
-        kinesiologistData,
-        {
-          headers: { Authorization: "Bearer " + token },
-        }
-      )
+      .post(`${Constants.SERVER_URL}/create-professional-user`, kinesiologistData, {
+        headers: { Authorization: "Bearer " + token },
+      })
       .then((res) => {
         refetchKinesiologists();
-        openModal(t("Professionals:Kinesiologist:creating_success_msg"), false);
+        openModal("Kinesiologist created successfully!", false, data);
       })
-      .catch((err) =>
-        openModal(
-          err.response?.data?.message ||
-            t("Professionals:Kinesiologist:creating_error_msg"),
-          true
-        )
-      );
+      .catch((err) => openModal(err.response?.data?.message || "Error creating kinesiologist", true));
   };
 
-  const openModal = (message, isError) => {
-    AntModal[isError ? "error" : "success"]({
-      content: message,
-      okText: "Close",
+  const sendPassword = (email, password) => {
+    const subject = encodeURIComponent('New Doctor Account');
+    const body = encodeURIComponent(`Hello,\n\nHere are the details for the new kinesioligst account:\n\nEmail: ${email}\nPassword: ${password}\n\nBest regards,`);
+    const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
+    window.location.href = mailtoLink;
+  };
+
+
+  const openModal = (message, isError, passwordData) => {
+    AntModal[isError ? 'error' : 'success']({
+      content: (
+        <div>
+          <p>{message}</p>
+          {!isError && passwordData && (
+            <div>
+              <p><strong>Email:</strong> {passwordData.email}</p>
+              <p><strong>Password:</strong> {passwordData.password}</p>
+              <button onClick={() => sendPassword(passwordData.email, passwordData.password)}>Send Password</button>
+            </div>
+          )}
+        </div>
+      ),
+      okText: 'Close',
       centered: true,
       onOk: () => {
         if (!isError) {
-          reset();
+          reset(); // Réinitialiser le formulaire en cas de succès
         }
-      },
+      }
     });
   };
 
+
   const generatePassword = async () => {
     try {
-      const response = await axios.get(
-        `${Constants.SERVER_URL}/generate-password`,
-        {
-          headers: { Authorization: "Bearer " + token },
-        }
-      );
+      const response = await axios.get(`${Constants.SERVER_URL}/generate-password`, {
+        headers: { Authorization: "Bearer " + token },
+      });
       const generatedPassword = response.data.password;
       // Met à jour le champ password avec le mot de passe généré
       reset({ ...control._formValues, password: generatedPassword });
     } catch (err) {
-      openModal(
-        t("Professionals:Kinesiologist:generating_password_error_msg"),
-        true
-      );
+      openModal("Error generating password", true);
     }
   };
 
@@ -93,7 +83,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Kinesiologist:first_name_label")}
+                label="First Name"
                 required
                 validateStatus={errors.firstname ? "error" : ""}
                 help={errors.firstname?.message}
@@ -102,30 +92,19 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                   name="firstname"
                   control={control}
                   rules={{
-                    required: t(
-                      "Professionals:Kinesiologist:required_first_name_error"
-                    ),
+                    required: "Le prénom est obligatoire",
                     minLength: {
                       value: 2,
-                      message: t(
-                        "Professionals:Kinesiologist:first_name_min_length_error"
-                      ),
-                    },
+                      message: "Le prénom doit contenir au moins 2 caractères"
+                    }
                   }}
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      placeholder={t(
-                        "Professionals:Kinesiologist:enter_first_name_placeholder"
-                      )}
-                    />
-                  )}
+                  render={({ field }) => <Input {...field} placeholder="Entrez le prénom" />}
                 />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Kinesiologist:last_name_label")}
+                label="Last Name"
                 required
                 validateStatus={errors.lastname ? "error" : ""}
                 help={errors.lastname?.message}
@@ -134,24 +113,13 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                   name="lastname"
                   control={control}
                   rules={{
-                    required: t(
-                      "Professionals:Kinesiologist:required_last_name_error"
-                    ),
+                    required: "Le nom est obligatoire",
                     minLength: {
                       value: 2,
-                      message: t(
-                        "Professionals:Kinesiologist:last_name_min_length_error"
-                      ),
-                    },
+                      message: "Le nom doit contenir au moins 2 caractères"
+                    }
                   }}
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      placeholder={t(
-                        "Professionals:Kinesiologist:enter_last_name"
-                      )}
-                    />
-                  )}
+                  render={({ field }) => <Input {...field} placeholder="Entrez le nom" />}
                 />
               </Form.Item>
             </Col>
@@ -160,7 +128,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Kinesiologist:email")}
+                label="Email"
                 required
                 validateStatus={errors.email ? "error" : ""}
                 help={errors.email?.message}
@@ -169,30 +137,19 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                   name="email"
                   control={control}
                   rules={{
-                    required: t(
-                      "Professionals:Kinesiologist:required_email_error"
-                    ),
+                    required: "L'email est obligatoire",
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: t(
-                        "Professionals:Kinesiologist:invalid_email_format_error"
-                      ),
-                    },
+                      message: "Format d'email invalide"
+                    }
                   }}
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      placeholder={t(
-                        "Professionals:Kinesiologist:enter_email_placeholder"
-                      )}
-                    />
-                  )}
+                  render={({ field }) => <Input {...field} placeholder="Entrez l'adresse email" />}
                 />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Kinesiologist:confirm_email_label")}
+                label="Confirm Email"
                 required
                 validateStatus={errors.confirmEmail ? "error" : ""}
                 help={errors.confirmEmail?.message}
@@ -201,21 +158,10 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                   name="confirmEmail"
                   control={control}
                   rules={{
-                    required: t(
-                      "Professionals:Kinesiologist:required_email_confirmation_error"
-                    ),
-                    validate: (value) =>
-                      value === control._formValues.email ||
-                      t("Professionals:Kinesiologist:email_mismatch_error"),
+                    required: "La confirmation de l'email est obligatoire",
+                    validate: value => value === control._formValues.email || "Les emails ne correspondent pas"
                   }}
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      placeholder={t(
-                        "Professionals:Kinesiologist:confirm_email_placeholder"
-                      )}
-                    />
-                  )}
+                  render={({ field }) => <Input {...field} placeholder="Confirmez l'adresse email" />}
                 />
               </Form.Item>
             </Col>
@@ -224,7 +170,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Kinesiologist:phone_number")}
+                label="Phone Number"
                 required
                 validateStatus={errors.phoneNumber ? "error" : ""}
                 help={errors.phoneNumber?.message}
@@ -233,24 +179,13 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                   name="phoneNumber"
                   control={control}
                   rules={{
-                    required: t(
-                      "Professionals:Kinesiologist:required_phone_number_error"
-                    ),
+                    required: "Le numéro de téléphone est obligatoire",
                     pattern: {
                       value: /^[0-9+\s-]{8,}$/,
-                      message: t(
-                        "Professionals:Kinesiologist:invalid_phone_number_error"
-                      ),
-                    },
+                      message: "Format de numéro de téléphone invalide"
+                    }
                   }}
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      placeholder={t(
-                        "Professionals:Kinesiologist:phone_number_placeholder"
-                      )}
-                    />
-                  )}
+                  render={({ field }) => <Input {...field} placeholder="Entrez le numéro de téléphone" />}
                 />
               </Form.Item>
             </Col>
@@ -259,7 +194,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Kinesiologist:password_label")}
+                label="Password"
                 required
                 validateStatus={errors.password ? "error" : ""}
                 help={errors.password?.message}
@@ -269,30 +204,22 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                     name="password"
                     control={control}
                     rules={{
-                      required: t(
-                        "Professionals:Kinesiologist:required_password_error"
-                      ),
+                      required: "Le mot de passe est obligatoire",
                       minLength: {
                         value: 8,
-                        message: t(
-                          "Professionals:Kinesiologist:password_min_length_error"
-                        ),
+                        message: "Le mot de passe doit contenir au moins 8 caractères"
                       },
                       pattern: {
                         value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-                        message: t(
-                          "Professionals:Kinesiologist:password_requirements_error"
-                        ),
-                      },
+                        message: "Le mot de passe doit contenir au moins une lettre et un chiffre"
+                      }
                     }}
                     render={({ field }) => (
                       <>
                         <Input.Password
                           {...field}
-                          placeholder={t(
-                            "Professionals:Kinesiologist:password_placeholder"
-                          )}
-                          style={{ width: "calc(100% - 40px)" }}
+                          placeholder="Entrez le mot de passe"
+                          style={{ width: 'calc(100% - 40px)' }}
                         />
                         <Tooltip title="Générer un mot de passe">
                           <Button
@@ -306,11 +233,33 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                 </Input.Group>
               </Form.Item>
             </Col>
+            <Col span={12}>
+              <Form.Item
+                label="Work environment"
+                required
+                validateStatus={errors.workEnvironment ? "error" : ""}
+                help={errors.workEnvironment?.message}
+              >
+                <Controller
+                  name="workEnvironment"
+                  control={control}
+                  rules={{
+                    required: "Le milieu de travail est obligatoire",
+                    minLength: {
+                      value: 2,
+                      message: "Le milieu de travail doit contenir au moins 2 caractères"
+                    }
+                  }}
+                  render={({ field }) => <Input {...field} placeholder="Entrez le mileu de travail" />}
+                />
+              </Form.Item>
+            </Col>
+
           </Row>
 
           <Form.Item className="submit-button">
             <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
-              {t("Professionals:Kinesiologist:create_kenisiologist_button")}
+              Create Kinesiologist
             </Button>
           </Form.Item>
         </Form>
