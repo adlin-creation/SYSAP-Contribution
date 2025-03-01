@@ -10,4 +10,5 @@ npm-debug.log
 images/*
 
 # exception to the rule
+
 !images/.gitkeep 
