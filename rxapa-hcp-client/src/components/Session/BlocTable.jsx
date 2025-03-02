@@ -7,22 +7,27 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-
-const columns = [
-  { id: "name", label: "Name", minWidth: 100 },
-  {
-    id: "description",
-    label: "Description",
-    minWidth: 100,
-  },
-  { id: "dayTime", label: "Day Time", minWidth: 70 },
-  { id: "isRequired", label: "Required", align: "ceneter", minWidth: 70 },
-];
+import { useTranslation } from "react-i18next";
 
 export default function BlocTable({ blocs }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
+  const { t } = useTranslation();
+  const columns = [
+    { id: "name", label: t("Sessions:name_label"), minWidth: 100 },
+    {
+      id: "description",
+      label: t("Sessions:description_label"),
+      minWidth: 100,
+    },
+    { id: "dayTime", label: t("Sessions:day_time_label"), minWidth: 70 },
+    {
+      id: "isRequired",
+      label: t("Sessions:required_label"),
+      align: "ceneter",
+      minWidth: 70,
+    },
+  ];
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };

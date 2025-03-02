@@ -1,13 +1,15 @@
 import React from "react";
 import { Row, Col, Input, Button, Form, Modal } from "antd";
-import { CheckOutlined } from '@ant-design/icons'; // Ajout de l'importation
+import { CheckOutlined } from "@ant-design/icons"; // Ajout de l'importation
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
 import useToken from "../Authentication/useToken";
 import Constants from "../Utils/Constants";
 import "./Styles.css";
+import { useTranslation } from "react-i18next";
 
 export default function ExerciseDetail({ exercise, refetchExercises }) {
+  const { t } = useTranslation();
   const { handleSubmit, control } = useForm();
   const { token } = useToken();
 
@@ -22,8 +24,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
     React.useState("");
 
   const [selectedFitnessLevel, setselectedFitnessLevel] = React.useState(null);
-  const [displayedFitnessLevel, setdisplayedFitnessLevel] =
-    React.useState("");
+  const [displayedFitnessLevel, setdisplayedFitnessLevel] = React.useState("");
 
   const [selectedIsSeatingExercise, setSelectedIsSeatingExercise] =
     React.useState(null);
@@ -79,10 +80,10 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
   };
 
   return (
-    <Row justify="center" align="middle" style={{ minHeight: '50vh' }}>
+    <Row justify="center" align="middle" style={{ minHeight: "50vh" }}>
       <Col span={12}>
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
-          <Form.Item label="Exercise Name">
+          <Form.Item label={t("Exercise Name")}>
             <Controller
               name="name"
               control={control}
@@ -116,12 +117,8 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
           </Form.Item>
 
           <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              icon={<CheckOutlined />}
-            >
-              UPDATE
+            <Button type="primary" htmlType="submit" icon={<CheckOutlined />}>
+              {t("Exercises:update_button")}
             </Button>
           </Form.Item>
         </Form>
@@ -137,7 +134,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
               </Button>,
             ]}
           >
-            <p style={{ color: isErrorMessage ? 'red' : 'green' }}>{message}</p>
+            <p style={{ color: isErrorMessage ? "red" : "green" }}>{message}</p>
           </Modal>
         )}
       </Col>

@@ -18,6 +18,10 @@ import { useNavigation } from '@react-navigation/native'; // Import useNavigatio
 import sessionService from '../services/sessionService'; // Import the session service
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient'; // Import LinearGradient for gradient background
+import { useTranslation } from 'react-i18next';
+import '../utils/i18n';
+
+const { t, i18n } = useTranslation();
 
 interface Errors {
   exercisesCompleted?: string;
@@ -45,18 +49,18 @@ export default function CahierDeSuiviScreen() {
 
   const validateFields = () => {
     const newErrors: Errors = {};
-    if (!exercisesCompleted) newErrors.exercisesCompleted = 'Veuillez choisir votre nombre d’exercices';
-    if (!difficultyLevel) newErrors.difficultyLevel = 'Veuillez choisir votre difficulté';
-    if (!satisfactionLevel) newErrors.satisfactionLevel = 'Veuillez choisir votre satisfaction';
-    if (!painLevel) newErrors.painLevel = 'Veuillez choisir votre niveau de douleur';
-    if (!walkingHours || !walkingMinutes) newErrors.walkingTime = 'Veuillez choisir votre temps de marche';
+    if (!exercisesCompleted) newErrors.exercisesCompleted = t('Cahier:err_choisir_nb_exercices');
+    if (!difficultyLevel) newErrors.difficultyLevel = t('Cahier:err_choisir_difficulte');
+    if (!satisfactionLevel) newErrors.satisfactionLevel = t('Cahier:err_choisir_satisfaction');
+    if (!painLevel) newErrors.painLevel = t('Cahier:err_choisir_douleur');
+    if (!walkingHours || !walkingMinutes) newErrors.walkingTime = t('Cahier:err_choisir_temps');
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async () => {
     if (!validateFields()) {
-      Alert.alert('Erreur', 'Veuillez remplir tous les champs obligatoires');
+      Alert.alert(t('Cahier:erreur'), t('Cahier:err_remplir_champs'));
       return;
     }
 
@@ -75,15 +79,15 @@ export default function CahierDeSuiviScreen() {
     try {
       const response = await sessionService.createSessionRecord(sessionData);
       if (response.success) {
-        Alert.alert('Succès', 'Session enregistrée avec succès');
+        Alert.alert(t('Cahier:succes'), t('Cahier:msg_session_enregistree'));
         console.log('Session data:', response.data);
         navigation.navigate('home' as never); // Navigate to the home page
       } else {
-        Alert.alert('Erreur', response.message || 'Échec de l\'enregistrement');
+        Alert.alert(t('Cahier:erreur'), response.message || t('Cahier:err_echec_enregistrement_1'));
       }
     } catch (error) {
       console.error('Erreur lors de l\'enregistrement de la session:', error);
-      Alert.alert('Erreur', 'Une erreur est survenue lors de l\'enregistrement');
+      Alert.alert(t('Cahier:erreur'), t('Cahier:err_echec_enregistrement_2'));
     }
   };
 
@@ -92,7 +96,7 @@ export default function CahierDeSuiviScreen() {
       setWalkingMinutes('0');
     }
     setShowTimePicker(false);
-    updateTitle('Temps de marche effectué aujourd’hui');
+    updateTitle(t('Cahier:temps_marche'));
   };
 
   return (
@@ -100,21 +104,21 @@ export default function CahierDeSuiviScreen() {
       <SafeAreaView style={{ flex: 1 }}>
         <LinearGradient colors={['#e0f7fa', '#1B365D']} style={styles.container}>
           <ScrollView>
-            <Text style={styles.title}>Cahier de Suivi</Text>
+            <Text style={styles.title}>{t('Cahier:cahier_de_suivi')}</Text>
             <Text style={styles.currentTitle}>{currentTitle}</Text>
 
             {/* Number of Exercises */}
             <Card style={[styles.card, exercisesCompleted ? styles.completedCard : errors.exercisesCompleted && styles.errorCard]}>
-              <Text style={[styles.label, errors.exercisesCompleted && styles.errorLabel]}>Nombre d’exercices effectués aujourd’hui</Text>
+              <Text style={[styles.label, errors.exercisesCompleted && styles.errorLabel]}>{t('Cahier:choisir_nombre_exercices')}</Text>
               <Picker
                 selectedValue={exercisesCompleted}
                 onValueChange={(itemValue) => {
                   setExercisesCompleted(itemValue);
-                  updateTitle('Nombre d’exercices effectués aujourd’hui');
+                  updateTitle(t('Cahier:nombre_exercices'));
                 }}
                 style={[styles.picker, errors.exercisesCompleted && styles.errorPicker]}
               >
-                <Picker.Item label="Choisissez votre nombre d’exercices" value="" />
+                <Picker.Item label={t('Cahier:choisir_nombre_exercices')} value="" />
                 <Picker.Item label="1" value="1" />
                 <Picker.Item label="2" value="2" />
                 <Picker.Item label="3" value="3" />
@@ -125,76 +129,76 @@ export default function CahierDeSuiviScreen() {
 
             {/* Difficulty Level */}
             <Card style={[styles.card, difficultyLevel ? styles.completedCard : errors.difficultyLevel && styles.errorCard]}>
-              <Text style={[styles.label, errors.difficultyLevel && styles.errorLabel]}>Difficulté ressentie durant votre séance</Text>
+              <Text style={[styles.label, errors.difficultyLevel && styles.errorLabel]}>{t('Cahier:difficulte_ressentie')}</Text>
               <Picker
                 selectedValue={difficultyLevel}
                 onValueChange={(itemValue) => {
                   setDifficultyLevel(itemValue);
-                  updateTitle('Difficulté ressentie durant votre séance');
+                  updateTitle(t('Cahier:difficulte_ressentie'));
                 }}
                 style={[styles.picker, errors.difficultyLevel && styles.errorPicker]}
               >
-                <Picker.Item label="Choisissez votre difficulté" value="" />
-                <Picker.Item label="Très difficile 😣" value="1" />
-                <Picker.Item label="Difficile 😕" value="2" />
-                <Picker.Item label="Facile 🙂" value="3" />
-                <Picker.Item label="Très facile 😃" value="4" />
+                <Picker.Item label={t('Cahier:choisir_difficulte')} value="" />
+                <Picker.Item label={t('Cahier:tres_difficile') + " 😣"} value="1" />
+                <Picker.Item label={t('Cahier:difficile') + " 😕"} value="2" />
+                <Picker.Item label={t('Cahier:facile') + " 🙂"} value="3" />
+                <Picker.Item label={t('Cahier:tres_facile') + " 😃"} value="4" />
               </Picker>
               {errors.difficultyLevel && <Text style={styles.errorText}>{errors.difficultyLevel}</Text>}
             </Card>
 
             {/* Satisfaction Level */}
             <Card style={[styles.card, satisfactionLevel ? styles.completedCard : errors.satisfactionLevel && styles.errorCard]}>
-              <Text style={[styles.label, errors.satisfactionLevel && styles.errorLabel]}>Satisfaction de votre séance du jour</Text>
+              <Text style={[styles.label, errors.satisfactionLevel && styles.errorLabel]}>{t('Cahier:satisfaction')}</Text>
               <Picker
                 selectedValue={satisfactionLevel}
                 onValueChange={(itemValue) => {
                   setSatisfactionLevel(itemValue);
-                  updateTitle('Satisfaction de votre séance du jour');
+                  updateTitle(t('Cahier:satisfaction'));
                 }}
                 style={[styles.picker, errors.satisfactionLevel && styles.errorPicker]}
               >
-                <Picker.Item label="Choisissez votre satisfaction" value="" />
-                <Picker.Item label="Très insatisfait 😡" value="1" />
-                <Picker.Item label="Insatisfait 😞" value="2" />
-                <Picker.Item label="Satisfait 🙂" value="3" />
-                <Picker.Item label="Très satisfait 😃" value="4" />
+                <Picker.Item label={t('Cahier:choisir_satisfaction')} value="" />
+                <Picker.Item label={t('Cahier:tres_insatisfait') + " 😡"} value="1" />
+                <Picker.Item label={t('Cahier:insatisfait') + " 😞"} value="2" />
+                <Picker.Item label={t('Cahier:satisfait') + " 🙂"} value="3" />
+                <Picker.Item label={t('Cahier:tres_satisfait') + " 😃"} value="4" />
               </Picker>
               {errors.satisfactionLevel && <Text style={styles.errorText}>{errors.satisfactionLevel}</Text>}
             </Card>
 
             {/* Pain Level */}
             <Card style={[styles.card, painLevel ? styles.completedCard : errors.painLevel && styles.errorCard]}>
-              <Text style={[styles.label, errors.painLevel && styles.errorLabel]}>Niveau de douleur ressenti durant la pratique</Text>
+              <Text style={[styles.label, errors.painLevel && styles.errorLabel]}>{t('Cahier:niveau_douleur')}</Text>
               <Picker
                 selectedValue={painLevel}
                 onValueChange={(itemValue) => {
                   setPainLevel(itemValue);
-                  updateTitle('Niveau de douleur ressenti durant la pratique');
+                  updateTitle(t('Cahier:niveau_douleur'));
                 }}
                 style={[styles.picker, errors.painLevel && styles.errorPicker]}
               >
-                <Picker.Item label="Choisissez votre niveau de douleur" value="" />
-                <Picker.Item label="Aucune 😌" value="1" />
-                <Picker.Item label="Légère 🙂" value="2" />
-                <Picker.Item label="Modérée 😕" value="3" />
-                <Picker.Item label="Intense 😣" value="4" />
+                <Picker.Item label={t('Cahier:choisir_douleur')} value="" />
+                <Picker.Item label={t('Cahier:douleur_aucune') + " 😌"} value="1" />
+                <Picker.Item label={t('Cahier:douleur_legere') + " 🙂"} value="2" />
+                <Picker.Item label={t('Cahier:douleur_moderee') + " 😕"} value="3" />
+                <Picker.Item label={t('Cahier:douleur_intense') + " 😣"} value="4" />
               </Picker>
               {errors.painLevel && <Text style={styles.errorText}>{errors.painLevel}</Text>}
             </Card>
 
             {/* Walking Time */}
             <Card style={[styles.card, (walkingHours && walkingMinutes) ? styles.completedCard : errors.walkingTime && styles.errorCard]}>
-              <Text style={[styles.label, errors.walkingTime && styles.errorLabel]}>Temps de marche effectué aujourd’hui</Text>
+              <Text style={[styles.label, errors.walkingTime && styles.errorLabel]}>{t('Cahier:temps_marche')}</Text>
               <TouchableOpacity onPress={() => setShowTimePicker(true)} style={[styles.input, errors.walkingTime && styles.errorPicker]}>
                 <Text style={styles.inputText}>
-                  {walkingHours && walkingMinutes ? `${walkingHours}h ${walkingMinutes}m` : 'Choisissez votre temps de marche'}
+                  {walkingHours && walkingMinutes ? `${walkingHours}h ${walkingMinutes}m` : t('Cahier:choisir_temps')}
                 </Text>
               </TouchableOpacity>
               {errors.walkingTime && <Text style={styles.errorText}>{errors.walkingTime}</Text>}
               <Portal>
                 <Modal visible={showTimePicker} onDismiss={() => setShowTimePicker(false)} contentContainerStyle={styles.modalContent}>
-                  <Text style={styles.modalTitle}>Sélectionnez le temps de marche</Text>
+                  <Text style={styles.modalTitle}>{t('Cahier:selectionner_temps')}</Text>
                   <View style={styles.timeContainer}>
                     <Picker
                       selectedValue={walkingHours}
@@ -206,7 +210,7 @@ export default function CahierDeSuiviScreen() {
                       }}
                       style={[styles.picker, styles.timePicker]}
                     >
-                      <Picker.Item label="Choisissez heure" value="" />
+                      <Picker.Item label={t('Cahier:choisir_heure')} value="" />
                       <Picker.Item label="0" value="0" />
                       <Picker.Item label="1" value="1" />
                       <Picker.Item label="2" value="2" />
@@ -218,7 +222,7 @@ export default function CahierDeSuiviScreen() {
                       style={[styles.picker, styles.timePicker]}
                       enabled={walkingHours !== '2'}
                     >
-                      <Picker.Item label="Choisissez minute" value="" />
+                      <Picker.Item label={t('Cahier:choisir_minute')} value="" />
                       {Array.from({ length: 12 }, (_, i) => (
                         <Picker.Item key={i * 5} label={`${i * 5}`} value={`${i * 5}`} />
                       ))}
@@ -226,7 +230,7 @@ export default function CahierDeSuiviScreen() {
                     <Text style={styles.timeSeparator}>m</Text>
                   </View>
                   <TouchableOpacity style={styles.fullWidthButton} onPress={handleConfirmTimePicker}>
-                    <Button mode="contained" style={styles.orangeButton}>CONFIRMER</Button>
+                    <Button mode="contained" style={styles.orangeButton}>{t('Cahier:confirmer')}</Button>
                   </TouchableOpacity>
                 </Modal>
               </Portal>
@@ -234,7 +238,7 @@ export default function CahierDeSuiviScreen() {
 
             {/* Submit Button */}
             <TouchableOpacity style={styles.fullWidthButton} onPress={handleSubmit}>
-              <Button mode="contained" style={styles.orangeButton}>CONFIRMER</Button>
+              <Button mode="contained" style={styles.orangeButton}>{t('Cahier:confirmer')}</Button>
             </TouchableOpacity>
           </ScrollView>
         </LinearGradient>
