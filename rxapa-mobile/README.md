@@ -1,9 +1,3 @@
-To initialize and update all submodules recursively, use:
-```bash
-git submodule update --init --recursive
-```
+# RxAPA mobile
 
-If you need to pull the latest changes for all submodules, you can use:
-```bash
-git submodule foreach git pull origin main
-```
+RxAPA mobile est une application dédiée aux patients et à leurs proches aidants (2 proches aidants max).

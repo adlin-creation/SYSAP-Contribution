@@ -7,8 +7,10 @@ import Typography from "@mui/material/Typography";
 import image from "../../images/phase2.jpeg";
 import AppButton from "../Button/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useTranslation } from "react-i18next";
 
 export default function Phase({ phase, deletePhase, onSelect, onClick }) {
+  const { t } = useTranslation();
   return (
     <Card sx={{ maxWidth: 345 }} className="bloc">
       <CardMedia
@@ -50,7 +52,7 @@ export default function Phase({ phase, deletePhase, onSelect, onClick }) {
             onClick(event);
           }}
           name={"edit-phase"}
-          displayText={"EDIT"}
+          displayText={t("Phases:edit_button")}
           variant={"contained"}
           type={"button"}
           size={"medium"}
@@ -60,7 +62,7 @@ export default function Phase({ phase, deletePhase, onSelect, onClick }) {
             // calls parent function to delete the exercise
             deletePhase(phase);
           }}
-          displayText={"DELETE"}
+          displayText={t("Sessions:delete_button")}
           variant={"contained"}
           type={"button"}
           color={"error"}

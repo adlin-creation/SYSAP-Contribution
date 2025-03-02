@@ -9,8 +9,10 @@ import Constants from "../Utils/Constants";
 import "../MainMenu/MainMenu.css";
 import SessionDetails from "./SessionDetails";
 import useToken from "../Authentication/useToken";
+import { useTranslation } from "react-i18next";
 
 export default function SessionList(props) {
+  const { t } = useTranslation();
   // tracks the state of two buttons: create a session and edit a day session
   const [buttonState, setButtonState] = useState({
     isCreateSession: false,
@@ -54,10 +56,10 @@ export default function SessionList(props) {
   /// SESSION QUERY VALIDATIONS ///
   /////////////////////////////////////
   if (isSessionLoading) {
-    return <h1>Sessions Loading...</h1>;
+    return <h1>{t("Sessions:sessions_loading")}</h1>;
   }
   if (isSessionLoadingError) {
-    return <h1>Sorry, an error occured while loading sessions</h1>;
+    return <h1>{t("Sessions:sessions_loading_error_msg")}</h1>;
   }
 
   /**
@@ -136,7 +138,7 @@ export default function SessionList(props) {
             type="primary"
             icon={<PlusOutlined />}
           >
-            Create Session
+            {t("Sessions:create_session")}
           </Button>
 
           {/* Display exisitng sessions */}
@@ -164,16 +166,14 @@ export default function SessionList(props) {
           type="primary"
           icon={<ArrowLeftOutlined />}
         >
-          Back
+          {t("Sessions:back_button")}
         </Button>
       )}
 
       {/* show create session input elements when create day session is clicked */}
       {buttonState.isCreateSession && (
         <div>
-          <h3>
-            Enter the following details and then submit to create a new session
-          </h3>
+          <h3>{t("Sessions:session_details_title")}</h3>
           <CreateSession refetchSessions={refetchSessions} />
         </div>
       )}
@@ -182,11 +182,7 @@ export default function SessionList(props) {
       {buttonState.isEditSession && (
         <SessionDetails sessionKey={selectedSession.key} />
       )}
-      <Modal
-        open={isOpenModal}
-        onCancel={closeModal}
-        footer={null}
-      >
+      <Modal open={isOpenModal} onCancel={closeModal} footer={null}>
         <p>{message}</p>
       </Modal>
     </div>

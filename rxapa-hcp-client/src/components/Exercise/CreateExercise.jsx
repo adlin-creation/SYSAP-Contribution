@@ -1,18 +1,20 @@
 import React, { useState } from "react";
-import PropTypes from 'prop-types'; // Import de PropTypes
-import { Col, Input, Button, Form, Modal, Select } from "antd";
+import PropTypes from "prop-types"; // Import de PropTypes
+import { Col, Input, Button, Form, Modal, Select, Checkbox } from "antd";
 import { Controller, useForm } from "react-hook-form";
-import { SendOutlined } from '@ant-design/icons'; // Import de l'icône
+import { SendOutlined } from "@ant-design/icons"; // Import de l'icône
 import "./Styles.css";
 import axios from "axios";
 import useToken from "../Authentication/useToken";
 import Constants from "../Utils/Constants";
+import { useTranslation } from "react-i18next";
 
 export default function CreateExercise(props) {
   const { handleSubmit, control } = useForm();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isErrorMessage, setIsErrorMessage] = useState(false);
   const [message, setMessage] = useState("");
+  const { t } = useTranslation();
 
   const [selectedExerciseCategory, setSelectedExerciseCategory] = useState(null);
   const [selectedFitnessLevel, setSelectedFitnessLevel] = useState(null); // Assurez-vous que la valeur initiale est null
@@ -69,7 +71,9 @@ export default function CreateExercise(props) {
         props.refetchExercises();
       })
       .catch((err) => {
-        const errorMessage = err.response ? err.response.data.message : "An error occurred";
+        const errorMessage = err.response
+          ? err.response.data.message
+          : "An error occurred";
         openModal(errorMessage, true);
       });
   };
@@ -140,17 +144,40 @@ export default function CreateExercise(props) {
                 <Input.TextArea
                   onChange={onChange}
                   value={value}
-                  placeholder="Description de l'exercice"
+                  placeholder="Exercise Description"
                   rows={4}
                 />
               )}
             />
           </Form.Item>
-          
-          <Form.Item label="Image de l'exercice: " className="input-element">
+
+          <Form.Item label="Please enter the instructional video of the exercise : " className="input-element">
+            <Controller
+              name="instructionalVideo"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <Input
+                  onChange={onChange}
+                  value={value}
+                  placeholder="Exercise Instructional Video"
+                />
+              )}
+            />
+          </Form.Item>
+
+          <Form.Item label="Exercise Image : " className="input-element">
             <input type="file" accept="image/*" onChange={onChangeImage} />
           </Form.Item>
-          
+
+          <Form.Item className="input-element">
+            <Checkbox
+              checked={isSeatingExercise}
+              onChange={handleChange}
+            >
+              Seating Exercise
+            </Checkbox>
+          </Form.Item>
+
           <Form.Item className="input-element">
             <Button
               type="primary"
@@ -167,11 +194,11 @@ export default function CreateExercise(props) {
             onCancel={closeModal}
             footer={[
               <Button key="close" onClick={closeModal}>
-                Close
+                {t("Exercises:close_button")}
               </Button>,
             ]}
           >
-            <p style={{ color: isErrorMessage ? 'red' : 'black' }}>{message}</p>
+            <p style={{ color: isErrorMessage ? "red" : "black" }}>{message}</p>
           </Modal>
         )}
       </Col>

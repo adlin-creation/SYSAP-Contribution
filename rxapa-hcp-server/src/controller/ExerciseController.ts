@@ -312,12 +312,12 @@ exports.addExerciseVersion = async (req: any, res: any, next: any) => {
  * @author Hyacinth Ali
  */
 const createVariant = async (
-  /**
-   * @todo verify which id comes first
-   */
-  versionId: Number,
-  exerciseId: Number,
-  level: any
+    /**
+     * @todo verify which id comes first
+     */
+    versionId: Number,
+    exerciseId: Number,
+    level: any
 ) => {
   // Use sequelize (Database Framework) to create the component
   try {
