@@ -7,6 +7,9 @@
 
 # testing
 /coverage
+/component/ProfessionalUser/Doctor/__snapshots__
+/component/ProfessionalUser/Kinesiologist/__snapshots__
+
 
 # production
 /build
