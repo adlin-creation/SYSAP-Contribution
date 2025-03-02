@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types"; // Import de PropTypes
-import { Col, Input, Button, Form, Modal, Select, Checkbox } from "antd";
+import { Col, Input, Button, Form, Modal, Select} from "antd";
 import { Controller, useForm } from "react-hook-form";
 import { SendOutlined } from "@ant-design/icons"; // Import de l'icône
 import "./Styles.css";
@@ -55,7 +55,7 @@ export default function CreateExercise(props) {
     formData.append("name", combinedData.name);
     formData.append("description", combinedData.description);
     formData.append("instructionalVideo", combinedData.instructionalVideo);
-    formData.append("isSeating", combinedData.isSeating);
+    formData.append("isSeating", "");
     formData.append("category", combinedData.category);
     formData.append("targetAgeRange", combinedData.targetAgeRange);
     formData.append("fitnessLevel", combinedData.fitnessLevel);
@@ -89,7 +89,7 @@ export default function CreateExercise(props) {
       <Col span={12}>
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
 
-          <Form.Item label="Veuillez entrer le nom de l'exercice : " className="input-element">
+          <Form.Item label={t("Exercises:enter_exercise_name")} className="input-element">
             <Controller
               name="name"
               control={control}
@@ -97,22 +97,22 @@ export default function CreateExercise(props) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder="Nom de l'exercice"
+                  placeholder={t("Exercises:exercise_name")}
                   required
                 />
               )}
             />
           </Form.Item>
 
-          <Form.Item label="Veuillez sélectionner la catégorie : " className="input-element">
+          <Form.Item label={t("Exercises:exercise_category")} className="input-element">
             <Select
               value={selectedExerciseCategory}
               onChange={(value) => setSelectedExerciseCategory(value)}
-              placeholder="Sélectionnez la catégorie"
+              placeholder={t("Exercises:exercise_category")}
               style={{ width: '100%' }}
               allowClear
             >
-              {["Aérobic", "Endurance", "Force", "Flexibilité", "Équilibre"].map((category) => (
+              {[ t("Exercises:aerobic"), t("Exercises:strength"),t("Exercises:endurance"), t("Exercises:flexibility"), t("Exercises:balance")].map((category) => (
                 <Select.Option key={category} value={category}>
                   {category}
                 </Select.Option>
@@ -120,15 +120,15 @@ export default function CreateExercise(props) {
             </Select>
           </Form.Item>
 
-          <Form.Item label="Veuillez sélectionner le niveau de forme physique attendu : " className="input-element">
+          <Form.Item label={t("Exercises:select_expected_fitness_level")} className="input-element">
             <Select
               value={selectedFitnessLevel}
               onChange={(value) => setSelectedFitnessLevel(value)}
-              placeholder="Niveau de forme physique attendu"
+              placeholder={t("Exercises:select_fitness_level")}
               style={{ width: '100%' }}
               allowClear
             >
-              {["Facile","Intermédiaire","Avancé"].map((level) => (
+              {[t("Exercises:easy"),t("Exercises:intermediate"),t("Exercises:advanced")].map((level) => (
                 <Select.Option key={level} value={level}>
                   {level}
                 </Select.Option>
@@ -136,7 +136,7 @@ export default function CreateExercise(props) {
             </Select>
           </Form.Item>
 
-          <Form.Item label="Veuillez entrer la description de l'exercice : " className="input-element">
+          <Form.Item label={t("Exercises:enter_exercise_description")} className="input-element">
             <Controller
               name="description"
               control={control}
@@ -144,38 +144,15 @@ export default function CreateExercise(props) {
                 <Input.TextArea
                   onChange={onChange}
                   value={value}
-                  placeholder="Exercise Description"
+                  placeholder={t("Exercises:exercise_description")}
                   rows={4}
                 />
               )}
             />
           </Form.Item>
-
-          <Form.Item label="Please enter the instructional video of the exercise : " className="input-element">
-            <Controller
-              name="instructionalVideo"
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <Input
-                  onChange={onChange}
-                  value={value}
-                  placeholder="Exercise Instructional Video"
-                />
-              )}
-            />
-          </Form.Item>
-
-          <Form.Item label="Exercise Image : " className="input-element">
+      
+          <Form.Item label={t("Exercises:enter_exercise_image")} className="input-element">
             <input type="file" accept="image/*" onChange={onChangeImage} />
-          </Form.Item>
-
-          <Form.Item className="input-element">
-            <Checkbox
-              checked={isSeatingExercise}
-              onChange={handleChange}
-            >
-              Seating Exercise
-            </Checkbox>
           </Form.Item>
 
           <Form.Item className="input-element">
@@ -184,7 +161,7 @@ export default function CreateExercise(props) {
               htmlType="submit"
               icon={<SendOutlined />} // Utilisation de l'icône Ant Design
             >
-              Soumettre
+              {t("Exercises:submit_button")}
             </Button>
           </Form.Item>
         </Form>
