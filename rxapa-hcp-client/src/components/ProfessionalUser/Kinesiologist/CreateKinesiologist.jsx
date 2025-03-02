@@ -1,6 +1,7 @@
 import {
   Row,
   Col,
+  Select,
   Input,
   Button,
   Form,
@@ -17,6 +18,21 @@ import "./Styles.css";
 import { useTranslation } from "react-i18next";
 
 function CreateKinesiologist({ refetchKinesiologists }) {
+
+
+  const { Option } = Select;
+
+  const milieuxTravail = [
+    { value: "Hôpital: SPA soins post-aigus", label: "Hôpital: SPA soins post-aigus" },
+    { value: "Hôpital: UCDG unité courte durée gériatrique", label: "Hôpital: UCDG unité courte durée gériatrique" },
+    { value: "Hôpital: UTRF unité transitoire de réadaptation fonctionnelle", label: "Hôpital: UTRF unité transitoire de réadaptation fonctionnelle" },
+    { value: "Hôpital: autre unité", label: "Hôpital: autre unité" },
+    { value: "CHSLD", label: "CHSLD" },
+    { value: "RPA Résidence Privée pour aînés", label: "RPA Résidence Privée pour aînés" },
+    { value: "Clinique de médecine familiale-GMF", label: "Clinique de médecine familiale-GMF" },
+    { value: "Clinique: autre", label: "Clinique: autre" }
+  ];
+
   const { t } = useTranslation();
   const {
     handleSubmit,
@@ -43,7 +59,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
       )
       .then((res) => {
         refetchKinesiologists();
-        openModal(t("Professionals:Kinesiologist:creating_success_msg"), false);
+        openModal(t("Professionals:Kinesiologist:creating_success_msg"), false, data);
       })
       .catch((err) =>
         openModal(
@@ -54,19 +70,39 @@ function CreateKinesiologist({ refetchKinesiologists }) {
       );
   };
 
-  const openModal = (message, isError) => {
-    AntModal[isError ? "error" : "success"]({
-      content: message,
-      okText: "Close",
+  const sendPassword = (email, password) => {
+    const subject = encodeURIComponent('New Doctor Account');
+    const body = encodeURIComponent(`Hello,\n\nHere are the details for the new kinesioligst account:\n\nEmail: ${email}\nPassword: ${password}\n\nBest regards,`);
+    const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
+    window.location.href = mailtoLink;
+  };
+
+
+  const openModal = (message, isError, passwordData) => {
+    AntModal[isError ? 'error' : 'success']({
+      content: (
+        <div>
+          <p>{message}</p>
+          {!isError && passwordData && (
+            <div>
+              <p><strong>Email:</strong> {passwordData.email}</p>
+              <p><strong>Password:</strong> {passwordData.password}</p>
+              <button onClick={() => sendPassword(passwordData.email, passwordData.password)}>Send Password</button>
+            </div>
+          )}
+        </div>
+      ),
+      okText: 'Close',
       centered: true,
       onOk: () => {
         if (!isError) {
-          reset();
+          reset(); // Réinitialiser le formulaire en cas de succès
         }
-      },
+      }
     });
   };
 
+  
   const generatePassword = async () => {
     try {
       const response = await axios.get(
@@ -251,6 +287,34 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                       )}
                     />
                   )}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label="Work environment"
+                required
+                validateStatus={errors.workEnvironment ? "error" : ""}
+                help={errors.workEnvironment?.message}
+              >
+                <Controller
+                  name="workEnvironment"
+                  control={control}
+                  rules={{
+                    required: "Le milieu de travail est obligatoire",
+                    minLength: {
+                      value: 2,
+                      message: "Le milieu de travail doit contenir au moins 2 caractères"
+                    }
+                  }}
+                  render={({ field }) => 
+                  <Select {...field} placeholder="Sélectionnez le milieu de travail">
+                    {milieuxTravail.map((milieu) => (
+                      <Option key={milieu.value} value={milieu.value}>
+                        {milieu.label}
+                      </Option>
+                    ))}
+                  </Select>}
                 />
               </Form.Item>
             </Col>

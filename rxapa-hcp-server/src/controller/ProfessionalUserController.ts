@@ -6,29 +6,37 @@ import { Follow_Patient } from "../model/Follow_Patient";
 import { Patient } from "../model/Patient";
 import { ProgramEnrollement } from "../model/ProgramEnrollement";
 import crypto from 'crypto';
+import { hash } from './UserController';
+
 
 /**
  * Creates a new professional user.
  */
-exports.createProfessionalUser = async (req: any, res: any, next: any) => {
-  const { firstname, lastname, email, phoneNumber, password, role } = req.body;
+export const createProfessionalUser = async (req: any, res: any, next: any) => {
+  const { firstname, lastname, email, phoneNumber, password, role, workEnvironment } = req.body;
+  const hashedPassword = await hash(password);
   try {
+    const existingUser = await Professional_User.findOne({ where: { email } });
+    if (existingUser) {
+      return res.status(409).json({ message: "Un utilisateur avec cet email existe déjà." });
+    }
+
     const newProfessionalUser = await Professional_User.create({
       firstname,
       lastname,
       email,
       phoneNumber,
-      password,
+      password: hashedPassword,
       role
     });
-
+   
     // Create the specific role entity
     if (role === 'admin') {
       await Admin.create({ idAdmin: newProfessionalUser.id });
     } else if (role === 'doctor') {
-      await Doctor.create({ idDoctor: newProfessionalUser.id });
+      await Doctor.create({ idDoctor: newProfessionalUser.id, workEnvironment: workEnvironment });
     } else if (role === 'kinesiologist') {
-      await Kinesiologist.create({ idKinesiologist: newProfessionalUser.id });
+      await Kinesiologist.create({ idKinesiologist: newProfessionalUser.id, workEnvironment: workEnvironment });
     }
 
     res.status(201).json(newProfessionalUser);
@@ -185,18 +193,18 @@ exports.generatePassword = async (req: any, res: any, next: any) => {
       const length = 12;
       const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
       let password = '';
-      
+
       // Assure au moins un chiffre et une lettre
       password += charset.slice(52)[Math.floor(Math.random() * 10)]; // un chiffre
       password += charset.slice(0, 52)[Math.floor(Math.random() * 52)]; // une lettre
-      
+
       // Complète avec des caractères aléatoires
       for (let i = 2; i < length; i++) {
         const randomBytes = crypto.randomBytes(1);
         const randomIndex = randomBytes[0] % charset.length;
         password += charset[randomIndex];
       }
-      
+
       // Mélange le mot de passe final
       return password.split('').sort(() => 0.5 - Math.random()).join('');
     };
@@ -210,3 +218,4 @@ exports.generatePassword = async (req: any, res: any, next: any) => {
     res.status(error.statusCode).json({ message: "Error generating password" });
   }
 };
+

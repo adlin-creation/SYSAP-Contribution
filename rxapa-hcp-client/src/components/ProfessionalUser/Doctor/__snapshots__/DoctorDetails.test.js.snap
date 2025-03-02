@@ -1,0 +1,441 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders DoctorDetails form snapshot 1`] = `
+<div
+  className="ant-row ant-row-center css-dev-only-do-not-override-1hpnbz2"
+  style={
+    Object {
+      "rowGap": undefined,
+    }
+  }
+>
+  <div
+    className="ant-col ant-col-16 css-dev-only-do-not-override-1hpnbz2"
+    style={Object {}}
+  >
+    <form
+      className="ant-form ant-form-vertical css-dev-only-do-not-override-1hpnbz2"
+      onReset={[Function]}
+      onSubmit={[Function]}
+      style={Object {}}
+    >
+      <div
+        className="ant-row css-dev-only-do-not-override-1hpnbz2"
+        style={
+          Object {
+            "marginLeft": -8,
+            "marginRight": -8,
+            "rowGap": undefined,
+          }
+        }
+      >
+        <div
+          className="ant-col ant-col-12 css-dev-only-do-not-override-1hpnbz2"
+          style={
+            Object {
+              "paddingLeft": 8,
+              "paddingRight": 8,
+            }
+          }
+        >
+          <div
+            className="ant-form-item css-dev-only-do-not-override-1hpnbz2"
+          >
+            <div
+              className="ant-row ant-form-item-row css-dev-only-do-not-override-1hpnbz2"
+              style={
+                Object {
+                  "rowGap": undefined,
+                }
+              }
+            >
+              <div
+                className="ant-col ant-form-item-label css-dev-only-do-not-override-1hpnbz2"
+                style={Object {}}
+              >
+                <label
+                  className="ant-form-item-required"
+                  title="Professionals:Doctors:first_name_label"
+                >
+                  Professionals:Doctors:first_name_label
+                </label>
+              </div>
+              <div
+                className="ant-col ant-form-item-control css-dev-only-do-not-override-1hpnbz2"
+                style={Object {}}
+              >
+                <div
+                  className="ant-form-item-control-input"
+                >
+                  <div
+                    className="ant-form-item-control-input-content"
+                  >
+                    <input
+                      className="ant-input css-dev-only-do-not-override-1hpnbz2 ant-input-outlined"
+                      disabled={false}
+                      name="firstname"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onCompositionEnd={[Function]}
+                      onCompositionStart={[Function]}
+                      onFocus={[Function]}
+                      onKeyDown={[Function]}
+                      onKeyUp={[Function]}
+                      style={Object {}}
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="ant-col ant-col-12 css-dev-only-do-not-override-1hpnbz2"
+          style={
+            Object {
+              "paddingLeft": 8,
+              "paddingRight": 8,
+            }
+          }
+        >
+          <div
+            className="ant-form-item css-dev-only-do-not-override-1hpnbz2"
+          >
+            <div
+              className="ant-row ant-form-item-row css-dev-only-do-not-override-1hpnbz2"
+              style={
+                Object {
+                  "rowGap": undefined,
+                }
+              }
+            >
+              <div
+                className="ant-col ant-form-item-label css-dev-only-do-not-override-1hpnbz2"
+                style={Object {}}
+              >
+                <label
+                  className="ant-form-item-required"
+                  title="Professionals:Doctors:last_name_label"
+                >
+                  Professionals:Doctors:last_name_label
+                </label>
+              </div>
+              <div
+                className="ant-col ant-form-item-control css-dev-only-do-not-override-1hpnbz2"
+                style={Object {}}
+              >
+                <div
+                  className="ant-form-item-control-input"
+                >
+                  <div
+                    className="ant-form-item-control-input-content"
+                  >
+                    <input
+                      className="ant-input css-dev-only-do-not-override-1hpnbz2 ant-input-outlined"
+                      disabled={false}
+                      name="lastname"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onCompositionEnd={[Function]}
+                      onCompositionStart={[Function]}
+                      onFocus={[Function]}
+                      onKeyDown={[Function]}
+                      onKeyUp={[Function]}
+                      style={Object {}}
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="ant-row css-dev-only-do-not-override-1hpnbz2"
+        style={
+          Object {
+            "marginLeft": -8,
+            "marginRight": -8,
+            "rowGap": undefined,
+          }
+        }
+      >
+        <div
+          className="ant-col ant-col-12 css-dev-only-do-not-override-1hpnbz2"
+          style={
+            Object {
+              "paddingLeft": 8,
+              "paddingRight": 8,
+            }
+          }
+        >
+          <div
+            className="ant-form-item css-dev-only-do-not-override-1hpnbz2"
+          >
+            <div
+              className="ant-row ant-form-item-row css-dev-only-do-not-override-1hpnbz2"
+              style={
+                Object {
+                  "rowGap": undefined,
+                }
+              }
+            >
+              <div
+                className="ant-col ant-form-item-label css-dev-only-do-not-override-1hpnbz2"
+                style={Object {}}
+              >
+                <label
+                  className="ant-form-item-required"
+                  title="Professionals:Doctors:email"
+                >
+                  Professionals:Doctors:email
+                </label>
+              </div>
+              <div
+                className="ant-col ant-form-item-control css-dev-only-do-not-override-1hpnbz2"
+                style={Object {}}
+              >
+                <div
+                  className="ant-form-item-control-input"
+                >
+                  <div
+                    className="ant-form-item-control-input-content"
+                  >
+                    <input
+                      className="ant-input css-dev-only-do-not-override-1hpnbz2 ant-input-outlined"
+                      disabled={false}
+                      name="email"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onCompositionEnd={[Function]}
+                      onCompositionStart={[Function]}
+                      onFocus={[Function]}
+                      onKeyDown={[Function]}
+                      onKeyUp={[Function]}
+                      style={Object {}}
+                      type="email"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="ant-col ant-col-12 css-dev-only-do-not-override-1hpnbz2"
+          style={
+            Object {
+              "paddingLeft": 8,
+              "paddingRight": 8,
+            }
+          }
+        >
+          <div
+            className="ant-form-item css-dev-only-do-not-override-1hpnbz2"
+          >
+            <div
+              className="ant-row ant-form-item-row css-dev-only-do-not-override-1hpnbz2"
+              style={
+                Object {
+                  "rowGap": undefined,
+                }
+              }
+            >
+              <div
+                className="ant-col ant-form-item-label css-dev-only-do-not-override-1hpnbz2"
+                style={Object {}}
+              >
+                <label
+                  className="ant-form-item-required"
+                  title="Professionals:Doctors:phone_number"
+                >
+                  Professionals:Doctors:phone_number
+                </label>
+              </div>
+              <div
+                className="ant-col ant-form-item-control css-dev-only-do-not-override-1hpnbz2"
+                style={Object {}}
+              >
+                <div
+                  className="ant-form-item-control-input"
+                >
+                  <div
+                    className="ant-form-item-control-input-content"
+                  >
+                    <input
+                      className="ant-input css-dev-only-do-not-override-1hpnbz2 ant-input-outlined"
+                      disabled={false}
+                      name="phoneNumber"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onCompositionEnd={[Function]}
+                      onCompositionStart={[Function]}
+                      onFocus={[Function]}
+                      onKeyDown={[Function]}
+                      onKeyUp={[Function]}
+                      style={Object {}}
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="ant-row css-dev-only-do-not-override-1hpnbz2"
+        style={
+          Object {
+            "marginLeft": -8,
+            "marginRight": -8,
+            "rowGap": undefined,
+          }
+        }
+      >
+        <div
+          className="ant-col ant-col-12 css-dev-only-do-not-override-1hpnbz2"
+          style={
+            Object {
+              "paddingLeft": 8,
+              "paddingRight": 8,
+            }
+          }
+        >
+          <div
+            className="ant-form-item css-dev-only-do-not-override-1hpnbz2"
+          >
+            <div
+              className="ant-row ant-form-item-row css-dev-only-do-not-override-1hpnbz2"
+              style={
+                Object {
+                  "rowGap": undefined,
+                }
+              }
+            >
+              <div
+                className="ant-col ant-form-item-label css-dev-only-do-not-override-1hpnbz2"
+                style={Object {}}
+              >
+                <label
+                  className=""
+                  title="Professionals:Doctors:status"
+                >
+                  Professionals:Doctors:status
+                </label>
+              </div>
+              <div
+                className="ant-col ant-form-item-control css-dev-only-do-not-override-1hpnbz2"
+                style={Object {}}
+              >
+                <div
+                  className="ant-form-item-control-input"
+                >
+                  <div
+                    className="ant-form-item-control-input-content"
+                  >
+                    <button
+                      aria-checked={false}
+                      className="ant-switch css-dev-only-do-not-override-1hpnbz2"
+                      onClick={[Function]}
+                      onKeyDown={[Function]}
+                      role="switch"
+                      style={Object {}}
+                      type="button"
+                    >
+                      <div
+                        className="ant-switch-handle"
+                      />
+                      <span
+                        className="ant-switch-inner"
+                      >
+                        <span
+                          className="ant-switch-inner-checked"
+                        >
+                          Professionals:Doctors:active_status
+                        </span>
+                        <span
+                          className="ant-switch-inner-unchecked"
+                        >
+                          Professionals:Doctors:inactive_status
+                        </span>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="ant-form-item css-dev-only-do-not-override-1hpnbz2"
+      >
+        <div
+          className="ant-row ant-form-item-row css-dev-only-do-not-override-1hpnbz2"
+          style={
+            Object {
+              "rowGap": undefined,
+            }
+          }
+        >
+          <div
+            className="ant-col ant-form-item-control css-dev-only-do-not-override-1hpnbz2"
+            style={Object {}}
+          >
+            <div
+              className="ant-form-item-control-input"
+            >
+              <div
+                className="ant-form-item-control-input-content"
+              >
+                <button
+                  className="ant-btn css-dev-only-do-not-override-1hpnbz2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid"
+                  disabled={false}
+                  onClick={[Function]}
+                  style={Object {}}
+                  type="submit"
+                >
+                  <span
+                    className="ant-btn-icon"
+                    style={Object {}}
+                  >
+                    <span
+                      aria-label="save"
+                      className="anticon anticon-save"
+                      role="img"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        data-icon="save"
+                        fill="currentColor"
+                        focusable="false"
+                        height="1em"
+                        viewBox="64 64 896 896"
+                        width="1em"
+                      >
+                        <path
+                          d="M893.3 293.3L730.7 130.7c-7.5-7.5-16.7-13-26.7-16V112H144c-17.7 0-32 14.3-32 32v736c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V338.5c0-17-6.7-33.2-18.7-45.2zM384 184h256v104H384V184zm456 656H184V184h136v136c0 17.7 14.3 32 32 32h320c17.7 0 32-14.3 32-32V205.8l136 136V840zM512 442c-79.5 0-144 64.5-144 144s64.5 144 144 144 144-64.5 144-144-64.5-144-144-144zm0 224c-44.2 0-80-35.8-80-80s35.8-80 80-80 80 35.8 80 80-35.8 80-80 80z"
+                        />
+                      </svg>
+                    </span>
+                  </span>
+                  <span>
+                    Professionals:Doctors:update_doctor_button
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+`;
