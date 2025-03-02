@@ -1,17 +1,39 @@
 import React from "react";
 import { Row, Col, Input, Button, Form, Modal } from "antd";
-import { CheckOutlined } from '@ant-design/icons'; // Ajout de l'importation
+import { CheckOutlined } from "@ant-design/icons"; // Ajout de l'importation
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
 import useToken from "../Authentication/useToken";
 import Constants from "../Utils/Constants";
 import "./Styles.css";
+import { useTranslation } from "react-i18next";
 
 export default function ExerciseDetail({ exercise, refetchExercises }) {
+  const { t } = useTranslation();
   const { handleSubmit, control } = useForm();
   const { token } = useToken();
 
-  
+  const [selectedExerciseCategory, setselectedExerciseCategory] =
+    React.useState(null);
+  const [displayedExerciseCategory, setdisplayedExerciseCategory] =
+    React.useState("");
+
+  const [selectedTargetAgeRange, setselectedTargetAgeRange] =
+    React.useState(null);
+  const [displayedTargetAgeRange, setdisplayedTargetAgeRange] =
+    React.useState("");
+
+  const [selectedFitnessLevel, setselectedFitnessLevel] = React.useState(null);
+  const [displayedFitnessLevel, setdisplayedFitnessLevel] =
+    React.useState("");
+
+  const [selectedIsSeatingExercise, setSelectedIsSeatingExercise] =
+    React.useState(null);
+  const [
+    selectedDisplayedIsSeatingExercise,
+    setSelectedDisplayedIsSeatingExercise,
+  ] = React.useState("");
+
   const [isOpenModal, setIsOpenModal] = React.useState(false);
   const [isErrorMessage, setIsErrorMessage] = React.useState(false);
   const [message, setMessage] = React.useState("");
@@ -45,10 +67,10 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
   };
 
   return (
-    <Row justify="center" align="middle" style={{ minHeight: '50vh' }}>
+    <Row justify="center" align="middle" style={{ minHeight: "50vh" }}>
       <Col span={12}>
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
-          <Form.Item label="Nom d'exercice :">
+          <Form.Item label={t("Exercise Name")}>
             <Controller
               name="name"
               control={control}
@@ -103,7 +125,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
               </Button>,
             ]}
           >
-            <p style={{ color: isErrorMessage ? 'red' : 'green' }}>{message}</p>
+            <p style={{ color: isErrorMessage ? "red" : "green" }}>{message}</p>
           </Modal>
         )}
       </Col>

@@ -7,46 +7,55 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-
-const columns = [
-  { id: "name", label: "Name", minWidth: 100 },
-  {
-    id: "description",
-    label: "Description",
-    minWidth: 100,
-  },
-  { id: "instructionalVideo", label: "Instructional Video", minWidth: 100 },
-  {
-    id: "numberOfSeries",
-    label: "Number of Series",
-    align: "ceneter",
-    minWidth: 100,
-  },
-  {
-    id: "numberOfRepetition",
-    label: "Number of Repetition",
-    align: "ceneter",
-    minWidth: 100,
-  },
-  {
-    id: "restingInstruction",
-    label: "Resting Instruction",
-    align: "ceneter",
-    minWidth: 100,
-  },
-  {
-    id: "minutes",
-    label: "Number of Minutes",
-    align: "ceneter",
-    minWidth: 100,
-  },
-  { id: "required", label: "Required", align: "ceneter", minWidth: 70 },
-];
+import { useTranslation } from "react-i18next";
 
 export default function ExerciseTable({ exercises }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
+  const { t } = useTranslation();
+  const columns = [
+    { id: "name", label: t("Blocs:name_label"), minWidth: 100 },
+    {
+      id: "description",
+      label: t("Blocs:description_label"),
+      minWidth: 100,
+    },
+    {
+      id: "instructionalVideo",
+      label: t("Blocs:intructional_video_label"),
+      minWidth: 100,
+    },
+    {
+      id: "numberOfSeries",
+      label: t("Blocs:number_of_series_label"),
+      align: "ceneter",
+      minWidth: 100,
+    },
+    {
+      id: "numberOfRepetition",
+      label: t("Blocs:number_of_repetition_label"),
+      align: "ceneter",
+      minWidth: 100,
+    },
+    {
+      id: "restingInstruction",
+      label: t("Blocs:resting_instruction_label"),
+      align: "ceneter",
+      minWidth: 100,
+    },
+    {
+      id: "minutes",
+      label: t("Blocs:number_of_minutes_label"),
+      align: "ceneter",
+      minWidth: 100,
+    },
+    {
+      id: "required",
+      label: t("Blocs:required_label"),
+      align: "ceneter",
+      minWidth: 70,
+    },
+  ];
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };

@@ -3,8 +3,10 @@ import PropTypes from "prop-types";
 import { Card, Button, Typography } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import image from "../../images/cycle.webp";
+import { useTranslation } from "react-i18next";
 
 export default function Cycle({ onClick, onSelect, cycle, deleteCycle }) {
+  const { t } = useTranslation();
   return (
     <Card
       hoverable
@@ -21,15 +23,15 @@ export default function Cycle({ onClick, onSelect, cycle, deleteCycle }) {
             // Create a synthetic event object
             const event = {
               currentTarget: {
-                name: "edit-cycle"
-              }
+                name: "edit-cycle",
+              },
             };
             onClick(event);
-            onSelect(cycle); 
+            onSelect(cycle);
           }}
           type="primary"
         >
-          EDIT
+          {t("Cycles:edit_button")}
         </Button>
         <Button
           onClick={() => {
@@ -41,7 +43,7 @@ export default function Cycle({ onClick, onSelect, cycle, deleteCycle }) {
           icon={<DeleteOutlined />}
           style={{ marginLeft: 8 }}
         >
-          DELETE
+          {t("Cycles:delete_button")}
         </Button>
       </div>
     </Card>
