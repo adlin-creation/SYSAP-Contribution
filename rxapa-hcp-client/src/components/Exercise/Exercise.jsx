@@ -45,8 +45,9 @@ export default function Exercise({
           >
             {t("Exercises:delete_button")}
           </Button>,
+          
           <Button
-            type="link"
+            type="primary"
             onClick={(event) => {
               onClick(event);
               onSelect(exercise);
@@ -56,7 +57,10 @@ export default function Exercise({
           </Button>,
         ]}
       >
-        <Meta title={exercise.name} description={exercise.description} />
+        <Meta
+          title={exercise.name}
+          description={`${exercise.fitnessLevel} | ${exercise.category}`}
+        />
       </Card>
     </>
   );

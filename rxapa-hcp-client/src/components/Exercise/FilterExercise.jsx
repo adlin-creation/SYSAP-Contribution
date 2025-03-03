@@ -8,27 +8,21 @@ export default function FilterExercise({ updateSelectedValues }) {
   const { t } = useTranslation();
   const [selectedFitnessLevel, setSelectedFitnessLevel] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selectedAgeGroup, setSelectedAgeGroup] = useState(null);
 
   const handleCategoryChange = (newValue) => {
     setSelectedCategory(newValue);
-    updateSelectedValues(newValue || "ALL", "category");
+    updateSelectedValues(newValue || "Tout", "category");
   };
 
   const handleFitnessLevelChange = (newValue) => {
     setSelectedFitnessLevel(newValue);
-    updateSelectedValues(newValue || "ALL", "fitnessLevel");
-  };
-
-  const handleAgeGroupChange = (newValue) => {
-    setSelectedAgeGroup(newValue);
-    updateSelectedValues(newValue || "ALL", "ageRange");
+    updateSelectedValues(newValue || "Tout", "fitnessLevel");
   };
 
   return (
     <div className="filter-container">
-      <Row gutter={24}>
-        <Col span={8}>
+      <Row gutter={16}>
+        <Col span={12}>
           <div className="filter-item">
             <Select
               value={selectedCategory}
@@ -37,15 +31,16 @@ export default function FilterExercise({ updateSelectedValues }) {
               placeholder={t("Exercises:category_placeholder")}
               allowClear
             >
-              <Option value="ALL">{t("Exercises:all")}</Option>
-              <Option value="AEROBIC">{t("Exercises:aerobic")}</Option>
-              <Option value="STRENGTH">{t("Exercises:strength")}</Option>
-              <Option value="ENDURANCE">{t("Exercises:endurance")}</Option>
-              <Option value="FLEXIBILITY">{t("Exercises:flexibility")}</Option>
+              <Option value="ALL">{t("Exercises:all")}</Option> , 
+              <Option value="Aérobique">{t("Exercises:aerobic")}</Option>
+              <Option value="Endurance">{t("Exercises:strength")}</Option>
+              <Option value="Force">{t("Exercises:endurance")}</Option>
+              <Option value="Flexibilité">{t("Exercises:flexibility")}</Option>
+              <Option value="Équilibre">{t("Exercises:balance")}</Option>
             </Select>
           </div>
         </Col>
-        <Col span={8}>
+        <Col span={12}>
           <div className="filter-item">
             <Select
               value={selectedFitnessLevel}
@@ -55,40 +50,9 @@ export default function FilterExercise({ updateSelectedValues }) {
               allowClear
             >
               <Option value="ALL">{t("Exercises:all")}</Option>
-              <Option value="LOW">{t("Exercises:low")}</Option>
-              <Option value="BELOW_AVERAGE">
-                {t("Exercises:below_average")}
-              </Option>
-              <Option value="AVERAGE">{t("Exercises:average")}</Option>
-              <Option value="ABOVE_AVERAGE">
-                {t("Exercises:above_average")}
-              </Option>
-              <Option value="HIGH">{t("Exercises:high")}</Option>
-            </Select>
-          </div>
-        </Col>
-        <Col span={8}>
-          <div className="filter-item">
-            <Select
-              value={selectedAgeGroup}
-              onChange={handleAgeGroupChange}
-              className="select-wide"
-              placeholder={t("Exercises:age_groupe_placeholder")}
-              allowClear
-            >
-              <Option value="ALL">{t("Exercises:all")}</Option>
-              <Option value="FIFTY_TO_FIFTY_NINE">
-                {t("Exercises:fifty_to_fifty_nine")}
-              </Option>
-              <Option value="SIXTY_TO_SIXTY_NINE">
-                {t("Exercises:sixty_to_sixty_nine")}
-              </Option>
-              <Option value="SEVENTY_TO_SEVENTY_NINE">
-                {t("Exercises:seventy_to_seventy_nine")}
-              </Option>
-              <Option value="EIGHTY_TO_EIGHTY_NINE">
-                {t("Exercises:eighty_to_eighty_nine")}
-              </Option>
+              <Option value="Facile">{t("Exercises:easy")}</Option>
+              <Option value="Intermédiaire">{t("Exercises:intermediate")}</Option>
+              <Option value="Avancé">{t("Exercises:advanced")}</Option>
             </Select>
           </div>
         </Col>

@@ -24,7 +24,8 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
     React.useState("");
 
   const [selectedFitnessLevel, setselectedFitnessLevel] = React.useState(null);
-  const [displayedFitnessLevel, setdisplayedFitnessLevel] = React.useState("");
+  const [displayedFitnessLevel, setdisplayedFitnessLevel] =
+    React.useState("");
 
   const [selectedIsSeatingExercise, setSelectedIsSeatingExercise] =
     React.useState(null);
@@ -37,13 +38,6 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
   const [isErrorMessage, setIsErrorMessage] = React.useState(false);
   const [message, setMessage] = React.useState("");
 
-  const [exerciseAttributes, setExerciseAttributes] = React.useState({
-    name: "",
-    description: "",
-    instructionalVideo: "",
-    isSeating: false,
-  });
-
   function openModal(message, isError) {
     setMessage(message);
     setIsErrorMessage(isError);
@@ -54,13 +48,6 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
     setIsOpenModal(false);
     setMessage("");
     setIsErrorMessage(false);
-  }
-
-  function setExerciseAttribute(attribute, value) {
-    setExerciseAttributes((prevAttributes) => ({
-      ...prevAttributes,
-      [attribute]: value,
-    }));
   }
 
   const onSubmit = (data) => {
@@ -92,14 +79,14 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder="Enter another name to update the exercise name"
+                  placeholder="Entrez le nouveau nom d'exercice."
                   required
                 />
               )}
             />
           </Form.Item>
 
-          <Form.Item label="Exercise Description">
+          <Form.Item label="Description d'exercice">
             <Controller
               name="description"
               control={control}
@@ -108,7 +95,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
                 <Input.TextArea
                   onChange={onChange}
                   value={value}
-                  placeholder="Enter another value to edit the description"
+                  placeholder="Entrez la nouvelle description de l'exercice."
                   rows={4}
                   required
                 />
@@ -117,8 +104,12 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" icon={<CheckOutlined />}>
-              {t("Exercises:update_button")}
+            <Button
+              type="primary"
+              htmlType="submit"
+              icon={<CheckOutlined />}
+            >
+              Modifier
             </Button>
           </Form.Item>
         </Form>
@@ -130,7 +121,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
             onCancel={closeModal}
             footer={[
               <Button key="close" onClick={closeModal}>
-                Close
+                Fermer
               </Button>,
             ]}
           >
