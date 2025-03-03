@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types"; // Import de PropTypes
-import { Col, Input, Button, Form, Modal, Select} from "antd";
+import { Col, Input, Button, Form, Modal, Select } from "antd";
 import { Controller, useForm } from "react-hook-form";
 import { SendOutlined } from "@ant-design/icons"; // Import de l'icône
 import "./Styles.css";
@@ -20,8 +20,25 @@ export default function CreateExercise(props) {
   const [selectedFitnessLevel, setSelectedFitnessLevel] = useState(null); // Assurez-vous que la valeur initiale est null
   const [exerciseImage, setExerciseImage] = useState(null);
 
+  // Correspondance des catégories en anglais vers le français
+  const categoryTranslation = {
+    "Aerobic": "Aérobic",
+    "Strength": "Force",
+    "Endurance": "Endurance",
+    "Flexibility": "Flexibilité",
+    "Balance": "Équilibre",
+  };
+
+  // Correspondance des niveaux de forme en anglais vers le français
+  const fitnessLevelTranslation = {
+    "Easy": "Facile",
+    "Intermediate": "Intermédiaire",
+    "Advanced": "Avancé",
+  };
+
   // destructure custom use hook
   const { token } = useToken();
+  
   function openModal(message, isError) {
     setMessage(message);
     setIsErrorMessage(isError);
@@ -35,20 +52,26 @@ export default function CreateExercise(props) {
   }
 
   const onSubmit = (data) => {
-    const { name, description} = data;
+    const { name, description } = data;
+
+    // Traduire la catégorie sélectionnée en français
+    const categoryInFrench = categoryTranslation[selectedExerciseCategory] || selectedExerciseCategory;
+    const fitnessLevelInFrench = fitnessLevelTranslation[selectedFitnessLevel] || selectedFitnessLevel;
+
     let formData = new FormData();
     const combinedData = {
       name: name,
       description: description,
       instructionalVideo: " ",
       isSeating: false,
-      category: selectedExerciseCategory,
+      category: categoryInFrench,  // Utilisation de la catégorie traduite en français
       targetAgeRange: " ",
-      fitnessLevel: selectedFitnessLevel,
+      fitnessLevel: fitnessLevelInFrench,  // Utilisation du niveau de forme traduit
       exerciseImage: exerciseImage,
     };
-    console.log("Submitting Data:", combinedData); 
-    console.log("The exercise object", combinedData);
+
+    console.log("Submitting Data:", combinedData);
+  
     if (exerciseImage) {
       formData.append("image", exerciseImage);
     }
@@ -59,6 +82,7 @@ export default function CreateExercise(props) {
     formData.append("category", combinedData.category);
     formData.append("targetAgeRange", combinedData.targetAgeRange);
     formData.append("fitnessLevel", combinedData.fitnessLevel);
+
     axios
       .post(`${Constants.SERVER_URL}/create-exercise`, combinedData, {
         headers: {
