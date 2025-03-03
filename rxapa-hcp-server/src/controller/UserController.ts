@@ -1,5 +1,8 @@
 import { User } from "../model/User";
+import { Professional_User } from "../model/Professional_User";
+
 import jwt from "jsonwebtoken";
+
 
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
@@ -64,6 +67,10 @@ exports.login = async (req: any, res: any) => {
 
   try {
     user = await User.findOne({ where: { email: email } });
+    // Si l'utilisateur n'est pas trouvé, vérifier dans ProfessionalUser
+    if (!user) {
+      user = await Professional_User.findOne({ where: { email: email } });
+    }
     if (!user) {
       return res.status(401).json({ message: "The user doesn't exist" });
     }
@@ -71,6 +78,7 @@ exports.login = async (req: any, res: any) => {
     if (!error.statusCode) {
       error.statusCode = 401;
     }
+
     return res
       .status(error.statusCode)
       .json({ message: "Failed to authenticate the user" });
@@ -91,6 +99,7 @@ exports.login = async (req: any, res: any) => {
     {
       email: user.email,
       key: user.key,
+      role: user.role || "SuperAdmin", // Ajouter le rôle si disponible
     },
     `${process.env.TOKEN_SECRET_KEY}`,
     { expiresIn: "2h" }
@@ -99,6 +108,7 @@ exports.login = async (req: any, res: any) => {
   return res.status(200).json({
     token: token,
     userId: user.key,
+    role: user.role || "SuperAdmin",
     message: "Successfully logged in",
   });
 };
@@ -113,7 +123,7 @@ exports.logout = (req: any, res: any) => {
   });
 };
 
-async function hash(password: string) {
+export async function hash(password: string) {
   const salt = randomBytes(8).toString("hex");
   const derivedKey = await scryptPromise(password, salt, 64);
   return salt + ":" + (derivedKey as Buffer).toString("hex");

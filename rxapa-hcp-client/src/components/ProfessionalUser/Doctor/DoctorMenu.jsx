@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   PlusOutlined,
   EditOutlined,
-  DeleteOutlined,
   ArrowLeftOutlined,
   UserOutlined,
 } from "@ant-design/icons";
@@ -90,9 +89,6 @@ export default function DoctorMenu() {
           </Button>
           <Button type="link" onClick={() => handleEdit(record)}>
             <EditOutlined /> {t("Professionals:Doctors:edit_button")}
-          </Button>
-          <Button type="link" danger onClick={() => handleDelete(record)}>
-            <DeleteOutlined /> {t("Professionals:Doctors:delete_button")}
           </Button>
         </Space>
       ),

@@ -55,24 +55,8 @@ function App() {
   const navigate = useNavigate();
   const { token, setToken } = useToken(); // Utilisation du hook personnalisé pour gérer le token
   const [selectedKey, setSelectedKey] = useState(location.pathname);
+  const [role, setRole] = useState("");
 
-  useEffect(() => {
-    setSelectedKey(location.pathname);
-  }, [location.pathname]);
-
-  const handleLogout = async () => {
-    try {
-      console.log("Attempting to logout...");
-      const response = await axios.post(`${Constants.SERVER_URL}/logout`);
-      console.log("Logout response:", response);
-
-      setToken(null);
-      console.log("Token after logout:", token);
-      navigate("/login");
-    } catch (error) {
-      console.error("Failed to logout:", error);
-    }
-  };
   const menuItems = [
     {
       key: "/",
@@ -138,6 +122,46 @@ function App() {
     },
     // Ajoutez d'autres éléments de menu si nécessaire
   ];
+
+  const [filteredMenuItems, setFilteredMenuItems] = useState(menuItems);
+
+  useEffect(() => {
+    if (location.state?.role) {
+      setRole(location.state.role);
+      const filterMenuItems = (items) => {
+        return items
+          .map((item) => {
+            if (item.children) {
+              return {
+                ...item,
+                children: filterMenuItems(item.children),
+              };
+            }
+            if (location.state.role === "admin" && item.key === "/admins") {
+              return null;
+            }
+            return item;
+          })
+          .filter((item) => item !== null);
+      };
+      setFilteredMenuItems(filterMenuItems(menuItems));
+    }
+  }, [location.state]);
+
+  const handleLogout = async () => {
+    try {
+      console.log("Attempting to logout...");
+      const response = await axios.post(`${Constants.SERVER_URL}/logout`);
+      console.log("Logout response:", response);
+
+      setToken(null);
+      console.log("Token after logout:", token);
+      navigate("/login");
+    } catch (error) {
+      console.error("Failed to logout:", error);
+    }
+  };
+
   const userMenuItems = [
     {
       key: "1",
@@ -173,7 +197,7 @@ function App() {
           theme="dark"
           selectedKeys={[selectedKey]}
           mode="inline"
-          items={menuItems}
+          items={filteredMenuItems}
         />
       </Sider>
       <Layout className="site-layout">
@@ -186,7 +210,7 @@ function App() {
             <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
               <div className="header-avatar">
                 <Avatar icon={<UserOutlined />} />
-                <span>John Doe</span>
+                <span>{role}</span>
               </div>
             </Dropdown>
           </div>
@@ -200,7 +224,10 @@ function App() {
             <Route path="cycles" element={<CycleMenu />}></Route>
             <Route path="phases" element={<PhaseMenu />}></Route>
             <Route path="programs" element={<ProgramMenu />}></Route>
-            <Route path="patients" element={<PatientMenu />}></Route>
+            <Route
+              path="patients"
+              element={<PatientMenu role={role} />}
+            ></Route>
             <Route path="doctors" element={<DoctorMenu />}></Route>
             <Route
               path="doctor-patients/:id"
