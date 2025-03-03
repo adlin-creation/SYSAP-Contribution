@@ -32,11 +32,11 @@ export default function FilterExercise({ updateSelectedValues }) {
               allowClear
             >
               <Option value="ALL">{t("Exercises:all")}</Option> , 
-              <Option value="Aérobic">t("Exercises:aerobic")}</Option>
+              <Option value="Aérobique">{t("Exercises:aerobic")}</Option>
               <Option value="Endurance">{t("Exercises:strength")}</Option>
               <Option value="Force">{t("Exercises:endurance")}</Option>
               <Option value="Flexibilité">{t("Exercises:flexibility")}</Option>
-              <Option value="Équilibre">Équilibre</Option>
+              <Option value="Équilibre">{t("Exercises:balance")}</Option>
             </Select>
           </div>
         </Col>
@@ -50,9 +50,9 @@ export default function FilterExercise({ updateSelectedValues }) {
               allowClear
             >
               <Option value="ALL">{t("Exercises:all")}</Option>
-              <Option value="Facile">{t("Exercises:low")}</Option>
-              <Option value="Intermédiaire">{t("Exercises:below_average")}</Option>
-              <Option value="Avancé">{t("Exercises:above_average")}</Option>
+              <Option value="Facile">{t("Exercises:easy")}</Option>
+              <Option value="Intermédiaire">{t("Exercises:intermediate")}</Option>
+              <Option value="Avancé">{t("Exercises:advanced")}</Option>
             </Select>
           </div>
         </Col>
