@@ -1,8 +1,10 @@
 // KinesiologistDetails.test.js
-import React from "react";
+import React, { Suspense } from "react";
 import renderer from "react-test-renderer";
 import KinesiologistDetails from "./KinesiologistDetails";
 import useToken from "../../Authentication/useToken";
+import { I18nextProvider } from 'react-i18next';
+import i18n from '../../../i18n';
 
 jest.mock("../../Authentication/useToken", () => ({
   __esModule: true,
@@ -21,6 +23,10 @@ beforeAll(() => {
 afterAll(() => {
   global.matchMedia.mockRestore();
 });
+
+const ErrorBoundary = ({ children }) => {
+  return children;
+};
 
 test("renders KinesiologistDetails form", () => {
   // Mock token
@@ -41,12 +47,18 @@ test("renders KinesiologistDetails form", () => {
 
   // Render with react-test-renderer
   const component = renderer.create(
-    <KinesiologistDetails
-      kinesiologist={mockKinesiologist}
-      onClose={mockOnClose}
-      refetchKinesiologists={mockRefetch}
-      openModal={mockOpenModal}
-    />
+    <I18nextProvider i18n={i18n}>
+      <ErrorBoundary>
+        <Suspense fallback={<div>Loading...</div>}>
+          <KinesiologistDetails
+            kinesiologist={mockKinesiologist}
+            onClose={mockOnClose}
+            refetchKinesiologists={mockRefetch}
+            openModal={mockOpenModal}
+          />
+        </Suspense>
+      </ErrorBoundary>
+    </I18nextProvider>
   );
 
   // Convert to JSON

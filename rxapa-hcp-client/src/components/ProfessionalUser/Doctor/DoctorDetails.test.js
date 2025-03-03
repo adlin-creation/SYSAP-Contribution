@@ -1,9 +1,11 @@
 // DoctorDetails.test.js
 
-import React from "react";
+import React, { Suspense } from "react";
 import renderer from "react-test-renderer";
 import DoctorDetails from "./DoctorDetails";
 import useToken from "../../Authentication/useToken";
+import { I18nextProvider } from 'react-i18next';
+import i18n from '../../../i18n';
 
 jest.mock("../../Authentication/useToken", () => ({
   __esModule: true,
@@ -22,6 +24,10 @@ beforeAll(() => {
 afterAll(() => {
   global.matchMedia.mockRestore();
 });
+
+const ErrorBoundary = ({ children }) => {
+  return children;
+};
 
 test("renders DoctorDetails form snapshot", () => {
   // Mock token
@@ -43,12 +49,18 @@ test("renders DoctorDetails form snapshot", () => {
 
   // Render via react-test-renderer
   const component = renderer.create(
-    <DoctorDetails
-      doctor={mockDoctor}
-      onClose={mockOnClose}
-      refetchDoctors={mockRefetchDoctors}
-      openModal={mockOpenModal}
-    />
+    <I18nextProvider i18n={i18n}>
+      <ErrorBoundary>
+        <Suspense fallback={<div>Loading...</div>}>
+          <DoctorDetails
+            doctor={mockDoctor}
+            onClose={mockOnClose}
+            refetchDoctors={mockRefetchDoctors}
+            openModal={mockOpenModal}
+          />
+        </Suspense>
+      </ErrorBoundary>
+    </I18nextProvider>
   );
 
   // Snapshot
