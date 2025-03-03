@@ -29,7 +29,7 @@ export default function Login({ setToken }) {
         console.log(res.data);
         setIsSignup(false);
         setToken(res.data);
-        navigate("/");
+        navigate("/", { state: { role: res.data.role } });
       })
       .catch((err) => {
         openModal(err.response.data.message, true);

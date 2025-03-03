@@ -15,7 +15,7 @@ import CreatePatient from "./CreatePatient";
 import PatientDetails from "./PatientDetails";
 import { useTranslation } from "react-i18next";
 
-export default function PatientMenu() {
+export default function PatientMenu({ role }) {
   const { t } = useTranslation();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isErrorMessage, setIsErrorMessage] = useState(false);
@@ -90,10 +90,14 @@ export default function PatientMenu() {
       key: "actions",
       render: (_, record) => (
         <Space size="middle">
-          <Button type="link" onClick={() => handleEdit(record)}>
+          <Button type="link" onClick={() => handleEdit(record)}
+            style={{ display: role === 'admin' ? 'none' : 'inline-block' }}
+            >
             <EditOutlined /> {t("Patients:edit_button")}
           </Button>
-          <Button type="link" danger onClick={() => handleDelete(record)}>
+          <Button type="link" danger onClick={() => handleDelete(record)}
+            style={{ display: role === 'admin' ? 'none' : 'inline-block' }}
+            >
             <DeleteOutlined /> {t("Patients:delete_button")}
           </Button>
         </Space>
@@ -172,13 +176,14 @@ export default function PatientMenu() {
       )}
 
       {/* Affiche soit la liste des patients soit le formulaire de création ou d'édition */}
-      {!isCreatePatient && !selectedPatient ? (
+      {!isCreatePatient && !selectedPatient && role ? (
         <>
           <div style={{ marginBottom: 16 }}>
             <Button
               type="primary"
               icon={<PlusOutlined />}
               onClick={() => setIsCreatePatient(true)}
+              style={{ display: role === 'admin' ? 'none' : 'inline-block' }}
             >
               {t("Patients:register_patient")}
             </Button>
@@ -220,3 +225,4 @@ export default function PatientMenu() {
     </div>
   );
 }
+

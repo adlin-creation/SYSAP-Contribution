@@ -90,9 +90,6 @@ export default function KinesiologistMenu() {
           <Button type="link" onClick={() => handleEdit(record)}>
             <EditOutlined /> {t("Professionals:Kinesiologist:edit_button")}
           </Button>
-          <Button type="link" danger onClick={() => handleDelete(record)}>
-            <DeleteOutlined /> {t("Professionals:Kinesiologist:delete_button")}
-          </Button>
         </Space>
       ),
     },
