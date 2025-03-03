@@ -85,102 +85,104 @@ export default function CreateExercise(props) {
   }
 
   return (
-    <div className="form-container">
-      <Col span={12}>
-        <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
-
-          <Form.Item label={t("Exercises:enter_exercise_name")} className="input-element">
-            <Controller
-              name="name"
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <Input
-                  onChange={onChange}
-                  value={value}
-                  placeholder={t("Exercises:exercise_name")}
-                  required
-                />
-              )}
-            />
-          </Form.Item>
-
-          <Form.Item label={t("Exercises:exercise_category")} className="input-element">
-            <Select
-              value={selectedExerciseCategory}
-              onChange={(value) => setSelectedExerciseCategory(value)}
-              placeholder={t("Exercises:exercise_category")}
-              style={{ width: '100%' }}
-              allowClear
+    <div className="form-wrapper-exercice">
+      <div className="title-container">
+        <h2 className="form-title">{t("Exercises:create_exercise")}</h2>
+      </div>
+  
+      <div className="form-box-exercice">
+        <Col span={12}>
+          <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
+            <Form.Item label={t("Exercises:enter_exercise_name")} className="input-element">
+              <Controller
+                name="name"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <Input
+                    onChange={onChange}
+                    value={value}
+                    placeholder={t("Exercises:exercise_name")}
+                    required
+                  />
+                )}
+              />
+            </Form.Item>
+  
+            <Form.Item label={t("Exercises:exercise_category")} className="input-element">
+              <Select
+                value={selectedExerciseCategory}
+                onChange={(value) => setSelectedExerciseCategory(value)}
+                placeholder={t("Exercises:exercise_category")}
+                style={{ width: "100%" }}
+                allowClear
+              >
+                {[t("Exercises:aerobic"), t("Exercises:strength"), t("Exercises:endurance"), t("Exercises:flexibility"), t("Exercises:balance")].map((category) => (
+                  <Select.Option key={category} value={category}>
+                    {category}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+  
+            <Form.Item label={t("Exercises:select_expected_fitness_level")} className="input-element">
+              <Select
+                value={selectedFitnessLevel}
+                onChange={(value) => setSelectedFitnessLevel(value)}
+                placeholder={t("Exercises:select_fitness_level")}
+                style={{ width: "100%" }}
+                allowClear
+              >
+                {[t("Exercises:easy"), t("Exercises:intermediate"), t("Exercises:advanced")].map((level) => (
+                  <Select.Option key={level} value={level}>
+                    {level}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+  
+            <Form.Item label={t("Exercises:enter_exercise_description")} className="input-element">
+              <Controller
+                name="description"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <Input.TextArea
+                    onChange={onChange}
+                    value={value}
+                    placeholder={t("Exercises:exercise_description")}
+                    rows={4}
+                  />
+                )}
+              />
+            </Form.Item>
+  
+            <Form.Item label={t("Exercises:enter_exercise_image")} className="input-element">
+              <input type="file" accept="image/*" onChange={onChangeImage} />
+            </Form.Item>
+  
+            <Form.Item className="input-element">
+              <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
+                {t("Exercises:submit_button")}
+              </Button>
+            </Form.Item>
+          </Form>
+  
+          {isOpenModal && (
+            <Modal
+              open={isOpenModal}
+              onCancel={closeModal}
+              footer={[
+                <Button key="close" onClick={closeModal}>
+                  {t("Exercises:close_button")}
+                </Button>,
+              ]}
             >
-              {[ t("Exercises:aerobic"), t("Exercises:strength"),t("Exercises:endurance"), t("Exercises:flexibility"), t("Exercises:balance")].map((category) => (
-                <Select.Option key={category} value={category}>
-                  {category}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
-
-          <Form.Item label={t("Exercises:select_expected_fitness_level")} className="input-element">
-            <Select
-              value={selectedFitnessLevel}
-              onChange={(value) => setSelectedFitnessLevel(value)}
-              placeholder={t("Exercises:select_fitness_level")}
-              style={{ width: '100%' }}
-              allowClear
-            >
-              {[t("Exercises:easy"),t("Exercises:intermediate"),t("Exercises:advanced")].map((level) => (
-                <Select.Option key={level} value={level}>
-                  {level}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
-
-          <Form.Item label={t("Exercises:enter_exercise_description")} className="input-element">
-            <Controller
-              name="description"
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <Input.TextArea
-                  onChange={onChange}
-                  value={value}
-                  placeholder={t("Exercises:exercise_description")}
-                  rows={4}
-                />
-              )}
-            />
-          </Form.Item>
-      
-          <Form.Item label={t("Exercises:enter_exercise_image")} className="input-element">
-            <input type="file" accept="image/*" onChange={onChangeImage} />
-          </Form.Item>
-
-          <Form.Item className="input-element">
-            <Button
-              type="primary"
-              htmlType="submit"
-              icon={<SendOutlined />} // Utilisation de l'icône Ant Design
-            >
-              {t("Exercises:submit_button")}
-            </Button>
-          </Form.Item>
-        </Form>
-        {isOpenModal && (
-          <Modal
-            open={isOpenModal}
-            onCancel={closeModal}
-            footer={[
-              <Button key="close" onClick={closeModal}>
-                {t("Exercises:close_button")}
-              </Button>,
-            ]}
-          >
-            <p style={{ color: isErrorMessage ? "red" : "black" }}>{message}</p>
-          </Modal>
-        )}
-      </Col>
+              <p style={{ color: isErrorMessage ? "red" : "black" }}>{message}</p>
+            </Modal>
+          )}
+        </Col>
+      </div>
     </div>
-  );
+  );  
 }
 
 CreateExercise.propTypes = {
