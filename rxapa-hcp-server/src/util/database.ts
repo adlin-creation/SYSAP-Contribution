@@ -33,17 +33,18 @@ let isDBConnected = false;
  * Creates new sequelize instance, which is used to create data
  * models.
  */
-export const sequelize = new Sequelize(
-  process.env.DATABASE_NAME,
-  process.env.DATABASE_USER,
-  process.env.DATABASE_PASSWORD,
+const sequelize = new Sequelize(
+  process.env.DB_NAME,
+  process.env.DB_USER,
+  process.env.DB_PASSWORD,
   {
-    host: process.env.DATABASE_HOST,
-    // host: 'localhost',
+    host: process.env.DB_HOST,
     dialect: "postgres",
-    logging: false,
+    port: process.env.DB_PORT,
+    logging: false, // Désactiver les logs SQL
   }
 );
+
 
 export const dataTypes = DataTypes;
 
@@ -80,3 +81,5 @@ export async function dropDatabase() {
 export async function findAllInstances(model: typeof Model) {
   return model.findAll();
 }
+export { sequelize };  // ✅ Exportation pour les imports nommés
+export default sequelize;
