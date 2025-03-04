@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { Row, Col, Input, Button, Form, Radio, Modal } from "antd";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import useToken from "../Authentication/useToken";
 import Constants from "../Utils/Constants";
 
 function EvaluationPACE({ onSubmit }) {
+  const { patientId } = useParams(); // Récupère l'ID depuis l'URL
   const [formData, setFormData] = useState({
     // Section A
     chairTestSupport: true,
@@ -174,6 +176,7 @@ function EvaluationPACE({ onSubmit }) {
   const handleConfirm = async () => {
     // Créer directement le payload avant l'envoi
     const payload = {
+      idPatient: patientId,
       chairTestSupport: formData.chairTestSupport ? "with" : "without",
       chairTestCount: parseInt(formData.chairTestCount, 10),
       balanceFeetTogether: parseInt(formData.balanceFeetTogether, 10),

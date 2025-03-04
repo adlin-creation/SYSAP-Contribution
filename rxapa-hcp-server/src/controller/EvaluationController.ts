@@ -8,7 +8,7 @@ import { Op } from "sequelize";
 exports.createEvaluation = async (req: any, res: any, next: any) => {
   console.log("Requête reçue :", req.body);
   const {
-    //idPatient,
+    idPatient,
     //idKinesiologist,
     chairTestSupport,
     chairTestCount,
@@ -27,7 +27,7 @@ exports.createEvaluation = async (req: any, res: any, next: any) => {
   try {
     const evaluation = await Evaluation.create(
       {
-        //idPatient,
+        idPatient: idPatient,
         //idKinesiologist,
         //idResultProgram: scores.programme,
       },
