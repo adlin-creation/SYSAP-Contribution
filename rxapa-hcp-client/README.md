@@ -1,4 +1,27 @@
-# Getting Started with Create React App
+# rxapa-hcp-client
+
+## Installation et Exécution
+
+⚠️ Prérequis : Assurez-vous que le serveur backend est démarré (`rxapa-hcp-server`) et fonctionnel avant de lancer l'application frontend.
+
+Pour démarrer l'application, suivez ces étapes :
+
+1. Installez les dépendances :
+```bash
+npm install
+```
+
+2. Démarrez l'application :
+```bash
+npm start
+```
+
+L'application sera accessible à l'adresse [http://localhost:3000](http://localhost:3000).
+
+
+--------------------------------------------------------------------------
+
+
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

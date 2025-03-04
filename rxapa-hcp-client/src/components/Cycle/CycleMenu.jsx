@@ -9,8 +9,10 @@ import Constants from "../Utils/Constants";
 import Modal from "../Modal/Modal";
 import CycleDetails from "./CycleDetails";
 import useToken from "../Authentication/useToken";
+import { useTranslation } from "react-i18next";
 
 export default function CycleMenu() {
+  const { t } = useTranslation();
   // tracks the state of two buttons: create a cycle and edit a cycle
   const [buttonState, setButtonState] = useState({
     isCreateCycle: false,
@@ -128,7 +130,7 @@ export default function CycleMenu() {
             type="primary"
             icon={<PlusOutlined />}
           >
-            Create Cycle
+            {t("Cycles:create_cycle_button")}
           </Button>
 
           {/* Display exisitng cycles */}
@@ -151,7 +153,11 @@ export default function CycleMenu() {
 
       {/* Shows the back button if create cycle button is clicked */}
       {(buttonState.isCreateCycle || buttonState.isEditCycle) && (
-        <Row align="middle" justify="space-between" style={{ marginBottom: '20px' }}>
+        <Row
+          align="middle"
+          justify="space-between"
+          style={{ marginBottom: "20px" }}
+        >
           <Col>
             <Button
               onClick={handleButtonState}
@@ -159,13 +165,13 @@ export default function CycleMenu() {
               type="primary"
               icon={<ArrowLeftOutlined />}
             >
-              Back
+              {t("Cycles:back_button")}
             </Button>
           </Col>
-          <Col flex="auto" style={{ textAlign: 'center' }}>
+          <Col flex="auto" style={{ textAlign: "center" }}>
             <h2 style={{ marginBottom: 0 }}>
-              {buttonState.isCreateCycle 
-                ? "Create a new cycle"
+              {buttonState.isCreateCycle
+                ? t("Cycles:create_new_cycle")
                 : `Edit ${selectedCycle?.name}`}
             </h2>
           </Col>
@@ -191,11 +197,11 @@ export default function CycleMenu() {
           onCancel={closeModal}
           footer={[
             <Button key="close" onClick={closeModal}>
-              Close
+              {t("close")}
             </Button>,
           ]}
-          style={{ 
-            color: isErrorMessage ? '#ff4d4f' : '#52c41a'
+          style={{
+            color: isErrorMessage ? "#ff4d4f" : "#52c41a",
           }}
         >
           <p>{message}</p>
