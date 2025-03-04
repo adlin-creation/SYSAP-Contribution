@@ -50,7 +50,7 @@ import "./App.css";
 const { Header, Sider, Content } = Layout;
 
 function App() {
-  const { t } = useTranslation(); // la fonction qu'on doit appliquer a la traduction
+  const { t, i18n } = useTranslation(); // la fonction qu'on doit appliquer a la traduction
   const location = useLocation();
   const navigate = useNavigate();
   const { token, setToken } = useToken(); // Utilisation du hook personnalisé pour gérer le token
@@ -126,6 +126,10 @@ function App() {
   const [filteredMenuItems, setFilteredMenuItems] = useState(menuItems);
 
   useEffect(() => {
+    document.documentElement.dir = i18n.language === "ar" ? "rtl" : "ltr";
+  }, [i18n.language]);
+
+  useEffect(() => {
     setSelectedKey(location.pathname);
   }, [location.pathname]);
 
@@ -195,7 +199,7 @@ function App() {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Sider className="sider">
+      <Sider className={`sider ${i18n.language === "ar" ? "sider-ar" : ""}`}>
         <div className="logo">RxAPA</div>
         <Menu
           theme="dark"
@@ -204,8 +208,16 @@ function App() {
           items={filteredMenuItems}
         />
       </Sider>
-      <Layout className="site-layout">
-        <Header className="header site-layout-background">
+      <Layout
+        className={`site-layout ${
+          i18n.language === "ar" ? "site-layout-ar" : ""
+        }`}
+      >
+        <Header
+          className={`header site-layout-background ${
+            i18n.language === "ar" ? "header-ar" : ""
+          }`}
+        >
           <div></div> {/* Empty div to align items to the right */}
           <div className="header-content">
             <LanguageSwitcher />

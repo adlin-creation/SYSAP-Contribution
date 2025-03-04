@@ -108,7 +108,6 @@
     "phone": "Téléphone",
     "register_admin_button": "Enregistrer un administrateur",
     "register_new_admin": "Enregistrer un nouvel Administrateur",
-    "edit_admin": "Modifier un Administrateur",
     "updating_success_msg": "Administrateur mis à jour avec succès !",
     "updating_admin_error_msg": "Erreur lors de la mise à jour de l'administrateur",
     "creating_success_msg": "Administrateur créé avec succès !",
