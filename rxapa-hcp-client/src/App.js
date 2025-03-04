@@ -53,77 +53,6 @@ import './App.css';
 
 const { Header, Sider, Content } = Layout;
 
-const menuItems = [
-  {
-    key: '/',
-    icon: <HomeOutlined />,
-    label: <Link to="/">Dashboard</Link>,
-  },
-  {
-    key: '/exercises',
-    icon: <AppstoreOutlined />,
-    label: <Link to="/exercises">Exercises</Link>,
-  },
-  {
-    key: '/blocs',
-    icon: <BlockOutlined />,
-    label: <Link to="/blocs">Blocs</Link>,
-  },
-  {
-    key: '/sessions',
-    icon: <CalendarOutlined />,
-    label: <Link to="/sessions">Sessions</Link>,
-  },
-  {
-    key: '/cycles',
-    icon: <ClusterOutlined />,
-    label: <Link to="/cycles">Cycles</Link>,
-  },
-  {
-    key: '/phases',
-    icon: <PartitionOutlined />,
-    label: <Link to="/phases">Phases</Link>,
-  },
-  {
-    key: '/programs',
-    icon: <SettingOutlined />,
-    label: <Link to="/programs">Programs</Link>,
-  },
-  {
-    key: '/patients',
-    icon: <UserOutlined />,
-    label: <Link to="/patients">Patients</Link>,
-  },
-  {
-    key: '/evaluations',
-    icon: <FormOutlined />,
-    label: <Link to="/evaluations">Évaluation</Link>,
-  },
-  {
-    key: 'healthcare-professional',
-    icon: <UsergroupAddOutlined />,
-    label: 'Professionals',
-    children: [
-      {
-        key: '/doctors',
-        icon: <MedicineBoxOutlined />,
-        label: <Link to="/doctors">Doctors</Link>,
-      },
-      {
-        key: '/kinesiologists',
-        icon: <HeartOutlined />,
-        label: <Link to="/kinesiologists">Kinesiologists</Link>,
-      },
-      {
-        key: '/admins',
-        icon: <UserOutlined />,
-        label: <Link to="/admins">Admins</Link>,
-      },
-    ],
-  },
-  // Ajoutez d'autres éléments de menu si nécessaire
-];
-
 function App() {
   const { t } = useTranslation(); // la fonction qu'on doit appliquer a la traduction
   const location = useLocation();
@@ -172,6 +101,11 @@ function App() {
       key: "/patients",
       icon: <UserOutlined />,
       label: <Link to="/patients">{t("App:patients")}</Link>,
+    },
+    {
+      key: '/evaluations',
+      icon: <FormOutlined />,
+      label: <Link to="/evaluations">Évaluation</Link>,
     },
     {
       key: "healthcare-professional",
