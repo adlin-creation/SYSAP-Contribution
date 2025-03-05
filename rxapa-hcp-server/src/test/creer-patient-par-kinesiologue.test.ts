@@ -4,12 +4,19 @@ import { Caregiver } from "../model/Caregiver";
 import { ProgramEnrollement } from "../model/ProgramEnrollement";
 import { Patient_Caregiver } from "../model/Patient_Caregiver";
 import { expect, jest } from "@jest/globals";
+import { sequelize } from "../util/database"; // Import de sequelize
 
 // Mock des modèles Sequelize
 jest.mock("../model/Patient");
 jest.mock("../model/Caregiver");
 jest.mock("../model/ProgramEnrollement");
 jest.mock("../model/Patient_Caregiver");
+
+// Mock de sequelize.transaction
+(sequelize.transaction as jest.Mock) = jest.fn(() => ({
+    commit: jest.fn(),
+    rollback: jest.fn(),
+}));
 
 describe("createPatientWithCaregivers", () => {
     let req: any;
@@ -40,6 +47,7 @@ describe("createPatientWithCaregivers", () => {
         };
 
         next = jest.fn();
+
     });
 
     afterEach(() => {
@@ -288,3 +296,4 @@ describe("createPatientWithCaregivers", () => {
         });
     });
 });
+
