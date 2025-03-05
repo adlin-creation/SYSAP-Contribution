@@ -75,11 +75,6 @@ function EvaluationSearch() {
      */
     const columns = [
         {
-            title: "ID",
-            dataIndex: "id",
-            key: "id",
-        },
-        {
             title: "Nom",
             dataIndex: "lastname",
             key: "lastname",
@@ -88,6 +83,11 @@ function EvaluationSearch() {
             title: "Prénom",
             dataIndex: "firstname",
             key: "firstname",
+        },
+        {
+            title: "Date de naisssance",
+            dataIndex: "birthday",
+            key: "Birthday",
         },
         {
             title: "Actions",
@@ -117,7 +117,7 @@ function EvaluationSearch() {
                     <div className="flex gap-4">
                         {/* Champs de recherche*/}
                         <Input
-                            placeholder="Rechercher un patient par ID ou nom"
+                            placeholder="Rechercher un patient par nom"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             onPressEnter={handleSearch}

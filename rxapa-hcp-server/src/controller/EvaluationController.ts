@@ -247,21 +247,50 @@ exports.deleteEvaluation = async (req: any, res: any, next: any) => {
 exports.searchPatients = async (req: Request, res: Response) => {
   try {
     const { term } = req.query;
+    if (!term) return res.status(400).json({ message: "Terme de recherche requis" });
 
-    const patients = await Patient.findAll({
-      where: {
+    // Nettoyage et séparation des termes
+    const searchTerms = term.toString().trim().split(/\s+/);
+    
+    let whereClause;
+    
+    if (searchTerms.length === 1) {
+      // Recherche simple sur un seul terme
+      whereClause = {
         [Op.or]: [
-          { firstname: { [Op.iLike]: `%${term}%` } },
-          { lastname: { [Op.iLike]: `%${term}%` } },
-        ],
-      },
-    });
+          { firstname: { [Op.iLike]: `%${searchTerms[0]}%` } },
+          { lastname: { [Op.iLike]: `%${searchTerms[0]}%` } },
+        ]
+      };
+    } else {
+      // Combinaisons prénom/nom
+      whereClause = {
+        [Op.or]: [
+          // Format "Prénom Nom"
+          {
+            [Op.and]: [
+              { firstname: { [Op.iLike]: `%${searchTerms[0]}%` } },
+              { lastname: { [Op.iLike]: `%${searchTerms.slice(1).join(' ')}%` } },
+            ]
+          },
+          // Format "Nom Prénom" (si deux termes)
+          ...(searchTerms.length === 2 ? [
+            {
+              [Op.and]: [
+                { firstname: { [Op.iLike]: `%${searchTerms[1]}%` } },
+                { lastname: { [Op.iLike]: `%${searchTerms[0]}%` } },
+              ]
+            }
+          ] : [])
+        ]
+      };
+    }
 
+    const patients = await Patient.findAll({ where: whereClause });
     res.status(200).json(patients);
+    
   } catch (error) {
-    console.error("Erreur lors de la recherche de patients:", error);
-    res
-      .status(500)
-      .json({ message: "Erreur lors de la recherche de patients" });
+    console.error("Erreur recherche:", error);
+    res.status(500).json({ message: "Échec de la recherche" });
   }
 };
