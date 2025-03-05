@@ -131,13 +131,19 @@ function App() {
       const filterMenuItems = (items) => {
         return items
           .map((item) => {
+            if(location.state.role === "kinesiologist" && item.key === "healthcare-professional"){
+              return null;
+            }
             if (item.children) {
               return {
                 ...item,
                 children: filterMenuItems(item.children),
               };
             }
-            if (location.state.role === "admin" && item.key === "/admins") {
+            if ((location.state.role === "admin" || location.state.role === "kinesiologist")  && item.key === "/admins") {
+              return null;
+            }
+            if(location.state.role === "kinesiologist" && item.key === item.key === "/kinesiologists" ||item.key === "/doctors"){
               return null;
             }
             return item;
