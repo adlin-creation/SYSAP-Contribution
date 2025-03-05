@@ -1,20 +1,9 @@
-<<<<<<< HEAD
 import { User } from "../model/User"; // Importation du modèle User pour interagir avec la base de données des utilisateurs
 import { Professional_User } from "../model/Professional_User"; // Importation du modèle Professional_User pour gérer les utilisateurs professionnels
 import jwt from "jsonwebtoken"; // Importation de jsonwebtoken pour la gestion des tokens JWT
 
 import { scrypt, randomBytes, timingSafeEqual } from "crypto"; // Importation de fonctions pour le hachage des mots de passe
 import { promisify } from "util"; // Importation de promisify pour transformer scrypt en version asynchrone
-=======
-import { User } from "../model/User";
-import { Professional_User } from "../model/Professional_User";
-
-import jwt from "jsonwebtoken";
-
-
-import { scrypt, randomBytes, timingSafeEqual } from "crypto";
-import { promisify } from "util";
->>>>>>> d51d88b9ae8a63737da696f6de6cd140548e88c8
 
 const scryptPromise = promisify(scrypt); // Permet d'utiliser `scrypt` avec `async/await`
 
@@ -84,20 +73,12 @@ exports.login = async (req: any, res: any) => {
   try {
     // Vérifier si l'utilisateur existe dans la table `User`
     user = await User.findOne({ where: { email: email } });
-<<<<<<< HEAD
 
-    // Si non trouvé dans `User`, chercher dans `Professional_User`
-    if (!user) {
-      user = await Professional_User.findOne({ where: { email: email } });
-    }
-
-    // Si toujours non trouvé, renvoyer une erreur
-=======
     // Si l'utilisateur n'est pas trouvé, vérifier dans ProfessionalUser
     if (!user) {
       user = await Professional_User.findOne({ where: { email: email } });
     }
->>>>>>> d51d88b9ae8a63737da696f6de6cd140548e88c8
+    // Si toujours non trouvé, renvoyer une erreur
     if (!user) {
       return res.status(401).json({ message: "The user doesn't exist" });
     }
@@ -124,30 +105,18 @@ exports.login = async (req: any, res: any) => {
   // Génération du token JWT
   let token = jwt.sign(
     {
-<<<<<<< HEAD
       email: user.email, // Ajout de l'email au token
       key: user.key, // Ajout de l'ID utilisateur au token
-      role: user.role || "user", // Ajout du rôle au token (par défaut "user")
-=======
-      email: user.email,
-      key: user.key,
-      role: user.role || "SuperAdmin", // Ajouter le rôle si disponible
->>>>>>> d51d88b9ae8a63737da696f6de6cd140548e88c8
+      role: user.role || "SuperAdmin", // Ajouter le rôle si disponible --- role: user.role || "user", // Ajout du rôle au token (par défaut "user")
     },
     `${process.env.TOKEN_SECRET_KEY}`, // Utilisation d'une clé secrète stockée dans les variables d'environnement
     { expiresIn: "2h" } // Expiration du token en 2 heures
   );
 
   return res.status(200).json({
-<<<<<<< HEAD
     token: token, // Envoi du token au frontend
     userId: user.key, // Envoi de l'ID utilisateur
-    role: user.role || "user", // Envoi du rôle utilisateur
-=======
-    token: token,
-    userId: user.key,
-    role: user.role || "SuperAdmin",
->>>>>>> d51d88b9ae8a63737da696f6de6cd140548e88c8
+    role: user.role || "SuperAdmin", // role: user.role || "user", // Envoi du rôle utilisateur
     message: "Successfully logged in",
   });
 };
@@ -163,7 +132,6 @@ exports.logout = (req: any, res: any) => {
   });
 };
 
-<<<<<<< HEAD
 /**
  * Fonction de hachage du mot de passe avec `scrypt`
  */
@@ -171,12 +139,6 @@ export async function hash(password: string) {
   const salt = randomBytes(8).toString("hex"); // Génération d'un sel unique
   const derivedKey = await scryptPromise(password, salt, 64); // Hachage du mot de passe
   return salt + ":" + (derivedKey as Buffer).toString("hex"); // Retourne le mot de passe haché sous format `salt:hash`
-=======
-export async function hash(password: string) {
-  const salt = randomBytes(8).toString("hex");
-  const derivedKey = await scryptPromise(password, salt, 64);
-  return salt + ":" + (derivedKey as Buffer).toString("hex");
->>>>>>> d51d88b9ae8a63737da696f6de6cd140548e88c8
 }
 
 /**
