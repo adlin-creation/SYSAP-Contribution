@@ -31,7 +31,7 @@ exports.createProgramEnrollement = async (req: any, res: any, next: any) => {
 /**
  * Creates a new patient with caregivers using the "Sans programme" (ID=1) program
  */
-exports.createPatientWithCaregivers = async (req: any, res: any, next: any) => {
+export const createPatientWithCaregivers = async (req: any, res: any, next: any) => {
   const { patientData, caregivers } = req.body;
   const transaction = await sequelize.transaction();
 
