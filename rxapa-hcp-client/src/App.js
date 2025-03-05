@@ -106,7 +106,7 @@ function App() {
         {
           key: "/doctors",
           icon: <MedicineBoxOutlined />,
-          label: <Link to="/doctors">{t("App:doctors")}</Link>,
+          label: <Link to="/doctors">{t("App:physicians")}</Link>,
         },
         {
           key: "/kinesiologists",
@@ -124,6 +124,10 @@ function App() {
   ];
 
   const [filteredMenuItems, setFilteredMenuItems] = useState(menuItems);
+
+  useEffect(() => {
+    setSelectedKey(location.pathname);
+  }, [location.pathname]);
 
   useEffect(() => {
     if (location.state?.role) {

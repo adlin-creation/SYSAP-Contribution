@@ -73,7 +73,7 @@ function CreatePatient({ refetchPatients, onClose }) {
       })
       .then((res) => {
         refetchPatients();
-        openModal(t("create_patient_success"), false);
+        openModal(t("Patients:create_patient_success"), false);
       })
       .catch((err) =>
         openModal(err.response?.data?.error || t("create_patient_failed"), true)
@@ -303,7 +303,7 @@ function CreatePatient({ refetchPatients, onClose }) {
                         required: t("Patients:first_name_required"),
                         minLength: {
                           value: 2,
-                          message: t("Patients:first_name_required_info")
+                          message: t("Patients:first_name_required_info"),
                         },
                       }}
                       render={({ field }) => (
@@ -330,8 +330,8 @@ function CreatePatient({ refetchPatients, onClose }) {
                         required: t("Patients:last_name_required"),
                         minLength: {
                           value: 2,
-                          message: t("Patients:last_name_required_info")
-                        }
+                          message: t("Patients:last_name_required_info"),
+                        },
                       }}
                       render={({ field }) => (
                         <Input
@@ -396,7 +396,7 @@ function CreatePatient({ refetchPatients, onClose }) {
                         required: t("Patients:email_needed"),
                         pattern: {
                           value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                          message: t("Patients:email_invalid")
+                          message: t("Patients:email_invalid"),
                         },
                       }}
                       render={({ field }) => (
