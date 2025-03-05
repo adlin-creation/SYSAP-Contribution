@@ -9,6 +9,12 @@ import { Patient } from "../model/Patient";
 exports.createCaregiver = async (req: any, res: any, next: any) => {
   const { firstname, lastname, phoneNumber, email, relationship } = req.body;
   try {
+
+    const existingUser = await Caregiver.findOne({ where: { email } });
+
+    if (existingUser) {
+      return res.status(409).json({ message: "existing caregiver with this email." });
+    }
     const newCaregiver = await Caregiver.create({
       firstname,
       lastname,
@@ -142,9 +148,9 @@ exports.getPatientsByCaregiver = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({ 
+    res.status(error.statusCode).json({
       message: "Error loading patients for caregiver from the database",
-      error: error.message 
+      error: error.message
     });
   }
   return res;

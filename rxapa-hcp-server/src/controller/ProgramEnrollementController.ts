@@ -64,6 +64,11 @@ exports.createPatientWithCaregivers = async (req: any, res: any, next: any) => {
 
 
     // 1. Créer le patient avec status "waiting"
+
+    const existingUser = await Patient.findOne({ where: { email: patientData.email } });
+    if (existingUser) {
+      return res.status(409).json({ message: `existing patient with this email: ${patientData.email}` });
+    }
     const newPatient = await Patient.create({
       ...patientData,
       status: "waiting",        // Ajout du status par défaut
@@ -85,9 +90,18 @@ exports.createPatientWithCaregivers = async (req: any, res: any, next: any) => {
     );
 
     // 3. Créer et associer les caregivers
+    for (let caregiver of caregivers) {
+      const existingCaregiver = await Caregiver.findOne({ where: { email: caregiver.email } });
+      if (existingCaregiver) {
+        // Annulation de la transaction et retour d'une erreur
+        await transaction.rollback();
+        return res.status(409).json({ message: `Existing caregiver with this email: ${caregiver.email}` });
+      }
+    }
     const createdCaregivers = await Promise.all(caregivers.map(caregiverData =>
       Caregiver.create(caregiverData, { transaction })
     ));
+
 
     // 4. Création des associations Patient_Caregiver
     const Patient_Caregivers = await Promise.all(
