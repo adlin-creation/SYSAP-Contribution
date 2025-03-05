@@ -41,6 +41,14 @@ const LanguageSwitcher = () => {
         sx={{ mt: 0.3, ml: -2 }} // Rapproche le menu du bouton
         disableScrollLock // empêche la disparition du Scroll lors de l'affichage de ce Menu
       >
+        {" "}
+        <MenuItem onClick={() => handleClose("fr")}>
+          <Flag
+            code="FR"
+            style={{ width: 26, height: "auto", marginRight: 10 }}
+          />{" "}
+          Français
+        </MenuItem>
         <MenuItem onClick={() => handleClose("en")}>
           <Flag
             code="GB"
@@ -48,12 +56,12 @@ const LanguageSwitcher = () => {
           />{" "}
           English
         </MenuItem>
-        <MenuItem onClick={() => handleClose("fr")}>
+        <MenuItem onClick={() => handleClose("ar")}>
           <Flag
-            code="FR"
+            code="SA"
             style={{ width: 26, height: "auto", marginRight: 10 }}
           />{" "}
-          Français
+          عربي
         </MenuItem>
       </Menu>
     </>

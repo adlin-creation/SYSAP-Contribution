@@ -24,23 +24,31 @@ export default function Phase({ phase, deletePhase, onSelect, onClick }) {
           {phase.name}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {`End Condition Type: ${phase.startConditionType}`}
+          {`${t("Phases:start_condition_type_label")}: ${
+            phase.startConditionType
+          }`}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {`End Condition: ${phase.startConditionValue}`}
+          {`${t("Phases:start_condition_value_label")}: ${
+            phase.startConditionValue
+          }`}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {`End Condition Type: ${phase.endConditionType}`}
+          {`${t("Phases:end_condition_type_label")}: ${phase.endConditionType}`}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {`End Condition: ${phase.endConditionValue}`}
+          {`${t("Phases:end_condition_value_label")}: ${
+            phase.endConditionValue
+          }`}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           {console.log("Phase inside: ", phase)}
-          {`Weekly Cycle: ${phase?.Phase_Cycles[0]?.WeeklyCycle?.name}`}
+          {`${t("Phases:weekly_cycle_label")}: ${
+            phase?.Phase_Cycles[0]?.WeeklyCycle?.name
+          }`}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {`Frequency: ${phase.frequency}`}
+          {`${t("Phases:frequency")}: ${phase.frequency}`}
         </Typography>
       </CardContent>
       <CardActions>
