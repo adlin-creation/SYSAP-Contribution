@@ -59,7 +59,7 @@ exports.createExercise = async (req: any, res: any, next: any) => {
       imageUrl: imageUrl,
     });
     res.status(201).json({
-      message: "Successfully created an Exercise",
+      message: "Exercice créé avec succès.",
     });
   } catch (error: any) {
     if (!error.statusCode) {
@@ -76,15 +76,15 @@ exports.createExercise = async (req: any, res: any, next: any) => {
 
     if (error.name == "SequelizeUniqueConstraintError") {
       res.json({
-        messageTitle: "An exercise with the same name already exists.",
+        messageTitle: "Un exercice avec le meme nom existe déja ! ",
         message:
-            "Please modify the name of the exercise and then submit again.",
+          "Erreur ! Le nom existe déja dans la base de donnée !",
       });
     } else {
       res.json({
-        messageTitle: "Failed to create an Exercise",
+        messageTitle: "Erreur lors de la création de l'exercice ! ",
         message:
-            "Please contact the developer with a brief description of how this error can be reproduced.",
+          "Erreur ! Il manque un champ à remplir !",
       });
     }
   }
@@ -111,14 +111,14 @@ exports.updateExercise = async (req: any, res: any, next: any) => {
       where: { key: key },
     });
     if (exercise == null) {
-      res.json({ message: "Error: Can't find the exercise" });
+      res.json({ message: "Erreur ! Exercise n'existe pas !"  });
       return res;
     }
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.json({ message: "Error: Can't find the exercise" });
+    res.json({ message: "Erreur ! Exercise n'existe pas !"  });
     return res;
   }
 
@@ -134,7 +134,7 @@ exports.updateExercise = async (req: any, res: any, next: any) => {
       fitnessLevel: fitnessLevel || exercise.fitnessLevel,
     });
     res.status(201).json({
-      message: "Successfully updated the Exercise",
+      message: "Exercice mis à jour avec succes",
     });
   } catch (error: any) {
     if (!error.statusCode) {
@@ -146,12 +146,12 @@ exports.updateExercise = async (req: any, res: any, next: any) => {
     if (error.name == "SequelizeUniqueConstraintError") {
       res.json({
         message:
-            "Please modify the name of the exercise and then submit again.",
+          "Erreur ! Le nom existe déja dans la base de donnée !",
       });
     } else {
       res.json({
         message:
-            "Error - Please contact the developer with a brief description of how this error can be reproduced.",
+          "Erreur ! Il manque un champ à remplir !",
       });
     }
   }
@@ -168,7 +168,7 @@ exports.getExercises = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.json({ message: "Error loading exercises from the database" });
+    res.json({ message: "Erreur lors le chargement de l'exercice !" });
   }
   return res;
 };
@@ -188,7 +188,7 @@ exports.getExercise = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.json({ message: "Error loading the exercise from the database" });
+    res.json({ message: "Erreur lors le chargement de l'exercice !" });
   }
   return res;
 };
@@ -225,7 +225,7 @@ exports.createExerciseVersion = async (req: any, res: any, next: any) => {
       instructionalVideo: instructionalVideo,
     });
 
-    res.status(201).json({ message: "Exercise version created" });
+    res.status(201).json({ message: "Version d'exercice créé" });
   } catch (error: any) {
     // Otherwise, the action was not successful. Hence, let the user know that
     // his request was unsuccessful.
@@ -233,7 +233,7 @@ exports.createExerciseVersion = async (req: any, res: any, next: any) => {
       error.statusCode = 500;
     }
 
-    res.json({ message: "Failed to create an exercise version" });
+    res.json({ message: "Erreur lors la création d'une version d'exercice" });
   }
 
   // returns the response.
@@ -265,7 +265,7 @@ exports.addExerciseVersion = async (req: any, res: any, next: any) => {
   try {
     exercise = await Exercise.findOne({ where: { name: exerciseName } });
   } catch (error) {
-    throw new Error("Can't find the exercise in the database.");
+    throw new Error("Erreur ! Exercice introuval dans la base de donnéee !");
   }
 
   // Get the exercise version
@@ -276,7 +276,7 @@ exports.addExerciseVersion = async (req: any, res: any, next: any) => {
       where: { name: versionName },
     });
   } catch (error) {
-    throw new Error("Can't find the exercise version in the database");
+    throw new Error("Erreur ! Exercice introuval dans la base de donnéee !");
   }
 
   // Extract the level value to create a variant, which connects the exercise and
@@ -289,8 +289,8 @@ exports.addExerciseVersion = async (req: any, res: any, next: any) => {
     variant = await createVariant(exerciseVersion.id, exercise.id, level);
 
     res
-        .status(201)
-        .json({ message: "Added an exercise version to an exercise" });
+      .status(201)
+      .json({ message: "Version d'exercice est ajouté à un exercice" });
   } catch (error: any) {
     res.status(500);
     if (!error.statusCode) {
@@ -298,7 +298,7 @@ exports.addExerciseVersion = async (req: any, res: any, next: any) => {
     }
     console.log(error);
 
-    res.json({ message: "Failed to add an exercise version to an exercise" });
+    res.json({ message: "Erreur lors l'ajout d'une version à un exercice" });
     return res;
   }
 };
@@ -329,7 +329,7 @@ const createVariant = async (
 
     return variant;
   } catch (error: any) {
-    throw new Error("Failed to create an exercise variant.");
+    throw new Error("Erreur lors la création d'un variant de l'exercice!");
   }
 };
 
@@ -347,16 +347,16 @@ exports.deleteExercise = async (req: any, res: any) => {
     });
     if (exercise == null) {
       return res
-          .status(500)
-          .json({ message: "The exercise doesn't exist in the database" });
+        .status(500)
+        .json({ message: "L'exercice n'existe pas dans la base de donnée !" });
     }
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
     return res
-        .status(error.statusCode)
-        .json({ message: "The exercise doesn't exist in the database" });
+      .status(error.statusCode)
+      .json({ message: "L'exercice n'existe pas dans la base de donnée !" });
   }
   try {
     await exercise.destroy();
@@ -364,14 +364,14 @@ exports.deleteExercise = async (req: any, res: any) => {
       fileHelper.deleteFile(exercise.imageUrl);
     }
     return res
-        .status(200)
-        .json({ message: "Successfully deleted the exercise" });
+      .status(200)
+      .json({ message: "Exercice suprimé avec succès !" });
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
     return res
-        .status(error.statusCode)
-        .json({ message: "Failed to delete the exercise" });
+      .status(error.statusCode)
+      .json({ message: "Erreur lors la supression de l'exercice" });
   }
 };
