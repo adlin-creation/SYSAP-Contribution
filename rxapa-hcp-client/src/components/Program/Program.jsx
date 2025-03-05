@@ -3,16 +3,24 @@ import { Button, List } from "antd";
 import { DeleteOutlined } from "@ant-design/icons"; // Import des icônes Ant Design
 
 import "./ProgramStyles.css";
+import { useTranslation } from "react-i18next";
 
 export default function Program({ onClick, onSelect, program, deleteProgram }) {
+  const { t } = useTranslation();
   return (
     <div className="program">
       <List style={{ textAlign: "center" }}>
-        <h3>Name: {program.name}</h3>
+        <h3>
+          {t("Programs:name_title")}: {program.name}
+        </h3>
         <br />
-        <h5>Description: {program.description}</h5>
+        <h5>
+          {t("Programs:description_title")}: {program.description}
+        </h5>
         <br />
-        <h5>Duration: {program.duration}</h5>
+        <h5>
+          {t("Programs:duration_title")}: {program.duration}
+        </h5>
 
         <div>
           <Button
@@ -25,7 +33,7 @@ export default function Program({ onClick, onSelect, program, deleteProgram }) {
             name="edit-program"
             type="primary"
           >
-            EDIT
+            {t("Programs:edit_button")}
           </Button>
           <Button
             onClick={() => {
@@ -36,7 +44,7 @@ export default function Program({ onClick, onSelect, program, deleteProgram }) {
             danger
             icon={<DeleteOutlined />}
           >
-            DELETE
+            {t("Programs:delete_button")}
           </Button>
         </div>
       </List>

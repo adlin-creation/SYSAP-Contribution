@@ -33,25 +33,20 @@ export const Exercise = sequelize.define("Exercise", {
     allowNull: false,
   },
   category: {
-    type: dataTypes.ENUM("AEROBIC", "STRENGHT", "ENDURANCE", "FLEXIBILITY"),
+    type: dataTypes.ENUM("Aérobique", "Endurance", "Force", "Flexibilité", "Équilibre"),
     allowNull: false,
   },
   targetAgeRange: {
     type: dataTypes.ENUM(
-      "FIFTY_TO_FIFTY_NINE",
-      "SIXTY_TO_SIXTY_NINE",
-      "SEVENTY_TO_SEVENTY_NINE",
-      "EIGHTY_TO_EIGHTY_NINE"
+      " "
     ),
     allowNull: false,
   },
   fitnessLevel: {
     type: dataTypes.ENUM(
-      "LOW",
-      "BELOW_AVERAGE",
-      "AVERAGE",
-      "ABOVE_AVERAGE",
-      "HIGH"
+      "Facile",
+      "Intermédiaire",
+      "Avancé"
     ),
     allowNull: false,
   },

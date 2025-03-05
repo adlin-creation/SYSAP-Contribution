@@ -1,0 +1,22 @@
+{
+    "permission_refusee": "Permission denied",
+    "activer_notifications_svp": "Enable notifications to receive reminders.",
+    "erreur": "Error",
+    "entrer_heure_et_titre_svp": "Please select a time and a title.",
+    "rappel": "Reminder",
+    "faire_votre_seance": "It's time for your session!",
+    "rappel_ajoute": "Reminder added",
+    "rappel_rajoute_a": "Reminder added to",
+    "err_rappel": "Unable to schedule the reminder.",
+    "rappel_supprime": "Reminder deleted",
+    "rappel_supprime_confirmation": "The reminder has been deleted.",
+    "rappels_programmes": "Scheduled reminders",
+    "aucun_rappel": "No reminders for now.",
+    "supprimer": "Delete",
+    "ajouter_un_rappel": "Add a reminder",
+    "nouveau_rappel": "New Reminder",
+    "titre_du_rappel": "Reminder title",
+    "selectionner_heure": "Select time",
+    "planifier": "Schedule",
+    "annuler": "Cancel"
+}

@@ -7,36 +7,44 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-
-const columns = [
-  { id: "phaseName", label: "Phase Name", minWidth: 170 },
-  { id: "startConditionType", label: "Start Condition Type", minWidth: 170 },
-  {
-    id: "startConditionValue",
-    label: "Start Condition Value",
-    minWidth: 170,
-    align: "center",
-  },
-  { id: "endConditionType", label: "End Condition Type", minWidth: 170 },
-  {
-    id: "endConditionValue",
-    label: "End Condition Value",
-    minWidth: 170,
-    align: "center",
-  },
-  {
-    id: "frequency",
-    label: "Frequency",
-    minWidth: 170,
-    align: "center",
-    format: (value) => value.toLocaleString("en-US"),
-  },
-];
+import { useTranslation } from "react-i18next";
 
 export default function ProgramPhaseTable({ programPhases }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
+  const { t } = useTranslation();
+  const columns = [
+    { id: "phaseName", label: t("Programs:phase_name_label"), minWidth: 170 },
+    {
+      id: "startConditionType",
+      label: t("Programs:start_condition_type_label"),
+      minWidth: 170,
+    },
+    {
+      id: "startConditionValue",
+      label: t("Programs:start_condition_value_label"),
+      minWidth: 170,
+      align: "center",
+    },
+    {
+      id: "endConditionType",
+      label: t("Programs:end_condition_type_label"),
+      minWidth: 170,
+    },
+    {
+      id: "endConditionValue",
+      label: t("Programs:end_condition_value_label"),
+      minWidth: 170,
+      align: "center",
+    },
+    {
+      id: "frequency",
+      label: t("Programs:frequency_label"),
+      minWidth: 170,
+      align: "center",
+      format: (value) => value.toLocaleString("en-US"),
+    },
+  ];
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };

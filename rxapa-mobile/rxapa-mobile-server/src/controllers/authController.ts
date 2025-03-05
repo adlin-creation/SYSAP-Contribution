@@ -15,7 +15,7 @@ export const authenticate = async (req: Request, res: Response) => {
 
         const query = `
             SELECT pe.id as "programEnrollementId", p.firstname, p.lastname, pr.name as programName, pe."startDate", pr.duration
-            FROM public."Program_Enrollements" pe
+            FROM public."ProgramEnrollements" pe
             JOIN public."Patients" p ON pe."PatientId" = p.id
             JOIN public."Programs" pr ON pe."ProgramId" = pr.id
             WHERE pe."programEnrollementCode" = $1

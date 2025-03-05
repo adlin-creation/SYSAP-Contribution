@@ -5,9 +5,13 @@ import { useRouter } from 'expo-router';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons'; // Ajout pour les icônes
 import { LinearGradient } from 'expo-linear-gradient';
+import { useTranslation } from 'react-i18next';
+import '../utils/i18n';
 
 export default function HomeScreen() {
   const router = useRouter();
+
+  const { t, i18n } = useTranslation();
 
   return (
     <LinearGradient colors={['#e0f7fa', '#1B365D']} style={styles.container}>
@@ -17,34 +21,34 @@ export default function HomeScreen() {
           source={require('../assets/images/Logo-Rx-APA-Allonge-sans-texte-Bleu-sur-fond-blanc-removebg-preview.png')}
           style={styles.logo}
         />
-        <Text style={styles.greeting}>Bienvenue, John Doe !</Text>
+        <Text style={styles.greeting}>{t('Home:bienvenue')}, John Doe !</Text>
       </View>
 
       {/* Menu sous forme de cartes */}
       <View style={styles.menuContainer}>
         <TouchableOpacity style={styles.card} onPress={() => router.push('/programme')}>
           <MaterialIcons name="fitness-center" size={30} color="#1B365D" />
-          <Text style={styles.cardText}>Mon Programme</Text>
+          <Text style={styles.cardText}>{t('Home:mon_programme')}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.card} onPress={() => router.push('/seance')}>
           <Ionicons name="timer-outline" size={30} color="#1B365D" />
-          <Text style={styles.cardText}>Ma Séance</Text>
+          <Text style={styles.cardText}>{t('Home:ma_seance')}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.card} onPress={() => router.push('/progression')}>
           <Ionicons name="bar-chart-outline" size={30} color="#1B365D" />
-          <Text style={styles.cardText}>Ma Progression</Text>
+          <Text style={styles.cardText}>{t('Home:ma_progression')}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.card} onPress={() => router.push('/configuration')}>
           <Ionicons name="settings-outline" size={30} color="#1B365D" />
-          <Text style={styles.cardText}>Configuration</Text>
+          <Text style={styles.cardText}>{t('Home:configuration')}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.card} onPress={() => router.push('/cahier-de-suivi')}>
           <MaterialIcons name="assignment" size={30} color="#1B365D" />
-          <Text style={styles.cardText}>Cahier de Suivi</Text>
+          <Text style={styles.cardText}>{t('Home:cahier_suivi')}</Text>
         </TouchableOpacity>
       </View>
 
-      //{/* Bouton Déconnexion */}
+      {/* Bouton Déconnexion */}
 
     </LinearGradient>
   );

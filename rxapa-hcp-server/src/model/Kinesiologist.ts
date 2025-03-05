@@ -14,8 +14,14 @@ const Kinesiologist = sequelize.define('Kinesiologist', {
     type: dataTypes.UUID,
     defaultValue: dataTypes.UUIDV4,
   },
+  workEnvironment: {
+    type: dataTypes.STRING,
+    allowNull: false,
+  },
+
 }, {
   modelName: 'Kinesiologist',
 });
 
 export { Kinesiologist };
+

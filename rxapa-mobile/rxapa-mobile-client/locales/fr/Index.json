@@ -1,0 +1,14 @@
+{
+    "entrer_code": "Veuillez entrer un code.",
+    "entrer_votre_code": "Entrez votre code",
+    "erreur_code_incorrect": "Le code saisi est incorrect. Veuillez réessayer.",
+    "authentification": "AUTHENTIFICATION",
+    "saisir_code_personnel": "Veuillez saisir votre code personnel",
+    "connexion": "CONNEXION",
+    "aucun_code_perso": "Je n'ai pas le code personnel",
+    "question_besoin_aide": "Besoin d'aide ?",
+    "contact_aide_code": "Si vous n'avez pas le code personnel ou si vous l'avez oublié, veuillez contacter :",
+    "contact_it": "Le département TI :",
+    "contact_kine": "Votre kinésiologue pour obtenir un code valide.",
+    "fermer": "Fermer"
+}

@@ -1,14 +1,16 @@
 import { Input, Button, Row, Col, Form, Modal } from "antd";
 import { SendOutlined } from "@ant-design/icons";
 import React, { useState } from "react";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import { Controller, useForm } from "react-hook-form";
 import "./Styles.css";
 import axios from "axios";
 import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
+import { useTranslation } from "react-i18next";
 
 export default function CreateBloc(props) {
+  const { t } = useTranslation();
   const { handleSubmit, control } = useForm();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isErrorMessage, setIsErrorMessage] = useState(false);
@@ -55,62 +57,58 @@ export default function CreateBloc(props) {
   };
 
   return (
-    <Row justify="center" align="middle" style={{ minHeight: '50vh' }}>
-      <Col span={12}>        
-          <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
-            <Form.Item label="Please enter the name of the bloc : " >
-              <Controller
-                name={"name"}
-                control={control}
-                render={({ field: { onChange, value } }) => (
-                  <Input
-                    onChange={onChange}
-                    value={value}
-                    placeholder="Exercise Name"
-                    required
-                  />
-                )}
-              />
-            </Form.Item>
+    <Row justify="center" align="middle" style={{ minHeight: "50vh" }}>
+      <Col span={12}>
+        <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
+          <Form.Item label={t("Blocs:enter_bloc_name")}>
+            <Controller
+              name={"name"}
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <Input
+                  onChange={onChange}
+                  value={value}
+                  placeholder={t("Blocs:exercise_name")}
+                  required
+                />
+              )}
+            />
+          </Form.Item>
 
-            <Form.Item label="Please enter the description of the bloc : ">
-              <Controller
-                name={"description"}
-                control={control}
-                render={({ field: { onChange, value } }) => (
-                  <Input.TextArea
-                    onChange={onChange}
-                    value={value}
-                    placeholder="Exercise Description"
-                    required
-                  />
-                )}
-              />
-            </Form.Item>
+          <Form.Item label={t("Blocs:enter_bloc_description")}>
+            <Controller
+              name={"description"}
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <Input.TextArea
+                  onChange={onChange}
+                  value={value}
+                  placeholder={t("Blocs:exercise_description")}
+                  required
+                />
+              )}
+            />
+          </Form.Item>
 
-            <Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                icon={<SendOutlined />}
-              >
-                SUBMIT
-              </Button>
-            </Form.Item>
-          </Form>
-          {isOpenModal && (
-            <Modal
-              open={isOpenModal}
-              onCancel={closeModal}
-              footer={[
-                <Button key="close" onClick={closeModal}>
-                  Close
-                </Button>,
-              ]}
-            >
-              <p style={{ color: isErrorMessage ? "red" : "green" }}>{message}</p>
-            </Modal>
-          )}     
+          <Form.Item>
+            <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
+              {t("Blocs:submit_button")}
+            </Button>
+          </Form.Item>
+        </Form>
+        {isOpenModal && (
+          <Modal
+            open={isOpenModal}
+            onCancel={closeModal}
+            footer={[
+              <Button key="close" onClick={closeModal}>
+                {t("Blocs:close_button")}
+              </Button>,
+            ]}
+          >
+            <p style={{ color: isErrorMessage ? "red" : "green" }}>{message}</p>
+          </Modal>
+        )}
       </Col>
     </Row>
   );
