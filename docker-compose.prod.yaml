@@ -2,6 +2,7 @@
 # services. In addition, it removes each container after being stopped.
 # Hence, it is not required to create network and specify --rm
 # However, detached mode (-d) can be specified while running docker compose
+# test merge request
 version: "3.4"
 services:
   postgres:
