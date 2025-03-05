@@ -1,6 +1,5 @@
 import { ProgramEnrollement } from "../model/ProgramEnrollement";
 import { Patient_Caregiver } from "../model/Patient_Caregiver";
-import { Program } from "../model/Program";
 import { Patient } from "../model/Patient";
 import { Caregiver } from "../model/Caregiver";
 import { sequelize } from "../util/database"; // Ajout de l'import de l'instance sequelize
@@ -51,42 +50,70 @@ exports.createPatientWithCaregivers = async (req: any, res: any, next: any) => {
       throw new Error('Maximum 2 caregivers allowed per patient');
     }
 
+
+    const caregiverTriplets = caregivers.map(caregiver => [
+      caregiver.program,      // Programme
+      caregiver.programStart,    // Date de début
+      caregiver.programEnd       // Date de fin
+    ]);
+    console.log(caregiverTriplets);
+
+    const programs = caregivers.map(caregiver => caregiver.program);
+    const numberOfPrograms = new Set(programs).size;
+    console.log(numberOfPrograms);
+
+
     // 1. Créer le patient avec status "waiting"
     const newPatient = await Patient.create({
       ...patientData,
-      status: "waiting"  // Ajout du status par défaut
+      status: "waiting",        // Ajout du status par défaut
+      numberOfPrograms
     }, { transaction });
 
-    // 2. Créer le program enrollment avec "Sans programme" (ID=1)
-    const programEnrollment = await ProgramEnrollement.create({
-      enrollementDate: new Date(),
-      startDate: new Date(),
-      endDate: null,
-      programEnrollementCode: `SP-${newPatient.id}`, // SP pour "Sans Programme"
-      ProgramId: 1, // ID du programme "Sans programme"
-      PatientId: newPatient.id
-    }, { transaction });
+    // 2. Créer les enregistrements de programme en fonction du nombre de programmes
+    const programEnrollments = await Promise.all(
+      caregiverTriplets.map(async ([program, startDate, endDate], index) => {
+        return ProgramEnrollement.create({
+          enrollementDate: new Date(),
+          startDate: startDate,
+          endDate: endDate,
+          programEnrollementCode: `P-${newPatient.id}-${index + 1}`,
+          ProgramId: program,
+          PatientId: newPatient.id
+        }, { transaction });
+      })
+    );
 
     // 3. Créer et associer les caregivers
     const createdCaregivers = await Promise.all(caregivers.map(caregiverData =>
       Caregiver.create(caregiverData, { transaction })
     ));
 
-    // 4. Créer les associations Patient_Caregiver
-    await Promise.all(createdCaregivers.map(caregiver =>
-      Patient_Caregiver.create({
-        date: new Date(),
-        ProgramEnrollementId: programEnrollment.id,
-        CaregiverId: caregiver.id,
-        PatientId: newPatient.id
-      }, { transaction })
-    ));
+    // 4. Création des associations Patient_Caregiver
+    const Patient_Caregivers = await Promise.all(
+      createdCaregivers.map((caregiver, index) => {
+        // Associer chaque caregiver avec le bon ProgramEnrollement correspondant
+        const programEnrollment = programEnrollments[index]; // Associer le caregiver au bon programme
+
+        return Patient_Caregiver.create({
+          date: new Date(),
+          ProgramEnrollementId: programEnrollment.id, // Utilisation du bon ID
+          CaregiverId: caregiver.id,
+          PatientId: newPatient.id
+        }, { transaction });
+      })
+    );
 
     await transaction.commit();
 
+    console.log(newPatient);
+    console.log(programEnrollments);
+    console.log(Patient_Caregivers);
+    console.log(createdCaregivers);
+
     res.status(201).json({
       patient: newPatient,
-      enrollment: programEnrollment,
+      enrollments: programEnrollments,
       caregivers: createdCaregivers
     });
   } catch (error: any) {
@@ -94,9 +121,9 @@ exports.createPatientWithCaregivers = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({ 
+    res.status(error.statusCode).json({
       message: "Error creating patient with caregivers",
-      error: error.message 
+      error: error.message
     });
   }
   return res;
@@ -167,12 +194,12 @@ exports.createPatientWithCaregivers = async (req: any, res: any, next: any) => {
 
 //     // Valider la transaction
 //     await transaction.commit();
-    
+
 //     res.status(201).json(newProgramEnrollement);
 //   } catch (error: any) {
 //     // Annuler la transaction en cas d'erreur
 //     await transaction.rollback();
-    
+
 //     if (!error.statusCode) {
 //       error.statusCode = 500;
 //     }
