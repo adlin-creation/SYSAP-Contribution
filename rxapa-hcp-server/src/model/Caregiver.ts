@@ -38,3 +38,6 @@ export const Caregiver = sequelize.define("Caregiver", {
     defaultValue: true,
   },
 });
+
+
+

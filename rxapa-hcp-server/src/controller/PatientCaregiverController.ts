@@ -5,6 +5,7 @@ import { Patient_Caregiver } from "../model/Patient_Caregiver";
  */
 exports.createPatientCaregiver = async (req: any, res: any, next: any) => {
   const { date, ProgramEnrollementId, CaregiverId, PatientId } = req.body;
+  console.log(req);
   try {
     const programCaregivers = await Patient_Caregiver.findAll({ where: { ProgramEnrollementId } });
     if (programCaregivers.length >= 2) {
