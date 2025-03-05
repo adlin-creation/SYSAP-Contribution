@@ -3,6 +3,7 @@ import { Evaluation } from "../model/Evaluation";
 import { Evaluation_PACE } from "../model/Evaluation_PACE";
 import { sequelize } from "../util/database";
 import { Patient } from "../model/Patient";
+import { Program } from "../model/Program";
 import { Op } from "sequelize";
 
 exports.createEvaluation = async (req: any, res: any, next: any) => {
@@ -24,12 +25,19 @@ exports.createEvaluation = async (req: any, res: any, next: any) => {
 
   const t = await sequelize.transaction();
 
+  const program = await Program.findOne({
+    where: { 
+      name: scores.program
+    },
+    transaction: t
+  });
+
   try {
     const evaluation = await Evaluation.create(
       {
         idPatient: idPatient,
         //idKinesiologist,
-        //idResultProgram: scores.programme,
+        idResultProgram: program?.id || null
       },
       { transaction: t }
     );

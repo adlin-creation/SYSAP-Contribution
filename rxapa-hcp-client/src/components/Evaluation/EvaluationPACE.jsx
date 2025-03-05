@@ -192,7 +192,8 @@ function EvaluationPACE({ onSubmit }) {
         cardioMusculaire: calculateChairTestScore(),
         equilibre: calculateBalanceScore(),
         mobilite: calculateMobilityScore(),
-        total: calculateChairTestScore() + calculateBalanceScore() + calculateMobilityScore()
+        total: calculateChairTestScore() + calculateBalanceScore() + calculateMobilityScore(),
+        program: determineColor() + " " + determineLevel()
       }
     };
   
