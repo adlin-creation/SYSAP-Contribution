@@ -9,6 +9,7 @@ import en_cahier from '../locales/en/CahierDeSuivi.json';
 import en_config from '../locales/en/Configuration.json';
 import en_programme from '../locales/en/Programme.json';
 import en_progression from '../locales/en/Progression.json';
+import en_seance from '../locales/en/Seance.json';
 
 import fr_home from '../locales/fr/Home.json'
 import fr_index from '../locales/fr/Index.json'
@@ -17,6 +18,7 @@ import fr_cahier from '../locales/fr/CahierDeSuivi.json';
 import fr_config from '../locales/fr/Configuration.json';
 import fr_programme from '../locales/fr/Programme.json';
 import fr_progression from '../locales/fr/Progression.json';
+import fr_seance from '../locales/fr/Seance.json';
 
 const locales = RNLocalize.getLocales();
 const defaultLang = locales[0]?.languageCode || 'fr';
@@ -33,6 +35,7 @@ i18n
             Config: en_config,
             Programme: en_programme,
             Progression: en_progression,
+            Seance: en_seance
         },
 
         fr: {
@@ -42,7 +45,8 @@ i18n
             Cahier: fr_cahier,
             Config: fr_config,
             Programme: fr_programme,
-            Progression: fr_progression
+            Progression: fr_progression,
+            Seance: fr_seance
         },
     },
     lng: defaultLang,
@@ -53,7 +57,8 @@ i18n
         "Layout",
         "Cahier",
         "Programme",
-        "Progression"
+        "Progression",
+        "Seance"
     ],
     defaultNS: "Home",
     interpolation: { escapeValue: false },
