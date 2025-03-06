@@ -105,3 +105,10 @@ dist
 .tern-port
 
 .DS_Store
+
+.idea/
+
+# Client test
+/rxapa-hcp-client/src/components/ProfessionalUser/Doctor/__snapshots__
+/rxapa-hcp-client/src/components/ProfessionalUser/Kinesiologist/__snapshots__
+/rxapa-hcp-server/.env
