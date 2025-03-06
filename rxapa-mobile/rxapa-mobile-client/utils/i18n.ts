@@ -20,7 +20,13 @@ import fr_programme from '../locales/fr/Programme.json';
 import fr_progression from '../locales/fr/Progression.json';
 import fr_seance from '../locales/fr/Seance.json';
 
-const locales = RNLocalize.getLocales();
+let locales = [];
+try {
+    locales = RNLocalize.getLocales();
+} catch (error) {
+    console.error('Error fetching locales:', error);
+    locales = [{ languageCode: 'fr' }];
+}
 const defaultLang = locales[0]?.languageCode || 'fr';
 
 i18n
