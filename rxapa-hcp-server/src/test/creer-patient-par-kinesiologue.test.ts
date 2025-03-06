@@ -11,6 +11,10 @@ jest.mock("../model/Patient");
 jest.mock("../model/Caregiver");
 jest.mock("../model/ProgramEnrollement");
 jest.mock("../model/Patient_Caregiver");
+jest.mock("../util/unikpass", () => ({
+  sendEmail: jest.fn(),
+  generateCode: jest.fn(() => "123456"),
+}));
 
 // Mock de sequelize.transaction
 (sequelize.transaction as jest.Mock) = jest.fn(() => ({
