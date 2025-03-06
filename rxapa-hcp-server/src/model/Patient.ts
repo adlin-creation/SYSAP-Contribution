@@ -40,7 +40,7 @@ export const Patient = sequelize.define("Patient", {
     allowNull: true,
   },
   status: {
-    type: dataTypes.ENUM('active', 'paused', 'waiting', 'completed', 'abort'),
+    type: dataTypes.ENUM("active", "paused", "waiting", "completed", "abort"),
     allowNull: false,
   },
   numberOfPrograms: {
@@ -58,14 +58,11 @@ export const Patient = sequelize.define("Patient", {
     allowNull: true, // Optionnel
   },
   weightUnit: {
-    type: dataTypes.ENUM('kg', 'lbs'),
+    type: dataTypes.ENUM("kg", "lbs"),
     allowNull: true, // Optionnel
   },
   unikPassHashed: {
-    type: dataTypes.INTEGER,
+    type: dataTypes.STRING,
     allowNull: true,
   },
-
 });
-
-
