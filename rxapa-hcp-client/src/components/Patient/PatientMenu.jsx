@@ -90,14 +90,19 @@ export default function PatientMenu({ role }) {
       key: "actions",
       render: (_, record) => (
         <Space size="middle">
-          <Button type="link" onClick={() => handleEdit(record)}
-            style={{ display: role === 'admin' ? 'none' : 'inline-block' }}
-            >
+          <Button
+            type="link"
+            onClick={() => handleEdit(record)}
+            style={{ display: role === "admin" ? "none" : "inline-block" }}
+          >
             <EditOutlined /> {t("Patients:edit_button")}
           </Button>
-          <Button type="link" danger onClick={() => handleDelete(record)}
-            style={{ display: role === 'admin' ? 'none' : 'inline-block' }}
-            >
+          <Button
+            type="link"
+            danger
+            onClick={() => handleDelete(record)}
+            style={{ display: role === "admin" ? "none" : "inline-block" }}
+          >
             <DeleteOutlined /> {t("Patients:delete_button")}
           </Button>
         </Space>
@@ -183,7 +188,7 @@ export default function PatientMenu({ role }) {
               type="primary"
               icon={<PlusOutlined />}
               onClick={() => setIsCreatePatient(true)}
-              style={{ display: role === 'admin' ? 'none' : 'inline-block' }}
+              style={{ display: role === "admin" ? "none" : "inline-block" }}
             >
               {t("Patients:register_patient")}
             </Button>
@@ -225,4 +230,3 @@ export default function PatientMenu({ role }) {
     </div>
   );
 }
-

@@ -46,7 +46,6 @@ import {
 } from "@ant-design/icons";
 import "antd/dist/reset.css";
 import "./App.css";
-
 const { Header, Sider, Content } = Layout;
 
 function App() {
@@ -56,72 +55,77 @@ function App() {
   const { token, setToken } = useToken(); // Utilisation du hook personnalisé pour gérer le token
   const [selectedKey, setSelectedKey] = useState(location.pathname);
   const [role, setRole] = useState("");
+  const [menuItems, setMenuItems] = useState([]);
 
-  const menuItems = [
-    {
-      key: "/",
-      icon: <HomeOutlined />,
-      label: <Link to="/">{t("App:dashboard")}</Link>,
-    },
-    {
-      key: "/exercises",
-      icon: <AppstoreOutlined />,
-      label: <Link to="/exercises">{t("App:exercises")}</Link>,
-    },
-    {
-      key: "/blocs",
-      icon: <BlockOutlined />,
-      label: <Link to="/blocs">{t("App:blocs")}</Link>,
-    },
-    {
-      key: "/sessions",
-      icon: <CalendarOutlined />,
-      label: <Link to="/sessions">{t("App:sessions")}</Link>,
-    },
-    {
-      key: "/cycles",
-      icon: <ClusterOutlined />,
-      label: <Link to="/cycles">{t("App:cycles")}</Link>,
-    },
-    {
-      key: "/phases",
-      icon: <PartitionOutlined />,
-      label: <Link to="/phases">{t("App:phases")}</Link>,
-    },
-    {
-      key: "/programs",
-      icon: <SettingOutlined />,
-      label: <Link to="/programs">{t("App:programs")}</Link>,
-    },
-    {
-      key: "/patients",
-      icon: <UserOutlined />,
-      label: <Link to="/patients">{t("App:patients")}</Link>,
-    },
-    {
-      key: "healthcare-professional",
-      icon: <UsergroupAddOutlined />,
-      label: t("App:professionals"),
-      children: [
-        {
-          key: "/doctors",
-          icon: <MedicineBoxOutlined />,
-          label: <Link to="/doctors">{t("App:physicians")}</Link>,
-        },
-        {
-          key: "/kinesiologists",
-          icon: <HeartOutlined />,
-          label: <Link to="/kinesiologists">{t("App:kinesiologists")}</Link>,
-        },
-        {
-          key: "/admins",
-          icon: <UserOutlined />,
-          label: <Link to="/admins">{t("App:admins")}</Link>,
-        },
-      ],
-    },
-    // Ajoutez d'autres éléments de menu si nécessaire
-  ];
+  useEffect(() => {
+    const newMenuItems = [
+      {
+        key: "/",
+        icon: <HomeOutlined />,
+        label: <Link to="/">{t("App:dashboard")}</Link>,
+      },
+      {
+        key: "/exercises",
+        icon: <AppstoreOutlined />,
+        label: <Link to="/exercises">{t("App:exercises")}</Link>,
+      },
+      {
+        key: "/blocs",
+        icon: <BlockOutlined />,
+        label: <Link to="/blocs">{t("App:blocs")}</Link>,
+      },
+      {
+        key: "/sessions",
+        icon: <CalendarOutlined />,
+        label: <Link to="/sessions">{t("App:sessions")}</Link>,
+      },
+      {
+        key: "/cycles",
+        icon: <ClusterOutlined />,
+        label: <Link to="/cycles">{t("App:cycles")}</Link>,
+      },
+      {
+        key: "/phases",
+        icon: <PartitionOutlined />,
+        label: <Link to="/phases">{t("App:phases")}</Link>,
+      },
+      {
+        key: "/programs",
+        icon: <SettingOutlined />,
+        label: <Link to="/programs">{t("App:programs")}</Link>,
+      },
+      {
+        key: "/patients",
+        icon: <UserOutlined />,
+        label: <Link to="/patients">{t("App:patients")}</Link>,
+      },
+      {
+        key: "healthcare-professional",
+        icon: <UsergroupAddOutlined />,
+        label: t("App:professionals"),
+        children: [
+          {
+            key: "/doctors",
+            icon: <MedicineBoxOutlined />,
+            label: <Link to="/doctors">{t("App:physicians")}</Link>,
+          },
+          {
+            key: "/kinesiologists",
+            icon: <HeartOutlined />,
+            label: <Link to="/kinesiologists">{t("App:kinesiologists")}</Link>,
+          },
+          {
+            key: "/admins",
+            icon: <UserOutlined />,
+            label: <Link to="/admins">{t("App:admins")}</Link>,
+          },
+        ],
+      },
+    ];
+
+    setMenuItems(newMenuItems);
+    setFilteredMenuItems(newMenuItems);
+  }, [i18n.language, t]);
 
   const [filteredMenuItems, setFilteredMenuItems] = useState(menuItems);
 
@@ -154,7 +158,7 @@ function App() {
       };
       setFilteredMenuItems(filterMenuItems(menuItems));
     }
-  }, [location.state]);
+  }, [location.state, menuItems]);
 
   const handleLogout = async () => {
     try {
