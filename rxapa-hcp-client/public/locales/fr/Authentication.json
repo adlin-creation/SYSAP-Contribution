@@ -1,0 +1,9 @@
+{
+  "login_title": "Connexion",
+  "email_title": "Entrez votre adresse courriel",
+  "email_placeholder": "Votre adresse courriel",
+  "password_title": "Votre mot de passe",
+  "password_placeholder": "Votre mot de passe",
+  "login_button": "CONNEXION",
+  "register_button": "S'inscrire"
+}

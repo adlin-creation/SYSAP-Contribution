@@ -1,11 +1,12 @@
 import React from "react";
-import PropTypes from "prop-types"; // Linting 
-import { Input, Button, Col, Form } from "antd";
+import PropTypes from "prop-types"; // Linting
+import { Input, Button, Row, Col, Form } from "antd";
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
 import { ArrowLeftOutlined, CheckOutlined } from "@ant-design/icons";
 import Constants from "../Utils/Constants";
 import "./Auth.css";
+import LanguageSwitcher from "../LanguageSwitcher/LanguageSwitcher";
 
 export default function Signup({ setIsSignup }) {
   const { handleSubmit, control } = useForm();
@@ -103,11 +104,7 @@ export default function Signup({ setIsSignup }) {
             </div>
 
             <div className="input-element">
-              <Button
-                type="primary"
-                htmlType="submit"
-                icon={<CheckOutlined />}
-              >
+              <Button type="primary" htmlType="submit" icon={<CheckOutlined />}>
                 SIGNUP
               </Button>
             </div>

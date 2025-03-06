@@ -9,6 +9,7 @@ import Signup from "./Signup";
 import "./Auth.css";
 import PropTypes from "prop-types";
 import LanguageSwitcher from "../LanguageSwitcher/LanguageSwitcher";
+import { useTranslation } from "react-i18next";
 
 export default function Login({ setToken }) {
   const [isSignup, setIsSignup] = useState(false);
@@ -18,7 +19,7 @@ export default function Login({ setToken }) {
   const navigate = useNavigate();
 
   const { handleSubmit, control } = useForm();
-
+  const { t } = useTranslation();
   function register() {
     setIsSignup(true);
   }
@@ -61,18 +62,18 @@ export default function Login({ setToken }) {
             {/* Juste un espace vide pour centrer Login et mettre à gauche l'icone de langue*/}
             <Col span={8}></Col>{" "}
             <Col span={8} style={{ textAlign: "center" }}>
-              <h2>Login</h2>
+              <h2>{t("Authentication:login_title")}</h2>
             </Col>
-            <Col span={8} style={{ textAlign: "left" }}>
+            <Col span={8} style={{ textAlign: "center" }}>
               <LanguageSwitcher
-                iconStyle={{ color: "rgb(0, 0, 0)" }}
+                iconStyle={{ color: "#3b0062" }}
                 iconClassName="login-language-icon"
               />
             </Col>
           </Row>
           <Form onFinish={handleSubmit(onSubmit)}>
             <div className="input-element">
-              <h5>Enter your email</h5>
+              <h5>{t("Authentication:email_title")}</h5>
               <Controller
                 name={"email"}
                 control={control}
@@ -80,7 +81,7 @@ export default function Login({ setToken }) {
                   <Input
                     onChange={onChange}
                     value={value}
-                    placeholder="Your email"
+                    placeholder={t("Authentication:email_placeholder")}
                     type="email"
                     required
                   />
@@ -89,7 +90,7 @@ export default function Login({ setToken }) {
             </div>
 
             <div className="input-element">
-              <h5>Your password</h5>
+              <h5>{t("Authentication:password_title")}</h5>
               <Controller
                 name={"password"}
                 control={control}
@@ -97,7 +98,7 @@ export default function Login({ setToken }) {
                   <Input.Password
                     onChange={onChange}
                     value={value}
-                    placeholder="Your password"
+                    placeholder={t("Authentication:password_placeholder")}
                     required
                   />
                 )}
@@ -110,11 +111,11 @@ export default function Login({ setToken }) {
                 htmlType="submit"
                 icon={<CheckOutlined />} // Utilisation de l'icône de antd
               >
-                LOGIN
+                {t("Authentication:login_button")}
               </Button>
 
               <Button type="link" onClick={register}>
-                Register
+                {t("Authentication:register_button")}
               </Button>
             </div>
           </Form>

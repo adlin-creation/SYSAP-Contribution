@@ -1,0 +1,9 @@
+{
+  "login_title": "Login",
+  "email_title": "Enter your email",
+  "email_placeholder": "Your email",
+  "password_title": "Your password",
+  "password_placeholder": "Your password",
+  "login_button": "LOGIN",
+  "register_button": "Register"
+}

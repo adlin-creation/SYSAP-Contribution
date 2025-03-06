@@ -1,0 +1,9 @@
+{
+  "login_title": "تسجيل الدخول",
+  "email_title": "أدخل بريدك الإلكتروني",
+  "email_placeholder": "بريدك الإلكتروني",
+  "password_title": "كلمة المرور",
+  "password_placeholder": "كلمة المرور",
+  "login_button": "تسجيل الدخول",
+  "register_button": "إنشاء حساب"
+}
