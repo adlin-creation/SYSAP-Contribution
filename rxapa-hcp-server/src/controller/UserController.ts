@@ -78,7 +78,8 @@ exports.login = async (req: any, res: any) => {
     if (!user) {
       user = await Professional_User.findOne({ where: { email: email } });
     }
-  // Si toujours non trouvé, renvoyer une erreur
+
+    // Si toujours non trouvé, renvoyer une erreur
     if (!user) {
       return res.status(401).json({ message: "The user doesn't exist" });
     }
@@ -131,6 +132,7 @@ exports.logout = (req: any, res: any) => {
     message: "Successfully logged out",
   });
 };
+
 /**
  * Fonction de hachage du mot de passe avec `scrypt`
  */

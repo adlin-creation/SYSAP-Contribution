@@ -55,6 +55,13 @@ const LanguageSwitcher = () => {
           />{" "}
           Français
         </MenuItem>
+        <MenuItem onClick={() => handleClose("es")}>
+          <Flag
+            code="ES"
+            style={{ width: 26, height: "auto", marginRight: 10 }}
+          />{" "}
+          Espagnol
+        </MenuItem>
       </Menu>
     </>
   );
