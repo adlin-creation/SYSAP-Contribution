@@ -4,7 +4,7 @@ import { Menu, MenuItem, IconButton } from "@mui/material";
 import LanguageIcon from "@mui/icons-material/Language";
 import Flag from "react-world-flags";
 
-const LanguageSwitcher = () => {
+const LanguageSwitcher = ({ iconStyle, iconClassName, ...props }) => {
   const { i18n } = useTranslation();
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -25,9 +25,10 @@ const LanguageSwitcher = () => {
       {/* Icône de langue pour ouvrir le menu */}
       <IconButton
         onClick={handleClick}
-        sx={{ color: "white", marginRight: "1em" }}
+        className="language-switcher-icon"
+        {...props}
       >
-        <LanguageIcon />
+        <LanguageIcon style={iconStyle} className={iconClassName} />
       </IconButton>
 
       {/* Menu déroulant avec les langues */}

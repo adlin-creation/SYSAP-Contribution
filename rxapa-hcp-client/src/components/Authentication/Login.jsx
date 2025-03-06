@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
-import { Button, Col, Modal, Input, Form } from "antd";
+import { Button, Row, Col, Modal, Input, Form } from "antd";
 import { CheckOutlined } from "@ant-design/icons"; // Import de l'icône de antd
 import { useNavigate } from "react-router-dom"; // Import de useNavigate
 import Constants from "../Utils/Constants";
 import Signup from "./Signup";
 import "./Auth.css";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
+import LanguageSwitcher from "../LanguageSwitcher/LanguageSwitcher";
 
 export default function Login({ setToken }) {
   const [isSignup, setIsSignup] = useState(false);
@@ -56,7 +57,19 @@ export default function Login({ setToken }) {
     <div className="auth-container">
       <Col span={9}>
         <div className="auth-form">
-          <h2>Login</h2>
+          <Row justify="space-between" align="middle">
+            {/* Juste un espace vide pour centrer Login et mettre à gauche l'icone de langue*/}
+            <Col span={8}></Col>{" "}
+            <Col span={8} style={{ textAlign: "center" }}>
+              <h2>Login</h2>
+            </Col>
+            <Col span={8} style={{ textAlign: "left" }}>
+              <LanguageSwitcher
+                iconStyle={{ color: "rgb(0, 0, 0)" }}
+                iconClassName="login-language-icon"
+              />
+            </Col>
+          </Row>
           <Form onFinish={handleSubmit(onSubmit)}>
             <div className="input-element">
               <h5>Enter your email</h5>
@@ -115,7 +128,7 @@ export default function Login({ setToken }) {
             </Button>,
           ]}
         >
-          <p style={{ color: isErrorMessage ? 'red' : 'black' }}>{message}</p>
+          <p style={{ color: isErrorMessage ? "red" : "black" }}>{message}</p>
         </Modal>
       </Col>
     </div>

@@ -85,3 +85,10 @@
   margin: 1rem;
   overflow: initial;
 }
+
+.header-languge-switcher .language-switcher-icon {
+  color: white !important;
+  font-size: 1.5rem;
+  margin-right: 1em;
+  cursor: pointer;
+}

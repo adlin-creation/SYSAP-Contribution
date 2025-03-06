@@ -224,7 +224,10 @@ function App() {
         >
           <div></div> {/* Empty div to align items to the right */}
           <div className="header-content">
-            <LanguageSwitcher />
+            <LanguageSwitcher
+              iconStyle={{ color: "white" }}
+              iconClassName="header-language-icon"
+            />
             <Button icon={<SettingOutlined />} className="header-button" />
             <Button icon={<BellOutlined />} className="header-button" />
             <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
