@@ -103,3 +103,6 @@ async function configureDatabase() {
     throw new Error(error);
   }
 }
+
+// Exportation de app pour les tests et autres modules
+export default app;
