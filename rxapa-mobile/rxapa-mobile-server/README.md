@@ -24,12 +24,28 @@ Ce projet est un serveur backend pour l'application mobile RXAPA. Il gère les s
 
 3. Configurez les variables d'environnement en créant un fichier `.env` à la racine du projet :
    ```
-   DB_USER=adminadmin
-   DB_PASSWORD=rootpassword
-   DB_HOST=192.168.100.8
-   DB_PORT=5433
+   DB_USER=
+   DB_PASSWORD=
+   DB_HOST=
+   DB_PORT=
    DB_NAME=rxapa
    ```
+
+## Configuration de la Base de Données
+
+Le fichier `src/database.ts` doit être configuré selon votre environnement :
+
+```typescript
+{
+  user: 'postgres',        // Votre nom d'utilisateur PostgreSQL
+  password: '',           // Votre mot de passe PostgreSQL
+  host: 'localhost',      // L'adresse de votre serveur PostgreSQL
+  database: 'rxapa',      // Le nom de la base de données
+  ssl: false             // Activez SSL si nécessaire
+}
+```
+
+⚠️ Adaptez ces paramètres selon votre configuration PostgreSQL locale ou serveur.
 
 ## Démarrage
 Pour démarrer le serveur, exécutez :
@@ -72,6 +88,3 @@ Pour tester les endpoints avec Postman, utilisez les exemples suivants :
 
 ## Contribution
 Les contributions sont les bienvenues ! Veuillez soumettre une pull request pour toute amélioration ou correction de bug.
-
-## Licence
-Ce projet est sous licence MIT.

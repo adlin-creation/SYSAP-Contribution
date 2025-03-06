@@ -8,6 +8,7 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
+import { useTranslation } from "react-i18next";
 
 export default function ProgramMenu() {
   // tracks the state of two buttons: create a program and edit a program
@@ -22,7 +23,7 @@ export default function ProgramMenu() {
   const [message, setMessage] = useState("");
 
   const { token } = useToken();
-
+  const { t } = useTranslation();
   // selected program to be edited
   const [selectedProgram, setSelectedProgram] = useState(null);
 
@@ -52,10 +53,10 @@ export default function ProgramMenu() {
   /// PROGRAM QUERY VALIDATIONS ///
   /////////////////////////////////////
   if (isProgramLoading) {
-    return <h1>Program Loading...</h1>;
+    return <h1>{t("Programs:loading_program_phases")}</h1>;
   }
   if (isProgramLoadingError) {
-    return <h1>Sorry, an error occurred while loading program</h1>;
+    return <h1>{t("Programs:loading_program_phases_error")}</h1>;
   }
 
   /**
@@ -140,7 +141,7 @@ export default function ProgramMenu() {
             type="primary"
             icon={<PlusOutlined />}
           >
-            Create Program
+            {t("Programs:create_program_button")}
           </Button>
 
           {/* Display existing programs */}
@@ -163,7 +164,11 @@ export default function ProgramMenu() {
 
       {/* Shows the back button if create program button is clicked */}
       {(buttonState.isCreateProgram || buttonState.isEditProgram) && (
-        <Row align="middle" justify="space-between" style={{ marginBottom: '20px' }}>
+        <Row
+          align="middle"
+          justify="space-between"
+          style={{ marginBottom: "20px" }}
+        >
           <Col>
             <Button
               onClick={handleButtonState}
@@ -171,14 +176,14 @@ export default function ProgramMenu() {
               type="primary"
               icon={<ArrowLeftOutlined />}
             >
-              Back
+              {t("Programs:back_button")}
             </Button>
           </Col>
-          <Col flex="auto" style={{ textAlign: 'center' }}>
+          <Col flex="auto" style={{ textAlign: "center" }}>
             <h2 style={{ marginBottom: 0 }}>
-              {buttonState.isCreateProgram 
-                ? "Create a program"
-                : `Edit ${selectedProgram?.name}`}
+              {buttonState.isCreateProgram
+                ? t("Programs:create_program")
+                : t("Programs:edit_title") + " " + `${selectedProgram?.name}`}
             </h2>
           </Col>
           <Col span={4} />
@@ -202,11 +207,11 @@ export default function ProgramMenu() {
           onCancel={closeModal}
           footer={[
             <Button key="close" onClick={closeModal}>
-              Close
+              {t("Programs:close_button")}
             </Button>,
           ]}
         >
-          <p style={{ color: isErrorMessage ? 'red' : 'green' }}>{message}</p>
+          <p style={{ color: isErrorMessage ? "red" : "green" }}>{message}</p>
         </Modal>
       )}
     </div>

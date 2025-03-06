@@ -6,8 +6,10 @@ import axios from "axios";
 import "./ProgramStyles.css";
 import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
+import { useTranslation } from "react-i18next";
 
 export default function CreateProgram(props) {
+  const { t } = useTranslation();
   const { handleSubmit, control } = useForm();
   const { token } = useToken();
 
@@ -52,10 +54,10 @@ export default function CreateProgram(props) {
   }
 
   return (
-    <Row justify="center" align="middle" style={{ minHeight: '50vh' }}>
+    <Row justify="center" align="middle" style={{ minHeight: "50vh" }}>
       <Col span={12}>
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
-          <Form.Item label="Please enter the name of the program : " >
+          <Form.Item label={t("Programs:enter_program_name")}>
             <Controller
               name="name"
               control={control}
@@ -63,14 +65,14 @@ export default function CreateProgram(props) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder="Program Name"
+                  placeholder={t("Programs:program_name_placeholder")}
                   required
                 />
               )}
             />
           </Form.Item>
 
-          <Form.Item label="Please enter the description of the program : " >
+          <Form.Item label={t("Programs:enter_program_description")}>
             <Controller
               name="description"
               control={control}
@@ -78,7 +80,7 @@ export default function CreateProgram(props) {
                 <Input.TextArea
                   onChange={onChange}
                   value={value}
-                  placeholder="Program Description"
+                  placeholder={t("Programs:program_description_placeholder")}
                   rows={4}
                   required
                 />
@@ -86,7 +88,7 @@ export default function CreateProgram(props) {
             />
           </Form.Item>
 
-          <Form.Item label="Please enter the duration of the program : " >
+          <Form.Item label={t("Programs:enter_program_duration")}>
             <Controller
               name="duration"
               control={control}
@@ -94,20 +96,16 @@ export default function CreateProgram(props) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder="Program Duration"
+                  placeholder={t("Programs:program_duration_placeholder")}
                   required
                 />
               )}
             />
           </Form.Item>
 
-          <Form.Item >
-            <Button
-              type="primary"
-              htmlType="submit"
-              icon={<SendOutlined />}
-            >
-              SUBMIT
+          <Form.Item>
+            <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
+              {t("Programs:submit_button")}
             </Button>
           </Form.Item>
         </Form>
@@ -117,11 +115,11 @@ export default function CreateProgram(props) {
             onCancel={closeModal}
             footer={[
               <Button key="close" onClick={closeModal}>
-                Close
+                {t("Programs:close_button")}
               </Button>,
             ]}
           >
-            <p style={{ color: isErrorMessage ? 'red' : 'green' }}>{message}</p>
+            <p style={{ color: isErrorMessage ? "red" : "green" }}>{message}</p>
           </Modal>
         )}
       </Col>

@@ -1,6 +1,21 @@
 import React, { useState } from "react";
-import { PlusOutlined, EditOutlined, DeleteOutlined, ArrowLeftOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Table, Space, Tag, Row, Col, Modal as AntModal, Empty } from "antd";
+import {
+  PlusOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  ArrowLeftOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+import {
+  Button,
+  Table,
+  Space,
+  Tag,
+  Row,
+  Col,
+  Modal as AntModal,
+  Empty,
+} from "antd";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import Constants from "../../Utils/Constants";
@@ -8,69 +23,72 @@ import useToken from "../../Authentication/useToken";
 import CreateKinesiologist from "./CreateKinesiologist";
 import KinesiologistDetails from "./KinesiologistDetails";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export default function KinesiologistMenu() {
+  const { t } = useTranslation();
   const [isCreateKinesiologist, setIsCreateKinesiologist] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedKinesiologist, setSelectedKinesiologist] = useState(null);
-  
+
   const { token } = useToken();
   const navigate = useNavigate();
 
   const kinesiologistUrl = `${Constants.SERVER_URL}/professional-users`;
-  const { data: kinesiologistList, isLoading, error, refetch: refetchKinesiologists } = useQuery(
-    ["kinesiologists"],
-    () => {
-      return axios
-        .get(kinesiologistUrl, {
-          headers: { Authorization: "Bearer " + token }
-        })
-        .then((res) => res.data.filter(user => user.role === 'kinesiologist'));
-    }
-  );
+  const {
+    data: kinesiologistList,
+    isLoading,
+    error,
+    refetch: refetchKinesiologists,
+  } = useQuery(["kinesiologists"], () => {
+    return axios
+      .get(kinesiologistUrl, {
+        headers: { Authorization: "Bearer " + token },
+      })
+      .then((res) => res.data.filter((user) => user.role === "kinesiologist"));
+  });
 
   const columns = [
     {
-      title: 'Name',
-      key: 'name',
+      title: t("Professionals:Kinesiologist:name"),
+      key: "name",
       render: (_, record) => `${record.firstname} ${record.lastname}`,
     },
     {
-      title: 'Email',
-      dataIndex: 'email',
-      key: 'email',
+      title: t("Professionals:Kinesiologist:email"),
+      dataIndex: "email",
+      key: "email",
     },
     {
-      title: 'Phone',
-      dataIndex: 'phoneNumber',
-      key: 'phoneNumber',
+      title: t("Professionals:Kinesiologist:phone"),
+      dataIndex: "phoneNumber",
+      key: "phoneNumber",
     },
     {
-      title: 'Status',
-      key: 'active',
-      dataIndex: 'active',
+      title: t("Professionals:Kinesiologist:status"),
+      key: "active",
+      dataIndex: "active",
       render: (active) => (
-        <Tag color={active ? 'green' : 'red'}>
-          {active ? 'ACTIVE' : 'INACTIVE'}
+        <Tag color={active ? "green" : "red"}>
+          {active
+            ? t("Professionals:Kinesiologist:active_status")
+            : t("Professionals:Kinesiologist:inactive_status")}
         </Tag>
       ),
     },
     {
-      title: 'Actions',
-      key: 'actions',
+      title: t("Professionals:Kinesiologist:actions"),
+      key: "actions",
       render: (_, record) => (
         <Space size="middle">
-          <Button 
-            type="link" 
+          <Button
+            type="link"
             onClick={() => navigate(`/kinesiologist-patients/${record.id}`)}
           >
-            <UserOutlined /> Patients
+            <UserOutlined /> {t("Professionals:Kinesiologist:patients_button")}
           </Button>
           <Button type="link" onClick={() => handleEdit(record)}>
-            <EditOutlined /> Edit
-          </Button>
-          <Button type="link" danger onClick={() => handleDelete(record)}>
-            <DeleteOutlined /> Delete
+            <EditOutlined /> {t("Professionals:Kinesiologist:edit_button")}
           </Button>
         </Space>
       ),
@@ -84,38 +102,48 @@ export default function KinesiologistMenu() {
 
   const handleDelete = (kinesiologist) => {
     AntModal.confirm({
-      title: 'Are you sure you want to delete this kinesiologist?',
+      title: "Are you sure you want to delete this kinesiologist?",
       content: `This will permanently delete ${kinesiologist.firstname} ${kinesiologist.lastname}`,
-      okText: 'Yes',
-      okType: 'danger',
-      cancelText: 'No',
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
       onOk() {
         axios
-          .delete(`${Constants.SERVER_URL}/delete-professional-user/${kinesiologist.id}`, {
-            headers: { Authorization: "Bearer " + token }
-          })
+          .delete(
+            `${Constants.SERVER_URL}/delete-professional-user/${kinesiologist.id}`,
+            {
+              headers: { Authorization: "Bearer " + token },
+            }
+          )
           .then(() => {
             refetchKinesiologists();
             openModal("Kinesiologist successfully deleted", false);
           })
-          .catch((err) => openModal(err.response?.data?.message || "Error deleting kinesiologist", true));
+          .catch((err) =>
+            openModal(
+              err.response?.data?.message || "Error deleting kinesiologist",
+              true
+            )
+          );
       },
     });
   };
 
   const openModal = (message, isError) => {
-    AntModal[isError ? 'error' : 'success']({
+    AntModal[isError ? "error" : "success"]({
       content: message,
-      okText: 'Close',
+      okText: "Close",
       centered: true,
     });
   };
 
   const renderContent = () => {
     if (isCreateKinesiologist) {
-      return <CreateKinesiologist refetchKinesiologists={refetchKinesiologists} />;
+      return (
+        <CreateKinesiologist refetchKinesiologists={refetchKinesiologists} />
+      );
     }
-    
+
     if (isEditMode) {
       return (
         <KinesiologistDetails
@@ -132,7 +160,7 @@ export default function KinesiologistMenu() {
 
     if (error) {
       return (
-        <div style={{ textAlign: 'center', marginTop: '20px' }}>
+        <div style={{ textAlign: "center", marginTop: "20px" }}>
           <h3>Error loading kinesiologists</h3>
           <Button onClick={() => refetchKinesiologists()}>Retry</Button>
         </div>
@@ -141,16 +169,25 @@ export default function KinesiologistMenu() {
 
     return (
       <>
-        <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between' }}>
+        <div
+          style={{
+            marginBottom: 16,
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
           <Button
             type="primary"
             icon={<PlusOutlined />}
             onClick={() => setIsCreateKinesiologist(true)}
           >
-            Register a Kinesiologist
+            {t("Professionals:Kinesiologist:register_kenisiologist_button")}
           </Button>
           {kinesiologistList?.length > 0 && (
-            <span>Total Kinesiologists: {kinesiologistList.length}</span>
+            <span>
+              {t("Professionals:Kinesiologist:total_kinesiologists")}:{" "}
+              {kinesiologistList.length}
+            </span>
           )}
         </div>
 
@@ -160,11 +197,14 @@ export default function KinesiologistMenu() {
           rowKey="id"
           loading={isLoading}
           locale={{
-            emptyText: <Empty description="No kinesiologists found" />
+            emptyText: <Empty description="No kinesiologists found" />,
           }}
           pagination={{
             pageSize: 10,
-            showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} kinesiologists`
+            showTotal: (total, range) =>
+              `${range[0]}-${range[1]} ${t(
+                "Professionals:Kinesiologist:of"
+              )} ${total} ${t("Professionals:Kinesiologist:kinesiologists")}`,
           }}
         />
       </>
@@ -175,7 +215,11 @@ export default function KinesiologistMenu() {
     <div>
       {/* Edit/Create kinesiologist form header */}
       {(isCreateKinesiologist || isEditMode) && (
-        <Row align="middle" justify="space-between" style={{ marginBottom: '20px' }}>
+        <Row
+          align="middle"
+          justify="space-between"
+          style={{ marginBottom: "20px" }}
+        >
           <Col>
             <Button
               onClick={() => {
@@ -186,12 +230,14 @@ export default function KinesiologistMenu() {
               type="primary"
               icon={<ArrowLeftOutlined />}
             >
-              Back
+              {t("Professionals:Kinesiologist:back_button")}
             </Button>
           </Col>
-          <Col flex="auto" style={{ textAlign: 'center' }}>
+          <Col flex="auto" style={{ textAlign: "center" }}>
             <h2 style={{ marginBottom: 0 }}>
-              {isCreateKinesiologist ? 'Register a new kinesiologist' : 'Edit kinesiologist'}
+              {isCreateKinesiologist
+                ? t("Professionals:Kinesiologist:register_new_kinesiologist")
+                : t("Professionals:Kinesiologist:edit_kinesiologist")}
             </h2>
           </Col>
           <Col span={4} />

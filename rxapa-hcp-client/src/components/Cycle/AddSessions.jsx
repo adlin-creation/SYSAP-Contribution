@@ -10,6 +10,7 @@ import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import useToken from "../Authentication/useToken";
 import Modal from "../Modal/Modal";
+import { useTranslation } from "react-i18next";
 
 let sessionNames = [];
 
@@ -24,6 +25,7 @@ export default function AddSessions({
   cycle,
   allSessions,
 }) {
+  const { t } = useTranslation();
   const [selectedSessionNames, setSelectedSessionNames] = useState({
     sessionName1: "",
     sessionName2: "",

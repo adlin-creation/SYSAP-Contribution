@@ -15,6 +15,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient'; 
 import AuthService from '../services/authService';
+import { useTranslation } from 'react-i18next';
+import '../utils/i18n';
 
 export default function IndexScreen() {
   const [code, setCode] = useState('');
@@ -23,10 +25,12 @@ export default function IndexScreen() {
   const [showModal, setShowModal] = useState(false); // État pour afficher ou cacher la boîte modale
   const router = useRouter();
 
+  const { t, i18n } = useTranslation();
+
   const handleSubmit = async () => {
     setErrorMessage(null); // Réinitialise le message d'erreur
     if (!code.trim()) {
-      setErrorMessage('Veuillez entrer un code.');
+      setErrorMessage(t('Index:entrer_code'));
       return;
     }
 
@@ -45,7 +49,7 @@ export default function IndexScreen() {
         // Navigate to HomeScreen
         router.push('/home');
       } else {
-        setErrorMessage('Le code saisi est incorrect. Veuillez réessayer.');
+        setErrorMessage(t('Index:erreur_code_incorrect'));
       }
     } catch (error) {
       console.error(error);
@@ -67,11 +71,11 @@ export default function IndexScreen() {
         />
       </View>
       <View style={styles.formContainer}>
-        <Text style={styles.title}>AUTHENTIFICATION</Text>
-        <Text style={styles.subtitle}>Veuillez saisir votre code personnel</Text>
+        <Text style={styles.title}>{t('Index:authentification')}</Text>
+        <Text style={styles.subtitle}>{t('Index:saisir_code_personnel')}</Text>
         <TextInput
           style={styles.input}
-          placeholder="Entrez votre code"
+          placeholder={t('Index:entrer_votre_code')}
           value={code}
           onChangeText={(text) => {
             setCode(text);
@@ -88,7 +92,7 @@ export default function IndexScreen() {
           onPress={handleSubmit}
           disabled={loading}
         >
-          <Text style={styles.buttonText}>CONNEXION</Text>
+          <Text style={styles.buttonText}>{t('Index:connexion')}</Text>
         </TouchableOpacity>
 
         {/* Ajout de l'option pour "Je n'ai pas le code personnel" */}
@@ -96,7 +100,7 @@ export default function IndexScreen() {
           style={styles.noCodeButton}
           onPress={() => setShowModal(true)}
         >
-          <Text style={styles.noCodeText}>Je n'ai pas le code personnel</Text>
+          <Text style={styles.noCodeText}>{t('Index:aucun_code_perso')}</Text>
         </TouchableOpacity>
       </View>
 
@@ -104,21 +108,21 @@ export default function IndexScreen() {
       <Modal visible={showModal} transparent animationType="slide">
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Besoin d'aide ?</Text>
+            <Text style={styles.modalTitle}>{t('Index:question_besoin_aide')}</Text>
             <Text style={styles.modalText}>
-              Si vous n'avez pas le code personnel ou si vous l'avez oublié, veuillez contacter :
+              {t('Index:contact_aide_code')}
             </Text>
             <Text style={styles.modalText}>
-              - Le département TI : <Text style={styles.highlight}>TEST@ssss.gouv.qc.ca</Text>
+              - {t('Index:contact_it')} <Text style={styles.highlight}>TEST@ssss.gouv.qc.ca</Text>
             </Text>
             <Text style={styles.modalText}>
-              - Votre kinésiologue pour obtenir un code valide.
+              - {t('Index:contact_kine')}
             </Text>
             <TouchableOpacity
               style={styles.closeButton}
               onPress={() => setShowModal(false)}
             >
-              <Text style={styles.closeButtonText}>Fermer</Text>
+              <Text style={styles.closeButtonText}>{t("index:fermer")}</Text>
             </TouchableOpacity>
           </View>
         </View>

@@ -74,11 +74,10 @@ exports.login = async (req: any, res: any) => {
     // Vérifier si l'utilisateur existe dans la table `User`
     user = await User.findOne({ where: { email: email } });
 
-    // Si non trouvé dans `User`, chercher dans `Professional_User`
+    // Si l'utilisateur n'est pas trouvé, vérifier dans ProfessionalUser
     if (!user) {
       user = await Professional_User.findOne({ where: { email: email } });
     }
-
     // Si toujours non trouvé, renvoyer une erreur
     if (!user) {
       return res.status(401).json({ message: "The user doesn't exist" });
@@ -87,6 +86,7 @@ exports.login = async (req: any, res: any) => {
     if (!error.statusCode) {
       error.statusCode = 401;
     }
+
     return res
       .status(error.statusCode)
       .json({ message: "Failed to authenticate the user" }); // Erreur de connexion
@@ -107,7 +107,7 @@ exports.login = async (req: any, res: any) => {
     {
       email: user.email, // Ajout de l'email au token
       key: user.key, // Ajout de l'ID utilisateur au token
-      role: user.role || "user", // Ajout du rôle au token (par défaut "user")
+      role: user.role || "SuperAdmin", // Ajouter le rôle si disponible --- role: user.role || "user", // Ajout du rôle au token (par défaut "user")
     },
     `${process.env.TOKEN_SECRET_KEY}`, // Utilisation d'une clé secrète stockée dans les variables d'environnement
     { expiresIn: "2h" } // Expiration du token en 2 heures
@@ -116,7 +116,7 @@ exports.login = async (req: any, res: any) => {
   return res.status(200).json({
     token: token, // Envoi du token au frontend
     userId: user.key, // Envoi de l'ID utilisateur
-    role: user.role || "user", // Envoi du rôle utilisateur
+    role: user.role || "SuperAdmin", // role: user.role || "user", // Envoi du rôle utilisateur
     message: "Successfully logged in",
   });
 };

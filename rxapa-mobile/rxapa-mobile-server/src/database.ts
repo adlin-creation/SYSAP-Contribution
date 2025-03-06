@@ -6,11 +6,11 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export const dbClient = new Client({
-  user: 'adminadmin',
-  password: 'rootpassword',
+  user: 'postgres',
+  password: '',
   //host: '10.10.10.141',192.168.0.48,10.61.0.197
-  host: '192.168.0.80',
-  port: 5433,
+  // host: '192.168.0.80',
+  // port: 5433,
   database: 'rxapa', // Nouvelle base de données
   ssl: false
 });
