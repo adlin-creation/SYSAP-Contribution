@@ -7,10 +7,11 @@ import { ArrowLeftOutlined, CheckOutlined } from "@ant-design/icons";
 import Constants from "../Utils/Constants";
 import "./Auth.css";
 import LanguageSwitcher from "../LanguageSwitcher/LanguageSwitcher";
+import { useTranslation } from "react-i18next";
 
 export default function Signup({ setIsSignup }) {
   const { handleSubmit, control } = useForm();
-
+  const { t } = useTranslation();
   const onSubmit = (data) => {
     axios
       .post(`${Constants.SERVER_URL}/signup`, data)
@@ -30,16 +31,25 @@ export default function Signup({ setIsSignup }) {
     <div className="auth-container">
       <Col span={9}>
         <div className="auth-form">
+          <Row>
+            <Col span={16}></Col>
+            <Col span={8} style={{ textAlign: "right" }}>
+              <LanguageSwitcher
+                iconStyle={{ color: "#3b0062" }}
+                iconClassName="login-language-icon"
+              />
+            </Col>
+          </Row>
           <Button
             onClick={backToLogin}
             type="primary"
             icon={<ArrowLeftOutlined />}
           >
-            Back
+            {t("Authentication:back_button")}
           </Button>
           <Form onFinish={handleSubmit(onSubmit)}>
             <div className="input-element">
-              <h5>Enter your name</h5>
+              <h5> {t("Authentication:name_title")}</h5>
               <Controller
                 name={"name"}
                 control={control}
@@ -47,7 +57,7 @@ export default function Signup({ setIsSignup }) {
                   <Input
                     onChange={onChange}
                     value={value}
-                    placeholder="Your name"
+                    placeholder={t("Authentication:name_placeholder")}
                     required
                   />
                 )}
@@ -55,7 +65,7 @@ export default function Signup({ setIsSignup }) {
             </div>
 
             <div className="input-element">
-              <h5>Enter your email</h5>
+              <h5> {t("Authentication:email_title")}</h5>
               <Controller
                 name={"email"}
                 control={control}
@@ -63,7 +73,7 @@ export default function Signup({ setIsSignup }) {
                   <Input
                     onChange={onChange}
                     value={value}
-                    placeholder="Your email"
+                    placeholder={t("Authentication:email_placeholder")}
                     type="email"
                     required
                   />
@@ -72,7 +82,7 @@ export default function Signup({ setIsSignup }) {
             </div>
 
             <div className="input-element">
-              <h5>Your password</h5>
+              <h5> {t("Authentication:password_title")}</h5>
               <Controller
                 name={"password"}
                 control={control}
@@ -80,7 +90,7 @@ export default function Signup({ setIsSignup }) {
                   <Input.Password
                     onChange={onChange}
                     value={value}
-                    placeholder="Your password"
+                    placeholder={t("Authentication:password_placeholder")}
                     required
                   />
                 )}
@@ -88,7 +98,7 @@ export default function Signup({ setIsSignup }) {
             </div>
 
             <div className="input-element">
-              <h5>Confirm password</h5>
+              <h5> {t("Authentication:confirm_password_title")}</h5>
               <Controller
                 name={"confirmPassword"}
                 control={control}
@@ -96,7 +106,9 @@ export default function Signup({ setIsSignup }) {
                   <Input.Password
                     onChange={onChange}
                     value={value}
-                    placeholder="Confirm your password"
+                    placeholder={t(
+                      "Authentication:confirm_password_placeholder"
+                    )}
                     required
                   />
                 )}
@@ -105,7 +117,7 @@ export default function Signup({ setIsSignup }) {
 
             <div className="input-element">
               <Button type="primary" htmlType="submit" icon={<CheckOutlined />}>
-                SIGNUP
+                {t("Authentication:signup_button")}
               </Button>
             </div>
           </Form>

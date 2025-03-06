@@ -5,5 +5,11 @@
   "password_title": "Your password",
   "password_placeholder": "Your password",
   "login_button": "LOGIN",
-  "register_button": "Register"
+  "register_button": "Register",
+  "signup_button": "SIGNUP",
+  "back_button": "Back",
+  "name_title": "Enter your name",
+  "name_placeholder": "Your name",
+  "confirm_password_title": "Confirm password",
+  "confirm_password_placeholder": "Confirm your password"
 }
