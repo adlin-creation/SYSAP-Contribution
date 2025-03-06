@@ -1,6 +1,6 @@
 {
   "change_language": "Cambiar idioma",
-  "dashboard": "Tablero",
+  "dashboard": "Panel de control",
   "exercises": "Ejercicios",
   "blocs": "Bloques",
   "sessions": "Sesiones",
@@ -9,8 +9,8 @@
   "programs": "Programas",
   "patients": "Pacientes",
   "professionals": "Profesionales",
-  "doctors": "Doctores",
-  "kinesiologists": "Kinesiólogos",
+  "doctors": "Médicos",
+  "kinesiologists": "Fisioterapeutas",
   "admins": "Administradores",
   "profile": "Perfil",
   "settings": "Configuración",

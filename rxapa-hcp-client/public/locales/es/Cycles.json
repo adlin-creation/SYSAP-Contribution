@@ -1,18 +1,18 @@
 {
   "create_cycle_button": "Crear ciclo",
-  "enter_cycle_name": "Por favor, ingrese el nombre del ciclo : ",
-  "update_cycle_name": "Ingrese otro nombre para actualizar el nombre del ciclo",
-  "enter_cycle_description": "Por favor, ingrese la descripción du cycle : ",
-  "update_cycle_description": "Ingrese otro valor para editar la descripción",
+  "enter_cycle_name": "Por favor, introduzca el nombre del ciclo : ",
+  "update_cycle_name": "Introduzca otro nombre para actualizar el nombre del ciclo",
+  "enter_cycle_description": "Por favor, introduzca la descripción del ciclo : ",
+  "update_cycle_description": "Introduzca otro valor para editar la descripción",
   "create_new_cycle": "Crear un nuevo ciclo",
   "select_session": "Seleccionar una sesión",
   "weekly_cycle_name_placeholder": "Nombre del ciclo semanal",
-  "cycle_description_label": "Por favor, ingrese la descripción del ciclo : ",
+  "cycle_description_label": "Por favor, introduzca la descripción del ciclo : ",
   "weekly_cycle_description_placeholder": "Descripción del ciclo semanal",
   "sessions_loading_title": "Cargando todas las sesiones...",
-  "sessions_loading_error_message": "Lo sentimos, ocurrió un error al cargar las sesiones",
+  "sessions_loading_error_message": "Lo sentimos, se ha producido un error al cargar las sesiones",
   "cycle_sessions_loading_title": "Cargando sesiones del ciclo...",
-  "cycle_sessions_loading_error_msg": "Lo sentimos, ocurrió un error al cargar las sesiones del ciclo",
+  "cycle_sessions_loading_error_msg": "Lo sentimos, se ha producido un error al cargar las sesiones del ciclo",
 
   "back_button": "Atrás",
   "close_button": "Cerrar",
@@ -20,5 +20,5 @@
   "edit_button": "Editar",
   "delete_button": "Eliminar",
   "update_button": "Actualizar",
-  "add_session_button": "Agregar sesión"
+  "add_session_button": "Añadir sesión"
 }
