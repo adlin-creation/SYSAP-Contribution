@@ -70,11 +70,9 @@ export const createPatientWithCaregivers = async (
       caregiver.programStart, // Date de début
       caregiver.programEnd, // Date de fin
     ]);
-    console.log(caregiverTriplets);
 
     const programs = caregivers.map((caregiver) => caregiver.program);
     const numberOfPrograms = new Set(programs).size;
-    console.log(numberOfPrograms);
 
     // 1. Créer le patient avec status "waiting"
 
@@ -163,10 +161,10 @@ export const createPatientWithCaregivers = async (
 
     await transaction.commit();
 
-    console.log(newPatient);
-    console.log(programEnrollments);
-    console.log(Patient_Caregivers);
-    console.log(createdCaregivers);
+    // console.log(newPatient);
+    // console.log(programEnrollments);
+    // console.log(Patient_Caregivers);
+    // console.log(createdCaregivers);
 
     res.status(201).json({
       patient: newPatient,
