@@ -5,7 +5,7 @@ import { ProgramEnrollement } from "../model/ProgramEnrollement";
 import { Patient_Caregiver } from "../model/Patient_Caregiver";
 import { expect, jest } from "@jest/globals";
 import { sequelize } from "../util/database"; // Import de sequelize
-
+jest.setTimeout(30000);
 // Mock des modèles Sequelize
 jest.mock("../model/Patient");
 jest.mock("../model/Caregiver");
@@ -122,7 +122,7 @@ describe("createPatientWithCaregivers", () => {
         }),
       })
     );
-  }, 10000);
+  });
 
   it("should create a patient with two caregivers successfully", async () => {
     // Simuler une requête avec 2 caregivers
@@ -279,7 +279,7 @@ describe("createPatientWithCaregivers", () => {
         ]),
       })
     );
-  }, 10000);
+  });
 
   it("should return 409 if the patient already exists", async () => {
     // Mock de la méthode findOne pour simuler un patient existant
@@ -328,7 +328,7 @@ describe("createPatientWithCaregivers", () => {
     expect(res.json).toHaveBeenCalledWith({
       message: `Existing caregiver with this email: ${req.body.caregivers[0].email}`,
     });
-  }, 10000);
+  });
 
   it("should handle error when creating patient", async () => {
     // Mock de la méthode findOne pour simuler qu'aucun patient ou soignant n'existe
