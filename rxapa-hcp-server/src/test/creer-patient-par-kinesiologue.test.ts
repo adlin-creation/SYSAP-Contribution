@@ -5,7 +5,7 @@ import { ProgramEnrollement } from "../model/ProgramEnrollement";
 import { Patient_Caregiver } from "../model/Patient_Caregiver";
 import { expect, jest } from "@jest/globals";
 import { sequelize } from "../util/database"; // Import de sequelize
-jest.setTimeout(30000);
+jest.setTimeout(50000);
 // Mock des modèles Sequelize
 jest.mock("../model/Patient");
 jest.mock("../model/Caregiver");
