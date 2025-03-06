@@ -3,12 +3,21 @@ import { Patient_Caregiver } from "../model/Patient_Caregiver";
 import { Patient } from "../model/Patient";
 import { Caregiver } from "../model/Caregiver";
 import { sequelize } from "../util/database"; // Ajout de l'import de l'instance sequelize
+import { generateCode, sendEmail } from "../util/unikpass";
+import * as bcrypt from "bcrypt";
 
 /**
  * Creates a new program enrollement.
  */
 exports.createProgramEnrollement = async (req: any, res: any, next: any) => {
-  const { enrollementDate, startDate, endDate, programEnrollementCode, ProgramId, PatientId } = req.body;
+  const {
+    enrollementDate,
+    startDate,
+    endDate,
+    programEnrollementCode,
+    ProgramId,
+    PatientId,
+  } = req.body;
   try {
     const newProgramEnrollement = await ProgramEnrollement.create({
       enrollementDate,
@@ -16,14 +25,16 @@ exports.createProgramEnrollement = async (req: any, res: any, next: any) => {
       endDate,
       programEnrollementCode,
       ProgramId,
-      PatientId
+      PatientId,
     });
     res.status(201).json(newProgramEnrollement);
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({ message: "Error creating program enrollement" });
+    res
+      .status(error.statusCode)
+      .json({ message: "Error creating program enrollement" });
   }
   return res;
 };
@@ -31,77 +42,94 @@ exports.createProgramEnrollement = async (req: any, res: any, next: any) => {
 /**
  * Creates a new patient with caregivers using the "Sans programme" (ID=1) program
  */
-export const createPatientWithCaregivers = async (req: any, res: any, next: any) => {
+export const createPatientWithCaregivers = async (
+  req: any,
+  res: any,
+  next: any
+) => {
   const { patientData, caregivers } = req.body;
   const transaction = await sequelize.transaction();
 
   try {
     // Validation des données patient
     if (!patientData) {
-      throw new Error('Patient data is required');
+      throw new Error("Patient data is required");
     }
 
     // Validation des caregivers
     if (!caregivers || !Array.isArray(caregivers) || caregivers.length === 0) {
-      throw new Error('At least one caregiver is required');
+      throw new Error("At least one caregiver is required");
     }
 
     if (caregivers.length > 2) {
-      throw new Error('Maximum 2 caregivers allowed per patient');
+      throw new Error("Maximum 2 caregivers allowed per patient");
     }
 
-
-    const caregiverTriplets = caregivers.map(caregiver => [
-      caregiver.program,      // Programme
-      caregiver.programStart,    // Date de début
-      caregiver.programEnd       // Date de fin
+    const caregiverTriplets = caregivers.map((caregiver) => [
+      caregiver.program, // Programme
+      caregiver.programStart, // Date de début
+      caregiver.programEnd, // Date de fin
     ]);
     console.log(caregiverTriplets);
 
-    const programs = caregivers.map(caregiver => caregiver.program);
+    const programs = caregivers.map((caregiver) => caregiver.program);
     const numberOfPrograms = new Set(programs).size;
     console.log(numberOfPrograms);
 
-
     // 1. Créer le patient avec status "waiting"
 
-    const existingUser = await Patient.findOne({ where: { email: patientData.email } });
+    const existingUser = await Patient.findOne({
+      where: { email: patientData.email },
+    });
     if (existingUser) {
-      return res.status(409).json({ message: `existing patient with this email: ${patientData.email}` });
+      return res.status(409).json({
+        message: `existing patient with this email: ${patientData.email}`,
+      });
     }
-    const newPatient = await Patient.create({
-      ...patientData,
-      status: "waiting",        // Ajout du status par défaut
-      numberOfPrograms
-    }, { transaction });
+    const newPatient = await Patient.create(
+      {
+        ...patientData,
+        status: "waiting", // Ajout du status par défaut
+        numberOfPrograms,
+      },
+      { transaction }
+    );
 
     // 2. Créer les enregistrements de programme en fonction du nombre de programmes
     const programEnrollments = await Promise.all(
       caregiverTriplets.map(async ([program, startDate, endDate], index) => {
-        return ProgramEnrollement.create({
-          enrollementDate: new Date(),
-          startDate: startDate,
-          endDate: endDate,
-          programEnrollementCode: `P-${newPatient.id}-${index + 1}`,
-          ProgramId: program,
-          PatientId: newPatient.id
-        }, { transaction });
+        return ProgramEnrollement.create(
+          {
+            enrollementDate: new Date(),
+            startDate: startDate,
+            endDate: endDate,
+            programEnrollementCode: `P-${newPatient.id}-${index + 1}`,
+            ProgramId: program,
+            PatientId: newPatient.id,
+          },
+          { transaction }
+        );
       })
     );
 
     // 3. Créer et associer les caregivers
     for (let caregiver of caregivers) {
-      const existingCaregiver = await Caregiver.findOne({ where: { email: caregiver.email } });
+      const existingCaregiver = await Caregiver.findOne({
+        where: { email: caregiver.email },
+      });
       if (existingCaregiver) {
         // Annulation de la transaction et retour d'une erreur
         await transaction.rollback();
-        return res.status(409).json({ message: `Existing caregiver with this email: ${caregiver.email}` });
+        return res.status(409).json({
+          message: `Existing caregiver with this email: ${caregiver.email}`,
+        });
       }
     }
-    const createdCaregivers = await Promise.all(caregivers.map(caregiverData =>
-      Caregiver.create(caregiverData, { transaction })
-    ));
-
+    const createdCaregivers = await Promise.all(
+      caregivers.map((caregiverData) =>
+        Caregiver.create(caregiverData, { transaction })
+      )
+    );
 
     // 4. Création des associations Patient_Caregiver
     const Patient_Caregivers = await Promise.all(
@@ -109,16 +137,37 @@ export const createPatientWithCaregivers = async (req: any, res: any, next: any)
         // Associer chaque caregiver avec le bon ProgramEnrollement correspondant
         const programEnrollment = programEnrollments[index]; // Associer le caregiver au bon programme
 
-        return Patient_Caregiver.create({
-          date: new Date(),
-          ProgramEnrollementId: programEnrollment.id, // Utilisation du bon ID
-          CaregiverId: caregiver.id,
-          PatientId: newPatient.id
-        }, { transaction });
+        return Patient_Caregiver.create(
+          {
+            date: new Date(),
+            ProgramEnrollementId: programEnrollment.id, // Utilisation du bon ID
+            CaregiverId: caregiver.id,
+            PatientId: newPatient.id,
+          },
+          { transaction }
+        );
       })
     );
 
     await transaction.commit();
+
+    for (let caregiver of createdCaregivers) {
+      // Générer un code unique
+      const code = generateCode(6); // Appeler la fonction de génération de code avec 6 caractères
+      // Hacher le code avant de le stocker dans la base de données
+      const unikPassHashed = await bcrypt.hash(code, 10); // Utilisation de bcrypt pour hacher le code
+      await sendEmail(caregiver.email, "Votre code d'accès RXAPA", code);
+      //ajouter le code haché dans la db
+      caregiver.unikPassHashed = unikPassHashed;
+      await caregiver.save();
+    }
+    //générer un code pour le patient
+    const code = generateCode(6); // Appeler la fonction de génération de code avec 6 caractères
+    // Hacher le code avant de le stocker dans la base de données
+    const unikPassHashed = await bcrypt.hash(code, 10);
+    await sendEmail(newPatient.email, "Votre code d'accès RXAPA", code);
+    newPatient.unikPassHashed = unikPassHashed;
+    await newPatient.save();
 
     console.log(newPatient);
     console.log(programEnrollments);
@@ -128,7 +177,7 @@ export const createPatientWithCaregivers = async (req: any, res: any, next: any)
     res.status(201).json({
       patient: newPatient,
       enrollments: programEnrollments,
-      caregivers: createdCaregivers
+      caregivers: createdCaregivers,
     });
   } catch (error: any) {
     await transaction.rollback();
@@ -137,7 +186,7 @@ export const createPatientWithCaregivers = async (req: any, res: any, next: any)
     }
     res.status(error.statusCode).json({
       message: "Error creating patient with caregivers",
-      error: error.message
+      error: error.message,
     });
   }
   return res;
@@ -197,7 +246,7 @@ export const createPatientWithCaregivers = async (req: any, res: any, next: any)
 //     }, { transaction });
 
 //     // Créer les associations Patient_Caregiver avec transaction
-//     await Promise.all(caregivers.map(caregiverId => 
+//     await Promise.all(caregivers.map(caregiverId =>
 //       Patient_Caregiver.create({
 //         date: new Date(),
 //         ProgramEnrollementId: newProgramEnrollement.id,
@@ -217,9 +266,9 @@ export const createPatientWithCaregivers = async (req: any, res: any, next: any)
 //     if (!error.statusCode) {
 //       error.statusCode = 500;
 //     }
-//     res.status(error.statusCode).json({ 
+//     res.status(error.statusCode).json({
 //       message: "Error creating program enrollement with caregivers",
-//       error: error.message 
+//       error: error.message
 //     });
 //   }
 //   return res;
@@ -269,9 +318,9 @@ export const createPatientWithCaregivers = async (req: any, res: any, next: any)
 //     if (!error.statusCode) {
 //       error.statusCode = 500;
 //     }
-//     res.status(error.statusCode).json({ 
+//     res.status(error.statusCode).json({
 //       message: "Error creating complete enrollment",
-//       error: error.message 
+//       error: error.message
 //     });
 //   }
 //   return res;
@@ -282,7 +331,14 @@ export const createPatientWithCaregivers = async (req: any, res: any, next: any)
  */
 exports.updateProgramEnrollement = async (req: any, res: any, next: any) => {
   const enrollementId = req.params.id;
-  const { enrollementDate, startDate, endDate, programEnrollementCode, ProgramId, PatientId } = req.body;
+  const {
+    enrollementDate,
+    startDate,
+    endDate,
+    programEnrollementCode,
+    ProgramId,
+    PatientId,
+  } = req.body;
   try {
     const programEnrollement = await ProgramEnrollement.findByPk(enrollementId);
     if (!programEnrollement) {
@@ -300,7 +356,9 @@ exports.updateProgramEnrollement = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({ message: "Error updating program enrollement" });
+    res
+      .status(error.statusCode)
+      .json({ message: "Error updating program enrollement" });
   }
   return res;
 };
@@ -321,7 +379,9 @@ exports.deleteProgramEnrollement = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({ message: "Error deleting program enrollement" });
+    res
+      .status(error.statusCode)
+      .json({ message: "Error deleting program enrollement" });
   }
   return res;
 };
@@ -341,7 +401,9 @@ exports.getProgramEnrollement = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({ message: "Error loading program enrollement from the database" });
+    res
+      .status(error.statusCode)
+      .json({ message: "Error loading program enrollement from the database" });
   }
   return res;
 };
@@ -357,7 +419,9 @@ exports.getProgramEnrollements = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({ message: "Error loading program enrollements from the database" });
+    res.status(error.statusCode).json({
+      message: "Error loading program enrollements from the database",
+    });
   }
   return res;
 };

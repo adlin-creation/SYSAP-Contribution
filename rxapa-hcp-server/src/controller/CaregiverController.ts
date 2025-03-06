@@ -2,7 +2,6 @@ import { Caregiver } from "../model/Caregiver";
 import { Patient_Caregiver } from "../model/Patient_Caregiver";
 import { ProgramEnrollement } from "../model/ProgramEnrollement";
 import { Patient } from "../model/Patient";
-import { sendEmail, generateCode } from "../util/unikpass";
 import * as bcrypt from "bcrypt";
 
 /**
@@ -10,12 +9,6 @@ import * as bcrypt from "bcrypt";
  */
 exports.createCaregiver = async (req: any, res: any, next: any) => {
   const { firstname, lastname, phoneNumber, email, relationship } = req.body;
-
-  // Générer un code unique
-  const code = generateCode(6); // Appeler la fonction de génération de code avec 6 caractères
-
-  // Hacher le code avant de le stocker dans la base de données
-  const unikPassHashed = await bcrypt.hash(code, 10); // Utilisation de bcrypt pour hacher le code
 
   try {
     const existingUser = await Caregiver.findOne({ where: { email } });
@@ -31,9 +24,7 @@ exports.createCaregiver = async (req: any, res: any, next: any) => {
       phoneNumber,
       email,
       relationship,
-      unikPassHashed,
     });
-    await sendEmail(email, "Votre code d'accès RXAPA", code); // Envoie le code d'accès par e-mail
     res.status(201).json(newCaregiver);
   } catch (error: any) {
     if (!error.statusCode) {
