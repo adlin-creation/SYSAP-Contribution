@@ -86,14 +86,21 @@ export const createPatientWithCaregivers = async (
         message: `existing patient with this email: ${patientData.email}`,
       });
     }
+
+    //générer un code d'accès pour le patient
+    const codePatient = generateCode(6);
+    const unikPassHashed = await bcrypt.hash(codePatient, 10);
+
     const newPatient = await Patient.create(
       {
         ...patientData,
         status: "waiting", // Ajout du status par défaut
         numberOfPrograms,
+        unikPassHashed,
       },
       { transaction }
     );
+    await sendEmail(newPatient.email, "Votre code d'accès RXAPA", codePatient);
 
     // 2. Créer les enregistrements de programme en fonction du nombre de programmes
     const programEnrollments = await Promise.all(
@@ -124,6 +131,11 @@ export const createPatientWithCaregivers = async (
           message: `Existing caregiver with this email: ${caregiver.email}`,
         });
       }
+      //générer et envoyer un code d'accès pour les proches aidants
+      const codeCaregiver = generateCode(6);
+      const unikPassHashed = await bcrypt.hash(codeCaregiver, 10);
+      sendEmail(caregiver.email, "Votre code d'accès RXAPA", codeCaregiver);
+      caregiver.uniqueCode = unikPassHashed;
     }
     const createdCaregivers = await Promise.all(
       caregivers.map((caregiverData) =>
@@ -150,24 +162,6 @@ export const createPatientWithCaregivers = async (
     );
 
     await transaction.commit();
-
-    for (let caregiver of createdCaregivers) {
-      // Générer un code unique
-      const code = generateCode(6); // Appeler la fonction de génération de code avec 6 caractères
-      // Hacher le code avant de le stocker dans la base de données
-      const unikPassHashed = await bcrypt.hash(code, 10); // Utilisation de bcrypt pour hacher le code
-      await sendEmail(caregiver.email, "Votre code d'accès RXAPA", code);
-      //ajouter le code haché dans la db
-      caregiver.unikPassHashed = unikPassHashed;
-      await caregiver.save();
-    }
-    //générer un code pour le patient
-    const code = generateCode(6); // Appeler la fonction de génération de code avec 6 caractères
-    // Hacher le code avant de le stocker dans la base de données
-    const unikPassHashed = await bcrypt.hash(code, 10);
-    await sendEmail(newPatient.email, "Votre code d'accès RXAPA", code);
-    newPatient.unikPassHashed = unikPassHashed;
-    await newPatient.save();
 
     console.log(newPatient);
     console.log(programEnrollments);
