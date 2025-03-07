@@ -1,3 +1,7 @@
+// App.js
+// Exemple d'application React avec un menu latéral. On filtre le menu en fonction
+// du rôle reçu du backend (superadmin, admin, doctor, kinesiologist).
+
 import { useState, useEffect } from "react";
 import {
   Route,
@@ -23,7 +27,7 @@ import DoctorPatients from "./components/ProfessionalUser/Doctor/DoctorPatients"
 import KinesiologistMenu from "./components/ProfessionalUser/Kinesiologist/KinesiologistMenu";
 import KinesiologistPatients from "./components/ProfessionalUser/Kinesiologist/KinesiologistPatients";
 import AdminMenu from "./components/ProfessionalUser/Admin/AdminMenu";
-import useToken from "./components/Authentication/useToken"; // Import du hook personnalisé
+import useToken from "./components/Authentication/useToken";
 import Constants from "./components/Utils/Constants";
 import LanguageSwitcher from "./components/LanguageSwitcher/LanguageSwitcher";
 import { useTranslation } from "react-i18next";
@@ -50,13 +54,20 @@ import "./App.css";
 const { Header, Sider, Content } = Layout;
 
 function App() {
-  const { t } = useTranslation(); // la fonction qu'on doit appliquer a la traduction
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
-  const { token, setToken } = useToken(); // Utilisation du hook personnalisé pour gérer le token
+
+  // Hook qui gère le token (localStorage), etc.
+  const { token, setToken } = useToken();
+
+  // Gère la sélection d'items dans le menu
   const [selectedKey, setSelectedKey] = useState(location.pathname);
+
+  // Rôle actuel (superadmin, admin, doctor, kinesiologist)
   const [role, setRole] = useState("");
 
+  // Structure de menu (non filtrée)
   const menuItems = [
     {
       key: "/",
@@ -120,48 +131,70 @@ function App() {
         },
       ],
     },
-    // Ajoutez d'autres éléments de menu si nécessaire
   ];
 
+  // État pour stocker le menu filtré
   const [filteredMenuItems, setFilteredMenuItems] = useState(menuItems);
 
+  // useEffect qui se déclenche quand on navigue ou quand on récupère le role
   useEffect(() => {
     if (location.state?.role) {
       setRole(location.state.role);
-      const filterMenuItems = (items) => {
+
+      const filterMenuItems = (items, userRole) => {
         return items
           .map((item) => {
-            if (item.children) {
-              return {
-                ...item,
-                children: filterMenuItems(item.children),
-              };
-            }
-            if (location.state.role === "admin" && item.key === "/admins") {
+            // Repérage du sous-menu "Professionnels"
+            if (item.key === "healthcare-professional") {
+              // Si role est "doctor" ou "kinesiologist", on supprime tout le sous-menu
+              if (userRole === "doctor" || userRole === "kinesiologist") {
+                return null;
+              }
+              // Si role est "admin", on supprime juste l'entrée "/admins"
+              if (userRole === "admin") {
+                const newChildren = item.children.filter(
+                  (child) => child.key !== "/admins"
+                );
+                return { ...item, children: newChildren };
+              }
+              // Si role est "superadmin", on ne filtre rien
+              if (userRole === "superadmin") {
+                return item;
+              }
+              // Si autre chose => à toi de décider (on laisse tout par défaut ou on supprime)
               return null;
             }
+            // Sinon on ne touche pas l'item
             return item;
           })
-          .filter((item) => item !== null);
+          .filter((i) => i !== null);
       };
-      setFilteredMenuItems(filterMenuItems(menuItems));
+
+      const newMenu = filterMenuItems(menuItems, location.state.role);
+      setFilteredMenuItems(newMenu);
     }
   }, [location.state]);
 
+  /**
+   * Déconnexion
+   */
   const handleLogout = async () => {
     try {
-      console.log("Attempting to logout...");
-      const response = await axios.post(`${Constants.SERVER_URL}/logout`);
-      console.log("Logout response:", response);
-
+      await axios.post(`${Constants.SERVER_URL}/logout`, null, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setToken(null);
-      console.log("Token after logout:", token);
       navigate("/login");
     } catch (error) {
       console.error("Failed to logout:", error);
     }
   };
 
+  /**
+   * Menu utilisateur (avatar en haut à droite)
+   */
   const userMenuItems = [
     {
       key: "1",
@@ -174,10 +207,13 @@ function App() {
     {
       key: "3",
       label: t("App:logout"),
-      onClick: handleLogout, // Ajoutez cette ligne pour la déconnexion
+      onClick: handleLogout,
     },
   ];
 
+  /**
+   * Si pas de token, on renvoie l'utilisateur vers /login
+   */
   if (!token) {
     return (
       <Content className="content">
@@ -202,7 +238,7 @@ function App() {
       </Sider>
       <Layout className="site-layout">
         <Header className="header site-layout-background">
-          <div></div> {/* Empty div to align items to the right */}
+          <div></div>
           <div className="header-content">
             <LanguageSwitcher />
             <Button icon={<SettingOutlined />} className="header-button" />
@@ -224,15 +260,9 @@ function App() {
             <Route path="cycles" element={<CycleMenu />}></Route>
             <Route path="phases" element={<PhaseMenu />}></Route>
             <Route path="programs" element={<ProgramMenu />}></Route>
-            <Route
-              path="patients"
-              element={<PatientMenu role={role} />}
-            ></Route>
+            <Route path="patients" element={<PatientMenu role={role} />}></Route>
             <Route path="doctors" element={<DoctorMenu />}></Route>
-            <Route
-              path="doctor-patients/:id"
-              element={<DoctorPatients />}
-            ></Route>
+            <Route path="doctor-patients/:id" element={<DoctorPatients />}></Route>
             <Route
               path="kinesiologists"
               element={<KinesiologistMenu />}
