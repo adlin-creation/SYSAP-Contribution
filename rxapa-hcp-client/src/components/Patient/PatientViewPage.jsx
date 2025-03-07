@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Card, Button } from "antd";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
 import { useTranslation } from "react-i18next";
+import "./Styles.css"; // Import the CSS file
 
 const sessions = [
   { session: 1, date: "2024-03-01", difficulty: 3, pain: 5, exercises: 4 },
@@ -43,7 +44,7 @@ export default function PatientData({ patient, onClose }) {
   ];
 
   return (
-    <div>
+    <div className="patient-data-container">
       <h1>{t("Patient Data")}</h1>
       <Card>
         <h2>{`${patient.firstname} ${patient.lastname}`}</h2>
@@ -53,14 +54,12 @@ export default function PatientData({ patient, onClose }) {
         <p><strong>{t("Patients:programs")}:</strong> {patient.numberOfPrograms}</p>
       </Card>
 
-
       <h2>Session Data</h2>
       <Card>
-        <div style={{ display: "flex", gap: "16px" }}>
+        <div className="session-data-container">
           {/* Informations de la session */}
-          <div style={{ flex: 1 }}>
-            {/* Boutons avec une marge en bas */}
-            <div style={{ marginBottom: "16px" }}>
+          <div className="session-info">
+            <div className="session-buttons">
               <Button onClick={() => setCurrentSession((prev) => Math.max(prev - 1, 0))}>
                 Previous
               </Button>
@@ -78,7 +77,7 @@ export default function PatientData({ patient, onClose }) {
           </div>
 
           {/* Graphique Session Data */}
-          <div style={{ flex: 1 }}>
+          <div className="session-chart">
             <BarChart width={400} height={300} data={sessionDataForChart}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="session" />
@@ -92,30 +91,28 @@ export default function PatientData({ patient, onClose }) {
         </div>
       </Card>
 
-
       <h2>Average Since Inception</h2>
       <Card>
-        <div style={{ display: "flex", gap: "16px" }}>
+        <div className="average-data-container">
           {/* Informations des moyennes */}
-          <div style={{ flex: 1 }}>
+          <div className="average-info">
             <p><strong>Difficulty Level:</strong> {averages.difficulty}</p>
             <p><strong>Pain Level:</strong> {averages.pain}</p>
             <p><strong>Accomplished Exercises:</strong> {averages.exercises}</p>
           </div>
 
           {/* Graphique Average Since Inception */}
-          <div style={{ flex: 1 }}>
-          <BarChart width={400} height={300} data={averagesArray}>
+          <div className="average-chart">
+            <BarChart width={400} height={300} data={averagesArray}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" /> {/* Utilise la propriété "name" pour l'axe X */}
+              <XAxis dataKey="name" />
               <YAxis />
               <Tooltip />
-              <Bar dataKey="value" fill={({ fill }) => fill} /> {/* Une seule barre avec des couleurs personnalisées */}
+              <Bar dataKey="value" fill={({ fill }) => fill} />
             </BarChart>
           </div>
         </div>
       </Card>
-
     </div>
   );
 }
