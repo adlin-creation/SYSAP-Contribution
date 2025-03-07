@@ -1,0 +1,8 @@
+{
+    "err_id_programme": "Su identificador de programa no se encuentra. Por favor, autentíquese.",
+    "err_aucun_exercice": "No se encontraron ejercicios para esta sesión.",
+    "err_recuperation_exercices": "Ocurrió un error al recuperar los ejercicios.",
+    "chargement_exercices": "Cargando ejercicios...",
+    "liste_exercices": "Lista de ejercicios",
+    "aucun_exercice": "No hay ejercicios disponibles."
+}
