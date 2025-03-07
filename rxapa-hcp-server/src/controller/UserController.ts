@@ -78,6 +78,7 @@ exports.login = async (req: any, res: any) => {
     if (!user) {
       user = await Professional_User.findOne({ where: { email: email } });
     }
+
     // Si toujours non trouvé, renvoyer une erreur
     if (!user) {
       return res.status(401).json({ message: "The user doesn't exist" });
@@ -144,7 +145,7 @@ export async function hash(password: string) {
 /**
  * Fonction de vérification du mot de passe haché
  */
-async function verify(password: string, hash: string) {
+export async function verify(password: string, hash: string) {
   const [salt, key] = hash.split(":"); // Séparation du sel et du hash
   const keyBuffer = Buffer.from(key, "hex");
   const derivedKey = await scryptPromise(password, salt, 64); // Hachage du mot de passe entré
