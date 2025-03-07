@@ -21,14 +21,17 @@
   "homepage": "https://github.com/Hyacinth-Ali/goldfit-hcp-server#readme",
   "devDependencies": {
     "@cucumber/cucumber": "^11.0.1",
-    "@types/chai": "^5.0.0",
+    "@types/chai": "^5.2.0",
     "@types/mocha": "^9.1.1",
     "@types/sequelize": "^4.28.20",
-    "chai": "^4.3.6",
-    "mocha": "^10.0.0",
+    "@types/supertest": "^6.0.2",
+    "chai": "^4.5.0",
+    "mocha": "^10.8.2",
     "nodemon": "^3.1.7",
     "rimraf": "^4.0.4",
     "sinon": "^14.0.0",
+    "supertest": "^7.0.0",
+    "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.6.3"
   },
@@ -66,4 +69,3 @@
     "verbose": true
   }
 }
-
