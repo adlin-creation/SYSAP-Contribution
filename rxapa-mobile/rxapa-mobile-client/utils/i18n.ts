@@ -20,6 +20,15 @@ import fr_programme from '../locales/fr/Programme.json';
 import fr_progression from '../locales/fr/Progression.json';
 import fr_seance from '../locales/fr/Seance.json';
 
+import es_home from '../locales/es/Home.json'
+import es_index from '../locales/es/Index.json'
+import es_layout from '../locales/es/Layout.json';
+import es_cahier from '../locales/es/CahierDeSuivi.json';
+import es_config from '../locales/es/Configuration.json';
+import es_programme from '../locales/es/Programme.json';
+import es_progression from '../locales/es/Progression.json';
+import es_seance from '../locales/es/Seance.json';
+
 let locales = [];
 try {
     locales = RNLocalize.getLocales();
@@ -27,6 +36,7 @@ try {
     console.error('Error fetching locales:', error);
     locales = [{ languageCode: 'fr' }];
 }
+
 const defaultLang = locales[0]?.languageCode || 'fr';
 
 i18n
@@ -54,6 +64,17 @@ i18n
             Progression: fr_progression,
             Seance: fr_seance
         },
+
+        es: {
+            Home: es_home,
+            Index: es_index,
+            Layout: es_layout,
+            Cahier: es_cahier,
+            Config: es_config,
+            Programme: es_programme,
+            Progression: es_progression,
+            Seance: es_seance
+        }
     },
     lng: defaultLang,
     fallbackLng: "fr",

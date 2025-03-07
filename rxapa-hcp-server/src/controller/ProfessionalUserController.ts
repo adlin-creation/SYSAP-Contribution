@@ -18,7 +18,7 @@ export const createProfessionalUser = async (req: any, res: any, next: any) => {
   try {
     const existingUser = await Professional_User.findOne({ where: { email } });
     if (existingUser) {
-      return res.status(409).json({ message: "Un utilisateur avec cet email existe déjà." });
+      return res.status(409).json({ message: "existing professionnel user with this email" });
     }
 
     const newProfessionalUser = await Professional_User.create({
@@ -29,7 +29,7 @@ export const createProfessionalUser = async (req: any, res: any, next: any) => {
       password: hashedPassword,
       role
     });
-   
+
     // Create the specific role entity
     if (role === 'admin') {
       await Admin.create({ idAdmin: newProfessionalUser.id });

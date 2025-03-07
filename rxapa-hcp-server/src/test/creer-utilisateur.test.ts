@@ -254,14 +254,14 @@ describe("createProfessionalUser", () => {
             password: "hashedPassword",
             role: "doctor",
         });
-    
+
         // Appel de la fonction à tester
         await createProfessionalUser(req, res, next);
-    
+
         // Vérifications
         expect(Professional_User.findOne).toHaveBeenCalledWith({ where: { email: "john.doe@example.com" } });
         expect(res.statusCode).toBe(409);
-        expect(res.json).toHaveBeenCalledWith({ message: "Un utilisateur avec cet email existe déjà." });
+        expect(res.json).toHaveBeenCalledWith({ message: "existing professionnel user with this email" });
     });
 
 });
