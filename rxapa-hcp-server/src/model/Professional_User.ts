@@ -1,6 +1,6 @@
-import { sequelize, dataTypes } from "../util/database";
+import { sequelize, dataTypes } from '../util/database';
 
-const Professional_User = sequelize.define("Professional_User", {
+const Professional_User = sequelize.define('Professional_User', {
   id: {
     type: dataTypes.INTEGER,
     autoIncrement: true,
@@ -32,16 +32,15 @@ const Professional_User = sequelize.define("Professional_User", {
     allowNull: false,
   },
   role: {
-    type: dataTypes.ENUM("superadmin", "admin", "doctor", "kinesiologist"),
+    type: dataTypes.ENUM('admin', 'doctor', 'kinesiologist'),
     allowNull: false,
-    defaultValue: "doctor",
   },
   active: {
     type: dataTypes.BOOLEAN,
     defaultValue: true,
   },
 }, {
-  modelName: "Professional_User",
+  modelName: 'Professional_User',
 });
 
 export { Professional_User };
