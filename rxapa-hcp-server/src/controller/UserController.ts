@@ -45,7 +45,9 @@ export const login = async (req: any, res: any) => {
 
   try {
     // Recherche de l'utilisateur dans User et Professional_User
-    let user = await User.findOne({ where: { email } }) || await Professional_User.findOne({ where: { email } });
+    let user =
+      (await User.findOne({ where: { email } })) ||
+      (await Professional_User.findOne({ where: { email } }));
 
     if (!user) {
       return res.status(401).json({ message: "Utilisateur non trouvé." });
@@ -57,9 +59,23 @@ export const login = async (req: any, res: any) => {
       return res.status(401).json({ message: "Email ou mot de passe incorrect." });
     }
 
+    // Préparation du rôle renvoyé (pour s'assurer qu'on utilise 'superadmin' en minuscules)
+    let finalRole: string;
+    if (!user.role) {
+      // Si le user n'a pas de rôle => on force superadmin
+      finalRole = "superadmin";
+    } else {
+      // Sinon on met tout en minuscules pour uniformiser
+      finalRole = user.role.toLowerCase();
+    }
+
     // Génération du token JWT
     const token = jwt.sign(
-      { email: user.email, key: user.key, role: user.role || "SuperAdmin" },
+      {
+        email: user.email,
+        key: user.key,
+        role: finalRole, // On stocke la version unifiée du rôle
+      },
       process.env.TOKEN_SECRET_KEY as string,
       { expiresIn: "2h" }
     );
@@ -67,10 +83,10 @@ export const login = async (req: any, res: any) => {
     return res.status(200).json({
       token,
       userId: user.key,
-      role: user.role || "SuperAdmin",
+      // On renvoie le rôle unifié
+      role: finalRole,
       message: "Connexion réussie.",
     });
-
   } catch (error) {
     return res.status(500).json({ message: "Erreur lors de la connexion." });
   }
