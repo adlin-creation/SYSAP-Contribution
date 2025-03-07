@@ -1,13 +1,13 @@
 {
-  "Doctors": {
+  "Physicians": {
     "name": "Nombre",
     "status": "Estado",
     "actions": "Acciones",
     "email": "Correo electrónico",
     "phone": "Teléfono",
-    "register_doctor": "Registrar un médico",
-    "register_doctor_title": "Registrar un nuevo médico",
-    "edit_doctor": "Editar médico",
+    "register_physician": "Registrar un médico",
+    "register_physician_title": "Registrar un nuevo médico",
+    "edit_physician": "Editar médico",
     "updating_success_msg": "¡Médico actualizado con éxito!",
     "first_name_label": "Nombre",
     "required_first_name_error": "El nombre es obligatorio",
@@ -34,8 +34,8 @@
     "password_requirements_error": "La contraseña debe contener al menos una letra y un número",
     "password_placeholder": "Ingrese la contraseña",
     "back_button": "Atrás",
-    "create_doctor_button": "Crear médico",
-    "total_doctors": "Total de médicos",
+    "create_physician_button": "Crear médico",
+    "total_physicians": "Total de médicos",
     "active_status": "Activo",
     "inactive_status": "Inactivo",
     "patients_button": "Pacientes",
@@ -43,10 +43,10 @@
     "delete_button": "Eliminar",
     "close_button": "Cerrar",
     "of": "de",
-    "doctors": "Médicos",
-    "update_doctor_button": "Actualizar médico",
-    "back_to_doctors_button": "Volver a médicos",
-    "doctor_patients_title": "Pacientes del médico"
+    "physicians": "Médicos",
+    "update_physician_button": "Actualizar médico",
+    "back_to_physicians_button": "Volver a médicos",
+    "physician_patients_title": "Pacientes del médico"
   },
   "Kinesiologist": {
     "name": "Nombre",
