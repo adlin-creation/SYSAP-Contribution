@@ -5,6 +5,8 @@ import { View, Text, ActivityIndicator, StyleSheet, ScrollView, Dimensions } fro
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SeanceService from '../services/seanceService';
 import YouTube from 'react-native-youtube-iframe';
+import { useTranslation } from 'react-i18next';
+import '../utils/i18n';
 
 interface Exercise {
   exerciseName: string;
@@ -22,6 +24,8 @@ export default function SeanceScreen() {
   const [loading, setLoading] = useState(true);
   const [completedVideos, setCompletedVideos] = useState<{ [key: number]: boolean }>({});
 
+  const { t, i18n } = useTranslation();
+
   useEffect(() => {
     fetchExercises();
   }, []);
@@ -31,7 +35,7 @@ export default function SeanceScreen() {
       setLoading(true);
       const programEnrollementId = await AsyncStorage.getItem('programEnrollementId');
       if (!programEnrollementId) {
-        alert('Votre identifiant de programme est introuvable. Veuillez vous authentifier.');
+        alert(t('Seance:err_id_programme'));
         return;
       }
 
@@ -39,11 +43,11 @@ export default function SeanceScreen() {
       if (response.success) {
         setExercises(response.data);
       } else {
-        alert(response.message || 'Aucun exercice trouvé pour cette séance.');
+        alert(response.message || t('Seance:err_aucun_exercice'));
       }
     } catch (error) {
       console.error('Erreur lors de la récupération des exercices:', error);
-      alert('Une erreur est survenue lors de la récupération des exercices.');
+      alert(t('Seance:err_recuperation_exercices'));
     } finally {
       setLoading(false);
     }
@@ -65,16 +69,16 @@ export default function SeanceScreen() {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#1565C0" />
-        <Text>Chargement des exercices...</Text>
+        <Text>{t('Seance:chargement_exercices')}</Text>
       </View>
     );
   }
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.header}>Liste des exercices</Text>
+      <Text style={styles.header}>{t('Seance:liste_exercices')}</Text>
       {exercises.length === 0 ? (
-        <Text style={styles.noExerciseText}>Aucun exercice disponible.</Text>
+        <Text style={styles.noExerciseText}>{t('Seance:aucun_exercice')}</Text>
       ) : (
         exercises.map((exercise, index) => (
           <View
