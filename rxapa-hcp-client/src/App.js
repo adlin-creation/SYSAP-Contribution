@@ -29,6 +29,7 @@ import LanguageSwitcher from "./components/LanguageSwitcher/LanguageSwitcher";
 import { useTranslation } from "react-i18next";
 
 import { Layout, Menu, Button, Avatar, Dropdown } from "antd";
+
 import {
   HomeOutlined,
   AppstoreOutlined,
@@ -49,14 +50,13 @@ import "./App.css";
 const { Header, Sider, Content } = Layout;
 
 function App() {
-  const { t } = useTranslation(); // la fonction de traduction
+  const { t } = useTranslation(); // la fonction qu'on doit appliquer a la traduction
   const location = useLocation();
   const navigate = useNavigate();
-  const { token, setToken } = useToken(); // Hook personnalisé pour gérer le token
+  const { token, setToken } = useToken(); // Utilisation du hook personnalisé pour gérer le token
   const [selectedKey, setSelectedKey] = useState(location.pathname);
   const [role, setRole] = useState("");
 
-  // Menu principal
   const menuItems = [
     {
       key: "/",
@@ -120,54 +120,31 @@ function App() {
         },
       ],
     },
+    // Ajoutez d'autres éléments de menu si nécessaire
   ];
 
-  // État pour stocker le menu filtré
   const [filteredMenuItems, setFilteredMenuItems] = useState(menuItems);
 
   useEffect(() => {
     if (location.state?.role) {
       setRole(location.state.role);
-
-      // Fonction qui filtre le menu selon le rôle
       const filterMenuItems = (items) => {
         return items
           .map((item) => {
-            // Repérer le menu "healthcare-professional"
-            if (item.key === "healthcare-professional") {
-              // 1) Si c’est un doctor/kinesiologist : on supprime tout le menu "Professionnels"
-              if (
-                location.state.role === "doctor" ||
-                location.state.role === "kinesiologist"
-              ) {
-                return null;
-              }
-
-              // 2) Si c’est un admin : on retire seulement l’entrée "admins"
-              if (location.state.role === "admin") {
-                const newChildren = item.children.filter(
-                  (child) => child.key !== "/admins"
-                );
-                return { ...item, children: newChildren };
-              }
-
-              // 3) Si c’est un superadmin : on affiche tout
-              if (location.state.role === "superadmin") {
-                return item;
-              }
-
-              // Sinon, on supprime
+            if (item.children) {
+              return {
+                ...item,
+                children: filterMenuItems(item.children),
+              };
+            }
+            if (location.state.role === "admin" && item.key === "/admins") {
               return null;
             }
-            // Pour tout autre item, on ne touche pas
             return item;
           })
-          .filter((it) => it !== null);
+          .filter((item) => item !== null);
       };
-
-      // Exécuter la fonction de filtrage
-      const newMenu = filterMenuItems(menuItems);
-      setFilteredMenuItems(newMenu);
+      setFilteredMenuItems(filterMenuItems(menuItems));
     }
   }, [location.state]);
 
@@ -197,7 +174,7 @@ function App() {
     {
       key: "3",
       label: t("App:logout"),
-      onClick: handleLogout, // Déconnexion
+      onClick: handleLogout, // Ajoutez cette ligne pour la déconnexion
     },
   ];
 
@@ -225,7 +202,7 @@ function App() {
       </Sider>
       <Layout className="site-layout">
         <Header className="header site-layout-background">
-          <div></div> {/* Pour aligner le contenu à droite */}
+          <div></div> {/* Empty div to align items to the right */}
           <div className="header-content">
             <LanguageSwitcher />
             <Button icon={<SettingOutlined />} className="header-button" />
