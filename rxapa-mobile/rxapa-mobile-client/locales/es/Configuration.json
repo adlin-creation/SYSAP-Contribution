@@ -1,0 +1,22 @@
+{
+    "permission_refusee": "Permiso denegado",
+    "activer_notifications_svp": "Activa las notificaciones para recibir recordatorios.",
+    "erreur": "Error",
+    "entrer_heure_et_titre_svp": "Por favor, selecciona una hora y un título.",
+    "rappel": "Recordatorio",
+    "faire_votre_seance": "¡Es hora de hacer tu sesión!",
+    "rappel_ajoute": "Recordatorio agregado",
+    "rappel_rajoute_a": "Recordatorio agregado a",
+    "err_rappel": "No se pudo programar el recordatorio.",
+    "rappel_supprime": "Recordatorio eliminado",
+    "rappel_supprime_confirmation": "El recordatorio ha sido eliminado.",
+    "rappels_programmes": "Recordatorios programados",
+    "aucun_rappel": "No hay recordatorios por el momento.",
+    "supprimer": "Eliminar",
+    "ajouter_un_rappel": "Agregar un recordatorio",
+    "nouveau_rappel": "Nuevo Recordatorio",
+    "titre_du_rappel": "Título del recordatorio",
+    "selectionner_heure": "Selecciona la hora",
+    "planifier": "Planificar",
+    "annuler": "Cancelar"
+}
