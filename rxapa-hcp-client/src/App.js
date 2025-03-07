@@ -23,6 +23,8 @@ import DoctorPatients from "./components/ProfessionalUser/Doctor/DoctorPatients"
 import KinesiologistMenu from "./components/ProfessionalUser/Kinesiologist/KinesiologistMenu";
 import KinesiologistPatients from "./components/ProfessionalUser/Kinesiologist/KinesiologistPatients";
 import AdminMenu from "./components/ProfessionalUser/Admin/AdminMenu";
+import EvaluationPACE from "./components/Evaluation/EvaluationPACE";
+import EvaluationSearch from "./components/Evaluation/EvaluationSearch";
 import useToken from "./components/Authentication/useToken"; // Import du hook personnalisé
 import Constants from "./components/Utils/Constants";
 import LanguageSwitcher from "./components/LanguageSwitcher/LanguageSwitcher";
@@ -43,9 +45,11 @@ import {
   UsergroupAddOutlined,
   MedicineBoxOutlined,
   HeartOutlined,
-} from "@ant-design/icons";
-import "antd/dist/reset.css";
-import "./App.css";
+  FormOutlined,  // Ajoutez cette ligne
+} from '@ant-design/icons';
+import 'antd/dist/reset.css';
+import './App.css';
+
 
 const { Header, Sider, Content } = Layout;
 
@@ -97,6 +101,11 @@ function App() {
       key: "/patients",
       icon: <UserOutlined />,
       label: <Link to="/patients">{t("App:patients")}</Link>,
+    },
+    {
+      key: '/evaluations',
+      icon: <FormOutlined />,
+      label: <Link to="/evaluations">Évaluation</Link>,
     },
     {
       key: "healthcare-professional",
@@ -242,6 +251,8 @@ function App() {
               element={<KinesiologistPatients />}
             ></Route>
             <Route path="admins" element={<AdminMenu />}></Route>
+            <Route path="evaluations" element={<EvaluationSearch />}></Route>
+            <Route path="evaluation-pace/:patientId" element={<EvaluationPACE />}></Route>
             <Route
               path="*"
               element={
