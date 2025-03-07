@@ -24,6 +24,7 @@ import KinesiologistMenu from "./components/ProfessionalUser/Kinesiologist/Kines
 import KinesiologistPatients from "./components/ProfessionalUser/Kinesiologist/KinesiologistPatients";
 import AdminMenu from "./components/ProfessionalUser/Admin/AdminMenu";
 import EvaluationPACE from "./components/Evaluation/EvaluationPACE";
+import EvaluationPATH from "./components/Evaluation/EvaluationPATH";
 import EvaluationSearch from "./components/Evaluation/EvaluationSearch";
 import useToken from "./components/Authentication/useToken"; // Import du hook personnalisé
 import Constants from "./components/Utils/Constants";
@@ -253,6 +254,7 @@ function App() {
             <Route path="admins" element={<AdminMenu />}></Route>
             <Route path="evaluations" element={<EvaluationSearch />}></Route>
             <Route path="evaluation-pace/:patientId" element={<EvaluationPACE />}></Route>
+            <Route path="evaluation-path/:patientId" element={<EvaluationPATH/>}></Route>
             <Route
               path="*"
               element={
