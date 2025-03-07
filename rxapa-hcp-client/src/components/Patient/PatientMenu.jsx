@@ -26,16 +26,116 @@ export default function PatientMenu({ role }) {
   const { token } = useToken();
 
   const patientUrl = `${Constants.SERVER_URL}/patients`;
+
   const { data: patientList, refetch: refetchPatients } = useQuery(
     ["patients"],
-    () => {
-      return axios
-        .get(patientUrl, {
-          headers: { Authorization: "Bearer " + token },
-        })
-        .then((res) => res.data);
+    async () => {
+      const { data } = await axios.get(patientUrl, {
+        headers: { Authorization: "Bearer " + token },
+      });
+      return data;
     }
   );
+
+  // Fonction pour récupérer les enregistrements de programme liés à un patient
+  const fetchProgramEnrollements = async (patientId) => {
+    try {
+      const { data } = await axios.get(
+        `${Constants.SERVER_URL}/program-enrollements`,
+        {
+          headers: { Authorization: "Bearer " + token },
+        }
+      );
+      return data.filter((prog) => prog.PatientId === patientId);
+    } catch (err) {
+      throw new Error(
+        err.response?.data?.message ||
+          "Erreur lors de la récupération des programmes."
+      );
+    }
+  };
+
+  // Fonction pour récupérer les soignants liés aux enregistrements de programme
+  const fetchPatientCaregivers = async (programEnrollements) => {
+    try {
+      const { data } = await axios.get(
+        `${Constants.SERVER_URL}/patient-caregivers`,
+        {
+          headers: { Authorization: "Bearer " + token },
+        }
+      );
+      return data.filter((patientCaregiver) =>
+        programEnrollements.some(
+          (enrollment) =>
+            enrollment.id === patientCaregiver.ProgramEnrollementId
+        )
+      );
+    } catch (err) {
+      throw new Error(
+        err.response?.data?.message ||
+          "Erreur lors de la récupération des soignants."
+      );
+    }
+  };
+
+  // Fonction pour récupérer les détails des soignants
+  const fetchCaregiversDetails = async (caregivers) => {
+    try {
+      const caregiversDetails = await Promise.all(
+        caregivers.map((caregiver) =>
+          axios
+            .get(`${Constants.SERVER_URL}/caregiver/${caregiver.CaregiverId}`, {
+              headers: { Authorization: "Bearer " + token },
+            })
+            .then((res) => res.data)
+        )
+      );
+      return caregiversDetails;
+    } catch (err) {
+      throw new Error(
+        err.response?.data?.message ||
+          "Erreur lors de la récupération des détails des soignants."
+      );
+    }
+  };
+
+  // Fonction principale pour gérer la recuperation en cascade jusqu'aux aides soignants
+  const handleGetCaregivers = async (patient) => {
+    console.log(patient);
+    try {
+      const programEnrollements = await fetchProgramEnrollements(patient.id);
+      console.log("Enregistrements du patient :", programEnrollements);
+
+      const caregivers = await fetchPatientCaregivers(programEnrollements);
+      console.log("Soignants associés :", caregivers);
+
+      const caregiversDetails = await fetchCaregiversDetails(caregivers);
+      console.log("Détails des soignants :", caregiversDetails);
+
+      openCaregiversModal(caregiversDetails);
+    } catch (err) {
+      console.error("Erreur :", err.message);
+      openModal(err.message, true);
+    }
+  };
+  const openCaregiversModal = (caregivers) => {
+    console.log(caregivers);
+    AntModal.info({
+      title: t("Patients:caregivers_list"),
+      content: (
+        <div>
+          <ul>
+            {caregivers.map((caregiver) => (
+              <li key={caregiver.id}>
+                {caregiver.firstname} {caregiver.lastname}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ),
+      onOk() {},
+    });
+  };
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -86,6 +186,15 @@ export default function PatientMenu({ role }) {
       key: "numberOfPrograms",
     },
     {
+      title: "Caregivers",
+      key: "caregivers",
+      render: (record) => (
+        <Button type="link" onClick={() => handleGetCaregivers(record)}>
+          Caregivers
+        </Button>
+      ),
+    },
+    {
       title: t("Patients:actions"),
       key: "actions",
       render: (_, record) => (
@@ -114,6 +223,15 @@ export default function PatientMenu({ role }) {
     setSelectedPatient(patient);
   };
 
+  const showCaregiverWarning = () => {
+    AntModal.warning({
+      title: "Deletion impossible.",
+      content:
+        "Please delete the associated caregivers before deleting this patient.",
+      okText: "OK",
+    });
+  };
+
   const handleDelete = (patient) => {
     AntModal.confirm({
       title: t("Patients:delete_patient_alert"),
@@ -123,15 +241,20 @@ export default function PatientMenu({ role }) {
       okType: "danger",
       cancelText: "No",
       onOk: () => {
-        axios
-          .delete(`${Constants.SERVER_URL}/delete-patient/${patient.id}`, {
-            headers: { Authorization: "Bearer " + token },
-          })
-          .then((res) => {
-            refetchPatients();
-            openModal(res.data.message, false);
-          })
-          .catch((err) => openModal(err.response.data.message, true));
+        console.log(patient);
+        if (patient.numberOfCaregivers === 0) {
+          axios
+            .delete(`${Constants.SERVER_URL}/delete-patient/${patient.id}`, {
+              headers: { Authorization: "Bearer " + token },
+            })
+            .then((res) => {
+              refetchPatients();
+              openModal(res.data.message, false);
+            })
+            .catch((err) => openModal(err.response.data.message, true));
+        } else {
+          showCaregiverWarning();
+        }
       },
     });
   };
