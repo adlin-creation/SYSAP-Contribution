@@ -69,7 +69,7 @@ const LanguageSwitcher = ({ iconStyle, iconClassName, ...props }) => {
             code="ES"
             style={{ width: 26, height: "auto", marginRight: 10 }}
           />{" "}
-          Espagnol
+          Español
         </MenuItem>
       </Menu>
     </>
