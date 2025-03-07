@@ -2,19 +2,28 @@ import { Caregiver } from "../model/Caregiver";
 import { Patient_Caregiver } from "../model/Patient_Caregiver";
 import { ProgramEnrollement } from "../model/ProgramEnrollement";
 import { Patient } from "../model/Patient";
+import * as bcrypt from "bcrypt";
 
 /**
  * Creates a new caregiver.
  */
 exports.createCaregiver = async (req: any, res: any, next: any) => {
   const { firstname, lastname, phoneNumber, email, relationship } = req.body;
+
   try {
+    const existingUser = await Caregiver.findOne({ where: { email } });
+
+    if (existingUser) {
+      return res
+        .status(409)
+        .json({ message: "existing caregiver with this email." });
+    }
     const newCaregiver = await Caregiver.create({
       firstname,
       lastname,
       phoneNumber,
       email,
-      relationship
+      relationship,
     });
     res.status(201).json(newCaregiver);
   } catch (error: any) {
@@ -89,7 +98,9 @@ exports.getCaregiver = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({ message: "Error loading caregiver from the database" });
+    res
+      .status(error.statusCode)
+      .json({ message: "Error loading caregiver from the database" });
   }
   return res;
 };
@@ -105,7 +116,9 @@ exports.getCaregivers = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({ message: "Error loading caregivers from the database" });
+    res
+      .status(error.statusCode)
+      .json({ message: "Error loading caregivers from the database" });
   }
   return res;
 };
@@ -122,19 +135,26 @@ exports.getPatientsByCaregiver = async (req: any, res: any, next: any) => {
     }
 
     const patients = await Patient.findAll({
-      include: [{
-        model: ProgramEnrollement,
-        required: true,  // Ajout de required: true
-        include: [{
-          model: Patient_Caregiver,
-          where: { CaregiverId: caregiverId },
-          required: true  // Ajout de required: true
-        }]
-      }]
+      include: [
+        {
+          model: ProgramEnrollement,
+          required: true, // Ajout de required: true
+          include: [
+            {
+              model: Patient_Caregiver,
+              where: { CaregiverId: caregiverId },
+              required: true, // Ajout de required: true
+            },
+          ],
+        },
+      ],
     });
 
     if (!patients.length) {
-      return res.status(200).json({ message: "No patients found for this caregiver", patients: [] });
+      return res.status(200).json({
+        message: "No patients found for this caregiver",
+        patients: [],
+      });
     }
 
     res.status(200).json(patients);
@@ -142,9 +162,9 @@ exports.getPatientsByCaregiver = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({ 
+    res.status(error.statusCode).json({
       message: "Error loading patients for caregiver from the database",
-      error: error.message 
+      error: error.message,
     });
   }
   return res;
