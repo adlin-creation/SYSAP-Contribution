@@ -1,0 +1,22 @@
+{
+    "permission_refusee": "تم رفض الإذن",
+    "activer_notifications_svp": "قم بتفعيل الإشعارات لتلقي التذكيرات.",
+    "erreur": "خطأ",
+    "entrer_heure_et_titre_svp": "يرجى تحديد وقت وعنوان.",
+    "rappel": "تذكير",
+    "faire_votre_seance": "حان وقت القيام بجلسة التمرين!",
+    "rappel_ajoute": "تمت إضافة التذكير",
+    "rappel_rajoute_a": "تمت إضافة التذكير إلى",
+    "err_rappel": "تعذر جدولة التذكير.",
+    "rappel_supprime": "تم حذف التذكير",
+    "rappel_supprime_confirmation": "تم حذف التذكير بنجاح.",
+    "rappels_programmes": "التذكيرات المجدولة",
+    "aucun_rappel": "لا يوجد تذكيرات حتى الآن.",
+    "supprimer": "حذف",
+    "ajouter_un_rappel": "إضافة تذكير",
+    "nouveau_rappel": "تذكير جديد",
+    "titre_du_rappel": "عنوان التذكير",
+    "selectionner_heure": "حدد الوقت",
+    "planifier": "جدولة",
+    "annuler": "إلغاء"
+}
