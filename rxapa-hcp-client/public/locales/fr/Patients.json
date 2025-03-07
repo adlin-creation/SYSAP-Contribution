@@ -1,6 +1,8 @@
 {
   "register_patient": "Enregistrer un Patient",
   "register_new_patient": "Enregistrer un nouveau patient",
+  "view_patient_details": "Statistiques du patient",
+  "view_statistic_button": "Statistiques",
   "edit_patient_details": "Modifier les détails du patient",
   "enrollment_creation_success": "L'inscription a été créée avec succès!",
   "enrollment_creation_failed": "Erreur lors de la création de l'inscription",

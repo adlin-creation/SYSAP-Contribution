@@ -96,7 +96,7 @@ export default function PatientMenu() {
       render: (_, record) => (
         <Space size="middle">
           <Button type="link" onClick={() => handleView(record)}>
-          <EyeOutlined /> {t("Patients:view_button")}
+          <EyeOutlined /> {t("Patients:view_statistic_button")}
           </Button>
           <Button type="link" onClick={() => handleEdit(record)}>
             <EditOutlined /> {t("Patients:edit_button")}
