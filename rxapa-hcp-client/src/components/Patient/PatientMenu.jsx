@@ -102,24 +102,41 @@ export default function PatientMenu({ role }) {
       openModal(err.message, true);
     }
   };
-  const openCaregiversModal = (caregivers) => {
-    console.log(caregivers);
-    AntModal.info({
-      title: t("Patients:caregivers_list"),
-      content: (
-        <div>
-          <ul>
-            {caregivers.map((caregiver) => (
-              <li key={caregiver.id}>{caregiver.firstname} {caregiver.lastname}</li>
-            ))}
-          </ul>
-        </div>
-      ),
-      onOk() { },
-    });
-  };
 
+  //Fonction pour afficher la liste des aidants disponibles et chaque aidant a un bouton permettant d'afficher ses détails.
+const openCaregiversModal = (caregivers) => {
+  AntModal.info({
+    title: t("Patients:caregivers_list"),
+    content: caregivers.length ? (
+      <ul>
+        {caregivers.filter(c => c).map(c => (
+          <li key={c.id}>
+            {c.firstname} {c.lastname}
+            <Button type="link" onClick={() => viewCaregiverDetails(c)}>
+              {t("voir les details")}
+            </Button>
+          </li>
+        ))}
+      </ul>
+    ) : <p>{t("Aucune aide soignante disponible")}</p>,
+    onOk() {},
+  });
+};
 
+// fonction pour aficher les dteails d'un aidant, en excluant certains attributs, les clés 'active', 'createdAt' et 'updatedAt' sont filtrées.
+const viewCaregiverDetails = (caregiver) => {
+  const filteredCaregiver = Object.keys(caregiver)
+    .filter(key => key !== 'active' && key !== 'createdAt' && key !== 'updatedAt') 
+    .map(key => (
+      <p key={key}>{t(`Patients:${key}`)}: {caregiver[key]}</p>
+    ));
+
+  AntModal.info({
+    title: `${caregiver.firstname} ${caregiver.lastname} - ${t("Details de l'aide soignant")}`,
+    content: filteredCaregiver,
+    onOk() {},
+  });
+};
 
   const getStatusColor = (status) => {
     switch (status) {
