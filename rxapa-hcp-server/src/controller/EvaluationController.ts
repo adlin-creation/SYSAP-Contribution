@@ -25,19 +25,28 @@ exports.createEvaluation = async (req: any, res: any, next: any) => {
 
   const t = await sequelize.transaction();
 
-  const program = await Program.findOne({
-    where: { 
-      name: scores.program
-    },
-    transaction: t
-  });
-
+  
   try {
+    const program = await Program.findOne({
+      where: { 
+        name: scores.program
+      },
+      transaction: t
+    });
+  
+    if (!program) {
+      await t.rollback();
+      return res.status(404).json({
+        message: "Programme " + scores.program + " introuvable",
+        error: `Programme '${scores.program}' introuvable`
+      });
+    }
+
     const evaluation = await Evaluation.create(
       {
         idPatient: idPatient,
         //idKinesiologist,
-        idResultProgram: program?.id || null
+        idResultProgram: program.id
       },
       { transaction: t }
     );

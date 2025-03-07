@@ -175,6 +175,12 @@ function EvaluationPACE({ onSubmit }) {
 
   const handleConfirm = async () => {
     // Créer directement le payload avant l'envoi
+
+    const scoreA = calculateChairTestScore();
+    const scoreB = calculateBalanceScore();
+    const scoreC = calculateMobilityScore();
+    const scoreTotal = scoreA + scoreB + scoreC;
+
     const payload = {
       idPatient: patientId,
       chairTestSupport: formData.chairTestSupport ? "with" : "without",
@@ -189,11 +195,11 @@ function EvaluationPACE({ onSubmit }) {
       frtDistance: formData.frtPosition === "armNotWorking" ? 0 : parseInt(formData.frtDistance, 10),
       walkingTime: parseFloat(formData.walkingTime),
       scores: {
-        cardioMusculaire: calculateChairTestScore(),
-        equilibre: calculateBalanceScore(),
-        mobilite: calculateMobilityScore(),
-        total: calculateChairTestScore() + calculateBalanceScore() + calculateMobilityScore(),
-        program: determineColor() + " " + determineLevel()
+        cardioMusculaire: scoreA,
+        equilibre: scoreB,
+        mobilite: scoreC,
+        total: scoreTotal,
+        program: determineColor(scoreA, scoreB, scoreC) + " " + determineLevel(scoreTotal)
       }
     };
   
