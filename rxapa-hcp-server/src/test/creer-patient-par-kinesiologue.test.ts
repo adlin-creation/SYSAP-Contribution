@@ -5,6 +5,7 @@ import { ProgramEnrollement } from "../model/ProgramEnrollement";
 import { Patient_Caregiver } from "../model/Patient_Caregiver";
 import { expect, jest } from "@jest/globals";
 import { sequelize } from "../util/database"; // Import de sequelize
+import { sendEmail } from "../util/unikpass";
 jest.setTimeout(50000);
 // Mock des modèles Sequelize
 jest.mock("../model/Patient");
@@ -126,6 +127,8 @@ describe("createPatientWithCaregivers", () => {
         }),
       })
     );
+    //  verifier l'appel du nodemailer
+    expect(sendEmail).toHaveBeenCalledTimes(2);
   });
 
   it("should create a patient with two caregivers successfully", async () => {
@@ -283,6 +286,10 @@ describe("createPatientWithCaregivers", () => {
         ]),
       })
     );
+
+    // 6. verifier l'appel du nodemailer
+    expect(sendEmail).toHaveBeenCalledTimes(3);
+
   });
 
   it("should return 409 if the patient already exists", async () => {
