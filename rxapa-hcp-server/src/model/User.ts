@@ -1,8 +1,6 @@
 import { sequelize, dataTypes } from "../util/database";
 
-/**
- * Creates a User model (Table)
- */
+
 export const User = sequelize.define("User", {
   id: {
     type: dataTypes.INTEGER,
@@ -25,6 +23,11 @@ export const User = sequelize.define("User", {
   },
   password: {
     type: dataTypes.STRING,
+    allowNull: false,
+  },
+
+  role: {
+    type: dataTypes.ENUM("superadmin", "admin", "doctor", "kinesiologist"),
     allowNull: false,
   },
 });
