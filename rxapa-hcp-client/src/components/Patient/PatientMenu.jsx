@@ -186,7 +186,7 @@ export default function PatientMenu({ role }) {
       key: "numberOfPrograms",
     },
     {
-      title: "Caregivers",
+      title: t("Patients:caregivers"),
       key: "caregivers",
       render: (record) => (
         <Button type="link" onClick={() => handleGetCaregivers(record)}>

@@ -107,11 +107,11 @@
     "email": "البريد الإلكتروني",
     "phone": "الهاتف",
     "register_admin_button": "تسجيل مسؤول النظام",
-    "register_new_admin": "تسجيل مسؤول النظام جديد",
-    "updating_success_msg": "تم تحديث المسؤول النظام بنجاح!",
-    "updating_admin_error_msg": "حدث خطأ أثناء تحديث المسؤول النظام",
-    "creating_success_msg": "تم إنشاء المسؤول النظام بنجاح!",
-    "creating_error_msg": "حدث خطأ أثناء إنشاء المسؤول النظام",
+    "register_new_admin": "تسجيل مسؤول جديد للنظام ",
+    "updating_success_msg": "تم تحديث مسؤول النظام بنجاح!",
+    "updating_admin_error_msg": "حدث خطأ أثناء تحديث مسؤول النظام",
+    "creating_success_msg": "تم إنشاء مسؤول النظام بنجاح!",
+    "creating_error_msg": "حدث خطأ أثناء إنشاء مسؤول النظام",
     "generating_password_error_msg": "حدث خطأ أثناء إنشاء كلمة المرور",
     "first_name_label": "الاسم",
     "required_first_name_error": "الاسم مطلوب",
@@ -139,7 +139,7 @@
     "password_placeholder": "أدخل كلمة المرور",
     "back_button": "رجوع",
     "create_admin_button": "تسجيل مسؤول النظام",
-    "total_admins": "إجمالي المسؤول النظامين",
+    "total_admins": "إجمالي مسؤولي النظام",
     "active_status": "نشط",
     "inactive_status": "غير نشط",
     "edit_button": "تعديل",
@@ -148,6 +148,6 @@
     "close_button": "إغلاق",
     "of": "من",
     "admins": "مسؤولو النظام",
-    "update_admin_button": "تحديث المسؤول النظام النظام"
+    "update_admin_button": "تحديث مسؤول النظام"
   }
 }
