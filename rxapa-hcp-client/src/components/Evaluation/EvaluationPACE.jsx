@@ -4,8 +4,10 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import useToken from "../Authentication/useToken";
 import Constants from "../Utils/Constants";
+import { useTranslation } from "react-i18next";
 
 function EvaluationPACE({ onSubmit }) {
+  const { t } = useTranslation();
   const { patientId } = useParams(); // Récupère l'ID depuis l'URL
   const [formData, setFormData] = useState({
     // Section A
@@ -384,10 +386,23 @@ function EvaluationPACE({ onSubmit }) {
 
           {/* Section B: ÉQUILIBRE */}
           <h2>B. ÉQUILIBRE</h2>
+          <div style={{ marginBottom: 16 }}>
+            Réalisez les équilibres dans l’ordre<br />
+            Le score sera attribué selon l'équilibre le plus grand obtenu
+          </div>
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                label="Temps Pieds joints (secondes)"
+                label={
+                  <span style={{ display: 'flex', alignItems: 'center' }}>
+                    1. Temps Pieds joints (secondes)
+                    <img 
+                      src={require('./images/pace_balance_joint.png')}
+                      alt="Joint Jeet"
+                      style={{ marginLeft: 8, height: 24 }}
+                    />
+                  </span>
+                }
                 validateStatus={errors.balanceFeetTogether ? "error" : ""}
                 help={errors.balanceFeetTogether}
               >
@@ -400,11 +415,20 @@ function EvaluationPACE({ onSubmit }) {
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item
-                label="Temps Semi-tandem (secondes)"
-                validateStatus={errors.balanceSemiTandem ? "error" : ""}
-                help={errors.balanceSemiTandem}
-              >
+            <Form.Item
+              label={
+                <span style={{ display: 'flex', alignItems: 'center' }}>
+                  2. Temps Semi-tandem (secondes)
+                  <img 
+                    src={require('./images/pace_balance_semi_tandem.png')}
+                    alt="Semi tandem Feet"
+                    style={{ marginLeft: 8, height: 24 }}
+                  />
+                </span>
+              }
+              validateStatus={errors.balanceSemiTandem ? "error" : ""}
+              help={errors.balanceSemiTandem}
+            >
                 <Input
                   name="balanceSemiTandem"
                   value={formData.balanceSemiTandem}
@@ -417,7 +441,16 @@ function EvaluationPACE({ onSubmit }) {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                label="Temps Tandem (secondes)"
+                label={
+                  <span style={{ display: 'flex', alignItems: 'center' }}>
+                    3. Temps Tandem (secondes)
+                    <img 
+                      src={require('./images/pace_balance_tandem.png')}
+                      alt="Tandem Feet"
+                      style={{ marginLeft: 8, height: 24 }}
+                    />
+                  </span>
+                }
                 validateStatus={errors.balanceTandem ? "error" : ""}
                 help={errors.balanceTandem}
               >
@@ -431,7 +464,16 @@ function EvaluationPACE({ onSubmit }) {
             </Col>
             <Col span={12}>
               <Form.Item
-                label="Temps Unipodal (secondes)"
+                label={
+                  <span style={{ display: 'flex', alignItems: 'center' }}>
+                    4. Temps Unipodal (secondes)
+                    <img 
+                      src={require('./images/pace_balance_unipodal.png')}
+                      alt="Unipodal Foot"
+                      style={{ marginLeft: 8, height: 24 }}
+                    />
+                  </span>
+                }
                 validateStatus={errors.balanceOneFooted ? "error" : ""}
                 help={errors.balanceOneFooted}
               >
@@ -447,7 +489,8 @@ function EvaluationPACE({ onSubmit }) {
 
           {/* Section C: MOBILITÉ & STABILITÉ DU TRONC */}
           <h2>C. MOBILITÉ & STABILITÉ DU TRONC</h2>
-          <Form.Item label="Functional Reach Test (FRT)">
+          <Form.Item 
+          label="Functional Reach Test (FRT)">
             <Radio.Group
               name="frtPosition"
               value={formData.frtPosition}
