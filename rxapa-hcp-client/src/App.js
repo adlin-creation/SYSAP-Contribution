@@ -29,7 +29,6 @@ import LanguageSwitcher from "./components/LanguageSwitcher/LanguageSwitcher";
 import { useTranslation } from "react-i18next";
 
 import { Layout, Menu, Button, Avatar, Dropdown } from "antd";
-
 import {
   HomeOutlined,
   AppstoreOutlined,
@@ -46,6 +45,7 @@ import {
 } from "@ant-design/icons";
 import "antd/dist/reset.css";
 import "./App.css";
+
 const { Header, Sider, Content } = Layout;
 
 function App() {
@@ -53,11 +53,15 @@ function App() {
   const location = useLocation();
   const navigate = useNavigate();
   const { token, setToken } = useToken(); // Utilisation du hook personnalisé pour gérer le token
+
   const [selectedKey, setSelectedKey] = useState(location.pathname);
   const [role, setRole] = useState("");
+
+  // -- Menu brut (avant filtrage)
   const [menuItems, setMenuItems] = useState([]);
 
   useEffect(() => {
+    // Construction du menu complet
     const newMenuItems = [
       {
         key: "/",
@@ -127,8 +131,10 @@ function App() {
     setFilteredMenuItems(newMenuItems);
   }, [i18n.language, t]);
 
+  // Menu filtré final
   const [filteredMenuItems, setFilteredMenuItems] = useState(menuItems);
 
+  // Gère RTL si langue arabe
   useEffect(() => {
     document.documentElement.dir = i18n.language === "ar" ? "rtl" : "ltr";
   }, [i18n.language]);
@@ -137,29 +143,54 @@ function App() {
     setSelectedKey(location.pathname);
   }, [location.pathname]);
 
+  // Si on récupère un "role" depuis location.state (après login), on filtre
   useEffect(() => {
     if (location.state?.role) {
       setRole(location.state.role);
+
       const filterMenuItems = (items) => {
         return items
           .map((item) => {
+            // Si l'item a des enfants (menu déroulant)
             if (item.children) {
               return {
                 ...item,
+                // On ré-appelle filterMenuItems pour ses enfants
                 children: filterMenuItems(item.children),
               };
             }
-            if (location.state.role === "admin" && item.key === "/admins") {
+
+            // CAS ADMIN: l'admin ne voit PAS l'onglet "admins"
+            if (
+              location.state.role === "admin" &&
+              item.key === "/admins"
+            ) {
               return null;
             }
+
+            // CAS DOCTOR ou KINESIOLOGIST: ne voient PAS la section "healthcare-professional"
+            if (
+              (location.state.role === "doctor" ||
+                location.state.role === "kinesiologist") &&
+              (item.key === "healthcare-professional" ||
+                item.key === "/doctors" ||
+                item.key === "/kinesiologists" ||
+                item.key === "/admins")
+            ) {
+              return null;
+            }
+
+            // Sinon, on garde l'item
             return item;
           })
-          .filter((item) => item !== null);
+          .filter((item) => item !== null); // Retire les null
       };
+
       setFilteredMenuItems(filterMenuItems(menuItems));
     }
   }, [location.state, menuItems]);
 
+  // Déconnexion
   const handleLogout = async () => {
     try {
       console.log("Attempting to logout...");
@@ -167,7 +198,6 @@ function App() {
       console.log("Logout response:", response);
 
       setToken(null);
-      console.log("Token after logout:", token);
       navigate("/login");
     } catch (error) {
       console.error("Failed to logout:", error);
@@ -190,6 +220,7 @@ function App() {
     },
   ];
 
+  // Si pas de token => on va sur login
   if (!token) {
     return (
       <Content className="content">
