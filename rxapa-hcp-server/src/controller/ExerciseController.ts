@@ -4,7 +4,7 @@ import { Variant } from "../model/Variant";
 import fs from "fs";
 import path from "path";
 import { Request, Response } from "express";
-const fileHelper = require("./../util/file");
+import { deleteFile } from "../util/file";
 
 // Utility function to handle errors
 const handleError = (res: Response, error: unknown, message: string) => {
@@ -15,7 +15,6 @@ const handleError = (res: Response, error: unknown, message: string) => {
       error: error.message || error,
     });
   } else {
-    // Si l'erreur n'est pas une instance d'Error, on renvoie un message générique
     res.status(500).json({
       message: message || "Une erreur est survenue",
       error: "Erreur inconnue",
@@ -26,7 +25,7 @@ const handleError = (res: Response, error: unknown, message: string) => {
 /**
  * Returns an exercise image.
  */
-exports.getImage = (req: Request, res: Response) => {
+export const getImage = (req: Request, res: Response) => {
   const imageName = req.params.imageName;
   const imagePath = path.join(__dirname, "..", "images", imageName);
 
@@ -41,7 +40,7 @@ exports.getImage = (req: Request, res: Response) => {
 /**
  * Creates a new Exercise.
  */
-exports.createExercise = async (req: Request, res: Response) => {
+export const createExercise = async (req: Request, res: Response) => {
   const { name, description, instructionalVideo, category, isSeating, targetAgeRange, fitnessLevel } = req.body;
   const exerciseImageFile = req.file;
 
@@ -65,20 +64,24 @@ exports.createExercise = async (req: Request, res: Response) => {
 
     res.status(201).json({ message: "Exercice créé avec succès." });
   } catch (error: unknown) {
-    if (imageUrl) {
-      fileHelper.deleteFile(imageUrl); // Cleanup if error occurs
+    // Supprimer le fichier uniquement s'il existe
+    if (imageUrl && fs.existsSync(imageUrl)) {
+      try {
+        deleteFile(imageUrl); // Nettoyer uniquement les fichiers locaux
+      } catch (fileError) {
+        console.error("Erreur lors de la suppression du fichier :", fileError);
+      }
     }
 
+    // Gestion des erreurs
     if (error instanceof Error) {
-      // Vérifier si l'erreur est spécifique à la contrainte d'unicité
       if (error.name === "SequelizeUniqueConstraintError") {
-        handleError(res, error, "Un exercice avec ce nom existe déjà !");
+        res.status(409).json({ message: "Un exercice avec ce nom existe déjà !" });
       } else {
-        handleError(res, error, "Erreur lors de la création de l'exercice.");
+        res.status(500).json({ message: "Erreur lors de la création de l'exercice.", error: error.message });
       }
     } else {
-      // Si l'erreur n'est pas une instance d'Error, renvoyer une erreur générique
-      handleError(res, error, "Erreur inconnue lors de la création de l'exercice.");
+      res.status(500).json({ message: "Erreur inconnue lors de la création de l'exercice." });
     }
   }
 };
@@ -86,7 +89,7 @@ exports.createExercise = async (req: Request, res: Response) => {
 /**
  * Updates an existing Exercise.
  */
-exports.updateExercise = async (req: Request, res: Response) => {
+export const updateExercise = async (req: Request, res: Response) => {
   const exerciseKey = req.params.exerciseKey;
   const { name, description, instructionalVideo, category, isSeating, targetAgeRange, fitnessLevel } = req.body;
 
@@ -119,7 +122,7 @@ exports.updateExercise = async (req: Request, res: Response) => {
 /**
  * Returns all the exercises.
  */
-exports.getExercises = async (req: Request, res: Response) => {
+export const getExercises = async (req: Request, res: Response) => {
   try {
     const exercises = await Exercise.findAll();
     res.status(200).json(exercises);
@@ -135,7 +138,7 @@ exports.getExercises = async (req: Request, res: Response) => {
 /**
  * Returns a specific exercise based on its key.
  */
-exports.getExercise = async (req: Request, res: Response) => {
+export const getExercise = async (req: Request, res: Response) => {
   const exerciseKey = req.params.exerciseKey;
   try {
     const exercise = await Exercise.findOne({ where: { key: exerciseKey }, include: ExerciseVersion });
@@ -155,7 +158,7 @@ exports.getExercise = async (req: Request, res: Response) => {
 /**
  * Creates a new ExerciseVersion.
  */
-exports.createExerciseVersion = async (req: Request, res: Response) => {
+export const createExerciseVersion = async (req: Request, res: Response) => {
   const { name, numberOfRepitions, instructionalVideo } = req.body;
 
   if (!name || !numberOfRepitions) {
@@ -177,7 +180,7 @@ exports.createExerciseVersion = async (req: Request, res: Response) => {
 /**
  * Adds a new exercise version to an existing exercise.
  */
-exports.addExerciseVersion = async (req: Request, res: Response) => {
+export const addExerciseVersion = async (req: Request, res: Response) => {
   const { exerciseName, versionName, level } = req.body;
 
   try {
@@ -205,7 +208,7 @@ exports.addExerciseVersion = async (req: Request, res: Response) => {
 /**
  * Deletes an exercise.
  */
-exports.deleteExercise = async (req: Request, res: Response) => {
+export const deleteExercise = async (req: Request, res: Response) => {
   const exerciseKey = req.params.exerciseKey;
   try {
     const exercise = await Exercise.findOne({ where: { key: exerciseKey } });
@@ -214,8 +217,10 @@ exports.deleteExercise = async (req: Request, res: Response) => {
     }
 
     await exercise.destroy();
-    if (exercise.imageUrl) {
-      fileHelper.deleteFile(exercise.imageUrl); // Cleanup image if exists
+
+    // Utilisation de l'optional chaining pour vérifier imageUrl
+    if (exercise.imageUrl?.startsWith("/uploads")) {
+      deleteFile(exercise.imageUrl); // Nettoyer uniquement les fichiers locaux
     }
 
     res.status(200).json({ message: "Exercice supprimé avec succès." });
