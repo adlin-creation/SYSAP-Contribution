@@ -75,10 +75,9 @@ exports.login = async (req: any, res: any) => {
    // user = await User.findOne({ where: { email: email } }); 
 
     // Si l'utilisateur n'est pas trouvé, vérifier dans ProfessionalUser
-    if (!user) {
-      user = await Professional_User.findOne({ where: { email: email } });
-    }
-
+  
+    user = await Professional_User.findOne({ where: { email: email } });
+    
     // Si toujours non trouvé, renvoyer une erreur
     if (!user) {
       return res.status(401).json({ message: "The user doesn't exist" });

@@ -23,7 +23,7 @@ import DoctorPatients from "./components/ProfessionalUser/Doctor/DoctorPatients"
 import KinesiologistMenu from "./components/ProfessionalUser/Kinesiologist/KinesiologistMenu";
 import KinesiologistPatients from "./components/ProfessionalUser/Kinesiologist/KinesiologistPatients";
 import AdminMenu from "./components/ProfessionalUser/Admin/AdminMenu";
-import useToken from "./components/Authentication/useToken"; // Hook pour gérer le token
+import useToken from "./components/Authentication/useToken"; // Import du hook personnalisé
 import Constants from "./components/Utils/Constants";
 import LanguageSwitcher from "./components/LanguageSwitcher/LanguageSwitcher";
 import { useTranslation } from "react-i18next";
@@ -49,7 +49,7 @@ import "./App.css";
 const { Header, Sider, Content } = Layout;
 
 function App() {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(); // la fonction qu'on doit appliquer a la traduction
   const location = useLocation();
   const navigate = useNavigate();
   const { token, setToken } = useToken(); // Utilisation du hook personnalisé pour gérer le token
@@ -216,7 +216,7 @@ function App() {
     {
       key: "3",
       label: t("App:logout"),
-      onClick: handleLogout,
+      onClick: handleLogout,  // Ajoutez cette ligne pour la déconnexion
     },
   ];
 
@@ -225,7 +225,7 @@ function App() {
     return (
       <Content className="content">
         <Routes>
-          <Route path="login" element={<Login setToken={setToken} />} />
+          <Route path="login" element={<Login setToken={setToken} />}></Route>
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </Content>
@@ -253,7 +253,7 @@ function App() {
             i18n.language === "ar" ? "header-ar" : ""
           }`}
         >
-          <div></div> {/* Juste pour pousser le contenu à droite */}
+          <div></div> {/* Empty div to align items to the right */}
           <div className="header-content">
             <LanguageSwitcher
               iconStyle={{ color: "white" }}
@@ -271,22 +271,31 @@ function App() {
         </Header>
         <Content className="content">
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="exercises" element={<ExerciseMenu />} />
-            <Route path="blocs" element={<BlocMenu />} />
-            <Route path="sessions" element={<SessionMenu />} />
-            <Route path="cycles" element={<CycleMenu />} />
-            <Route path="phases" element={<PhaseMenu />} />
-            <Route path="programs" element={<ProgramMenu />} />
-            <Route path="patients" element={<PatientMenu role={role} />} />
-            <Route path="doctors" element={<DoctorMenu />} />
-            <Route path="doctor-patients/:id" element={<DoctorPatients />} />
-            <Route path="kinesiologists" element={<KinesiologistMenu />} />
+          <Route path="/" element={<Home />}></Route>
+            <Route path="exercises" element={<ExerciseMenu />}></Route>
+            <Route path="blocs" element={<BlocMenu />}></Route>
+            <Route path="sessions" element={<SessionMenu />}></Route>
+            <Route path="cycles" element={<CycleMenu />}></Route>
+            <Route path="phases" element={<PhaseMenu />}></Route>
+            <Route path="programs" element={<ProgramMenu />}></Route>
+            <Route
+              path="patients"
+              element={<PatientMenu role={role} />}
+            ></Route>
+            <Route path="doctors" element={<DoctorMenu />}></Route>
+            <Route
+              path="doctor-patients/:id"
+              element={<DoctorPatients />}
+            ></Route>
+            <Route
+              path="kinesiologists"
+              element={<KinesiologistMenu />}
+            ></Route>
             <Route
               path="kinesiologist-patients/:id"
               element={<KinesiologistPatients />}
-            />
-            <Route path="admins" element={<AdminMenu />} />
+            ></Route>
+            <Route path="admins" element={<AdminMenu />}></Route>
             <Route
               path="*"
               element={
