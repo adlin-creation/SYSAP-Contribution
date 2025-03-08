@@ -1,6 +1,7 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import * as RNLocalize from 'react-native-localize';
+import { I18nManager } from 'react-native';
 
 import en_home from '../locales/en/Home.json';
 import en_index from '../locales/en/Index.json';
@@ -29,6 +30,15 @@ import es_programme from '../locales/es/Programme.json';
 import es_progression from '../locales/es/Progression.json';
 import es_seance from '../locales/es/Seance.json';
 
+import ar_home from '../locales/ar/Home.json';
+import ar_index from '../locales/ar/Index.json';
+import ar_layout from '../locales/ar/Layout.json';
+import ar_cahier from '../locales/ar/CahierDeSuivi.json';
+import ar_config from '../locales/ar/Configuration.json';
+import ar_programme from '../locales/ar/Programme.json';
+import ar_progression from '../locales/ar/Progression.json';
+import ar_seance from '../locales/ar/Seance.json';
+
 let locales = [];
 try {
     locales = RNLocalize.getLocales();
@@ -38,6 +48,11 @@ try {
 }
 
 const defaultLang = locales[0]?.languageCode || 'fr';
+
+//Pour déterminer s'il faut mettre le texte de droite à gauche ou l'inverse
+const isRTL = defaultLang === 'ar';
+I18nManager.allowRTL(isRTL);
+I18nManager.forceRTL(isRTL);
 
 i18n
   .use(initReactI18next)
@@ -74,6 +89,17 @@ i18n
             Programme: es_programme,
             Progression: es_progression,
             Seance: es_seance
+        },
+
+        ar: {
+            Home: ar_home,
+            Index: ar_index,
+            Layout: ar_layout,
+            Cahier: ar_cahier,
+            Config: ar_config,
+            Programme: ar_programme,
+            Progression: ar_progression,
+            Seance: ar_seance
         }
     },
     lng: defaultLang,
