@@ -46,8 +46,8 @@ function DoctorDetails({ doctor, onClose, refetchDoctors, openModal }) {
       .then(() => {
         refetchDoctors();
         AntModal.success({
-          content: t("Professionals:Doctors:updating_success_msg"),
-          okText: t("Professionals:Doctors:close_button"),
+          content: t("Professionals:Physicians:updating_success_msg"),
+          okText: t("Professionals:Physicians:close_button"),
           centered: true,
           onOk: () => {
             onClose();
@@ -56,10 +56,10 @@ function DoctorDetails({ doctor, onClose, refetchDoctors, openModal }) {
       })
       .catch((err) => {
         const errorMessage =
-          err.response?.data?.message || "Error updating doctor";
+          err.response?.data?.message || "Error updating physician";
         AntModal.error({
           content: errorMessage,
-          okText: t("Professionals:Doctors:close_button"),
+          okText: t("Professionals:Physicians:close_button"),
           centered: true,
         });
       });
@@ -73,7 +73,7 @@ function DoctorDetails({ doctor, onClose, refetchDoctors, openModal }) {
             {/* First Name and Last Name fields */}
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Doctors:first_name_label")}
+                label={t("Professionals:Physicians:first_name_label")}
                 required
                 validateStatus={errors.firstname ? "error" : ""}
                 help={errors.firstname?.message}
@@ -94,7 +94,7 @@ function DoctorDetails({ doctor, onClose, refetchDoctors, openModal }) {
             </Col>
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Doctors:last_name_label")}
+                label={t("Professionals:Physicians:last_name_label")}
                 required
                 validateStatus={errors.lastname ? "error" : ""}
                 help={errors.lastname?.message}
@@ -119,7 +119,7 @@ function DoctorDetails({ doctor, onClose, refetchDoctors, openModal }) {
             {/* Email and Phone Number fields */}
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Doctors:email")}
+                label={t("Professionals:Physicians:email")}
                 required
                 validateStatus={errors.email ? "error" : ""}
                 help={errors.email?.message}
@@ -140,7 +140,7 @@ function DoctorDetails({ doctor, onClose, refetchDoctors, openModal }) {
             </Col>
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Doctors:phone_number")}
+                label={t("Professionals:Physicians:phone_number")}
                 required
                 validateStatus={errors.phoneNumber ? "error" : ""}
                 help={errors.phoneNumber?.message}
@@ -164,7 +164,7 @@ function DoctorDetails({ doctor, onClose, refetchDoctors, openModal }) {
           <Row gutter={16}>
             {/* Status field */}
             <Col span={12}>
-              <Form.Item label={t("Professionals:Doctors:status")}>
+              <Form.Item label={t("Professionals:Physicians:status")}>
                 <Controller
                   name="active"
                   control={control}
@@ -172,9 +172,11 @@ function DoctorDetails({ doctor, onClose, refetchDoctors, openModal }) {
                     <Switch
                       checked={value}
                       onChange={onChange}
-                      checkedChildren={t("Professionals:Doctors:active_status")}
+                      checkedChildren={t(
+                        "Professionals:Physicians:active_status"
+                      )}
                       unCheckedChildren={t(
-                        "Professionals:Doctors:inactive_status"
+                        "Professionals:Physicians:inactive_status"
                       )}
                     />
                   )}
@@ -185,7 +187,7 @@ function DoctorDetails({ doctor, onClose, refetchDoctors, openModal }) {
 
           <Form.Item>
             <Button type="primary" htmlType="submit" icon={<SaveOutlined />}>
-              {t("Professionals:Doctors:update_doctor_button")}
+              {t("Professionals:Physicians:update_physician_button")}
             </Button>
           </Form.Item>
         </Form>
