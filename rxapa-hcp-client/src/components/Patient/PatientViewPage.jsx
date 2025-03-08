@@ -61,18 +61,6 @@ export default function PatientData({ patient, onClose }) {
     { name: "Exercises", value: parseFloat(averages.exercises), fill: "#ff7300" },
   ];
 
-  // Gestion des états de chargement et d'erreur
-  if (isLoading) {
-    return <div>Loading sessions...</div>;
-  }
-
-  if (isError) {
-    return <div>Error loading sessions</div>;
-  }
-
-  if (sessions.length === 0) {
-    return <div>No sessions found for this patient.</div>;
-  }
 
   return (
     <div className="patient-data-container">
