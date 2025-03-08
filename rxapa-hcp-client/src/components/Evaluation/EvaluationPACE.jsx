@@ -7,7 +7,7 @@ import Constants from "../Utils/Constants";
 import { useTranslation } from "react-i18next";
 
 function EvaluationPACE({ onSubmit }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("Evaluations");
   const { patientId } = useParams(); // Récupère l'ID depuis l'URL
   const [formData, setFormData] = useState({
     // Section A
@@ -63,9 +63,9 @@ function EvaluationPACE({ onSubmit }) {
 
     // Validation
     if (!formData.chairTestCount) {
-      newErrors.chairTestCount = "Le nombre de levers est requis";
+      newErrors.chairTestCount = t("error_stand_required");
     } else if (isNaN(formData.chairTestCount) || formData.chairTestCount < 0) {
-      newErrors.chairTestCount = "Veuillez entrer un nombre valide";
+      newErrors.chairTestCount = t("error_stand_invalid");
     }
 
     [
@@ -75,9 +75,9 @@ function EvaluationPACE({ onSubmit }) {
       "balanceOneFooted",
     ].forEach((field) => {
       if (!formData[field]) {
-        newErrors[field] = "Le temps est requis";
+        newErrors[field] = t("error_time_required");
       } else if (isNaN(formData[field]) || formData[field] < 0) {
-        newErrors[field] = "Veuillez entrer un temps valide";
+        newErrors[field] = t("error_time_invalid");
       }
     });
 
@@ -89,9 +89,9 @@ function EvaluationPACE({ onSubmit }) {
     }
 
     if (!formData.walkingTime) {
-      newErrors.walkingTime = "Le temps de marche est requis";
+      newErrors.walkingTime = t("error_walktime_required");
     } else if (isNaN(formData.walkingTime) || formData.walkingTime <= 0) {
-      newErrors.walkingTime = "Veuillez entrer un temps de marche valide";
+      newErrors.walkingTime = t("error_walktime_invalid");
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -116,18 +116,18 @@ function EvaluationPACE({ onSubmit }) {
             paddingBottom: "10px",
           }}
         >
-          Résultats de l'évaluation
+          {t("modal_results_eval")}
         </h3>
 
         <div style={{ marginBottom: "15px" }}>
-          <strong>Scores individuels :</strong>
-          <p>A. Cardio-musculaire : {scoreA}/6</p>
-          <p>B. Équilibre : {scoreB}/6</p>
-          <p>C. Mobilité : {scoreC}/6</p>
+          <strong>{t("individual_scores")}</strong>
+          <p>{t("cardio_score")} : {scoreA}/6</p>
+          <p>{t("balance_score")} : {scoreB}/6</p>
+          <p>{t("mobility_score")}: {scoreC}/6</p>
         </div>
 
         <div style={{ marginBottom: "15px" }}>
-          <strong>Score Total : {totalScore}/18</strong>
+          <strong>{t("total_score")} : {totalScore}/18</strong>
         </div>
 
         <div
@@ -139,11 +139,11 @@ function EvaluationPACE({ onSubmit }) {
           }}
         >
           <p>
-            <strong>Niveau : {level}</strong>
+            <strong>{t("level")} : {level}</strong>
           </p>
           <p>
             <strong>
-              Programme recommandé : {color} {level}
+              {t("recommended_program")} : {color} {level}
             </strong>
           </p>
         </div>
@@ -157,12 +157,12 @@ function EvaluationPACE({ onSubmit }) {
             }}
           >
             <p>
-              Vitesse de marche :{" "}
+              {t("speed_calculation")} :{" "}
               {(4 / parseFloat(formData.walkingTime)).toFixed(2)} m/s
             </p>
             <p>
               <strong>
-                Objectif de marche :{" "}
+                {t("walk_objective")} :{" "}
                 {calculateWalkingObjective(formData.walkingTime)} minutes
               </strong>
             </p>
@@ -201,7 +201,7 @@ function EvaluationPACE({ onSubmit }) {
         equilibre: scoreB,
         mobilite: scoreC,
         total: scoreTotal,
-        program: determineColor(scoreA, scoreB, scoreC) + " " + determineLevel(scoreTotal)
+        program: determineFrenchColor(scoreA, scoreB, scoreC) + " " + determineLevel(scoreTotal)
       }
     };
   
@@ -318,19 +318,33 @@ function EvaluationPACE({ onSubmit }) {
     const min = Math.min(scoreA, scoreB, scoreC);
 
     // Si tous les scores sont égaux
-    if (scoreA === scoreB && scoreB === scoreC) return "MARRON";
+    if (scoreA === scoreB && scoreB === scoreC) return t("color_brown");
 
     // Si deux scores sont égaux et minimum
+    if (scoreA === scoreB && scoreA === min) return t("color_green");
+    if (scoreB === scoreC && scoreB === min) return t("color_orange");
+    if (scoreC === scoreA && scoreC === min) return t("color_purple");
+
+    // Si un seul score est minimum
+    if (scoreA === min) return t("color_blue");
+    if (scoreB === min) return t("color_yellow");
+    if (scoreC === min) return t("color_red");
+
+    return t("color_brown"); // Cas par défaut
+  };
+
+  // pour que le programme envoyé a la BD est francais
+  const determineFrenchColor = (scoreA, scoreB, scoreC) => {
+    const min = Math.min(scoreA, scoreB, scoreC);
+    
+    if (scoreA === scoreB && scoreB === scoreC) return "MARRON";
     if (scoreA === scoreB && scoreA === min) return "VERT";
     if (scoreB === scoreC && scoreB === min) return "ORANGE";
     if (scoreC === scoreA && scoreC === min) return "VIOLET";
-
-    // Si un seul score est minimum
     if (scoreA === min) return "BLEU";
     if (scoreB === min) return "JAUNE";
     if (scoreC === min) return "ROUGE";
-
-    return "MARRON"; // Cas par défaut
+    return "MARRON";
   };
 
   const calculateWalkingObjective = (walkingTime) => {
@@ -353,26 +367,21 @@ function EvaluationPACE({ onSubmit }) {
   return (
     <Row justify="center">
       <Col span={16}>
-        <Form
-          layout="vertical"
-          onFinish={handleSubmit}
-          initialValues={formData}
-        >
-          {/* Section A: CARDIO-MUSCULAIRE */}
-          <h2>A. CARDIO-MUSCULAIRE</h2>
-          <Form.Item label="Test de la chaise en 30 secondes">
+        <Form layout="vertical" onFinish={handleSubmit}>
+          <h2>{t("sectionA_title")}</h2>
+          <Form.Item label={t("chair_test_label")}>
             <Radio.Group
               name="chairTestSupport"
               value={formData.chairTestSupport}
               onChange={handleChange}
             >
-              <Radio value={true}>Avec appui</Radio>
-              <Radio value={false}>Sans appui</Radio>
+              <Radio value={true}>{t("with_support")}</Radio>
+              <Radio value={false}>{t("without_support")}</Radio>
             </Radio.Group>
           </Form.Item>
 
           <Form.Item
-            label="Nombre de levers"
+            label={t("stand_count")}
             validateStatus={errors.chairTestCount ? "error" : ""}
             help={errors.chairTestCount}
           >
@@ -380,25 +389,23 @@ function EvaluationPACE({ onSubmit }) {
               name="chairTestCount"
               value={formData.chairTestCount}
               onChange={handleChange}
-              placeholder="Entrez le nombre"
+              placeholder={t("stand_count_placeholder")}
             />
           </Form.Item>
 
-          {/* Section B: ÉQUILIBRE */}
-          <h2>B. ÉQUILIBRE</h2>
+          <h2>{t("sectionB_title")}</h2>
           <div style={{ marginBottom: 16 }}>
-            Réalisez les équilibres dans l’ordre<br />
-            Le score sera attribué selon l'équilibre le plus grand obtenu
+            {t("balance_instructions")}
           </div>
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
                 label={
                   <span style={{ display: 'flex', alignItems: 'center' }}>
-                    1. Temps Pieds joints (secondes)
+                    {t("feet_together")}
                     <img 
                       src={require('./images/pace_balance_joint.png')}
-                      alt="Joint Jeet"
+                      alt="Joint Feet"
                       style={{ marginLeft: 8, height: 24 }}
                     />
                   </span>
@@ -410,7 +417,7 @@ function EvaluationPACE({ onSubmit }) {
                   name="balanceFeetTogether"
                   value={formData.balanceFeetTogether}
                   onChange={handleChange}
-                  placeholder="Entrez le temps"
+                  placeholder={t("time_placeholder")}
                 />
               </Form.Item>
             </Col>
@@ -418,7 +425,7 @@ function EvaluationPACE({ onSubmit }) {
             <Form.Item
               label={
                 <span style={{ display: 'flex', alignItems: 'center' }}>
-                  2. Temps Semi-tandem (secondes)
+                  {t("feet_semi_tandem")}
                   <img 
                     src={require('./images/pace_balance_semi_tandem.png')}
                     alt="Semi tandem Feet"
@@ -433,7 +440,7 @@ function EvaluationPACE({ onSubmit }) {
                   name="balanceSemiTandem"
                   value={formData.balanceSemiTandem}
                   onChange={handleChange}
-                  placeholder="Entrez le temps"
+                  placeholder={t("time_placeholder")}
                 />
               </Form.Item>
             </Col>
@@ -443,7 +450,7 @@ function EvaluationPACE({ onSubmit }) {
               <Form.Item
                 label={
                   <span style={{ display: 'flex', alignItems: 'center' }}>
-                    3. Temps Tandem (secondes)
+                  {t("feet_tandem")}
                     <img 
                       src={require('./images/pace_balance_tandem.png')}
                       alt="Tandem Feet"
@@ -458,7 +465,7 @@ function EvaluationPACE({ onSubmit }) {
                   name="balanceTandem"
                   value={formData.balanceTandem}
                   onChange={handleChange}
-                  placeholder="Entrez le temps"
+                  placeholder={t("time_placeholder")}
                 />
               </Form.Item>
             </Col>
@@ -466,7 +473,7 @@ function EvaluationPACE({ onSubmit }) {
               <Form.Item
                 label={
                   <span style={{ display: 'flex', alignItems: 'center' }}>
-                    4. Temps Unipodal (secondes)
+                  {t("feet_unipodal")}
                     <img 
                       src={require('./images/pace_balance_unipodal.png')}
                       alt="Unipodal Foot"
@@ -481,29 +488,28 @@ function EvaluationPACE({ onSubmit }) {
                   name="balanceOneFooted"
                   value={formData.balanceOneFooted}
                   onChange={handleChange}
-                  placeholder="Entrez le temps"
+                  placeholder={t("time_placeholder")}
                 />
               </Form.Item>
             </Col>
           </Row>
 
           {/* Section C: MOBILITÉ & STABILITÉ DU TRONC */}
-          <h2>C. MOBILITÉ & STABILITÉ DU TRONC</h2>
-          <Form.Item 
-          label="Functional Reach Test (FRT)">
+          <h2>{t("sectionC_title")}</h2>
+          <Form.Item label={t("frt_label")}>
             <Radio.Group
               name="frtPosition"
               value={formData.frtPosition}
               onChange={handleChange}
             >
-              <Radio value={true}>Assis</Radio>
-              <Radio value={false}>Debout</Radio>
-              <Radio value="armNotWorking">Ne lève pas les bras</Radio>
+              <Radio value={true}>{t("sitting")}</Radio>
+              <Radio value={false}>{t("standing")}</Radio>
+              <Radio value="armNotWorking">{t("arms_not_working")}</Radio>
             </Radio.Group>
           </Form.Item>
 
           <Form.Item
-            label="Distance (cm)"
+            label={t("distance_label")}
             validateStatus={errors.frtDistance ? "error" : ""}
             help={errors.frtDistance}
           >
@@ -511,15 +517,15 @@ function EvaluationPACE({ onSubmit }) {
               name="frtDistance"
               value={formData.frtDistance}
               onChange={handleChange}
-              placeholder="Entrez la distance"
+              placeholder={t("distance_placeholder")}
               disabled={formData.frtPosition === "armNotWorking"}
             />
           </Form.Item>
 
           {/* Section D: VITESSE DE MARCHE */}
-          <h2>VITESSE DE MARCHE</h2>
+          <h2>{t("sectionD_title")}</h2>
           <Form.Item
-            label="Test 4 mètres - Temps nécessaire pour marcher 4-mètres (secondes)"
+            label={t("walk_test_label")}
             validateStatus={errors.walkingTime ? "error" : ""}
             help={errors.walkingTime}
           >
@@ -532,11 +538,11 @@ function EvaluationPACE({ onSubmit }) {
                   handleChange(e);
                 }
               }}
-              placeholder="Entrez le temps en secondes"
+              placeholder={t("walktime_placeholder")}
             />
             {formData.walkingTime && !errors.walkingTime && (
               <div style={{ marginTop: 8, color: "#666" }}>
-                Vitesse de marche :{" "}
+                {t("walk_speed")} :{" "}
                 {(4 / parseFloat(formData.walkingTime)).toFixed(2)} m/s
               </div>
             )}
@@ -544,21 +550,21 @@ function EvaluationPACE({ onSubmit }) {
 
           <Form.Item>
             <Button onClick={() => onClose()} style={{ marginRight: 8 }}>
-              Annuler
+            {t("button_cancel")}
             </Button>
             <Button type="primary" htmlType="submit">
-              Soumettre
+            {t("button_submit")}
             </Button>
           </Form.Item>
         </Form>
       </Col>
       <Modal
-        title="Résultats"
+        title={t("modal_results_title")}
         open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         footer={[
           <Button key="close" onClick={() => setIsModalVisible(false)}>
-            Fermer
+            {t("button_close")}
           </Button>,
           <Button
             key="submit"
@@ -566,7 +572,7 @@ function EvaluationPACE({ onSubmit }) {
             onClick={handleConfirm}
             disabled={false}
           >
-            Confirmer
+            {t("button_confirm")}
           </Button>,
         ]}
       >

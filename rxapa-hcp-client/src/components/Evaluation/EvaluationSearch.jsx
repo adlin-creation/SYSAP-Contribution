@@ -3,8 +3,10 @@ import { Input, Button, Table, Card, message } from "antd";
 import { SearchOutlined, CloseOutlined } from "@ant-design/icons";
 import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
+import { useTranslation } from "react-i18next";
 
 function EvaluationSearch() {
+    const { t } = useTranslation("Evaluations");
     const { token } = useToken(); // Récupération du token d'authentification
     const [searchTerm, setSearchTerm] = useState(""); // Stocke la valeur de la recherche
     const [patients, setPatients] = useState([]); // Liste des patients récupérés
@@ -16,7 +18,7 @@ function EvaluationSearch() {
      */
     const handleSearch = async () => {
         if (!searchTerm.trim()) { // Vérifie si l'entrée est vide
-            message.warning("Veuillez entrer un ID ou un nom.");
+            message.warning("Veuillez entrer un nom.");
             return;
         }
     
@@ -75,17 +77,17 @@ function EvaluationSearch() {
      */
     const columns = [
         {
-            title: "Nom",
+            title: t("table_column_lastname"),
             dataIndex: "lastname",
             key: "lastname",
         },
         {
-            title: "Prénom",
+            title: t("table_column_firstname"),
             dataIndex: "firstname",
             key: "firstname",
         },
         {
-            title: "Date de naisssance",
+            title: t("table_column_birthday"),
             dataIndex: "birthday",
             key: "Birthday",
         },
@@ -112,12 +114,12 @@ function EvaluationSearch() {
 
     return (
         <div className="p-6">
-            <Card title="Recherche de patient pour évaluation" className="shadow-sm">
+            <Card title={t("search_title")} className="shadow-sm">
                 <div className="mb-6">
                     <div className="flex gap-4">
                         {/* Champs de recherche*/}
                         <Input
-                            placeholder="Rechercher un patient par nom"
+                            placeholder={t("search_placeholder")}
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             onPressEnter={handleSearch}
@@ -138,7 +140,11 @@ function EvaluationSearch() {
 
                 {/* Affichage messages d'erreur */}
                 {errorMessage ? (
-                    <div className="text-center py-8 text-red-500">{errorMessage}</div>
+                    <div className="text-center py-8 text-red-500">
+                    {errorMessage === "Aucun patient trouvé." 
+                      ? t("error_no_patients")
+                      : t("error_search")}
+                  </div>
                 ) : (
                     // Tableau d'affichage des patientss
                     <Table
