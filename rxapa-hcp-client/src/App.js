@@ -23,13 +23,12 @@ import DoctorPatients from "./components/ProfessionalUser/Doctor/DoctorPatients"
 import KinesiologistMenu from "./components/ProfessionalUser/Kinesiologist/KinesiologistMenu";
 import KinesiologistPatients from "./components/ProfessionalUser/Kinesiologist/KinesiologistPatients";
 import AdminMenu from "./components/ProfessionalUser/Admin/AdminMenu";
-import useToken from "./components/Authentication/useToken"; // Import du hook personnalisé
+import useToken from "./components/Authentication/useToken";
 import Constants from "./components/Utils/Constants";
 import LanguageSwitcher from "./components/LanguageSwitcher/LanguageSwitcher";
 import { useTranslation } from "react-i18next";
 
 import { Layout, Menu, Button, Avatar, Dropdown } from "antd";
-
 import {
   HomeOutlined,
   AppstoreOutlined,
@@ -50,13 +49,17 @@ import "./App.css";
 const { Header, Sider, Content } = Layout;
 
 function App() {
-  const { t } = useTranslation(); // la fonction qu'on doit appliquer a la traduction
+  const { t } = useTranslation(); // la fonction de traduction
   const location = useLocation();
   const navigate = useNavigate();
-  const { token, setToken } = useToken(); // Utilisation du hook personnalisé pour gérer le token
+
+  // Hook personnalisé pour gérer le token
+  const { token, setToken } = useToken(); 
+
   const [selectedKey, setSelectedKey] = useState(location.pathname);
   const [role, setRole] = useState("");
 
+  // Menu principal (référence brute, avant filtrage)
   const menuItems = [
     {
       key: "/",
@@ -120,34 +123,93 @@ function App() {
         },
       ],
     },
-    // Ajoutez d'autres éléments de menu si nécessaire
   ];
 
+  // État pour le menu filtré selon le rôle
   const [filteredMenuItems, setFilteredMenuItems] = useState(menuItems);
 
   useEffect(() => {
+    // S’il existe un "role" dans location.state, on le stocke
     if (location.state?.role) {
       setRole(location.state.role);
+
+      // Fonction qui filtre le menu selon le rôle
       const filterMenuItems = (items) => {
         return items
           .map((item) => {
-            if (item.children) {
-              return {
-                ...item,
-                children: filterMenuItems(item.children),
-              };
-            }
-            if (location.state.role === "admin" && item.key === "/admins") {
+            // On gère la logique pour /doctors
+            if (item.key === "/doctors") {
+              // Visible pour admin et superadmin
+              if (
+                location.state.role === "admin" ||
+                location.state.role === "superadmin"
+              ) {
+                return item;
+              }
               return null;
             }
+
+            // On gère la logique pour /kinesiologists
+            if (item.key === "/kinesiologists") {
+              // Visible pour admin et superadmin
+              if (
+                location.state.role === "admin" ||
+                location.state.role === "superadmin"
+              ) {
+                return item;
+              }
+              return null;
+            }
+
+            // On gère la logique pour /admins
+            if (item.key === "/admins") {
+              // Visible pour superadmin uniquement
+              if (location.state.role === "superadmin") {
+                return item;
+              }
+              return null;
+            }
+
+            // Si l'utilisateur est doctor ou kinesiologist, on enlève TOUT le bloc "healthcare-professional"
+            // => Concrètement, si c'est un item parent ou child, on l'exclut
+            if (
+              location.state.role === "doctor" ||
+              location.state.role === "kinesiologist"
+            ) {
+              // Si c'est l'item parent (key === "healthcare-professional") ou un enfant,
+              // on le vire. On peut juste détecter la présence de "healthcare-professional"
+              // ou le fait que item.key soit /doctors, /kinesiologists, /admins, etc.
+              if (
+                item.key === "healthcare-professional" ||
+                item.key === "/doctors" ||
+                item.key === "/kinesiologists" ||
+                item.key === "/admins"
+              ) {
+                return null;
+              }
+            }
+
+            // Pour tout le reste, on le laisse
             return item;
           })
-          .filter((item) => item !== null);
+          .filter((it) => it !== null)
+          .map((item) => {
+            // Si c'est un item parent avec des children, on répète la logique en récursif
+            if (item.children) {
+              const newChildren = filterMenuItems(item.children);
+              return { ...item, children: newChildren };
+            }
+            return item;
+          });
       };
-      setFilteredMenuItems(filterMenuItems(menuItems));
+
+      // On exécute le filtrage
+      const newMenu = filterMenuItems(menuItems);
+      setFilteredMenuItems(newMenu);
     }
   }, [location.state]);
 
+  // Déconnexion
   const handleLogout = async () => {
     try {
       console.log("Attempting to logout...");
@@ -155,13 +217,13 @@ function App() {
       console.log("Logout response:", response);
 
       setToken(null);
-      console.log("Token after logout:", token);
       navigate("/login");
     } catch (error) {
       console.error("Failed to logout:", error);
     }
   };
 
+  // Menu du user (avatar) dans le header
   const userMenuItems = [
     {
       key: "1",
@@ -174,15 +236,16 @@ function App() {
     {
       key: "3",
       label: t("App:logout"),
-      onClick: handleLogout, // Ajoutez cette ligne pour la déconnexion
+      onClick: handleLogout,
     },
   ];
 
+  // Si pas de token => on oblige la page de login
   if (!token) {
     return (
       <Content className="content">
         <Routes>
-          <Route path="login" element={<Login setToken={setToken} />}></Route>
+          <Route path="login" element={<Login setToken={setToken} />} />
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </Content>
@@ -202,7 +265,7 @@ function App() {
       </Sider>
       <Layout className="site-layout">
         <Header className="header site-layout-background">
-          <div></div> {/* Empty div to align items to the right */}
+          <div></div>
           <div className="header-content">
             <LanguageSwitcher />
             <Button icon={<SettingOutlined />} className="header-button" />
@@ -210,6 +273,7 @@ function App() {
             <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
               <div className="header-avatar">
                 <Avatar icon={<UserOutlined />} />
+                {/* Affiche le rôle à droite de l'avatar */}
                 <span>{role}</span>
               </div>
             </Dropdown>
@@ -217,31 +281,29 @@ function App() {
         </Header>
         <Content className="content">
           <Routes>
-            <Route path="/" element={<Home />}></Route>
-            <Route path="exercises" element={<ExerciseMenu />}></Route>
-            <Route path="blocs" element={<BlocMenu />}></Route>
-            <Route path="sessions" element={<SessionMenu />}></Route>
-            <Route path="cycles" element={<CycleMenu />}></Route>
-            <Route path="phases" element={<PhaseMenu />}></Route>
-            <Route path="programs" element={<ProgramMenu />}></Route>
-            <Route
-              path="patients"
-              element={<PatientMenu role={role} />}
-            ></Route>
-            <Route path="doctors" element={<DoctorMenu />}></Route>
-            <Route
-              path="doctor-patients/:id"
-              element={<DoctorPatients />}
-            ></Route>
+            {/* Dashboard */}
+            <Route path="/" element={<Home />} />
+            {/* Menus / Exercices, etc. */}
+            <Route path="exercises" element={<ExerciseMenu />} />
+            <Route path="blocs" element={<BlocMenu />} />
+            <Route path="sessions" element={<SessionMenu />} />
+            <Route path="cycles" element={<CycleMenu />} />
+            <Route path="phases" element={<PhaseMenu />} />
+            <Route path="programs" element={<ProgramMenu />} />
+            <Route path="patients" element={<PatientMenu role={role} />} />
+            {/* Professionnels */}
+            <Route path="doctors" element={<DoctorMenu />} />
+            <Route path="doctor-patients/:id" element={<DoctorPatients />} />
             <Route
               path="kinesiologists"
               element={<KinesiologistMenu />}
-            ></Route>
+            />
             <Route
               path="kinesiologist-patients/:id"
               element={<KinesiologistPatients />}
-            ></Route>
-            <Route path="admins" element={<AdminMenu />}></Route>
+            />
+            <Route path="admins" element={<AdminMenu />} />
+            {/* 404 */}
             <Route
               path="*"
               element={
