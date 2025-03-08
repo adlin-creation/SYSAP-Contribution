@@ -116,3 +116,5 @@ async function configureDatabase() {
     throw new Error(error);
   }
 }
+
+export default app;

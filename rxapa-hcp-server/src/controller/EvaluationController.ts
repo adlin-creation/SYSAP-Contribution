@@ -5,8 +5,9 @@ import { sequelize } from "../util/database";
 import { Patient } from "../model/Patient";
 import { Program } from "../model/Program";
 import { Op } from "sequelize";
+import { Evaluation_MATCH } from "../model/Evaluation_MATCH";
 
-exports.createEvaluation = async (req: any, res: any, next: any) => {
+exports.createPaceEvaluation = async (req: any, res: any, next: any) => {
   console.log("Requête reçue :", req.body);
   const {
     idPatient,
@@ -25,20 +26,19 @@ exports.createEvaluation = async (req: any, res: any, next: any) => {
 
   const t = await sequelize.transaction();
 
-  
   try {
     const program = await Program.findOne({
-      where: { 
-        name: scores.program
+      where: {
+        name: scores.program,
       },
-      transaction: t
+      transaction: t,
     });
-  
+
     if (!program) {
       await t.rollback();
       return res.status(404).json({
         message: "Programme " + scores.program + " introuvable",
-        error: `Programme '${scores.program}' introuvable`
+        error: `Programme '${scores.program}' introuvable`,
       });
     }
 
@@ -46,7 +46,7 @@ exports.createEvaluation = async (req: any, res: any, next: any) => {
       {
         idPatient: idPatient,
         //idKinesiologist,
-        idResultProgram: program.id
+        idResultProgram: program.id,
       },
       { transaction: t }
     );
@@ -86,21 +86,104 @@ exports.createEvaluation = async (req: any, res: any, next: any) => {
     res.status(201).json({ evaluation, scores, objectifMarche });
   } catch (error: any) {
     console.error("ERREUR COMPLETE SERVEUR :", error);
-    
+
     await t.rollback();
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({ 
+    res.status(error.statusCode).json({
       message: "Error creating evaluation",
       errorDetails: error.toString(),
-      stack: error.stack
+      stack: error.stack,
     });
   }
   return res;
 };
 
-exports.updateEvaluation = async (req: any, res: any, next: any) => {
+exports.createMatchEvaluation = async (req: any, res: any, next: any) => {
+  console.log("Requête reçue pour évaluation MATCH:", req.body);
+  const {
+    idPatient,
+    chairTestSupport,
+    chairTestCount,
+    balanceFeetTogether,
+    balanceSemiTandem,
+    balanceTandem,
+    walkingTime,
+    scores,
+  } = req.body;
+
+  const t = await sequelize.transaction();
+
+  try {
+    const program = await Program.findOne({
+      where: {
+        name: scores.program,
+      },
+      transaction: t,
+    });
+
+    if (!program) {
+      await t.rollback();
+      return res.status(404).json({
+        message: "Programme " + scores.program + " introuvable",
+        error: `Programme '${scores.program}' introuvable`,
+      });
+    }
+
+    const evaluation = await Evaluation.create(
+      {
+        idPatient: idPatient,
+        idResultProgram: program.id,
+      },
+      { transaction: t }
+    );
+
+    const vitesse = walkingTime ? 4 / parseFloat(walkingTime) : 0;
+    let objectifMarche = 1; // 10 min par défaut
+    if (vitesse >= 0.8) objectifMarche = 4; // 30 min
+    else if (vitesse > 0.6 && vitesse < 0.8) objectifMarche = 3; // 20 min
+    else if (vitesse > 0.4 && vitesse < 0.6) objectifMarche = 2; // 15 min
+
+    await Evaluation_MATCH.create(
+      {
+        // Section Cardio-musculaire
+        idPATH: evaluation.id,
+        chairTestSupport: chairTestSupport === "with",
+        chairTestCount: parseInt(chairTestCount),
+        scoreCM: scores.cardioMusculaire,
+        // Section Equilibre
+        balanceFeetTogether: parseFloat(balanceFeetTogether),
+        balanceSemiTandem: parseFloat(balanceSemiTandem),
+        balanceTandem: parseFloat(balanceTandem),
+        scoreBalance: scores.equilibre,
+        // Scores et vitesse
+        scoreTotal: scores.total,
+        vitesseDeMarche: vitesse,
+        objectifMarche: objectifMarche,
+      },
+      { transaction: t }
+    );
+
+    await t.commit();
+    res.status(201).json({ evaluation, scores, objectifMarche });
+  } catch (error: any) {
+    console.error("ERREUR COMPLETE SERVEUR :", error);
+
+    await t.rollback();
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    res.status(error.statusCode).json({
+      message: "Error creating MATCH evaluation",
+      errorDetails: error.toString(),
+      stack: error.stack,
+    });
+  }
+  return res;
+};
+
+exports.updatePaceEvaluation = async (req: any, res: any, next: any) => {
   const evaluationId = req.params.id;
   const {
     chairTestSupport,
@@ -173,10 +256,107 @@ exports.updateEvaluation = async (req: any, res: any, next: any) => {
   return res;
 };
 
+exports.updateMatchEvaluation = async (req: any, res: any, next: any) => {
+  const evaluationId = req.params.id;
+  const {
+    chairTestSupport,
+    chairTestCount,
+    balanceFeetTogether,
+    balanceSemiTandem,
+    balanceTandem,
+    walkingTime,
+    scores,
+  } = req.body;
+
+  const t = await sequelize.transaction();
+
+  try {
+    const evaluation = await Evaluation.findByPk(evaluationId);
+    if (!evaluation) {
+      await t.rollback();
+      return res.status(404).json({ message: "Evaluation not found" });
+    }
+
+    const pathEvaluation = await Evaluation_MATCH.findOne({
+      where: { idPATH: evaluationId },
+    });
+
+    if (!pathEvaluation) {
+      await t.rollback();
+      return res.status(404).json({ message: "MATCH evaluation not found" });
+    }
+
+    // Mettre à jour le programme si nécessaire
+    if (scores.program) {
+      const program = await Program.findOne({
+        where: { name: scores.program },
+        transaction: t,
+      });
+
+      if (!program) {
+        await t.rollback();
+        return res.status(404).json({
+          message: "Programme " + scores.program + " introuvable",
+        });
+      }
+
+      await evaluation.update(
+        { idResultProgram: program.id },
+        { transaction: t }
+      );
+    }
+
+    const vitesse = walkingTime ? 4 / parseFloat(walkingTime) : 0;
+    let objectifMarche = 1; // 10 min par défaut
+    if (vitesse >= 0.8) objectifMarche = 4; // 30 min
+    else if (vitesse >= 0.6 && vitesse < 0.8) objectifMarche = 3; // 20 min
+    else if (vitesse >= 0.4 && vitesse < 0.6) objectifMarche = 2; // 15 min
+
+    await pathEvaluation.update(
+      {
+        chairTestSupport: chairTestSupport === "with",
+        chairTestCount: parseInt(chairTestCount),
+        scoreCM: scores.cardioMusculaire,
+        balanceFeetTogether: parseFloat(balanceFeetTogether),
+        balanceSemiTandem: parseFloat(balanceSemiTandem),
+        balanceTandem: parseFloat(balanceTandem),
+        scoreBalance: scores.equilibre,
+        scoreTotal: scores.total,
+        vitesseDeMarche: vitesse,
+        objectifMarche: objectifMarche,
+      },
+      { transaction: t }
+    );
+
+    await t.commit();
+
+    res.status(200).json({
+      evaluation,
+      pathEvaluation,
+      scores,
+      message: "MATCH evaluation updated successfully",
+    });
+  } catch (error: any) {
+    await t.rollback();
+    console.error("Error updating MATCH evaluation:", error);
+
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+
+    res.status(error.statusCode).json({
+      message: "Error updating MATCH evaluation",
+      errorDetails: error.toString(),
+      stack: error.stack,
+    });
+  }
+  return res;
+};
+
 /**
  * Returns a specific PACE evaluation based on ID.
  */
-exports.getEvaluation = async (req: any, res: any, next: any) => {
+exports.getPaceEvaluation = async (req: any, res: any, next: any) => {
   const evaluationId = req.params.id;
   try {
     const evaluation = await Evaluation.findOne({
@@ -204,10 +384,38 @@ exports.getEvaluation = async (req: any, res: any, next: any) => {
   return res;
 };
 
+exports.getMatchEvaluation = async (req: any, res: any, next: any) => {
+  const evaluationId = req.params.id;
+  try {
+    const evaluation = await Evaluation.findOne({
+      where: { id: evaluationId },
+      include: [
+        {
+          model: Evaluation_MATCH,
+          required: true,
+        },
+      ],
+    });
+
+    if (!evaluation) {
+      return res.status(404).json({ message: "Evaluation not found" });
+    }
+    res.status(200).json(evaluation);
+  } catch (error: any) {
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    res
+      .status(error.statusCode)
+      .json({ message: "Error loading evaluation from the database" });
+  }
+  return res;
+};
+
 /**
  * Returns all PACE evaluations.
  */
-exports.getEvaluations = async (req: any, res: any, next: any) => {
+exports.getPaceEvaluations = async (req: any, res: any, next: any) => {
   try {
     const evaluations = await Evaluation.findAll({
       include: [
@@ -229,10 +437,32 @@ exports.getEvaluations = async (req: any, res: any, next: any) => {
   return res;
 };
 
+exports.getMatchEvaluations = async (req: any, res: any, next: any) => {
+  try {
+    const evaluations = await Evaluation.findAll({
+      include: [
+        {
+          model: Evaluation_MATCH,
+          required: true,
+        },
+      ],
+    });
+    res.status(200).json(evaluations);
+  } catch (error: any) {
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    res
+      .status(error.statusCode)
+      .json({ message: "Error loading evaluations from the database" });
+  }
+  return res;
+};
+
 /**
  * Deletes a PACE evaluation.
  */
-exports.deleteEvaluation = async (req: any, res: any, next: any) => {
+exports.deletePaceEvaluation = async (req: any, res: any, next: any) => {
   const evaluationId = req.params.id;
   const t = await sequelize.transaction();
 
@@ -261,23 +491,53 @@ exports.deleteEvaluation = async (req: any, res: any, next: any) => {
   return res;
 };
 
+exports.deleteMatchEvaluation = async (req: any, res: any, next: any) => {
+  const evaluationId = req.params.id;
+  const t = await sequelize.transaction();
+
+  try {
+    const evaluation = await Evaluation.findByPk(evaluationId);
+    if (!evaluation) {
+      return res.status(404).json({ message: "Evaluation not found" });
+    }
+
+    await Evaluation_MATCH.destroy({
+      where: { idPATH: evaluationId },
+      transaction: t,
+    });
+
+    await evaluation.destroy({ transaction: t });
+    await t.commit();
+
+    res.status(200).json({ message: "Evaluation deleted" });
+  } catch (error: any) {
+    await t.rollback();
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    res.status(error.statusCode).json({ message: "Error deleting evaluation" });
+  }
+  return res;
+};
+
 exports.searchPatients = async (req: Request, res: Response) => {
   try {
     const { term } = req.query;
-    if (!term) return res.status(400).json({ message: "Terme de recherche requis" });
+    if (!term)
+      return res.status(400).json({ message: "Terme de recherche requis" });
 
     // Nettoyage et séparation des termes
     const searchTerms = term.toString().trim().split(/\s+/);
-    
+
     let whereClause;
-    
+
     if (searchTerms.length === 1) {
       // Recherche simple sur un seul terme
       whereClause = {
         [Op.or]: [
           { firstname: { [Op.iLike]: `%${searchTerms[0]}%` } },
           { lastname: { [Op.iLike]: `%${searchTerms[0]}%` } },
-        ]
+        ],
       };
     } else {
       // Combinaisons prénom/nom
@@ -287,25 +547,28 @@ exports.searchPatients = async (req: Request, res: Response) => {
           {
             [Op.and]: [
               { firstname: { [Op.iLike]: `%${searchTerms[0]}%` } },
-              { lastname: { [Op.iLike]: `%${searchTerms.slice(1).join(' ')}%` } },
-            ]
+              {
+                lastname: { [Op.iLike]: `%${searchTerms.slice(1).join(" ")}%` },
+              },
+            ],
           },
           // Format "Nom Prénom" (si deux termes)
-          ...(searchTerms.length === 2 ? [
-            {
-              [Op.and]: [
-                { firstname: { [Op.iLike]: `%${searchTerms[1]}%` } },
-                { lastname: { [Op.iLike]: `%${searchTerms[0]}%` } },
+          ...(searchTerms.length === 2
+            ? [
+                {
+                  [Op.and]: [
+                    { firstname: { [Op.iLike]: `%${searchTerms[1]}%` } },
+                    { lastname: { [Op.iLike]: `%${searchTerms[0]}%` } },
+                  ],
+                },
               ]
-            }
-          ] : [])
-        ]
+            : []),
+        ],
       };
     }
 
     const patients = await Patient.findAll({ where: whereClause });
     res.status(200).json(patients);
-    
   } catch (error) {
     console.error("Erreur recherche:", error);
     res.status(500).json({ message: "Échec de la recherche" });
