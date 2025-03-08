@@ -57,6 +57,8 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
     setIsEditing(true); // Active le mode édition
     setValue("name", exercise.name); // Pré-remplir les champs avec les données existantes
     setValue("description", exercise.description); // Pré-remplir les champs avec les données existantes
+    setValue("category", exercise.category); // Pré-remplir la catégorie
+    setValue("fitnessLevel", exercise.fitnessLevel); // Pré-remplir le niveau de forme physique
   };
 
   // Rendu du composant
@@ -95,6 +97,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
                   placeholder="Sélectionner une catégorie"
                   style={{ width: "100%" }}
                   allowClear
+                  disabled={!isEditing} // Si isEditing est false, les champs sont en lecture seule
                 >
                   {["Cardio", "Force", "Flexibilité", "Équilibre"].map((category) => (
                     <Select.Option key={category} value={category}>
@@ -106,7 +109,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
             />
           </Form.Item>
 
-
+          {/* Champ pour le niveau de forme physique */}
           <Form.Item label={t("le niveau de forme physique attendu")}>
             <Controller
               name="fitnessLevel"
@@ -119,6 +122,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
                   placeholder="Sélectionner un niveau"
                   style={{ width: "100%" }}
                   allowClear
+                  disabled={!isEditing} // Si isEditing est false, les champs sont en lecture seule
                 >
                   {["Débutant", "Intermédiaire", "Avancé"].map((level) => (
                     <Select.Option key={level} value={level}>
@@ -129,7 +133,6 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
               )}
             />
           </Form.Item>
-
 
           {/* Champ de saisie pour la description de l'exercice */}
           <Form.Item label="Description d'exercice">
