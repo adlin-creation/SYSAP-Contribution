@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { User } from "../model/User";
 import { Professional_User } from "../model/Professional_User";
 
 interface AuthRequest extends Request {
@@ -30,7 +29,7 @@ export default async function isAuth(
     const decoded: any = jwt.verify(token, process.env.TOKEN_SECRET_KEY as string);
 
     // Cherche dans User
-    let user = await User.findOne({ where: { email: decoded.email } });
+    let user = await Professional_User.findOne({ where: { email: decoded.email } });
     if (user) {
       // => c'est un "superadmin" (dans votre logique)
       req.user = user; 
