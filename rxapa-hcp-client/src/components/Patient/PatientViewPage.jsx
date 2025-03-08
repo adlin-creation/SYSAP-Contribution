@@ -1,39 +1,57 @@
 import { useState } from "react";
+import axios from "axios";
+import useToken from "../Authentication/useToken";
+import { useQuery } from "@tanstack/react-query";
 import { Card, Button } from "antd";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
 import { useTranslation } from "react-i18next";
+import Constants from "../Utils/Constants";
 import "./Styles.css"; // Import the CSS file
-
-const sessions = [
-  { session: 1, date: "2024-03-01", difficulty: 3, pain: 5, exercises: 4 },
-  { session: 2, date: "2024-03-05", difficulty: 4, pain: 4, exercises: 5 },
-  { session: 3, date: "2024-03-10", difficulty: 5, pain: 3, exercises: 6 },
-];
 
 export default function PatientData({ patient, onClose }) {
   const { t } = useTranslation();
-  const [currentSession, setCurrentSession] = useState(sessions.length - 1);
-  const sessionData = sessions[currentSession];
+  const patientSessionsUrl = `${Constants.SERVER_URL}/patient/${patient.id}/sessions`;
+  const { token } = useToken();
 
-  // Transformation de sessionData en tableau pour le graphique
+  // Récupérer les sessions avec useQuery
+  const {
+    data: sessionsData,
+    isLoading,
+    isError,
+  } = useQuery(["SessionRecord", patient.id], () => {
+    return axios
+      .get(patientSessionsUrl, {
+        headers: { Authorization: "Bearer " + token },
+      })
+      .then((res) => res.data);
+  });
+
+  const sessions = sessionsData || [];
+
+  const [currentSession, setCurrentSession] = useState(sessions.length);
+
+  console.log(sessions);
+
+  const sessionData = sessions[currentSession] || {};
+
   const sessionDataForChart = [sessionData];
 
   // Calcul des moyennes
   const averageData = sessions.reduce(
     (acc, s) => {
-      acc.difficulty += s.difficulty;
-      acc.pain += s.pain;
-      acc.exercises += s.exercises;
+      acc.difficultyLevel += s.difficultyLevel || 0;
+      acc.painLevel += s.painLevel || 0;
+      acc.accomplishedExercice += s.accomplishedExercice || 0;
       return acc;
     },
-    { difficulty: 0, pain: 0, exercises: 0 }
+    { difficultyLevel: 0, painLevel: 0, accomplishedExercice: 0 }
   );
 
   const totalSessions = sessions.length;
   const averages = {
-    difficulty: (averageData.difficulty / totalSessions).toFixed(1),
-    pain: (averageData.pain / totalSessions).toFixed(1),
-    exercises: (averageData.exercises / totalSessions).toFixed(1),
+    difficulty: (averageData.difficultyLevel / totalSessions).toFixed(1),
+    pain: (averageData.painLevel / totalSessions).toFixed(1),
+    exercises: (averageData.accomplishedExercice / totalSessions).toFixed(1),
   };
 
   // Transformation des moyennes en tableau d'objets avec des couleurs personnalisées
@@ -42,6 +60,19 @@ export default function PatientData({ patient, onClose }) {
     { name: "Pain", value: parseFloat(averages.pain), fill: "#82ca9d" },
     { name: "Exercises", value: parseFloat(averages.exercises), fill: "#ff7300" },
   ];
+
+  // Gestion des états de chargement et d'erreur
+  if (isLoading) {
+    return <div>Loading sessions...</div>;
+  }
+
+  if (isError) {
+    return <div>Error loading sessions</div>;
+  }
+
+  if (sessions.length === 0) {
+    return <div>No sessions found for this patient.</div>;
+  }
 
   return (
     <div className="patient-data-container">
@@ -71,9 +102,9 @@ export default function PatientData({ patient, onClose }) {
             {/* Données de la session */}
             <p><strong>Session:</strong> {currentSession + 1}</p>
             <p><strong>Date:</strong> {sessionData.date}</p>
-            <p><strong>Difficulty Level:</strong> {sessionData.difficulty}</p>
-            <p><strong>Pain Level:</strong> {sessionData.pain}</p>
-            <p><strong>Accomplished Exercises:</strong> {sessionData.exercises}</p>
+            <p><strong>Difficulty Level:</strong> {sessionData.difficultyLevel}</p>
+            <p><strong>Pain Level:</strong> {sessionData.painLevel}</p>
+            <p><strong>Accomplished Exercice:</strong> {sessionData.accomplishedExercice}</p>
           </div>
 
           {/* Graphique Session Data */}
@@ -83,9 +114,9 @@ export default function PatientData({ patient, onClose }) {
               <XAxis dataKey="session" />
               <YAxis />
               <Tooltip />
-              <Bar dataKey="difficulty" fill="#8884d8" name="Difficulty" />
-              <Bar dataKey="pain" fill="#82ca9d" name="Pain" />
-              <Bar dataKey="exercises" fill="#ff7300" name="Exercises" />
+              <Bar dataKey="difficultyLevel" fill="#8884d8" name="Difficulty" />
+              <Bar dataKey="painLevel" fill="#82ca9d" name="Pain" />
+              <Bar dataKey="accomplishedExercice" fill="#ff7300" name="Exercises" />
             </BarChart>
           </div>
         </div>
@@ -98,7 +129,7 @@ export default function PatientData({ patient, onClose }) {
           <div className="average-info">
             <p><strong>Difficulty Level:</strong> {averages.difficulty}</p>
             <p><strong>Pain Level:</strong> {averages.pain}</p>
-            <p><strong>Accomplished Exercises:</strong> {averages.exercises}</p>
+            <p><strong>Accomplished Exercice:</strong> {averages.exercises}</p>
           </div>
 
           {/* Graphique Average Since Inception */}

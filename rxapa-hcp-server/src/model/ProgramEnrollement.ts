@@ -32,4 +32,9 @@ export const ProgramEnrollement = sequelize.define("ProgramEnrollement", {
     allowNull: false,
     unique: true,
   },
+  PatientId: {
+    type: dataTypes.INTEGER,
+    allowNull: false,
+    unique: true,
+  }
 });

@@ -35,4 +35,8 @@ export const SessionRecord = sequelize.define("SessionRecord", {
     type: dataTypes.DATE,
     allowNull: false,
   },
+  ProgramEnrollementId: {
+    type: dataTypes.INTEGER,
+    allowNull: false,
+  }
 });
