@@ -5,8 +5,11 @@ import {
   DeleteOutlined,
   ArrowLeftOutlined,
   ExclamationCircleOutlined,
+  PhoneOutlined,
+  MailOutlined,
+  LinkOutlined
 } from "@ant-design/icons";
-import { Button, Table, Space, Tag, Row, Col, Modal as AntModal } from "antd";
+import { Card, Descriptions, Button, Table, Space, Tag, Row, Col, Modal as AntModal } from "antd";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import Constants from "../Utils/Constants";
@@ -14,6 +17,7 @@ import useToken from "../Authentication/useToken";
 import CreatePatient from "./CreatePatient";
 import PatientDetails from "./PatientDetails";
 import { useTranslation } from "react-i18next";
+
 
 export default function PatientMenu({ role }) {
   const { t } = useTranslation();
@@ -37,44 +41,44 @@ export default function PatientMenu({ role }) {
     }
   );
 
+  // Faire un endpoint pour lister les patients avec aide(s) soignant(s).... 
+  const fetchProgram = async (ProgramEnrollement) => {
+    try {
+      const { data } = await axios.get(`${Constants.SERVER_URL}/programs`, {
+        headers: { Authorization: "Bearer " + token },
+      });
+      console.log(data);
+      return data.find((prog) => prog.id === ProgramEnrollement.ProgramId);
+    } catch (err) {
+      throw new Error(err.response?.data?.message || "Erreur lors de la récupération des programmes.");
+    }
+  };
+
   // Fonction pour récupérer les enregistrements de programme liés à un patient
   const fetchProgramEnrollements = async (patientId) => {
     try {
-      const { data } = await axios.get(
-        `${Constants.SERVER_URL}/program-enrollements`,
-        {
-          headers: { Authorization: "Bearer " + token },
-        }
-      );
+      const { data } = await axios.get(`${Constants.SERVER_URL}/program-enrollements`, {
+        headers: { Authorization: "Bearer " + token },
+      });
       return data.filter((prog) => prog.PatientId === patientId);
     } catch (err) {
-      throw new Error(
-        err.response?.data?.message ||
-          "Erreur lors de la récupération des programmes."
-      );
+      throw new Error(err.response?.data?.message || "Erreur lors de la récupération des Programmes d'enrôlement.");
     }
   };
 
   // Fonction pour récupérer les soignants liés aux enregistrements de programme
   const fetchPatientCaregivers = async (programEnrollements) => {
     try {
-      const { data } = await axios.get(
-        `${Constants.SERVER_URL}/patient-caregivers`,
-        {
-          headers: { Authorization: "Bearer " + token },
-        }
-      );
+      const { data } = await axios.get(`${Constants.SERVER_URL}/patient-caregivers`, {
+        headers: { Authorization: "Bearer " + token },
+      });
       return data.filter((patientCaregiver) =>
         programEnrollements.some(
-          (enrollment) =>
-            enrollment.id === patientCaregiver.ProgramEnrollementId
+          (enrollment) => enrollment.id === patientCaregiver.ProgramEnrollementId
         )
       );
     } catch (err) {
-      throw new Error(
-        err.response?.data?.message ||
-          "Erreur lors de la récupération des soignants."
-      );
+      throw new Error(err.response?.data?.message || "Erreur lors de la récupération des soignants.");
     }
   };
 
@@ -92,10 +96,7 @@ export default function PatientMenu({ role }) {
       );
       return caregiversDetails;
     } catch (err) {
-      throw new Error(
-        err.response?.data?.message ||
-          "Erreur lors de la récupération des détails des soignants."
-      );
+      throw new Error(err.response?.data?.message || "Erreur lors de la récupération des détails des soignants.");
     }
   };
 
@@ -106,34 +107,103 @@ export default function PatientMenu({ role }) {
       const programEnrollements = await fetchProgramEnrollements(patient.id);
       console.log("Enregistrements du patient :", programEnrollements);
 
-      const caregivers = await fetchPatientCaregivers(programEnrollements);
-      console.log("Soignants associés :", caregivers);
+      const patient_caregivers = await fetchPatientCaregivers(programEnrollements);
+      console.log("Soignants associés :", patient_caregivers);
 
-      const caregiversDetails = await fetchCaregiversDetails(caregivers);
-      console.log("Détails des soignants :", caregiversDetails);
+      const caregivers = await fetchCaregiversDetails(patient_caregivers);
+      console.log("Détails des soignants :", caregivers);
 
-      openCaregiversModal(caregiversDetails);
+      openCaregiversModal(caregivers, patient_caregivers, programEnrollements);
     } catch (err) {
       console.error("Erreur :", err.message);
       openModal(err.message, true);
     }
   };
-  const openCaregiversModal = (caregivers) => {
-    console.log(caregivers);
+
+  const openCaregiversModal = (caregivers, patient_caregivers, programEnrollements) => {
     AntModal.info({
-      title: t("Patients:caregivers_list"),
-      content: (
-        <div>
-          <ul>
-            {caregivers.map((caregiver) => (
-              <li key={caregiver.id}>
-                {caregiver.firstname} {caregiver.lastname}
-              </li>
-            ))}
-          </ul>
+      title: (
+        <div style={{ fontSize: "18px", fontWeight: "bold" }}>
+          Liste des soignants
         </div>
+      ), content: caregivers.length ? (
+        <Row gutter={[16, 16]}>
+          {caregivers.filter(c => c).map(c => (
+            <Col key={c.id} span={8}>
+              <Card
+                title={`${c.firstname} ${c.lastname}`}
+                actions={[
+                  <Button
+                    type="link"
+                    icon={<LinkOutlined />}
+                    onClick={() => viewCaregiverDetails(c, patient_caregivers, programEnrollements)}
+                  >
+                    {t("voir les details")}
+                  </Button>
+                ]}
+              >
+                <p><MailOutlined /> {c.email}</p>
+                <p><PhoneOutlined /> {c.phoneNumber}</p>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      ) : <p>{t("Aucune aide soignante disponible")}</p>,
+      onOk() { },
+      width: "80%",
+    });
+  };
+
+  const viewCaregiverDetails = async (caregiver, patient_caregivers, programEnrollements) => {
+    const keysToShow = ['firstname', 'lastname', 'email', 'phoneNumber', 'relationship'];
+
+    const patient_caregiver = patient_caregivers.find(
+      (p_c) => p_c.CaregiverId === caregiver.id
+    );
+
+    let program = null;
+    if (patient_caregiver) {
+      const programEnrollement = programEnrollements.find(
+        (p_e) => p_e.id === patient_caregiver.ProgramEnrollementId
+      );
+
+      if (programEnrollement) {
+        program = await fetchProgram(programEnrollement);
+      }
+    }
+
+    const items = keysToShow
+      .filter(key => caregiver[key] !== undefined)
+      .map(key => ({
+        key,
+        label: t(`Patients:${key}`),
+        children: caregiver[key],
+      }));
+
+    if (program) {
+      items.push({
+        key: "program",
+        label: t("Patients:program"),
+        children: program.name,
+      });
+    }
+
+    AntModal.info({
+      title: (
+        <div style={{ fontSize: "18px", fontWeight: "bold" }}>
+          {caregiver.firstname} {caregiver.lastname} - Détails de l'aide soignant
+        </div>
+      ), content: (
+        <Descriptions bordered column={1}>
+          {items.map(item => (
+            <Descriptions.Item key={item.key} label={item.label}>
+              {item.children}
+            </Descriptions.Item>
+          ))}
+        </Descriptions>
       ),
-      onOk() {},
+      onOk() { },
+      width: "60%",
     });
   };
 
@@ -186,7 +256,7 @@ export default function PatientMenu({ role }) {
       key: "numberOfPrograms",
     },
     {
-      title: t("Patients:caregivers"),
+      title: "Caregivers",
       key: "caregivers",
       render: (record) => (
         <Button type="link" onClick={() => handleGetCaregivers(record)}>
@@ -199,18 +269,13 @@ export default function PatientMenu({ role }) {
       key: "actions",
       render: (_, record) => (
         <Space size="middle">
-          <Button
-            type="link"
-            onClick={() => handleEdit(record)}
-            style={{ display: role === "admin" ? "none" : "inline-block" }}
+          <Button type="link" onClick={() => handleEdit(record)}
+            style={{ display: role === 'admin' ? 'none' : 'inline-block' }}
           >
             <EditOutlined /> {t("Patients:edit_button")}
           </Button>
-          <Button
-            type="link"
-            danger
-            onClick={() => handleDelete(record)}
-            style={{ display: role === "admin" ? "none" : "inline-block" }}
+          <Button type="link" danger onClick={() => handleDelete(record)}
+            style={{ display: role === 'admin' ? 'none' : 'inline-block' }}
           >
             <DeleteOutlined /> {t("Patients:delete_button")}
           </Button>
@@ -226,8 +291,7 @@ export default function PatientMenu({ role }) {
   const showCaregiverWarning = () => {
     AntModal.warning({
       title: "Deletion impossible.",
-      content:
-        "Please delete the associated caregivers before deleting this patient.",
+      content: "Please delete the associated caregivers before deleting this patient.",
       okText: "OK",
     });
   };
@@ -252,6 +316,7 @@ export default function PatientMenu({ role }) {
               openModal(res.data.message, false);
             })
             .catch((err) => openModal(err.response.data.message, true));
+
         } else {
           showCaregiverWarning();
         }
@@ -311,7 +376,7 @@ export default function PatientMenu({ role }) {
               type="primary"
               icon={<PlusOutlined />}
               onClick={() => setIsCreatePatient(true)}
-              style={{ display: role === "admin" ? "none" : "inline-block" }}
+              style={{ display: role === 'admin' ? 'none' : 'inline-block' }}
             >
               {t("Patients:register_patient")}
             </Button>
@@ -353,3 +418,4 @@ export default function PatientMenu({ role }) {
     </div>
   );
 }
+
