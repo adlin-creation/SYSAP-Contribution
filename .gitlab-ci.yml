@@ -20,7 +20,6 @@ job_test:
 
   script:
     - echo "Running tests for backend"
-    - npx jest --version 
     - cd rxapa-hcp-server && npm install && npm test
     - echo "Running tests for frontend"
     - cd ../rxapa-hcp-client && npm install && npm test
