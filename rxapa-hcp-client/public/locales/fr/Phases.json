@@ -37,5 +37,6 @@
   "start_condition_value_placeholder": "Valeur de la condition de début",
   "select_end_condition_type_placeholder": "Sélectionner le type de condition de fin",
   "end_condition_value_placeholder": "Valeur de la condition de fin",
-  "frequency_placeholder": "Fréquence"
+  "frequency_placeholder": "Fréquence",
+  "weekly_cycle_label": "Cycle hebdomadaire"
 }

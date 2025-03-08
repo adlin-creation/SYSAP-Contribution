@@ -147,7 +147,7 @@ function PatientDetails({ patient, onClose, refetchPatients }) {
                   name="phoneNumber"
                   control={control}
                   rules={{
-                    required: t("Patients:phone_required"),
+                    required: t("Patients:phone_number_required"),
                     pattern: {
                       value: /^[0-9+\s-]{8,}$/,
                       message: t("Patients:phone_number_invalid"),

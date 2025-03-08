@@ -18,6 +18,7 @@ i18n
       "Professionals",
       "Programs",
       "Sessions",
+      "Authentication",
     ], // un tableau de namespace (ou chercher)
     defaultNS: "App", // Il faut envisager un defaultNS App ne contient que les clé pour le fichier App
     backend: {
