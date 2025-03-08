@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Col, Input, Button, Form, Modal } from "antd";
+import { Row, Col, Input, Button, Form, Modal, Select } from "antd";
 import { CheckOutlined } from "@ant-design/icons"; // Ajout de l'importation
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
@@ -82,6 +82,32 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
             />
           </Form.Item>
 
+
+
+          <Form.Item label={t("le niveau de forme physique attendu")}>
+            <Controller
+              name="fitnessLevel"
+              control={control}
+              defaultValue={exercise.fitnessLevel}
+              render={({ field: { onChange, value } }) => (
+                <Select
+                  onChange={onChange}
+                  value={value}
+                  placeholder="Sélectionner un niveau"
+                  style={{ width: "100%" }}
+                  allowClear
+                >
+                  {["Débutant", "Intermédiaire", "Avancé"].map((level) => (
+                    <Select.Option key={level} value={level}>
+                      {level}
+                    </Select.Option>
+                  ))}
+                </Select>
+              )}
+            />
+          </Form.Item>
+
+
           {/* Champ de saisie pour la description de l'exercice */}
           <Form.Item label="Description d'exercice">
             <Controller
@@ -104,10 +130,9 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
           {/* Bouton pour activer le mode édition ou soumettre les modifications */}
           <Form.Item>
             {!isEditing ? (
-              // Si on n'est pas en mode édition, afficher le bouton "Modifier"
               <Button
                 type="primary"
-                onClick={startEditing} // Active le mode édition sans soumettre le formulaire
+                onClick={startEditing} // Active le mode édition 
               >
                 Modifier
               </Button>
@@ -115,7 +140,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
               // Une fois en mode édition, afficher le bouton "Sauvegarder" pour soumettre les changements
               <Button
                 type="primary"
-                htmlType="submit" // Ce bouton soumet uniquement le formulaire
+                htmlType="submit" 
                 icon={<CheckOutlined />}
               >
                 Sauvegarder
@@ -136,7 +161,6 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
               </Button>,
             ]}
           >
-            {/* Affiche un message avec une couleur différente selon qu'il s'agisse d'une erreur ou non */}
             <p style={{ color: isErrorMessage ? "red" : "green" }}>{message}</p>
           </Modal>
         )}
