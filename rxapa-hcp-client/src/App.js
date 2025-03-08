@@ -23,7 +23,7 @@ import DoctorPatients from "./components/ProfessionalUser/Doctor/DoctorPatients"
 import KinesiologistMenu from "./components/ProfessionalUser/Kinesiologist/KinesiologistMenu";
 import KinesiologistPatients from "./components/ProfessionalUser/Kinesiologist/KinesiologistPatients";
 import AdminMenu from "./components/ProfessionalUser/Admin/AdminMenu";
-import useToken from "./components/Authentication/useToken";
+import useToken from "./components/Authentication/useToken"; // Hook pour gérer le token
 import Constants from "./components/Utils/Constants";
 import LanguageSwitcher from "./components/LanguageSwitcher/LanguageSwitcher";
 import { useTranslation } from "react-i18next";
@@ -45,92 +45,23 @@ import {
 } from "@ant-design/icons";
 import "antd/dist/reset.css";
 import "./App.css";
+
 const { Header, Sider, Content } = Layout;
 
 function App() {
-<<<<<<< HEAD
-  const { t } = useTranslation(); // la fonction de traduction
-=======
-  const { t, i18n } = useTranslation(); // la fonction qu'on doit appliquer a la traduction
->>>>>>> c5f3b777a121104d21fba992e12da913698a7810
+  const { t, i18n } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
-
-  // Hook personnalisé pour gérer le token
-  const { token, setToken } = useToken(); 
+  const { token, setToken } = useToken(); // Utilisation du hook personnalisé pour gérer le token
 
   const [selectedKey, setSelectedKey] = useState(location.pathname);
   const [role, setRole] = useState("");
+
+  // -- Menu brut (avant filtrage)
   const [menuItems, setMenuItems] = useState([]);
 
-<<<<<<< HEAD
-  // Menu principal (référence brute, avant filtrage)
-  const menuItems = [
-    {
-      key: "/",
-      icon: <HomeOutlined />,
-      label: <Link to="/">{t("App:dashboard")}</Link>,
-    },
-    {
-      key: "/exercises",
-      icon: <AppstoreOutlined />,
-      label: <Link to="/exercises">{t("App:exercises")}</Link>,
-    },
-    {
-      key: "/blocs",
-      icon: <BlockOutlined />,
-      label: <Link to="/blocs">{t("App:blocs")}</Link>,
-    },
-    {
-      key: "/sessions",
-      icon: <CalendarOutlined />,
-      label: <Link to="/sessions">{t("App:sessions")}</Link>,
-    },
-    {
-      key: "/cycles",
-      icon: <ClusterOutlined />,
-      label: <Link to="/cycles">{t("App:cycles")}</Link>,
-    },
-    {
-      key: "/phases",
-      icon: <PartitionOutlined />,
-      label: <Link to="/phases">{t("App:phases")}</Link>,
-    },
-    {
-      key: "/programs",
-      icon: <SettingOutlined />,
-      label: <Link to="/programs">{t("App:programs")}</Link>,
-    },
-    {
-      key: "/patients",
-      icon: <UserOutlined />,
-      label: <Link to="/patients">{t("App:patients")}</Link>,
-    },
-    {
-      key: "healthcare-professional",
-      icon: <UsergroupAddOutlined />,
-      label: t("App:professionals"),
-      children: [
-        {
-          key: "/doctors",
-          icon: <MedicineBoxOutlined />,
-          label: <Link to="/doctors">{t("App:doctors")}</Link>,
-        },
-        {
-          key: "/kinesiologists",
-          icon: <HeartOutlined />,
-          label: <Link to="/kinesiologists">{t("App:kinesiologists")}</Link>,
-        },
-        {
-          key: "/admins",
-          icon: <UserOutlined />,
-          label: <Link to="/admins">{t("App:admins")}</Link>,
-        },
-      ],
-    },
-  ];
-=======
   useEffect(() => {
+    // Construction du menu complet
     const newMenuItems = [
       {
         key: "/",
@@ -199,15 +130,12 @@ function App() {
     setMenuItems(newMenuItems);
     setFilteredMenuItems(newMenuItems);
   }, [i18n.language, t]);
->>>>>>> c5f3b777a121104d21fba992e12da913698a7810
 
-  // État pour le menu filtré selon le rôle
+  // Menu filtré final
   const [filteredMenuItems, setFilteredMenuItems] = useState(menuItems);
 
+  // Gère RTL si langue arabe
   useEffect(() => {
-<<<<<<< HEAD
-    // S’il existe un "role" dans location.state, on le stocke
-=======
     document.documentElement.dir = i18n.language === "ar" ? "rtl" : "ltr";
   }, [i18n.language]);
 
@@ -215,84 +143,50 @@ function App() {
     setSelectedKey(location.pathname);
   }, [location.pathname]);
 
+  // Si on récupère un "role" depuis location.state (après login), on filtre
   useEffect(() => {
->>>>>>> c5f3b777a121104d21fba992e12da913698a7810
     if (location.state?.role) {
       setRole(location.state.role);
 
-      // Fonction qui filtre le menu selon le rôle
       const filterMenuItems = (items) => {
         return items
           .map((item) => {
-            // On gère la logique pour /doctors
-            if (item.key === "/doctors") {
-              // Visible pour admin et superadmin
-              if (
-                location.state.role === "admin" ||
-                location.state.role === "superadmin"
-              ) {
-                return item;
-              }
-              return null;
+            // Si l'item a des enfants (menu déroulant)
+            if (item.children) {
+              return {
+                ...item,
+                // On ré-appelle filterMenuItems pour ses enfants
+                children: filterMenuItems(item.children),
+              };
             }
 
-            // On gère la logique pour /kinesiologists
-            if (item.key === "/kinesiologists") {
-              // Visible pour admin et superadmin
-              if (
-                location.state.role === "admin" ||
-                location.state.role === "superadmin"
-              ) {
-                return item;
-              }
-              return null;
-            }
-
-            // On gère la logique pour /admins
-            if (item.key === "/admins") {
-              // Visible pour superadmin uniquement
-              if (location.state.role === "superadmin") {
-                return item;
-              }
-              return null;
-            }
-
-            // Si l'utilisateur est doctor ou kinesiologist, on enlève TOUT le bloc "healthcare-professional"
-            // => Concrètement, si c'est un item parent ou child, on l'exclut
+            // CAS ADMIN: l'admin ne voit PAS l'onglet "admins"
             if (
-              location.state.role === "doctor" ||
-              location.state.role === "kinesiologist"
+              location.state.role === "admin" &&
+              item.key === "/admins"
             ) {
-              // Si c'est l'item parent (key === "healthcare-professional") ou un enfant,
-              // on le vire. On peut juste détecter la présence de "healthcare-professional"
-              // ou le fait que item.key soit /doctors, /kinesiologists, /admins, etc.
-              if (
-                item.key === "healthcare-professional" ||
+              return null;
+            }
+
+            // CAS DOCTOR ou KINESIOLOGIST: ne voient PAS la section "healthcare-professional"
+            if (
+              (location.state.role === "doctor" ||
+                location.state.role === "kinesiologist") &&
+              (item.key === "healthcare-professional" ||
                 item.key === "/doctors" ||
                 item.key === "/kinesiologists" ||
-                item.key === "/admins"
-              ) {
-                return null;
-              }
+                item.key === "/admins")
+            ) {
+              return null;
             }
 
-            // Pour tout le reste, on le laisse
+            // Sinon, on garde l'item
             return item;
           })
-          .filter((it) => it !== null)
-          .map((item) => {
-            // Si c'est un item parent avec des children, on répète la logique en récursif
-            if (item.children) {
-              const newChildren = filterMenuItems(item.children);
-              return { ...item, children: newChildren };
-            }
-            return item;
-          });
+          .filter((item) => item !== null); // Retire les null
       };
 
-      // On exécute le filtrage
-      const newMenu = filterMenuItems(menuItems);
-      setFilteredMenuItems(newMenu);
+      setFilteredMenuItems(filterMenuItems(menuItems));
     }
   }, [location.state, menuItems]);
 
@@ -310,7 +204,6 @@ function App() {
     }
   };
 
-  // Menu du user (avatar) dans le header
   const userMenuItems = [
     {
       key: "1",
@@ -327,7 +220,7 @@ function App() {
     },
   ];
 
-  // Si pas de token => on oblige la page de login
+  // Si pas de token => on va sur login
   if (!token) {
     return (
       <Content className="content">
@@ -350,11 +243,6 @@ function App() {
           items={filteredMenuItems}
         />
       </Sider>
-<<<<<<< HEAD
-      <Layout className="site-layout">
-        <Header className="header site-layout-background">
-          <div></div>
-=======
       <Layout
         className={`site-layout ${
           i18n.language === "ar" ? "site-layout-ar" : ""
@@ -365,8 +253,7 @@ function App() {
             i18n.language === "ar" ? "header-ar" : ""
           }`}
         >
-          <div></div> {/* Empty div to align items to the right */}
->>>>>>> c5f3b777a121104d21fba992e12da913698a7810
+          <div></div> {/* Juste pour pousser le contenu à droite */}
           <div className="header-content">
             <LanguageSwitcher
               iconStyle={{ color: "white" }}
@@ -377,7 +264,6 @@ function App() {
             <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
               <div className="header-avatar">
                 <Avatar icon={<UserOutlined />} />
-                {/* Affiche le rôle à droite de l'avatar */}
                 <span>{role}</span>
               </div>
             </Dropdown>
@@ -385,9 +271,7 @@ function App() {
         </Header>
         <Content className="content">
           <Routes>
-            {/* Dashboard */}
             <Route path="/" element={<Home />} />
-            {/* Menus / Exercices, etc. */}
             <Route path="exercises" element={<ExerciseMenu />} />
             <Route path="blocs" element={<BlocMenu />} />
             <Route path="sessions" element={<SessionMenu />} />
@@ -395,19 +279,14 @@ function App() {
             <Route path="phases" element={<PhaseMenu />} />
             <Route path="programs" element={<ProgramMenu />} />
             <Route path="patients" element={<PatientMenu role={role} />} />
-            {/* Professionnels */}
             <Route path="doctors" element={<DoctorMenu />} />
             <Route path="doctor-patients/:id" element={<DoctorPatients />} />
-            <Route
-              path="kinesiologists"
-              element={<KinesiologistMenu />}
-            />
+            <Route path="kinesiologists" element={<KinesiologistMenu />} />
             <Route
               path="kinesiologist-patients/:id"
               element={<KinesiologistPatients />}
             />
             <Route path="admins" element={<AdminMenu />} />
-            {/* 404 */}
             <Route
               path="*"
               element={

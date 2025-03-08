@@ -30,7 +30,7 @@ exports.signup = async (req: any, res: any) => {
 
   try {
     // Vérifier si l'utilisateur existe déjà dans la base de données
-    user = await User.findOne({ where: { email: email } });
+    user = await Professional_User.findOne({ where: { email: email } });
     if (user) {
       return res
         .status(500)
@@ -72,7 +72,7 @@ exports.login = async (req: any, res: any) => {
 
   try {
     // Vérifier si l'utilisateur existe dans la table `User`
-    user = await User.findOne({ where: { email: email } });
+   // user = await User.findOne({ where: { email: email } }); 
 
     // Si l'utilisateur n'est pas trouvé, vérifier dans ProfessionalUser
     if (!user) {
