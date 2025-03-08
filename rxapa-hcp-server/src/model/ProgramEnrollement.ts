@@ -1,7 +1,7 @@
 import { sequelize, dataTypes } from "../util/database";
 
 /**
- * Creates a program enrollement model, which translates to a table in the database.
+ * Creates a program enrollment model, which translates to a table in the database.
  * Each attribute of this model represents a column in the table.
  */
 export const ProgramEnrollement = sequelize.define("ProgramEnrollement", {
@@ -32,9 +32,12 @@ export const ProgramEnrollement = sequelize.define("ProgramEnrollement", {
     allowNull: false,
     unique: true,
   },
-  PatientId: {
+  ProgramId: {  // Ajout pour les relations
     type: dataTypes.INTEGER,
     allowNull: false,
-    unique: true,
-  }
+  },
+  PatientId: {  // Ajout pour les relations
+    type: dataTypes.INTEGER,
+    allowNull: false,
+  },
 });

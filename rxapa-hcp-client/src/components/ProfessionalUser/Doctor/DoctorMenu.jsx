@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   PlusOutlined,
   EditOutlined,
-  DeleteOutlined,
   ArrowLeftOutlined,
   UserOutlined,
 } from "@ant-design/icons";
@@ -50,34 +49,34 @@ export default function DoctorMenu() {
 
   const columns = [
     {
-      title: t("Professionals:Doctors:name"),
+      title: t("Professionals:Physicians:name"),
       key: "name",
       render: (_, record) => `${record.firstname} ${record.lastname}`,
     },
     {
-      title: t("Professionals:Doctors:email"),
+      title: t("Professionals:Physicians:email"),
       dataIndex: "email",
       key: "email",
     },
     {
-      title: t("Professionals:Doctors:phone"),
+      title: t("Professionals:Physicians:phone"),
       dataIndex: "phoneNumber",
       key: "phoneNumber",
     },
     {
-      title: t("Professionals:Doctors:status"),
+      title: t("Professionals:Physicians:status"),
       key: "active",
       dataIndex: "active",
       render: (active) => (
         <Tag color={active ? "green" : "red"}>
           {active
-            ? t("Professionals:Doctors:active_status")
-            : t("Professionals:Doctors:inactive_status")}
+            ? t("Professionals:Physicians:active_status")
+            : t("Professionals:Physicians:inactive_status")}
         </Tag>
       ),
     },
     {
-      title: t("Professionals:Doctors:actions"),
+      title: t("Professionals:Physicians:actions"),
       key: "actions",
       render: (_, record) => (
         <Space size="middle">
@@ -86,13 +85,10 @@ export default function DoctorMenu() {
             onClick={() => navigate(`/doctor-patients/${record.id}`)}
           >
             <UserOutlined />
-            {t("Professionals:Doctors:patients_button")}
+            {t("Professionals:Physicians:patients_button")}
           </Button>
           <Button type="link" onClick={() => handleEdit(record)}>
-            <EditOutlined /> {t("Professionals:Doctors:edit_button")}
-          </Button>
-          <Button type="link" danger onClick={() => handleDelete(record)}>
-            <DeleteOutlined /> {t("Professionals:Doctors:delete_button")}
+            <EditOutlined /> {t("Professionals:Physicians:edit_button")}
           </Button>
         </Space>
       ),
@@ -106,7 +102,7 @@ export default function DoctorMenu() {
 
   const handleDelete = (doctor) => {
     AntModal.confirm({
-      title: "Are you sure you want to delete this doctor?",
+      title: "Are you sure you want to delete this physician?",
       content: `This will permanently delete ${doctor.firstname} ${doctor.lastname}`,
       okText: "Yes",
       okType: "danger",
@@ -121,11 +117,11 @@ export default function DoctorMenu() {
           )
           .then(() => {
             refetchDoctors();
-            openModal("Doctor successfully deleted", false);
+            openModal("physician successfully deleted", false);
           })
           .catch((err) =>
             openModal(
-              err.response?.data?.message || "Error deleting doctor",
+              err.response?.data?.message || "Error deleting physician",
               true
             )
           );
@@ -163,7 +159,7 @@ export default function DoctorMenu() {
     if (error) {
       return (
         <div style={{ textAlign: "center", marginTop: "20px" }}>
-          <h3>Error loading doctors</h3>
+          <h3>Error loading physicians</h3>
           <Button onClick={() => refetchDoctors()}>Retry</Button>
         </div>
       );
@@ -183,11 +179,12 @@ export default function DoctorMenu() {
             icon={<PlusOutlined />}
             onClick={() => setIsCreateDoctor(true)}
           >
-            {t("Professionals:Doctors:register_doctor")}
+            {t("Professionals:Physicians:register_physician")}
           </Button>
           {doctorList?.length > 0 && (
             <span>
-              {t("Professionals:Doctors:total_doctors")}: {doctorList.length}
+              {t("Professionals:Physicians:total_physicians")}:{" "}
+              {doctorList.length}
             </span>
           )}
         </div>
@@ -198,14 +195,14 @@ export default function DoctorMenu() {
           rowKey="id"
           loading={isLoading}
           locale={{
-            emptyText: <Empty description="No doctors found" />,
+            emptyText: <Empty description="No physicians found" />,
           }}
           pagination={{
             pageSize: 10,
             showTotal: (total, range) =>
               `${range[0]}-${range[1]} ${t(
-                "Professionals:Doctors:of"
-              )} ${total} ${t("Professionals:Doctors:doctors")}`,
+                "Professionals:Physicians:of"
+              )} ${total} ${t("Professionals:Physicians:physicians")}`,
           }}
         />
       </>
@@ -231,14 +228,14 @@ export default function DoctorMenu() {
               type="primary"
               icon={<ArrowLeftOutlined />}
             >
-              {t("Professionals:Doctors:back_button")}
+              {t("Professionals:Physicians:back_button")}
             </Button>
           </Col>
           <Col flex="auto" style={{ textAlign: "center" }}>
             <h2 style={{ marginBottom: 0 }}>
               {isCreateDoctor
-                ? t("Professionals:Doctors:register_doctor_title")
-                : t("Professionals:Doctors:edit_doctor")}
+                ? t("Professionals:Physicians:register_physician_title")
+                : t("Professionals:Physicians:edit_physician")}
             </h2>
           </Col>
           <Col span={4} />

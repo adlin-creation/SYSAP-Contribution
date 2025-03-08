@@ -1,0 +1,14 @@
+{
+    "entrer_code": "Por favor, introduzca un código.",
+    "entrer_votre_code": "Ingrese su código",
+    "erreur_code_incorrect": "El código ingresado es incorrecto. Inténtelo de nuevo.",
+    "authentification": "AUTENTICACIÓN",
+    "saisir_code_personnel": "Por favor, introduzca su código personal",
+    "connexion": "CONEXIÓN",
+    "aucun_code_perso": "No tengo el código personal",
+    "question_besoin_aide": "¿Necesita ayuda?",
+    "contact_aide_code": "Si no tiene el código personal o lo ha olvidado, por favor contacte a:",
+    "contact_it": "El departamento de TI:",
+    "contact_kine": "Su kinesiólogo para obtener un código válido.",
+    "fermer": "Cerrar"
+}

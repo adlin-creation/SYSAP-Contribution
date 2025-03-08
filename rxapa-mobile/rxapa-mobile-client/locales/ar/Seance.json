@@ -1,0 +1,8 @@
+{
+    "err_id_programme": "لم يتم العثور على معرف البرنامج. يرجى تسجيل الدخول.",
+    "err_aucun_exercice": "لم يتم العثور على تمارين لهذه الجلسة.",
+    "err_recuperation_exercices": "حدث خطأ أثناء استرجاع التمارين.",
+    "chargement_exercices": "جارٍ تحميل التمارين...",
+    "liste_exercices": "قائمة التمارين",
+    "aucun_exercice": "لا توجد تمارين متاحة."
+}

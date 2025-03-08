@@ -1,0 +1,8 @@
+{
+    "err_id_programme": "Votre identifiant de programme est introuvable. Veuillez vous authentifier.",
+    "err_aucun_exercice": "Aucun exercice trouvé pour cette séance.",
+    "err_recuperation_exercices": "Une erreur est survenue lors de la récupération des exercices.",
+    "chargement_exercices": "Chargement des exercices...",
+    "liste_exercices": "Liste des exercices",
+    "aucun_exercice": "Aucun exercice disponible."
+}

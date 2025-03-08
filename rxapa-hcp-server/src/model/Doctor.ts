@@ -14,6 +14,11 @@ const Doctor = sequelize.define('Doctor', {
     type: dataTypes.UUID,
     defaultValue: dataTypes.UUIDV4,
   },
+  workEnvironment: {
+    type: dataTypes.STRING,
+    allowNull: false,
+  },
+
 }, {
   modelName: 'Doctor',
 });
