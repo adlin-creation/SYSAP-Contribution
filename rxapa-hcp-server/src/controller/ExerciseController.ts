@@ -3,127 +3,99 @@ import { ExerciseVersion } from "../model/ExerciseVersion";
 import { Variant } from "../model/Variant";
 import fs from "fs";
 import path from "path";
-
+import { Request, Response } from "express";
 const fileHelper = require("./../util/file");
 
-/**
- * Returns an exercise image
- */
-exports.getImage = async (req: any, res: any) => {
-  const imageName = req.params.imageName;
-  const readImageStream = fs.createReadStream(`images/${imageName}`);
-  readImageStream.pipe(res);
+// Utility function to handle errors
+const handleError = (res: Response, error: unknown, message: string) => {
+  if (error instanceof Error) {
+    const statusCode = (error as any).statusCode || 500;
+    res.status(statusCode).json({
+      message: message || "Une erreur est survenue",
+      error: error.message || error,
+    });
+  } else {
+    // Si l'erreur n'est pas une instance d'Error, on renvoie un message générique
+    res.status(500).json({
+      message: message || "Une erreur est survenue",
+      error: "Erreur inconnue",
+    });
+  }
 };
 
 /**
- * This function creates an instance of @type {Exercise}
- * @param {Object} req - The request, which contains the name, description, and
- * a link to the instructional video for the new exercise.
- * @param {Object} res - The request response.
- * @param {Object} next - The next function, which calls the next middleware.
- * However, The next function is not used here because the request is returned
- * after executing this function.
- *
- * @returns {Object} res - The response, which contains details to alert the user
- * whether the create action was successfull or not.
- *
- * @author Hyacinth Ali
+ * Returns an exercise image.
  */
-exports.createExercise = async (req: any, res: any, next: any) => {
-  // Extract the required attribute values to create an Exercise
-  const name = req.body.name;
-  const description = req.body.description;
-  const instructionalVideo = req.body.instructionalVideo;
-  const category = req.body.category;
-  const isSeating = req.body.isSeating;
-  const targetAgeRange = req.body.targetAgeRange;
-  const fitnessLevel = req.body.fitnessLevel;
+exports.getImage = (req: Request, res: Response) => {
+  const imageName = req.params.imageName;
+  const imagePath = path.join(__dirname, "..", "images", imageName);
+
+  if (fs.existsSync(imagePath)) {
+    const readImageStream = fs.createReadStream(imagePath);
+    readImageStream.pipe(res);
+  } else {
+    res.status(404).json({ message: "Image non trouvée" });
+  }
+};
+
+/**
+ * Creates a new Exercise.
+ */
+exports.createExercise = async (req: Request, res: Response) => {
+  const { name, description, instructionalVideo, category, isSeating, targetAgeRange, fitnessLevel } = req.body;
   const exerciseImageFile = req.file;
 
-  /**
-   * @todo validate the input values
-   */
+  if (!name || !description || !instructionalVideo) {
+    return res.status(400).json({ message: "Tous les champs obligatoires doivent être remplis !" });
+  }
 
-  const imageUrl = exerciseImageFile?.path || "";
+  const imageUrl = exerciseImageFile?.path ?? "";
 
-  // Use sequelize (Database Framework) to create the Exercise
   try {
     await Exercise.create({
-      name: name,
-      description: description,
-      instructionalVideo: instructionalVideo,
-      category: category,
-      isSeating: isSeating,
-      targetAgeRange: targetAgeRange,
-      fitnessLevel: fitnessLevel,
-      imageUrl: imageUrl,
+      name,
+      description,
+      instructionalVideo,
+      category,
+      isSeating,
+      targetAgeRange,
+      fitnessLevel,
+      imageUrl,
     });
-    res.status(201).json({
-      message: "Exercice créé avec succès.",
-    });
-  } catch (error: any) {
-    if (!error.statusCode) {
-      error.statusCode = 500;
-    }
 
-    // delete the image
+    res.status(201).json({ message: "Exercice créé avec succès." });
+  } catch (error: unknown) {
     if (imageUrl) {
-      fileHelper.deleteFile(imageUrl);
+      fileHelper.deleteFile(imageUrl); // Cleanup if error occurs
     }
 
-    // initialize the status code
-    res.status(error.statusCode);
-
-    if (error.name == "SequelizeUniqueConstraintError") {
-      res.json({
-        messageTitle: "Un exercice avec le meme nom existe déja ! ",
-        message:
-          "Erreur ! Le nom existe déja dans la base de donnée !",
-      });
+    if (error instanceof Error) {
+      // Vérifier si l'erreur est spécifique à la contrainte d'unicité
+      if (error.name === "SequelizeUniqueConstraintError") {
+        handleError(res, error, "Un exercice avec ce nom existe déjà !");
+      } else {
+        handleError(res, error, "Erreur lors de la création de l'exercice.");
+      }
     } else {
-      res.json({
-        messageTitle: "Erreur lors de la création de l'exercice ! ",
-        message:
-          "Erreur ! Il manque un champ à remplir !",
-      });
+      // Si l'erreur n'est pas une instance d'Error, renvoyer une erreur générique
+      handleError(res, error, "Erreur inconnue lors de la création de l'exercice.");
     }
   }
 };
 
 /**
- * Updates an exercise.
- * @author Hyacinth Ali
+ * Updates an existing Exercise.
  */
-exports.updateExercise = async (req: any, res: any, next: any) => {
-  // Extract the required attribute values to update an Exercise
-  const key = req.params.exerciseKey;
-  const name = req.body.name;
-  const description = req.body.description;
-  const instructionalVideo = req.body.instructionalVideo;
-  const category = req.body.category;
-  const isSeating = req.body.isSeating;
-  const targetAgeRange = req.body.targetAgeRange;
-  const fitnessLevel = req.body.fitnessLevel;
+exports.updateExercise = async (req: Request, res: Response) => {
+  const exerciseKey = req.params.exerciseKey;
+  const { name, description, instructionalVideo, category, isSeating, targetAgeRange, fitnessLevel } = req.body;
 
-  let exercise;
   try {
-    exercise = await Exercise.findOne({
-      where: { key: key },
-    });
-    if (exercise == null) {
-      res.json({ message: "Erreur ! Exercise n'existe pas !"  });
-      return res;
+    const exercise = await Exercise.findOne({ where: { key: exerciseKey } });
+    if (!exercise) {
+      return res.status(404).json({ message: "Exercice non trouvé !" });
     }
-  } catch (error: any) {
-    if (!error.statusCode) {
-      error.statusCode = 500;
-    }
-    res.json({ message: "Erreur ! Exercise n'existe pas !"  });
-    return res;
-  }
 
-  // Use sequelize (Database Framework) to update the Exercise
-  try {
     await exercise.update({
       name: name || exercise.name,
       description: description || exercise.description,
@@ -133,245 +105,125 @@ exports.updateExercise = async (req: any, res: any, next: any) => {
       targetAgeRange: targetAgeRange || exercise.targetAgeRange,
       fitnessLevel: fitnessLevel || exercise.fitnessLevel,
     });
-    res.status(201).json({
-      message: "Exercice mis à jour avec succes",
-    });
-  } catch (error: any) {
-    if (!error.statusCode) {
-      error.statusCode = 500;
-    }
-    // initialize the status code
-    res.status(error.statusCode);
 
-    if (error.name == "SequelizeUniqueConstraintError") {
-      res.json({
-        message:
-          "Erreur ! Le nom existe déja dans la base de donnée !",
-      });
+    res.status(200).json({ message: "Exercice mis à jour avec succès." });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      handleError(res, error, "Erreur lors de la mise à jour de l'exercice.");
     } else {
-      res.json({
-        message:
-          "Erreur ! Il manque un champ à remplir !",
-      });
+      handleError(res, error, "Erreur inconnue lors de la mise à jour de l'exercice.");
     }
   }
 };
 
 /**
- * Returns all the exercises that exist in the database
+ * Returns all the exercises.
  */
-exports.getExercises = async (req: any, res: any, next: any) => {
+exports.getExercises = async (req: Request, res: Response) => {
   try {
     const exercises = await Exercise.findAll();
     res.status(200).json(exercises);
-  } catch (error: any) {
-    if (!error.statusCode) {
-      error.statusCode = 500;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      handleError(res, error, "Erreur lors du chargement des exercices.");
+    } else {
+      handleError(res, error, "Erreur inconnue lors du chargement des exercices.");
     }
-    res.json({ message: "Erreur lors le chargement de l'exercice !" });
-  }
-  return res;
-};
-
-/**
- * Returns a specific exercise based on its name.
- */
-exports.getExercise = async (req: any, res: any, next: any) => {
-  const exerciseKey: String = req.params.exerciseKey;
-  try {
-    const exercise = await Exercise.findOne({
-      where: { key: exerciseKey },
-      include: ExerciseVersion,
-    });
-    res.status(200).json(exercise);
-  } catch (error: any) {
-    if (!error.statusCode) {
-      error.statusCode = 500;
-    }
-    res.json({ message: "Erreur lors le chargement de l'exercice !" });
-  }
-  return res;
-};
-
-/**
- * This function creates an instance of @type {ExerciseVersion}
- * @param {Object} req - The request, which contains the name, number of repitions, and
- * a link to the instructional video for the new exercise version.
- * @param {Object} res - The request response.
- * @param {Object} next - The next function, which calls the next middleware.
- * However, Th next function is not used here because the request is returned
- * after executing this function.
- *
- * @returns {Object} res - The response, which contains details to alert the user
- * whether the create action was successfull or not.
- *
- * @author Hyacinth Ali
- */
-exports.createExerciseVersion = async (req: any, res: any, next: any) => {
-  // Extract the required attribute values to create an Exercise
-  const name = req.body.name;
-  const numberOfRepitions = req.body.numberOfRepitions;
-  const instructionalVideo = req.body.instructionalVideo;
-
-  /**
-   * @todo validate the input values
-   */
-
-  // Use sequelize (Database Framework) to create the ExerciseVersion
-  try {
-    const exerciseVersion = await ExerciseVersion.create({
-      name: name,
-      numberOfRepitions: numberOfRepitions,
-      instructionalVideo: instructionalVideo,
-    });
-
-    res.status(201).json({ message: "Version d'exercice créé" });
-  } catch (error: any) {
-    // Otherwise, the action was not successful. Hence, let the user know that
-    // his request was unsuccessful.
-    if (!error.statusCode) {
-      error.statusCode = 500;
-    }
-
-    res.json({ message: "Erreur lors la création d'une version d'exercice" });
-  }
-
-  // returns the response.
-  return res;
-};
-
-/**
- * This function adds a new exercise version to an existing exercise, i.e., instantiating
- * the exercise variant. See the model associations for further details.
- *
- * @param {Object} req - The request, which contains the exisitng exercise name,
- * existing exercise version name, and the level of the new variant.
- * @param {Object} res - The request response, which informs user whether the operation
- * was successful or not.
- * @param {Object} next - The next function, which calls the next middleware.
- * However, Th next function is not used here because the request is returned
- * after executing this function.
- *
- * @returns {Object} res - The response, which contains details to alert the user
- * whether the create action was successfull or not.
- *
- * @author Hyacinth Ali
- */
-exports.addExerciseVersion = async (req: any, res: any, next: any) => {
-  // Get the exercise that refers to the exercise version
-  const exerciseName = req.body.exerciseName;
-  let exercise;
-
-  try {
-    exercise = await Exercise.findOne({ where: { name: exerciseName } });
-  } catch (error) {
-    throw new Error("Erreur ! Exercice introuval dans la base de donnéee !");
-  }
-
-  // Get the exercise version
-  const versionName = req.body.versionName;
-  let exerciseVersion;
-  try {
-    exerciseVersion = await ExerciseVersion.findOne({
-      where: { name: versionName },
-    });
-  } catch (error) {
-    throw new Error("Erreur ! Exercice introuval dans la base de donnéee !");
-  }
-
-  // Extract the level value to create a variant, which connects the exercise and
-  // the exercise version.
-  const level = req.body.level;
-
-  let variant;
-
-  try {
-    variant = await createVariant(exerciseVersion.id, exercise.id, level);
-
-    res
-      .status(201)
-      .json({ message: "Version d'exercice est ajouté à un exercice" });
-  } catch (error: any) {
-    res.status(500);
-    if (!error.statusCode) {
-      error.statusCode = 500;
-    }
-    console.log(error);
-
-    res.json({ message: "Erreur lors l'ajout d'une version à un exercice" });
-    return res;
   }
 };
 
 /**
- * This function creates an instance of @type {Variant}
- * @param {Number} level - The level of an exercise.
- *
- * @returns {Variant} variant - The newly created variant or throws an exception if error occurs..
- *
- * @author Hyacinth Ali
+ * Returns a specific exercise based on its key.
  */
-const createVariant = async (
-    /**
-     * @todo verify which id comes first
-     */
-    versionId: Number,
-    exerciseId: Number,
-    level: any
-) => {
-  // Use sequelize (Database Framework) to create the component
-  try {
-    const variant = await Variant.create({
-      ExerciseVersionId: versionId,
-      ExerciseId: exerciseId,
-      level: level,
-    });
-
-    return variant;
-  } catch (error: any) {
-    throw new Error("Erreur lors la création d'un variant de l'exercice!");
-  }
-};
-
-/**
- * Deletes an exercise
- */
-exports.deleteExercise = async (req: any, res: any) => {
+exports.getExercise = async (req: Request, res: Response) => {
   const exerciseKey = req.params.exerciseKey;
-  let exercise;
   try {
-    exercise = await Exercise.findOne({
-      where: {
-        key: exerciseKey,
-      },
-    });
-    if (exercise == null) {
-      return res
-        .status(500)
-        .json({ message: "L'exercice n'existe pas dans la base de donnée !" });
+    const exercise = await Exercise.findOne({ where: { key: exerciseKey }, include: ExerciseVersion });
+    if (!exercise) {
+      return res.status(404).json({ message: "Exercice non trouvé !" });
     }
-  } catch (error: any) {
-    if (!error.statusCode) {
-      error.statusCode = 500;
+    res.status(200).json(exercise);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      handleError(res, error, "Erreur lors du chargement de l'exercice.");
+    } else {
+      handleError(res, error, "Erreur inconnue lors du chargement de l'exercice.");
     }
-    return res
-      .status(error.statusCode)
-      .json({ message: "L'exercice n'existe pas dans la base de donnée !" });
   }
+};
+
+/**
+ * Creates a new ExerciseVersion.
+ */
+exports.createExerciseVersion = async (req: Request, res: Response) => {
+  const { name, numberOfRepitions, instructionalVideo } = req.body;
+
+  if (!name || !numberOfRepitions) {
+    return res.status(400).json({ message: "Tous les champs obligatoires doivent être remplis !" });
+  }
+
   try {
+    await ExerciseVersion.create({ name, numberOfRepitions, instructionalVideo });
+    res.status(201).json({ message: "Version d'exercice créée avec succès." });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      handleError(res, error, "Erreur lors de la création de la version d'exercice.");
+    } else {
+      handleError(res, error, "Erreur inconnue lors de la création de la version d'exercice.");
+    }
+  }
+};
+
+/**
+ * Adds a new exercise version to an existing exercise.
+ */
+exports.addExerciseVersion = async (req: Request, res: Response) => {
+  const { exerciseName, versionName, level } = req.body;
+
+  try {
+    const exercise = await Exercise.findOne({ where: { name: exerciseName } });
+    if (!exercise) {
+      return res.status(404).json({ message: "Exercice non trouvé !" });
+    }
+
+    const exerciseVersion = await ExerciseVersion.findOne({ where: { name: versionName } });
+    if (!exerciseVersion) {
+      return res.status(404).json({ message: "Version d'exercice non trouvée !" });
+    }
+
+    await Variant.create({ ExerciseVersionId: exerciseVersion.id, ExerciseId: exercise.id, level });
+    res.status(201).json({ message: "Version d'exercice ajoutée avec succès." });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      handleError(res, error, "Erreur lors de l'ajout de la version à l'exercice.");
+    } else {
+      handleError(res, error, "Erreur inconnue lors de l'ajout de la version à l'exercice.");
+    }
+  }
+};
+
+/**
+ * Deletes an exercise.
+ */
+exports.deleteExercise = async (req: Request, res: Response) => {
+  const exerciseKey = req.params.exerciseKey;
+  try {
+    const exercise = await Exercise.findOne({ where: { key: exerciseKey } });
+    if (!exercise) {
+      return res.status(404).json({ message: "Exercice non trouvé !" });
+    }
+
     await exercise.destroy();
     if (exercise.imageUrl) {
-      fileHelper.deleteFile(exercise.imageUrl);
+      fileHelper.deleteFile(exercise.imageUrl); // Cleanup image if exists
     }
-    return res
-      .status(200)
-      .json({ message: "Exercice suprimé avec succès !" });
-  } catch (error: any) {
-    if (!error.statusCode) {
-      error.statusCode = 500;
+
+    res.status(200).json({ message: "Exercice supprimé avec succès." });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      handleError(res, error, "Erreur lors de la suppression de l'exercice.");
+    } else {
+      handleError(res, error, "Erreur inconnue lors de la suppression de l'exercice.");
     }
-    return res
-      .status(error.statusCode)
-      .json({ message: "Erreur lors la supression de l'exercice" });
   }
 };
