@@ -119,67 +119,6 @@ export default function PatientMenu({ role }) {
     }
   };
 
-  //Fonction pour afficher la liste des aidants disponibles et chaque aidant a un bouton permettant d'afficher ses détails.
-  // const openCaregiversModal = (caregivers, patient_caregivers, programEnrollements) => {
-  //   AntModal.info({
-  //     title: t("Patients:caregivers_list"),
-  //     content: caregivers.length ? (
-  //       <ul>
-  //         {caregivers.filter(c => c).map(c => (
-  //           <li key={c.id}>
-  //             {c.firstname} {c.lastname}
-  //             <Button type="link" onClick={() => viewCaregiverDetails(c,patient_caregivers, programEnrollements)}>
-  //               {t("voir les details")}
-  //             </Button>
-  //           </li>
-  //         ))}
-  //       </ul>
-  //     ) : <p>{t("Aucune aide soignante disponible")}</p>,
-  //     onOk() {},
-  //   });
-  // };
-
-  // const viewCaregiverDetails = async (caregiver, patient_caregivers, programEnrollements) => {
-  //   const keysToShow = ['firstname', 'lastname', 'email', 'phoneNumber', 'relationship'];
-
-  //   const patient_caregiver = patient_caregivers.find(
-  //     (p_c) => p_c.CaregiverId === caregiver.id
-  //   );
-  //   console.log(patient_caregiver);
-
-  //   let program = null;
-  //   if (patient_caregiver) {
-  //     const programEnrollement = programEnrollements.find(
-  //       (p_e) => p_e.id === patient_caregiver.ProgramEnrollementId
-  //     );
-  //     console.log(programEnrollement);
-
-  //     if (programEnrollement) {
-  //       program = await fetchProgram(programEnrollement);
-  //     }
-  //   }
-
-  //   const filteredCaregiver = keysToShow
-  //     .filter(key => caregiver[key] !== undefined)
-  //     .map(key => (
-  //       <p key={key}>{t(`Patients:${key}`)}: {caregiver[key]}</p>
-  //     ));
-
-  //     console.log(program);
-
-  //   if (program) {
-  //     filteredCaregiver.push(
-  //       <p key="program">{t("Patients:program")}: {program.name}</p>
-  //     );
-  //   }
-
-  //   AntModal.info({
-  //     title: `${caregiver.firstname} ${caregiver.lastname} - ${t("Détails de l'aide soignant")}`,
-  //     content: filteredCaregiver,
-  //     onOk() {},
-  //   });
-  // };
-
   const openCaregiversModal = (caregivers, patient_caregivers, programEnrollements) => {
     AntModal.info({
       title: (
