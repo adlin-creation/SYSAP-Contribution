@@ -73,11 +73,11 @@ export default function DoctorPatients() {
             type="primary"
             icon={<ArrowLeftOutlined />}
           >
-            {t("Professionals:Doctors:back_to_doctors_button")}
+            {t("Professionals:Physicians:back_to_physicians_button")}
           </Button>
         </Col>
         <Col span={16} style={{ textAlign: "center" }}>
-          <h2> {t("Professionals:Doctors:doctor_patients_title")}</h2>
+          <h2> {t("Professionals:Physicians:physician_patients_title")}</h2>
         </Col>
         <Col span={4} />
       </Row>

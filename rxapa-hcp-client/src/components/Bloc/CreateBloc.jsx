@@ -68,7 +68,7 @@ export default function CreateBloc(props) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder={t("Blocs:exercise_name")}
+                  placeholder={t("Blocs:bloc_name")}
                   required
                 />
               )}

@@ -4,7 +4,7 @@ import { Menu, MenuItem, IconButton } from "@mui/material";
 import LanguageIcon from "@mui/icons-material/Language";
 import Flag from "react-world-flags";
 
-const LanguageSwitcher = () => {
+const LanguageSwitcher = ({ iconStyle, iconClassName, ...props }) => {
   const { i18n } = useTranslation();
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -25,9 +25,10 @@ const LanguageSwitcher = () => {
       {/* Icône de langue pour ouvrir le menu */}
       <IconButton
         onClick={handleClick}
-        sx={{ color: "white", marginRight: "1em" }}
+        className="language-switcher-icon"
+        {...props}
       >
-        <LanguageIcon />
+        <LanguageIcon style={iconStyle} className={iconClassName} />
       </IconButton>
 
       {/* Menu déroulant avec les langues */}
@@ -41,13 +42,7 @@ const LanguageSwitcher = () => {
         sx={{ mt: 0.3, ml: -2 }} // Rapproche le menu du bouton
         disableScrollLock // empêche la disparition du Scroll lors de l'affichage de ce Menu
       >
-        <MenuItem onClick={() => handleClose("en")}>
-          <Flag
-            code="GB"
-            style={{ width: 26, height: "auto", marginRight: 10 }}
-          />{" "}
-          English
-        </MenuItem>
+        {" "}
         <MenuItem onClick={() => handleClose("fr")}>
           <Flag
             code="FR"
@@ -55,12 +50,26 @@ const LanguageSwitcher = () => {
           />{" "}
           Français
         </MenuItem>
+        <MenuItem onClick={() => handleClose("en")}>
+          <Flag
+            code="GB"
+            style={{ width: 26, height: "auto", marginRight: 10 }}
+          />{" "}
+          English
+        </MenuItem>
+        <MenuItem onClick={() => handleClose("ar")}>
+          <Flag
+            code="SA"
+            style={{ width: 26, height: "auto", marginRight: 10 }}
+          />{" "}
+          عربي
+        </MenuItem>
         <MenuItem onClick={() => handleClose("es")}>
           <Flag
             code="ES"
             style={{ width: 26, height: "auto", marginRight: 10 }}
           />{" "}
-          Espagnol
+          Español
         </MenuItem>
       </Menu>
     </>
