@@ -82,6 +82,29 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
             />
           </Form.Item>
 
+          {/* Champ pour la catégorie de l'exercice */}
+          <Form.Item label="Catégorie de l'exercice">
+            <Controller
+              name="category"
+              control={control}
+              defaultValue={exercise.category}
+              render={({ field: { onChange, value } }) => (
+                <Select
+                  onChange={onChange}
+                  value={value}
+                  placeholder="Sélectionner une catégorie"
+                  style={{ width: "100%" }}
+                  allowClear
+                >
+                  {["Cardio", "Force", "Flexibilité", "Équilibre"].map((category) => (
+                    <Select.Option key={category} value={category}>
+                      {category}
+                    </Select.Option>
+                  ))}
+                </Select>
+              )}
+            />
+          </Form.Item>
 
 
           <Form.Item label={t("le niveau de forme physique attendu")}>
