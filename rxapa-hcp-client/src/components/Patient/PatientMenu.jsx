@@ -41,6 +41,7 @@ export default function PatientMenu({ role }) {
     }
   );
 
+  // Faire un endpoint pour lister les patients avec aide(s) soignant(s).... 
   const fetchProgram = async (ProgramEnrollement) => {
     try {
       const { data } = await axios.get(`${Constants.SERVER_URL}/programs`, {
