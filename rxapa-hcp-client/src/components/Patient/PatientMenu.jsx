@@ -37,44 +37,43 @@ export default function PatientMenu({ role }) {
     }
   );
 
+  const fetchProgram = async (ProgramEnrollement) => {
+    try {
+      const { data } = await axios.get(`${Constants.SERVER_URL}/programs`, {
+        headers: { Authorization: "Bearer " + token },
+      });
+      console.log(data);
+      return data.find((prog) => prog.id === ProgramEnrollement.ProgramId);
+    } catch (err) {
+      throw new Error(err.response?.data?.message || "Erreur lors de la récupération des programmes.");
+    }
+  };
+
   // Fonction pour récupérer les enregistrements de programme liés à un patient
   const fetchProgramEnrollements = async (patientId) => {
     try {
-      const { data } = await axios.get(
-        `${Constants.SERVER_URL}/program-enrollements`,
-        {
-          headers: { Authorization: "Bearer " + token },
-        }
-      );
+      const { data } = await axios.get(`${Constants.SERVER_URL}/program-enrollements`, {
+        headers: { Authorization: "Bearer " + token },
+      });
       return data.filter((prog) => prog.PatientId === patientId);
     } catch (err) {
-      throw new Error(
-        err.response?.data?.message ||
-          "Erreur lors de la récupération des programmes."
-      );
+      throw new Error(err.response?.data?.message || "Erreur lors de la récupération des Programmes d'enrôlement.");
     }
   };
 
   // Fonction pour récupérer les soignants liés aux enregistrements de programme
   const fetchPatientCaregivers = async (programEnrollements) => {
     try {
-      const { data } = await axios.get(
-        `${Constants.SERVER_URL}/patient-caregivers`,
-        {
-          headers: { Authorization: "Bearer " + token },
-        }
-      );
+      const { data } = await axios.get(`${Constants.SERVER_URL}/patient-caregivers`, {
+        headers: { Authorization: "Bearer " + token },
+      });
       return data.filter((patientCaregiver) =>
         programEnrollements.some(
-          (enrollment) =>
-            enrollment.id === patientCaregiver.ProgramEnrollementId
+          (enrollment) => enrollment.id === patientCaregiver.ProgramEnrollementId
         )
       );
     } catch (err) {
-      throw new Error(
-        err.response?.data?.message ||
-          "Erreur lors de la récupération des soignants."
-      );
+      throw new Error(err.response?.data?.message || "Erreur lors de la récupération des soignants.");
     }
   };
 
@@ -92,10 +91,7 @@ export default function PatientMenu({ role }) {
       );
       return caregiversDetails;
     } catch (err) {
-      throw new Error(
-        err.response?.data?.message ||
-          "Erreur lors de la récupération des détails des soignants."
-      );
+      throw new Error(err.response?.data?.message || "Erreur lors de la récupération des détails des soignants.");
     }
   };
 
@@ -106,20 +102,21 @@ export default function PatientMenu({ role }) {
       const programEnrollements = await fetchProgramEnrollements(patient.id);
       console.log("Enregistrements du patient :", programEnrollements);
 
-      const caregivers = await fetchPatientCaregivers(programEnrollements);
-      console.log("Soignants associés :", caregivers);
+      const patient_caregivers = await fetchPatientCaregivers(programEnrollements);
+      console.log("Soignants associés :", patient_caregivers);
 
-      const caregiversDetails = await fetchCaregiversDetails(caregivers);
-      console.log("Détails des soignants :", caregiversDetails);
+      const caregivers = await fetchCaregiversDetails(patient_caregivers);
+      console.log("Détails des soignants :", caregivers);
 
-      openCaregiversModal(caregiversDetails);
+      openCaregiversModal(caregivers,patient_caregivers,programEnrollements);
     } catch (err) {
       console.error("Erreur :", err.message);
       openModal(err.message, true);
     }
   };
+
   //Fonction pour afficher la liste des aidants disponibles et chaque aidant a un bouton permettant d'afficher ses détails.
-const openCaregiversModal = (caregivers) => {
+const openCaregiversModal = (caregivers, patient_caregivers, programEnrollements) => {
   AntModal.info({
     title: t("Patients:caregivers_list"),
     content: caregivers.length ? (
@@ -127,7 +124,7 @@ const openCaregiversModal = (caregivers) => {
         {caregivers.filter(c => c).map(c => (
           <li key={c.id}>
             {c.firstname} {c.lastname}
-            <Button type="link" onClick={() => viewCaregiverDetails(c)}>
+            <Button type="link" onClick={() => viewCaregiverDetails(c,patient_caregivers, programEnrollements)}>
               {t("voir les details")}
             </Button>
           </li>
@@ -139,15 +136,55 @@ const openCaregiversModal = (caregivers) => {
 };
 
 // fonction pour aficher les dteails d'un aidant, en excluant certains attributs, les clés 'active', 'createdAt' et 'updatedAt' sont filtrées.
-const viewCaregiverDetails = (caregiver) => {
-  const filteredCaregiver = Object.keys(caregiver)
-    .filter(key => key !== 'active' && key !== 'createdAt' && key !== 'updatedAt') 
+// const viewCaregiverDetails = (caregiver) => {
+//   const filteredCaregiver = Object.keys(caregiver)
+//     .filter(key => key !== 'active' && key !== 'createdAt' && key !== 'updatedAt') 
+//     .map(key => (
+//       <p key={key}>{t(`Patients:${key}`)}: {caregiver[key]}</p>
+//     ));
+
+//   AntModal.info({
+//     title: `${caregiver.firstname} ${caregiver.lastname} - ${t("Details de l'aide soignant")}`,
+//     content: filteredCaregiver,
+//     onOk() {},
+//   });
+// };
+const viewCaregiverDetails = async (caregiver, patient_caregivers, programEnrollements) => {
+  const keysToShow = ['firstname', 'lastname', 'email', 'phoneNumber', 'relationship'];
+
+  const patient_caregiver = patient_caregivers.find(
+    (p_c) => p_c.CaregiverId === caregiver.id
+  );
+  console.log(patient_caregiver);
+
+  let program = null;
+  if (patient_caregiver) {
+    const programEnrollement = programEnrollements.find(
+      (p_e) => p_e.id === patient_caregiver.ProgramEnrollementId
+    );
+    console.log(programEnrollement);
+
+    if (programEnrollement) {
+      program = await fetchProgram(programEnrollement);
+    }
+  }
+
+  const filteredCaregiver = keysToShow
+    .filter(key => caregiver[key] !== undefined)
     .map(key => (
       <p key={key}>{t(`Patients:${key}`)}: {caregiver[key]}</p>
     ));
 
+    console.log(program);
+
+  if (program) {
+    filteredCaregiver.push(
+      <p key="program">{t("Patients:program")}: {program.name}</p>
+    );
+  }
+
   AntModal.info({
-    title: `${caregiver.firstname} ${caregiver.lastname} - ${t("Details de l'aide soignant")}`,
+    title: `${caregiver.firstname} ${caregiver.lastname} - ${t("Détails de l'aide soignant")}`,
     content: filteredCaregiver,
     onOk() {},
   });
@@ -202,7 +239,7 @@ const viewCaregiverDetails = (caregiver) => {
       key: "numberOfPrograms",
     },
     {
-      title: t("Patients:caregivers"),
+      title: "Caregivers",
       key: "caregivers",
       render: (record) => (
         <Button type="link" onClick={() => handleGetCaregivers(record)}>
@@ -215,18 +252,13 @@ const viewCaregiverDetails = (caregiver) => {
       key: "actions",
       render: (_, record) => (
         <Space size="middle">
-          <Button
-            type="link"
-            onClick={() => handleEdit(record)}
-            style={{ display: role === "admin" ? "none" : "inline-block" }}
+          <Button type="link" onClick={() => handleEdit(record)}
+            style={{ display: role === 'admin' ? 'none' : 'inline-block' }}
           >
             <EditOutlined /> {t("Patients:edit_button")}
           </Button>
-          <Button
-            type="link"
-            danger
-            onClick={() => handleDelete(record)}
-            style={{ display: role === "admin" ? "none" : "inline-block" }}
+          <Button type="link" danger onClick={() => handleDelete(record)}
+            style={{ display: role === 'admin' ? 'none' : 'inline-block' }}
           >
             <DeleteOutlined /> {t("Patients:delete_button")}
           </Button>
@@ -242,8 +274,7 @@ const viewCaregiverDetails = (caregiver) => {
   const showCaregiverWarning = () => {
     AntModal.warning({
       title: "Deletion impossible.",
-      content:
-        "Please delete the associated caregivers before deleting this patient.",
+      content: "Please delete the associated caregivers before deleting this patient.",
       okText: "OK",
     });
   };
@@ -268,6 +299,7 @@ const viewCaregiverDetails = (caregiver) => {
               openModal(res.data.message, false);
             })
             .catch((err) => openModal(err.response.data.message, true));
+
         } else {
           showCaregiverWarning();
         }
@@ -327,7 +359,7 @@ const viewCaregiverDetails = (caregiver) => {
               type="primary"
               icon={<PlusOutlined />}
               onClick={() => setIsCreatePatient(true)}
-              style={{ display: role === "admin" ? "none" : "inline-block" }}
+              style={{ display: role === 'admin' ? 'none' : 'inline-block' }}
             >
               {t("Patients:register_patient")}
             </Button>
@@ -369,3 +401,4 @@ const viewCaregiverDetails = (caregiver) => {
     </div>
   );
 }
+
