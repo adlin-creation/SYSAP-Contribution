@@ -1,7 +1,7 @@
 import { expect } from "chai"; // Importation de Chai pour les assertions
 import request from "supertest"; // Importation de Supertest pour tester les routes Express
 import app from "../server"; // Importation de l'application Express principale
-import { User } from "../model/User"; // Importation du modèle User pour interagir avec la base de données
+import { Professional_User } from "../model/Professional_User"; // Importation du modèle ProfessionalUser pour interagir avec la base de données
 import { hash } from "../controller/UserController"; // Importation de la fonction de hachage
 import { describe, it, before } from "mocha"; // Mocha pour la structure des tests
 import { after } from "mocha";
@@ -12,14 +12,14 @@ describe("Authentication API - Login", function () {
   // `before()` permet d’exécuter une préparation avant les tests.
   before(async function () {
     // Suppression de l'utilisateur "test@example.com" s'il existe déjà.
-    await User.destroy({ where: { email: "test@example.com" } });
+    await Professional_User.destroy({ where: { email: "test@example.com" } });
 
     // Hachage du mot de passe pour stocker un utilisateur valide dans la base de données.
     const hashedPassword = await hash("ValidPassword123");
 
     // Création d’un utilisateur de test dans la base de données.
-    await User.create({
-      name: "test",
+    await Professional_User.create({
+      firstname: "test",
       email: "test@example.com",
       password: hashedPassword, // Stockage du mot de passe sécurisé
       //role: "user", // Ajout d'un rôle pour tester les permissions
@@ -77,7 +77,7 @@ describe("Authentication API - Login", function () {
 
   after(async function () {
     // Suppression de l'utilisateur "test@example.com" apres le test.
-    await User.destroy({ where: { email: "test@example.com" } });
+    await Professional_User.destroy({ where: { email: "test@example.com" } });
     console.log("Fermeture du serveur après les tests...");
     process.exit(0); // Termine proprement le processus Node.js après les tests
   });
