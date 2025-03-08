@@ -10,9 +10,14 @@ import LanguageSwitcher from "../LanguageSwitcher/LanguageSwitcher";
 import { useTranslation } from "react-i18next";
 
 export default function Signup({ setIsSignup }) {
-  const { handleSubmit, control } = useForm();
+  const { handleSubmit, control, setValue } = useForm({
+    defaultValues: {
+      role: "superadmin", // Valeur par défaut pour le champ role
+    },
+  });
   const { t } = useTranslation();
   const onSubmit = (data) => {
+    console.log(data); // Ajout d'un console.log pour vérifier les données envoyées
     axios
       .post(`${Constants.SERVER_URL}/signup`, data)
       .then((res) => {
@@ -48,10 +53,26 @@ export default function Signup({ setIsSignup }) {
             {t("Authentication:back_button")}
           </Button>
           <Form onFinish={handleSubmit(onSubmit)}>
+          <div className="input-element">
+              <h5> Entrez votre prenom</h5>
+              <Controller
+                name={"firstname"}
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <Input
+                    onChange={onChange}
+                    value={value}
+                    placeholder={"Votre prenom"}
+                    required
+                  />
+                )}
+              />
+            </div>
+
             <div className="input-element">
               <h5> {t("Authentication:name_title")}</h5>
               <Controller
-                name={"name"}
+                name={"lastname"}
                 control={control}
                 render={({ field: { onChange, value } }) => (
                   <Input
@@ -111,6 +132,39 @@ export default function Signup({ setIsSignup }) {
                     )}
                     required
                   />
+                )}
+              />
+            </div>
+
+            <div className="input-element">
+              <h5> Phone Number</h5>
+              <Controller
+                name={"phoneNumber"}
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <Input
+                    onChange={onChange}
+                    value={value}
+                    placeholder={"Phone Number"}
+                    type="tel"
+                    required
+                  />
+                )}
+              />
+            </div>
+
+            <div className="input-element">
+              <h5> Role</h5>
+              <Controller
+                name={"role"}
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <select onChange={onChange} value={value} required>
+                    <option value="superadmin">Super Admin</option>
+                    <option value="admin">Admin</option>
+                    <option value="kinesiologist">Kinesiologue</option>
+                    <option value="doctor">Doctor</option>
+                  </select>
                 )}
               />
             </div>
