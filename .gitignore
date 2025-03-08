@@ -70,7 +70,7 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
-# *.env
+*.env
 .env.test
 .rxapa-hcp-server/src/.env
 .rxapa-hcp-server/.env
