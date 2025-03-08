@@ -5,8 +5,11 @@ import {
   DeleteOutlined,
   ArrowLeftOutlined,
   ExclamationCircleOutlined,
+  PhoneOutlined,
+  MailOutlined,
+  LinkOutlined
 } from "@ant-design/icons";
-import { Button, Table, Space, Tag, Row, Col, Modal as AntModal } from "antd";
+import { Card, Descriptions, Button, Table, Space, Tag, Row, Col, Modal as AntModal } from "antd";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import Constants from "../Utils/Constants";
@@ -14,6 +17,7 @@ import useToken from "../Authentication/useToken";
 import CreatePatient from "./CreatePatient";
 import PatientDetails from "./PatientDetails";
 import { useTranslation } from "react-i18next";
+
 
 export default function PatientMenu({ role }) {
   const { t } = useTranslation();
@@ -108,7 +112,7 @@ export default function PatientMenu({ role }) {
       const caregivers = await fetchCaregiversDetails(patient_caregivers);
       console.log("Détails des soignants :", caregivers);
 
-      openCaregiversModal(caregivers,patient_caregivers,programEnrollements);
+      openCaregiversModal(caregivers, patient_caregivers, programEnrollements);
     } catch (err) {
       console.error("Erreur :", err.message);
       openModal(err.message, true);
@@ -116,79 +120,152 @@ export default function PatientMenu({ role }) {
   };
 
   //Fonction pour afficher la liste des aidants disponibles et chaque aidant a un bouton permettant d'afficher ses détails.
-const openCaregiversModal = (caregivers, patient_caregivers, programEnrollements) => {
-  AntModal.info({
-    title: t("Patients:caregivers_list"),
-    content: caregivers.length ? (
-      <ul>
-        {caregivers.filter(c => c).map(c => (
-          <li key={c.id}>
-            {c.firstname} {c.lastname}
-            <Button type="link" onClick={() => viewCaregiverDetails(c,patient_caregivers, programEnrollements)}>
-              {t("voir les details")}
-            </Button>
-          </li>
-        ))}
-      </ul>
-    ) : <p>{t("Aucune aide soignante disponible")}</p>,
-    onOk() {},
-  });
-};
+  // const openCaregiversModal = (caregivers, patient_caregivers, programEnrollements) => {
+  //   AntModal.info({
+  //     title: t("Patients:caregivers_list"),
+  //     content: caregivers.length ? (
+  //       <ul>
+  //         {caregivers.filter(c => c).map(c => (
+  //           <li key={c.id}>
+  //             {c.firstname} {c.lastname}
+  //             <Button type="link" onClick={() => viewCaregiverDetails(c,patient_caregivers, programEnrollements)}>
+  //               {t("voir les details")}
+  //             </Button>
+  //           </li>
+  //         ))}
+  //       </ul>
+  //     ) : <p>{t("Aucune aide soignante disponible")}</p>,
+  //     onOk() {},
+  //   });
+  // };
 
-// fonction pour aficher les dteails d'un aidant, en excluant certains attributs, les clés 'active', 'createdAt' et 'updatedAt' sont filtrées.
-// const viewCaregiverDetails = (caregiver) => {
-//   const filteredCaregiver = Object.keys(caregiver)
-//     .filter(key => key !== 'active' && key !== 'createdAt' && key !== 'updatedAt') 
-//     .map(key => (
-//       <p key={key}>{t(`Patients:${key}`)}: {caregiver[key]}</p>
-//     ));
+  // const viewCaregiverDetails = async (caregiver, patient_caregivers, programEnrollements) => {
+  //   const keysToShow = ['firstname', 'lastname', 'email', 'phoneNumber', 'relationship'];
 
-//   AntModal.info({
-//     title: `${caregiver.firstname} ${caregiver.lastname} - ${t("Details de l'aide soignant")}`,
-//     content: filteredCaregiver,
-//     onOk() {},
-//   });
-// };
-const viewCaregiverDetails = async (caregiver, patient_caregivers, programEnrollements) => {
-  const keysToShow = ['firstname', 'lastname', 'email', 'phoneNumber', 'relationship'];
+  //   const patient_caregiver = patient_caregivers.find(
+  //     (p_c) => p_c.CaregiverId === caregiver.id
+  //   );
+  //   console.log(patient_caregiver);
 
-  const patient_caregiver = patient_caregivers.find(
-    (p_c) => p_c.CaregiverId === caregiver.id
-  );
-  console.log(patient_caregiver);
+  //   let program = null;
+  //   if (patient_caregiver) {
+  //     const programEnrollement = programEnrollements.find(
+  //       (p_e) => p_e.id === patient_caregiver.ProgramEnrollementId
+  //     );
+  //     console.log(programEnrollement);
 
-  let program = null;
-  if (patient_caregiver) {
-    const programEnrollement = programEnrollements.find(
-      (p_e) => p_e.id === patient_caregiver.ProgramEnrollementId
+  //     if (programEnrollement) {
+  //       program = await fetchProgram(programEnrollement);
+  //     }
+  //   }
+
+  //   const filteredCaregiver = keysToShow
+  //     .filter(key => caregiver[key] !== undefined)
+  //     .map(key => (
+  //       <p key={key}>{t(`Patients:${key}`)}: {caregiver[key]}</p>
+  //     ));
+
+  //     console.log(program);
+
+  //   if (program) {
+  //     filteredCaregiver.push(
+  //       <p key="program">{t("Patients:program")}: {program.name}</p>
+  //     );
+  //   }
+
+  //   AntModal.info({
+  //     title: `${caregiver.firstname} ${caregiver.lastname} - ${t("Détails de l'aide soignant")}`,
+  //     content: filteredCaregiver,
+  //     onOk() {},
+  //   });
+  // };
+
+  const openCaregiversModal = (caregivers, patient_caregivers, programEnrollements) => {
+    AntModal.info({
+      title: (
+        <div style={{ fontSize: "18px", fontWeight: "bold" }}>
+          Liste des soignants
+        </div>
+      ), content: caregivers.length ? (
+        <Row gutter={[16, 16]}>
+          {caregivers.filter(c => c).map(c => (
+            <Col key={c.id} span={8}>
+              <Card
+                title={`${c.firstname} ${c.lastname}`}
+                actions={[
+                  <Button
+                    type="link"
+                    icon={<LinkOutlined />}
+                    onClick={() => viewCaregiverDetails(c, patient_caregivers, programEnrollements)}
+                  >
+                    {t("voir les details")}
+                  </Button>
+                ]}
+              >
+                <p><MailOutlined /> {c.email}</p>
+                <p><PhoneOutlined /> {c.phoneNumber}</p>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      ) : <p>{t("Aucune aide soignante disponible")}</p>,
+      onOk() { },
+      width: "80%",
+    });
+  };
+
+  const viewCaregiverDetails = async (caregiver, patient_caregivers, programEnrollements) => {
+    const keysToShow = ['firstname', 'lastname', 'email', 'phoneNumber', 'relationship'];
+
+    const patient_caregiver = patient_caregivers.find(
+      (p_c) => p_c.CaregiverId === caregiver.id
     );
-    console.log(programEnrollement);
 
-    if (programEnrollement) {
-      program = await fetchProgram(programEnrollement);
+    let program = null;
+    if (patient_caregiver) {
+      const programEnrollement = programEnrollements.find(
+        (p_e) => p_e.id === patient_caregiver.ProgramEnrollementId
+      );
+
+      if (programEnrollement) {
+        program = await fetchProgram(programEnrollement);
+      }
     }
-  }
 
-  const filteredCaregiver = keysToShow
-    .filter(key => caregiver[key] !== undefined)
-    .map(key => (
-      <p key={key}>{t(`Patients:${key}`)}: {caregiver[key]}</p>
-    ));
+    const items = keysToShow
+      .filter(key => caregiver[key] !== undefined)
+      .map(key => ({
+        key,
+        label: t(`Patients:${key}`),
+        children: caregiver[key],
+      }));
 
-    console.log(program);
+    if (program) {
+      items.push({
+        key: "program",
+        label: t("Patients:program"),
+        children: program.name,
+      });
+    }
 
-  if (program) {
-    filteredCaregiver.push(
-      <p key="program">{t("Patients:program")}: {program.name}</p>
-    );
-  }
-
-  AntModal.info({
-    title: `${caregiver.firstname} ${caregiver.lastname} - ${t("Détails de l'aide soignant")}`,
-    content: filteredCaregiver,
-    onOk() {},
-  });
-};
+    AntModal.info({
+      title: (
+        <div style={{ fontSize: "18px", fontWeight: "bold" }}>
+          {caregiver.firstname} {caregiver.lastname} - Détails de l'aide soignant
+        </div>
+      ), content: (
+        <Descriptions bordered column={1}>
+          {items.map(item => (
+            <Descriptions.Item key={item.key} label={item.label}>
+              {item.children}
+            </Descriptions.Item>
+          ))}
+        </Descriptions>
+      ),
+      onOk() { },
+      width: "60%",
+    });
+  };
 
   const getStatusColor = (status) => {
     switch (status) {
