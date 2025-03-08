@@ -71,8 +71,7 @@ exports.login = async (req: any, res: any) => {
   let user;
 
   try {
-    // Vérifier si l'utilisateur existe dans la table `User`
-   // user = await User.findOne({ where: { email: email } }); 
+    // Vérifier si l'utilisateur existe dans la table `User` 
 
     // Si l'utilisateur n'est pas trouvé, vérifier dans ProfessionalUser
   

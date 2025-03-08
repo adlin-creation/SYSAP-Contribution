@@ -216,7 +216,7 @@ function App() {
     {
       key: "3",
       label: t("App:logout"),
-      onClick: handleLogout,  // Ajoutez cette ligne pour la déconnexion
+      onClick: handleLogout, // Ajoutez cette ligne pour la déconnexion
     },
   ];
 
@@ -271,7 +271,7 @@ function App() {
         </Header>
         <Content className="content">
           <Routes>
-          <Route path="/" element={<Home />}></Route>
+            <Route path="/" element={<Home />}></Route>
             <Route path="exercises" element={<ExerciseMenu />}></Route>
             <Route path="blocs" element={<BlocMenu />}></Route>
             <Route path="sessions" element={<SessionMenu />}></Route>
