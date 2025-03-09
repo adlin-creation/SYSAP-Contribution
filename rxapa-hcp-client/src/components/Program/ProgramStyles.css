@@ -56,3 +56,42 @@
   position: relative;
   top: 1px;
 }
+
+/* dropdownStyles */
+
+/* Style du bouton */
+.select-sessions-button {
+  margin-bottom: 10px;
+}
+
+/* Style du dropdown */
+.dropdown-container {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-top: 10px;
+  background-color: #fff;
+  position: absolute;
+  z-index: 10;
+  max-height: 200px;
+  overflow-y: auto;
+  width: 300px; /* Ajustable selon tes besoins */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Ajout d'ombre pour un effet pop-up */
+  transition: all 0.3s ease;  /* Transition fluide lors de l'affichage */
+}
+
+/* Style de l'input de recherche */
+.search-input {
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+/* Message "No sessions found" */
+.no-sessions-message {
+  color: gray;
+  font-style: italic;
+}
+
+/* Style du bouton de confirmation */
+.confirm-button {
+  margin-top: 10px;
+}
