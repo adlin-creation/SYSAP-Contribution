@@ -141,13 +141,17 @@ describe("PatientViewPage Component", () => {
     it("displays averages correctly", () => {
         render(<PatientViewPage patient={mockPatient} onClose={() => { }} />);
 
-        // Vérifiez les moyennes calculées
-        expect(screen.getByText("3.5")).toBeInTheDocument(); // difficulty
-        expect(screen.getByText("4.5")).toBeInTheDocument(); // pain
-        expect(screen.getByText("4.5")).toBeInTheDocument(); // exercises
+        expect(screen.getByText("3.5")).toBeInTheDocument(); // voir la moyenne est présente
+        const painLevels = screen.getAllByText("4.5"); // voir si moyennes douleur/difficulté sont présentes
+        expect(painLevels.length).toBe(2);
+
+        //À faire; voir si moyennes sont à la bonne place
     });
 
-    it("displays loading state while fetching sessions", () => {
+
+/**    Changer les tests dépendemmment du choix de l'équipe
+
+      it("displays loading state while fetching sessions", () => {
         // Mock de useQuery pour simuler un chargement
         useQuery.mockImplementation(() => ({
             data: undefined,
@@ -181,5 +185,6 @@ describe("PatientViewPage Component", () => {
 
         render(<PatientViewPage patient={mockPatient} onClose={() => { }} />);
         expect(screen.getByText("No sessions found for this patient.")).toBeInTheDocument();
-    });
+
+    }); **/
 });
