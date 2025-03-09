@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { Row, Col, Form, Input, Button, Modal, Radio, Checkbox } from "antd";
-import { SendOutlined,PlusOutlined, CheckOutlined } from "@ant-design/icons";
+import React, { useState, useEffect, useRef } from "react";
+import { Row, Col, Form, Input, Button, Modal, Radio, Checkbox, Select } from "antd";
+import { SendOutlined,PlusOutlined} from "@ant-design/icons";
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
 import "./ProgramStyles.css";
 import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
-
 
 export default function CreateProgram(props) {
   const { handleSubmit, control } = useForm();
@@ -19,42 +18,108 @@ export default function CreateProgram(props) {
   const [selectedSessions, setSelectedSessions] = useState([]); // Stocke les séances sélectionnées
   const [searchQuery, setSearchQuery] = useState(""); // Gère la recherche des séances
   const [isDropdownVisible, setDropdownVisible] = useState(false); // Gère la visibilité du menu déroulant
+  const dropdownRef = useRef(null);
+  const buttonRef = useRef(null);  // Reference for the button
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
+
+  const [imageURL, setImageURL] = useState(""); //Gère la saisie de l'url de l'image
+  const [error, setError] = useState("");
 
   const [uploadType, setUploadType] = useState("file");
 
   // Récupération des séances depuis l'API
   useEffect(() => {
     axios
-      .get(`${Constants.SERVER_URL}`) // Remplace par l'URL de ton API
-      .then((response) => {
-        setSessions(response.data.sessions || []);
+      .get(`${Constants.SERVER_URL}/sessions`, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }) 
+      .then((res) => {
+        console.log("Données reçues :", res.data);
+        setSessions(res.data);
       })
-      .catch((error) => {
-        console.error("Erreur lors de la récupération des séances :", error);
+      .catch((err) => {
+        openModal(err.res.data.message, true);
       });
+  }, [token]);
+
+   //Fermer la liste deroulante si on clique en dehors
+   useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownVisible(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
+
+  useEffect(() => {
+    if (isDropdownVisible && buttonRef.current) {
+      const buttonRect = buttonRef.current.getBoundingClientRect();
+      // Calcul du positionnement du dropdown
+      setDropdownPosition({
+        top: buttonRect.bottom + window.scrollY,  // Position au bas du bouton
+        left: buttonRect.left + window.scrollX,   // Alignement à gauche du bouton
+      });
+    }
+  }, [isDropdownVisible]);  // Recalculer à chaque fois que le dropdown devient visible
 
   // Filtrer les séances en fonction de la recherche
   const filteredSessions = sessions.filter((session) =>
     session.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+
   const handleSessionSelection = (sessionId) => {
     const isSelected = selectedSessions.includes(sessionId);
     if (isSelected) {
-      setSelectedSessions(
-        selectedSessions.filter((id) => id !== sessionId)
-      );
+      setSelectedSessions(selectedSessions.filter((id) => id !== sessionId));
     } else {
       setSelectedSessions([...selectedSessions, sessionId]);
     }
   };
 
+  // Valider le format de l'url de l'image
+  // n'accepte que des url directs
+  const isValidImageURL = (url) => {
+    return /\.(jpeg|jpg|png|webp)$/i.test(url);
+  };
+
   const onSubmit = (data) => {
+    const formData = new FormData();
+
+    // Ajouter les sessions sélectionnées
+    selectedSessions.forEach((sessionId) => {
+      formData.append("sessions[]", sessionId); // Ajouter les sessions sous le bon nom
+    });
+
+    // Ajouter les autres données du programme
+    Object.keys(data).forEach((key) => {
+      formData.append(key, data[key]);
+    });
+
+    // Ajouter l'image si elle existe
+    if (uploadType === "file" && data.image && data.image[0]) {
+      formData.append("image", data.image[0]); // Ajout du fichier
+    } else if (uploadType === "url" && data.imageURL) {
+      formData.append("imageUrl", data.imageURL); // Ajout du lien
+    }
+
+    
+    // formData.append("sessions", JSON.stringify(selectedSessions));
+
+    console.log("Selected sessions before submit:", selectedSessions);
+
+
     axios
-      .post(`${Constants.SERVER_URL}/create-program`, data, {
+      .post(`${Constants.SERVER_URL}/create-program`, formData, {
         headers: {
           Authorization: "Bearer " + token,
+          "Content-Type": "multipart/form-data",
         },
       })
       .then((res) => {
@@ -81,6 +146,7 @@ export default function CreateProgram(props) {
     <Row justify="center" align="middle" style={{ minHeight: "50vh" }}>
       <Col span={12}>
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
+
           <Form.Item label="Please enter the name of the program : ">
             <Controller
               name="name"
@@ -90,21 +156,6 @@ export default function CreateProgram(props) {
                   onChange={onChange}
                   value={value}
                   placeholder="Program Name"
-                  required
-                />
-              )}
-            />
-          </Form.Item>
-
-          <Form.Item label="Please enter the code of the program : ">
-            <Controller
-              name="code"
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <Input
-                  onChange={onChange}
-                  value={value}
-                  placeholder="Program Code"
                   required
                 />
               )}
@@ -127,7 +178,7 @@ export default function CreateProgram(props) {
             />
           </Form.Item>
 
-          <Form.Item label="Please enter the duration of the program (in days) : ">
+          <Form.Item label="Please enter the duration of the program : ">
             <Controller
               name="duration"
               control={control}
@@ -140,6 +191,19 @@ export default function CreateProgram(props) {
                   type="number"
                   required
                 />
+              )}
+            />
+          </Form.Item>
+
+          <Form.Item label="Please select the unit of the duration">
+            <Controller
+              name="duration_unit"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <Select onChange={onChange} value={value} required>
+                  <Select.Option value="days">Jours</Select.Option>
+                  <Select.Option value="weeks">Semaines</Select.Option>
+                </Select>
               )}
             />
           </Form.Item>
@@ -186,55 +250,81 @@ export default function CreateProgram(props) {
           {uploadType === "url" && (
             <Form.Item label="Enter the URL of the program image (optional):">
               <Controller
-                name="imageURL"
-                control={control}
-                render={({ field: { onChange, value } }) => (
+              name="imageURL"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <>
                   <Input
-                    onChange={onChange}
                     value={value}
+                    onChange={(e) => {
+                      setImageURL(e.target.value);
+                      setError(""); // Réinitialise l'erreur lorsqu'on tape
+                      onChange(e);
+                    }}
+                    onBlur={() => {
+                      if (imageURL && !isValidImageURL(imageURL)) {
+                        setError("Please enter a direct URL (https://example.com/images/photo.jpg).");
+                      }
+                    }}
                     placeholder="Program Image URL"
                   />
-                )}
-              />
+                  {error && <p style={{ color: "red", marginTop: 5 }}>{error}</p>}
+                </>
+              )}
+            />
             </Form.Item>
           )}
 
           {/* Sélection des séances */}
           <Form.Item label="Select sessions for the program:">
             <Button
+              name="sessions"
               type="primary"
               icon={<PlusOutlined />}
               onClick={() => setDropdownVisible(!isDropdownVisible)}
             >
               Select Sessions
             </Button>
+
             {isDropdownVisible && (
               <div
+                ref={dropdownRef}
                 style={{
-                  border: "1px solid #ccc",
-                  padding: "10px",
-                  marginTop: "10px",
-                  backgroundColor: "#fff",
-                  position: "absolute",
-                  zIndex: 10,
+                  top: dropdownPosition.top,  // Utilisation de la position calculée
+                  left: dropdownPosition.left, 
                 }}
               >
                 <Input
+                  name="sessions"
                   placeholder="Search sessions..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  style={{ marginBottom: "10px" }}
+                  className="search-input"
                 />
-                {filteredSessions.map((session) => (
-                  <div key={session.id}>
-                    <Checkbox
-                      checked={selectedSessions.includes(session.id)}
-                      onChange={() => handleSessionSelection(session.id)}
-                    >
-                      {session.name}
-                    </Checkbox>
-                  </div>
-                ))}
+
+                {filteredSessions.length > 0 ? (
+                  filteredSessions.map((session) => (
+                    <div key={session.id}>
+                      <Checkbox
+                        checked={selectedSessions.includes(session.id)}
+                        onChange={() => handleSessionSelection(session.id)}
+                      >
+                        {session.name}
+                      </Checkbox>
+                    </div>
+                  ))
+                ) : (
+                  <p className="no-sessions-message">No sessions found</p>
+                )}
+
+                <Button
+                  type="primary"
+                  block
+                  className="confirm-button"
+                  onClick={() => setDropdownVisible(false)}
+                >
+                  Confirm Selection
+                </Button>
               </div>
             )}
           </Form.Item>
