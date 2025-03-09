@@ -34,13 +34,10 @@ exports.createProgram = [
     const duration_unit = req.body.duration_unit;
     const imageUrl = req.body.imageUrl;
     const sessions = req.body;
-    // const sessions = req.body['sessions[]'];
 
     console.log("Parsed sessions:", sessions);
 
-    // Use sequelize (Database Framework) to create the Exercise
     try {
-      
       console.log("Body received:", req.body);
       console.log("File received:", req.file);
       console.log("Sessions received:", req.body.sessions);
@@ -48,11 +45,13 @@ exports.createProgram = [
       const rawSessions = req.body.sessions;
       console.log("Sessions received (raw):", rawSessions);
 
-      const sessions = rawSessions ? JSON.parse(rawSessions) : [];
-      console.log("Parsed sessions:", sessions);
+      // Vérification que les sessions sont bien dans un format tableau
+      const sessions = Array.isArray(rawSessions) ? rawSessions : [];
+      console.log("Sessions après parsing :", sessions);
 
-      // // Extraire les attributs nécessaires pour créer le programme
-      // const { name, description, duration, duration_unit, sessions } = req.body;
+      if (!sessions.length) {
+        return res.status(400).json({ message: "No valide session given" });
+      }
 
       let imagePath = "";
 
@@ -76,8 +75,8 @@ exports.createProgram = [
       });
 
       // // Associer les sessions au programme
-      if (req.body.sessions) {
-        const sessionIds = req.body.sessions; // Un tableau de sessions
+      if (sessions.length > 0) {
+        const sessionIds = req.body.sessions;
         for (const sessionId of sessionIds) {
           await ProgramSession.create({
             programId: program.id,
