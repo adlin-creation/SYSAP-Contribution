@@ -23,7 +23,6 @@ import { useTranslation } from "react-i18next";
 
 
 export default function PatientMenu({ role }) {
-  const navigate = useNavigate();
   const [viewingPatient, setViewingPatient] = useState(null);
   const { t } = useTranslation();
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -386,7 +385,7 @@ export default function PatientMenu({ role }) {
       )}
 
       
-      {!isCreatePatient && !selectedPatient && !viewingPatient ? (
+      {!isCreatePatient && !selectedPatient && !viewingPatient && role ? (
         <>
           <div style={{ marginBottom: 16 }}>
             <Button
