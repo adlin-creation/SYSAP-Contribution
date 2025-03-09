@@ -86,7 +86,7 @@ function EvaluationPATH({ onSubmit }) {
             paddingBottom: "10px",
           }}
         >
-          Résultats de l'évaluation
+          Évaluation PATH
         </h3>
 
         <div style={{ marginBottom: "15px" }}>
