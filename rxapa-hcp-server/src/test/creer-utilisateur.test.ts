@@ -4,6 +4,7 @@ import { Admin } from "../model/Admin";
 import { Doctor } from "../model/Doctor";
 import { Kinesiologist } from "../model/Kinesiologist";
 import { hash } from "../controller/UserController"; // Import de la fonction hash
+import { generateCode, sendEmail } from "../util/unikpass";
 import { expect, jest } from "@jest/globals";
 
 jest.mock("../model/Professional_User");
@@ -11,6 +12,8 @@ jest.mock("../model/Admin");
 jest.mock("../model/Doctor");
 jest.mock("../model/Kinesiologist");
 jest.mock("../controller/UserController");
+jest.mock("../util/unikpass");
+
 
 describe("createProfessionalUser", () => {
     let req: any;
@@ -40,17 +43,15 @@ describe("createProfessionalUser", () => {
         next = jest.fn();
     });
 
-    //Teste si la fonction hash est appelée
+
     it("should call hash function to hash the password", async () => {
         (hash as jest.MockedFunction<typeof hash>).mockResolvedValue("hashedPassword");
 
         await createProfessionalUser(req, res, next);
 
-        expect(hash).toHaveBeenCalledTimes(1);
-        expect(hash).toHaveBeenCalledWith("password123");
+        expect(hash).toHaveBeenCalledTimes(2);
     });
 
-    // 🔹 Teste la création réussie d'un utilisateur professionnel
     it("should create a professional user successfully", async () => {
 
         (hash as jest.MockedFunction<typeof hash>).mockResolvedValue("hashedPassword");
@@ -90,7 +91,6 @@ describe("createProfessionalUser", () => {
         );
     });
 
-    // 🔹 Teste la création d'un admin
     it("should create an admin user successfully", async () => {
         // Changement du rôle pour admin
         req.body.role = "admin";
@@ -142,7 +142,6 @@ describe("createProfessionalUser", () => {
         );
     });
 
-    // 🔹 Teste la création d'un kinésiologue (kine)
     it("should create a kinesiologist user successfully", async () => {
         // Changement du rôle pour kinésiologue
         req.body.role = "kinesiologist";
@@ -184,6 +183,7 @@ describe("createProfessionalUser", () => {
         expect(Kinesiologist.create).toHaveBeenCalledWith({
             idKinesiologist: 1,
             workEnvironment: "Clinic",
+            unikPassHashed: "hashedPassword",
         });
         expect(res.statusCode).toBe(201);
         expect(res.json).toHaveBeenCalledWith(
@@ -264,4 +264,16 @@ describe("createProfessionalUser", () => {
         expect(res.json).toHaveBeenCalledWith({ message: "existing professionnel user with this email" });
     });
 
+    it("should send email to doctor or kinesiologist with their unique code", async () => {
+        // Mock the code generation and email sending
+        (generateCode as jest.MockedFunction<typeof generateCode>).mockReturnValue("123456");
+        (sendEmail as jest.MockedFunction<typeof sendEmail>).mockResolvedValue();
+
+        await createProfessionalUser(req, res, next);
+
+        expect(generateCode).toHaveBeenCalled();
+        expect(sendEmail).toHaveBeenCalled();
+    });
+
 });
+
