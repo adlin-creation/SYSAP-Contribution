@@ -280,7 +280,8 @@ export default function PatientMenu({ role }) {
       key: "actions",
       render: (_, record) => (
         <Space size="middle">
-          <Button type="link" onClick={() => handleView(record)}>
+          <Button type="link" onClick={() => handleView(record)}
+            style={{ display: role === 'admin' ? 'none' : 'inline-block' }}>
           <EyeOutlined /> {t("Patients:view_statistic_button")}
           </Button>
           <Button type="link" onClick={() => handleEdit(record)}
