@@ -35,21 +35,16 @@ export default function PatientMenu({ role }) {
 
   const patientUrl = `${Constants.SERVER_URL}/patients`;
 
-  const { data: patientList = [], refetch: refetchPatients } = useQuery(
+  const { data: patientList, refetch: refetchPatients } = useQuery(
     ["patients"],
     async () => {
-      if (!token) return [];
-      
       const { data } = await axios.get(patientUrl, {
         headers: { Authorization: "Bearer " + token },
       });
       return data;
-    },
-    {
-      enabled: !!token,
-      retry: 1,
     }
   );
+
 
   // Faire un endpoint pour lister les patients avec aide(s) soignant(s).... 
   const fetchProgram = async (ProgramEnrollement) => {
@@ -385,7 +380,7 @@ export default function PatientMenu({ role }) {
       )}
 
       
-      {!isCreatePatient && !selectedPatient && !viewingPatient && role ? (
+      {!isCreatePatient && !selectedPatient && !viewingPatient ? (
         <>
           <div style={{ marginBottom: 16 }}>
             <Button
