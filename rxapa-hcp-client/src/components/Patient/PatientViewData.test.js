@@ -1,5 +1,5 @@
 // PatientData.test.js
-import React from "react";
+import { act } from "react";
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent, waitFor, within } from "@testing-library/react";
 import PatientViewPage from "./PatientViewPage";
@@ -41,6 +41,12 @@ const mockPatient = {
     numberOfPrograms: 2,
 };
 
+jest.mock("react-i18next", () => ({
+    useTranslation: () => ({
+      t: (key) => key, // Retourne simplement la clé de traduction au lieu d'une vraie traduction
+    }),
+  }));
+  
 describe("PatientViewPage Component", () => {
     beforeEach(() => {
         // Mock de useQuery pour retourner les sessions
