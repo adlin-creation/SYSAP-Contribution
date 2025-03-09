@@ -16,8 +16,6 @@ export default function PatientData({ patient, onClose }) {
   // Récupérer les sessions avec useQuery
   const {
     data: sessionsData,
-    isLoading,
-    isError,
   } = useQuery(["SessionRecord", patient.id], () => {
     return axios
       .get(patientSessionsUrl, {
