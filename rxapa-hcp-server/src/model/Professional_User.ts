@@ -32,7 +32,7 @@ const Professional_User = sequelize.define('Professional_User', {
     allowNull: false,
   },
   role: {
-    type: dataTypes.ENUM('admin', 'doctor', 'kinesiologist'),
+    type: dataTypes.ENUM('superadmin', 'admin', 'doctor', 'kinesiologist'),
     allowNull: false,
   },
   active: {

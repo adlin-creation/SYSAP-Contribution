@@ -7,36 +7,59 @@ import { Patient } from "../model/Patient";
 import { ProgramEnrollement } from "../model/ProgramEnrollement";
 import crypto from 'crypto';
 import { hash } from './UserController';
-
+import {
+  generateCode,
+  sendEmail,
+} from "../util/unikpass";
 
 /**
  * Creates a new professional user.
  */
 export const createProfessionalUser = async (req: any, res: any, next: any) => {
   const { firstname, lastname, email, phoneNumber, password, role, workEnvironment } = req.body;
-  const hashedPassword = await hash(password);
+
   try {
+    // Vérifier si l'utilisateur existe déjà
     const existingUser = await Professional_User.findOne({ where: { email } });
     if (existingUser) {
-      return res.status(409).json({ message: "Un utilisateur avec cet email existe déjà." });
+      return res.status(409).json({ message: "existing professionnel user with this email" });
     }
 
-    const newProfessionalUser = await Professional_User.create({
-      firstname,
-      lastname,
-      email,
-      phoneNumber,
-      password: hashedPassword,
-      role
-    });
-   
-    // Create the specific role entity
+    // Hacher le mot de passe
+    const hashedPassword = await hash(password);
+
+    // Créer l'utilisateur professionnel 
+    const newProfessionalUser = await Professional_User.create(
+      {
+        firstname,
+        lastname,
+        email,
+        phoneNumber,
+        password: hashedPassword,
+        role,
+      },
+    );
+
+    // Générer un code unique et le hacher
+    const code = generateCode(6); // Générer un code à 6 caractères
+    const unikPassHashed = await hash(code); // Hacher le code
+
     if (role === 'admin') {
       await Admin.create({ idAdmin: newProfessionalUser.id });
+
     } else if (role === 'doctor') {
-      await Doctor.create({ idDoctor: newProfessionalUser.id, workEnvironment: workEnvironment });
+      await Doctor.create(
+        { idDoctor: newProfessionalUser.id, workEnvironment, unikPassHashed },
+      );
+
     } else if (role === 'kinesiologist') {
-      await Kinesiologist.create({ idKinesiologist: newProfessionalUser.id, workEnvironment: workEnvironment });
+      await Kinesiologist.create(
+        { idKinesiologist: newProfessionalUser.id, workEnvironment, unikPassHashed },
+      );
+    }
+
+    if (role === 'doctor' || role === 'kinesiologist') {
+      await sendEmail(email, "Votre code d'accès RXAPA", code);
     }
 
     res.status(201).json(newProfessionalUser);

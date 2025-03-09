@@ -31,7 +31,6 @@ import LanguageSwitcher from "./components/LanguageSwitcher/LanguageSwitcher";
 import { useTranslation } from "react-i18next";
 
 import { Layout, Menu, Button, Avatar, Dropdown } from "antd";
-
 import {
   HomeOutlined,
   AppstoreOutlined,
@@ -54,109 +53,148 @@ import './App.css';
 const { Header, Sider, Content } = Layout;
 
 function App() {
-  const { t } = useTranslation(); // la fonction qu'on doit appliquer a la traduction
+  const { t, i18n } = useTranslation(); // la fonction qu'on doit appliquer a la traduction
   const location = useLocation();
   const navigate = useNavigate();
   const { token, setToken } = useToken(); // Utilisation du hook personnalisé pour gérer le token
+
   const [selectedKey, setSelectedKey] = useState(location.pathname);
   const [role, setRole] = useState("");
 
-  const menuItems = [
-    {
-      key: "/",
-      icon: <HomeOutlined />,
-      label: <Link to="/">{t("App:dashboard")}</Link>,
-    },
-    {
-      key: "/exercises",
-      icon: <AppstoreOutlined />,
-      label: <Link to="/exercises">{t("App:exercises")}</Link>,
-    },
-    {
-      key: "/blocs",
-      icon: <BlockOutlined />,
-      label: <Link to="/blocs">{t("App:blocs")}</Link>,
-    },
-    {
-      key: "/sessions",
-      icon: <CalendarOutlined />,
-      label: <Link to="/sessions">{t("App:sessions")}</Link>,
-    },
-    {
-      key: "/cycles",
-      icon: <ClusterOutlined />,
-      label: <Link to="/cycles">{t("App:cycles")}</Link>,
-    },
-    {
-      key: "/phases",
-      icon: <PartitionOutlined />,
-      label: <Link to="/phases">{t("App:phases")}</Link>,
-    },
-    {
-      key: "/programs",
-      icon: <SettingOutlined />,
-      label: <Link to="/programs">{t("App:programs")}</Link>,
-    },
-    {
-      key: "/patients",
-      icon: <UserOutlined />,
-      label: <Link to="/patients">{t("App:patients")}</Link>,
-    },
-    {
-      key: '/evaluations',
-      icon: <FormOutlined />,
-      label: <Link to="/evaluations">Évaluation</Link>,
-    },
-    {
-      key: "healthcare-professional",
-      icon: <UsergroupAddOutlined />,
-      label: t("App:professionals"),
-      children: [
-        {
-          key: "/doctors",
-          icon: <MedicineBoxOutlined />,
-          label: <Link to="/doctors">{t("App:doctors")}</Link>,
-        },
-        {
-          key: "/kinesiologists",
-          icon: <HeartOutlined />,
-          label: <Link to="/kinesiologists">{t("App:kinesiologists")}</Link>,
-        },
-        {
-          key: "/admins",
-          icon: <UserOutlined />,
-          label: <Link to="/admins">{t("App:admins")}</Link>,
-        },
-      ],
-    },
-    // Ajoutez d'autres éléments de menu si nécessaire
-  ];
+  // -- Menu brut (avant filtrage)
+  const [menuItems, setMenuItems] = useState([]);
 
+  useEffect(() => {
+    // Construction du menu complet
+    const newMenuItems = [
+      {
+        key: "/",
+        icon: <HomeOutlined />,
+        label: <Link to="/">{t("App:dashboard")}</Link>,
+      },
+      {
+        key: "/exercises",
+        icon: <AppstoreOutlined />,
+        label: <Link to="/exercises">{t("App:exercises")}</Link>,
+      },
+      {
+        key: "/blocs",
+        icon: <BlockOutlined />,
+        label: <Link to="/blocs">{t("App:blocs")}</Link>,
+      },
+      {
+        key: "/sessions",
+        icon: <CalendarOutlined />,
+        label: <Link to="/sessions">{t("App:sessions")}</Link>,
+      },
+      {
+        key: "/cycles",
+        icon: <ClusterOutlined />,
+        label: <Link to="/cycles">{t("App:cycles")}</Link>,
+      },
+      {
+        key: "/phases",
+        icon: <PartitionOutlined />,
+        label: <Link to="/phases">{t("App:phases")}</Link>,
+      },
+      {
+        key: "/programs",
+        icon: <SettingOutlined />,
+        label: <Link to="/programs">{t("App:programs")}</Link>,
+      },
+      {
+        key: "/patients",
+        icon: <UserOutlined />,
+        label: <Link to="/patients">{t("App:patients")}</Link>,
+      },
+      {
+        key: "healthcare-professional",
+        icon: <UsergroupAddOutlined />,
+        label: t("App:professionals"),
+        children: [
+          {
+            key: "/doctors",
+            icon: <MedicineBoxOutlined />,
+            label: <Link to="/doctors">{t("App:physicians")}</Link>,
+          },
+          {
+            key: "/kinesiologists",
+            icon: <HeartOutlined />,
+            label: <Link to="/kinesiologists">{t("App:kinesiologists")}</Link>,
+          },
+          {
+            key: "/admins",
+            icon: <UserOutlined />,
+            label: <Link to="/admins">{t("App:admins")}</Link>,
+          },
+        ],
+      },
+    ];
+
+    setMenuItems(newMenuItems);
+    setFilteredMenuItems(newMenuItems);
+  }, [i18n.language, t]);
+
+  // Menu filtré final
   const [filteredMenuItems, setFilteredMenuItems] = useState(menuItems);
 
+  // Gère RTL si langue arabe
+  useEffect(() => {
+    document.documentElement.dir = i18n.language === "ar" ? "rtl" : "ltr";
+  }, [i18n.language]);
+
+  useEffect(() => {
+    setSelectedKey(location.pathname);
+  }, [location.pathname]);
+
+  // Si on récupère un "role" depuis location.state (après login), on filtre
   useEffect(() => {
     if (location.state?.role) {
       setRole(location.state.role);
+
       const filterMenuItems = (items) => {
         return items
           .map((item) => {
+            // Si l'item a des enfants (menu déroulant)
             if (item.children) {
               return {
                 ...item,
+                // On ré-appelle filterMenuItems pour ses enfants
                 children: filterMenuItems(item.children),
               };
             }
-            if (location.state.role === "admin" && item.key === "/admins") {
+
+            // CAS ADMIN: l'admin ne voit PAS l'onglet "admins"
+            if (
+              location.state.role === "admin" &&
+              item.key === "/admins"
+            ) {
               return null;
             }
+
+            // CAS DOCTOR ou KINESIOLOGIST: ne voient PAS la section "healthcare-professional"
+            if (
+              (location.state.role === "doctor" ||
+                location.state.role === "kinesiologist") &&
+              (item.key === "healthcare-professional" ||
+                item.key === "/doctors" ||
+                item.key === "/kinesiologists" ||
+                item.key === "/admins")
+            ) {
+              return null;
+            }
+
+            // Sinon, on garde l'item
             return item;
           })
-          .filter((item) => item !== null);
+          .filter((item) => item !== null); // Retire les null
       };
+
       setFilteredMenuItems(filterMenuItems(menuItems));
     }
-  }, [location.state]);
+  }, [location.state, menuItems]);
 
+  // Déconnexion
   const handleLogout = async () => {
     try {
       console.log("Attempting to logout...");
@@ -164,7 +202,6 @@ function App() {
       console.log("Logout response:", response);
 
       setToken(null);
-      console.log("Token after logout:", token);
       navigate("/login");
     } catch (error) {
       console.error("Failed to logout:", error);
@@ -187,6 +224,7 @@ function App() {
     },
   ];
 
+  // Si pas de token => on va sur login
   if (!token) {
     return (
       <Content className="content">
@@ -200,7 +238,7 @@ function App() {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Sider className="sider">
+      <Sider className={`sider ${i18n.language === "ar" ? "sider-ar" : ""}`}>
         <div className="logo">RxAPA</div>
         <Menu
           theme="dark"
@@ -209,11 +247,22 @@ function App() {
           items={filteredMenuItems}
         />
       </Sider>
-      <Layout className="site-layout">
-        <Header className="header site-layout-background">
+      <Layout
+        className={`site-layout ${
+          i18n.language === "ar" ? "site-layout-ar" : ""
+        }`}
+      >
+        <Header
+          className={`header site-layout-background ${
+            i18n.language === "ar" ? "header-ar" : ""
+          }`}
+        >
           <div></div> {/* Empty div to align items to the right */}
           <div className="header-content">
-            <LanguageSwitcher />
+            <LanguageSwitcher
+              iconStyle={{ color: "white" }}
+              iconClassName="header-language-icon"
+            />
             <Button icon={<SettingOutlined />} className="header-button" />
             <Button icon={<BellOutlined />} className="header-button" />
             <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">

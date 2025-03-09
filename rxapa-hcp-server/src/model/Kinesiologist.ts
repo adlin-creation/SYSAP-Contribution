@@ -18,6 +18,10 @@ const Kinesiologist = sequelize.define('Kinesiologist', {
     type: dataTypes.STRING,
     allowNull: false,
   },
+  unikPassHashed: {
+    type: dataTypes.STRING,
+    allowNull: true,
+  },
 
 }, {
   modelName: 'Kinesiologist',

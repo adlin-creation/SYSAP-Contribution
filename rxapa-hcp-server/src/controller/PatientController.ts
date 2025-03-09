@@ -1,11 +1,45 @@
 import { Patient } from "../model/Patient";
+import { ProgramEnrollement } from "../model/ProgramEnrollement";
+import { SessionRecord } from "../model/SessionRecord";
+import {
+  extractEmailFromToken,
+  generateCode,
+  sendEmail,
+} from "../util/unikpass"; // Assure-toi que le chemin est correct pour ton utilitaire
+import jwt from "jsonwebtoken";
+import * as bcrypt from "bcrypt";
 
 /**
  * Creates a new patient.
  */
 exports.createPatient = async (req: any, res: any, next: any) => {
-  const { firstname, lastname, birthday, phoneNumber, email, otherinfo, status, numberOfPrograms } = req.body;
+  const {
+    firstname,
+    lastname,
+    birthday,
+    phoneNumber,
+    email,
+    otherinfo,
+    numberOfCaregivers,
+    status,
+    numberOfPrograms,
+    weight,
+    weightUnit,
+  } = req.body;
+
+  // Générer un code unique
+  const code = generateCode(6); // Appeler la fonction de génération de code avec 6 caractères
+
+  // Hacher le code avant de le stocker dans la base de données
+  const unikPassHashed = await bcrypt.hash(code, 10); // Utilisation de bcrypt pour hacher le code
   try {
+    const existingUser = await Patient.findOne({ where: { email } });
+    if (existingUser) {
+      return res
+        .status(409)
+        .json({ message: "existing patient with this email." });
+    }
+
     const newPatient = await Patient.create({
       firstname,
       lastname,
@@ -13,9 +47,14 @@ exports.createPatient = async (req: any, res: any, next: any) => {
       phoneNumber,
       email,
       otherinfo,
+      numberOfCaregivers,
       status: status || "waiting", // Utilise "waiting" si status n'est pas fourni
-      numberOfPrograms
+      numberOfPrograms: numberOfPrograms,
+      weight,
+      weightUnit,
+      unikPassHashed,
     });
+    await sendEmail(email, "Votre code d'accès RXAPA", code); // Envoie le code d'accès par e-mail
     res.status(201).json(newPatient);
   } catch (error: any) {
     if (!error.statusCode) {
@@ -31,7 +70,16 @@ exports.createPatient = async (req: any, res: any, next: any) => {
  */
 exports.updatePatient = async (req: any, res: any, next: any) => {
   const patientId = req.params.id;
-  const { firstname, lastname, birthday, phoneNumber, email, otherinfo, status, numberOfPrograms } = req.body;
+  const {
+    firstname,
+    lastname,
+    birthday,
+    phoneNumber,
+    email,
+    otherinfo,
+    status,
+    numberOfPrograms,
+  } = req.body;
   try {
     const patient = await Patient.findByPk(patientId);
     if (!patient) {
@@ -81,21 +129,23 @@ exports.deletePatient = async (req: any, res: any, next: any) => {
  * Returns a specific patient based on their ID.
  */
 exports.getPatient = async (req: any, res: any, next: any) => {
-    const patientId = req.params.id;
-    try {
-      const patient = await Patient.findByPk(patientId);
-      if (!patient) {
-        return res.status(404).json({ message: "Patient not found" });
-      }
-      res.status(200).json(patient);
-    } catch (error: any) {
-      if (!error.statusCode) {
-        error.statusCode = 500;
-      }
-      res.status(error.statusCode).json({ message: "Error loading patient from the database" });
+  const patientId = req.params.id;
+  try {
+    const patient = await Patient.findByPk(patientId);
+    if (!patient) {
+      return res.status(404).json({ message: "Patient not found" });
     }
-    return res;
-  };
+    res.status(200).json(patient);
+  } catch (error: any) {
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    res
+      .status(error.statusCode)
+      .json({ message: "Error loading patient from the database" });
+  }
+  return res;
+};
 
 /**
  * Returns all patients.
@@ -108,7 +158,34 @@ exports.getPatients = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({ message: "Error loading patients from the database" });
+    res
+      .status(error.statusCode)
+      .json({ message: "Error loading patients from the database" });
   }
   return res;
+};
+
+exports.getPatientSessions = async (req: any, res: any, next: any) => {
+  const patientId = parseInt(req.params.id, 10);
+
+  try {
+    // Récupérer les programmes du patient
+    const patientPrograms = await ProgramEnrollement.findAll({
+      where: { PatientId: patientId },
+    });
+
+    // Récupérer les IDs des programmes du patient
+    const programIds = patientPrograms.map((pp: typeof ProgramEnrollement) => pp.id);
+
+    // Récupérer les sessions associées à ces programmes
+    const sessions = await SessionRecord.findAll({
+      where: { ProgramEnrollementId: programIds },
+    });
+
+    // Renvoyer les sessions au client
+    res.status(200).json(sessions);
+  } catch (error) {
+    console.error('Error fetching patient sessions:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 };
