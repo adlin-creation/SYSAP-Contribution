@@ -1,0 +1,20 @@
+.patient-data-container {
+    padding: 20px;
+  }
+  
+  .session-data-container, .average-data-container {
+    display: flex;
+    gap: 16px;
+  }
+  
+  .session-info, .average-info {
+    flex: 1;
+  }
+  
+  .session-buttons {
+    margin-bottom: 16px;
+  }
+  
+  .session-chart, .average-chart {
+    flex: 1;
+  }
