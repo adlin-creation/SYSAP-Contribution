@@ -6,8 +6,10 @@ import axios from "axios";
 import "./ProgramStyles.css";
 import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
+import { useTranslation } from "react-i18next";
 
 export default function CreateProgram(props) {
+  const { t } = useTranslation();
   const { handleSubmit, control } = useForm();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isErrorMessage, setIsErrorMessage] = useState(false);
@@ -144,6 +146,7 @@ export default function CreateProgram(props) {
 
   return (
     <Row justify="center" align="middle" style={{ minHeight: "50vh" }}>
+    <Row justify="center" align="middle" style={{ minHeight: "50vh" }}>
       <Col span={12}>
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
 
@@ -155,7 +158,7 @@ export default function CreateProgram(props) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder="Program Name"
+                  placeholder={t("Programs:program_name_placeholder")}
                   required
                 />
               )}
@@ -170,7 +173,7 @@ export default function CreateProgram(props) {
                 <Input.TextArea
                   onChange={onChange}
                   value={value}
-                  placeholder="Program Description"
+                  placeholder={t("Programs:program_description_placeholder")}
                   rows={4}
                   required
                 />
@@ -342,10 +345,11 @@ export default function CreateProgram(props) {
             onCancel={closeModal}
             footer={[
               <Button key="close" onClick={closeModal}>
-                Close
+                {t("Programs:close_button")}
               </Button>,
             ]}
           >
+            <p style={{ color: isErrorMessage ? "red" : "green" }}>{message}</p>
             <p style={{ color: isErrorMessage ? "red" : "green" }}>{message}</p>
           </Modal>
         )}

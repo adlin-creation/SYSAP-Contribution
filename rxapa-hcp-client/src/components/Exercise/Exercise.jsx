@@ -5,6 +5,7 @@ import { DeleteOutlined } from "@ant-design/icons";
 import Constants from "../Utils/Constants";
 
 import "./Styles.css";
+import { useTranslation } from "react-i18next";
 
 const { Meta } = Card;
 
@@ -14,6 +15,7 @@ export default function Exercise({
   onSelect,
   deleteExercise,
 }) {
+  const { t } = useTranslation();
   return (
     <>
       <Card
@@ -24,13 +26,13 @@ export default function Exercise({
             <ReactPlayer
               url={exercise.instructionalVideo}
               width="100%"
-              height="90px" 
+              height="90px"
             />
           ) : exercise.imageUrl ? (
             <img
               src={`${Constants.SERVER_URL}/${exercise.imageUrl}`}
               alt="Exercise"
-              style={{ height: '90px', objectFit: 'cover' }}
+              style={{ height: "90px", objectFit: "cover" }}
             />
           ) : null
         }
@@ -41,22 +43,23 @@ export default function Exercise({
             icon={<DeleteOutlined />}
             onClick={() => deleteExercise(exercise)}
           >
-            DELETE
+            {t("Exercises:delete_button")}
           </Button>,
+          
           <Button
-            type="link"
+            type="primary"
             onClick={(event) => {
               onClick(event);
               onSelect(exercise);
             }}
           >
-            Learn More
+            {t("Exercises:learn_more_button")}
           </Button>,
         ]}
       >
         <Meta
           title={exercise.name}
-          description={exercise.description}
+          description={`${exercise.fitnessLevel} | ${exercise.category}`}
         />
       </Card>
     </>

@@ -6,8 +6,10 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import "./Styles.css";
 import { useState } from "react";
 import Modal from "../Modal/Modal";
+import { useTranslation } from "react-i18next";
 
 export default function Session({ onClick, onSelect, session, deleteSession }) {
+  const { t } = useTranslation();
   const [isOpenModal, setIsOpenModal] = useState(false);
 
   function openModal() {
@@ -21,11 +23,17 @@ export default function Session({ onClick, onSelect, session, deleteSession }) {
   return (
     <div className="day-session">
       <List style={{ textAlign: "center" }}>
-        <h3>Name: {session.name}</h3>
+        <h3>
+          {t("Sessions:session_name")}: {session.name}
+        </h3>
         <br></br>
-        <h5>Description: {session.description}</h5>
+        <h5>
+          {t("Sessions:session_description")}: {session.description}
+        </h5>
         <br></br>
-        <h5>Constraints: {session.constraints}</h5>
+        <h5>
+          {t("Sessions:session_constraints")}: {session.constraints}
+        </h5>
 
         <div>
           <AppButton
@@ -36,7 +44,7 @@ export default function Session({ onClick, onSelect, session, deleteSession }) {
               onClick(event);
             }}
             name={"edit-session"}
-            displayText={"EDIT"}
+            displayText={t("Sessions:edit_button")}
             variant={"contained"}
             type={"button"}
             size={"medium"}
@@ -46,7 +54,7 @@ export default function Session({ onClick, onSelect, session, deleteSession }) {
               // calls parent function to delete the cycle
               deleteSession(session);
             }}
-            displayText={"DELETE"}
+            displayText={t("Sessions:delete_button")}
             variant={"contained"}
             type={"button"}
             color={"error"}

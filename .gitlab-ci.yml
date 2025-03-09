@@ -1,4 +1,3 @@
-# Fictional example of a GitLab CI/CD pipeline configuration file
 variables:
   TAG_LATEST: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:latest
   TAG_COMMIT: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:$CI_COMMIT_SHORT_SHA
@@ -18,7 +17,9 @@ job_build:
 job_test:
   image: node:lts-alpine
   stage: test
+
   script:
-    - echo "Running tests"
-    - echo "Tests simulated"
-    - echo "Tests completed successfully"
+    - echo "Running tests for backend"
+    - cd rxapa-hcp-server && npm install && npm test
+    - echo "Running tests for frontend"
+    - cd ../rxapa-hcp-client && npm install && npm test

@@ -29,12 +29,16 @@ export const Caregiver = sequelize.define("Caregiver", {
     unique: true,
   },
   relationship: {
-    type: dataTypes.ENUM('parent', 'sibling', 'friend', 'other'),
+    type: dataTypes.ENUM("parent", "sibling", "friend", "other"),
     allowNull: false,
   },
   active: {
     type: dataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: true,
+  },
+  uniqueCode: {
+    type: dataTypes.STRING,
+    allowNull: true,
   },
 });

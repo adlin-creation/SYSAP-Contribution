@@ -3,11 +3,13 @@ import { Card, Typography, Button } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import image from "../../images/bloc-exercise.jpeg";
 import "./Styles.css";
+import { useTranslation } from "react-i18next";
 
 const { Meta } = Card;
 const { Title, Text } = Typography;
 
 export default function Bloc({ bloc, onClick, onSelect, deleteBloc }) {
+  const { t } = useTranslation();
   return (
     <Card
       hoverable
@@ -30,7 +32,7 @@ export default function Bloc({ bloc, onClick, onSelect, deleteBloc }) {
           }}
           style={{ marginRight: 8 }}
         >
-          EDIT
+          {t("Blocs:edit_button")}
         </Button>
         <Button
           type="primary"
@@ -41,7 +43,7 @@ export default function Bloc({ bloc, onClick, onSelect, deleteBloc }) {
           }}
           icon={<DeleteOutlined />}
         >
-          DELETE
+          {t("Blocs:delete_button")}
         </Button>
       </div>
     </Card>

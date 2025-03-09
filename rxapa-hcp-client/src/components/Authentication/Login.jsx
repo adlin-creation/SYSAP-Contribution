@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
-import { Button, Col, Modal, Input, Form } from "antd";
+import { Button, Row, Col, Modal, Input, Form } from "antd";
 import { CheckOutlined } from "@ant-design/icons"; // Import de l'icône de antd
 import { useNavigate } from "react-router-dom"; // Import de useNavigate
 import Constants from "../Utils/Constants";
 import Signup from "./Signup";
 import "./Auth.css";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
+import LanguageSwitcher from "../LanguageSwitcher/LanguageSwitcher";
+import { useTranslation } from "react-i18next";
 
 export default function Login({ setToken }) {
   const [isSignup, setIsSignup] = useState(false);
@@ -17,7 +19,7 @@ export default function Login({ setToken }) {
   const navigate = useNavigate();
 
   const { handleSubmit, control } = useForm();
-
+  const { t } = useTranslation();
   function register() {
     setIsSignup(true);
   }
@@ -29,7 +31,7 @@ export default function Login({ setToken }) {
         console.log(res.data);
         setIsSignup(false);
         setToken(res.data);
-        navigate("/");
+        navigate("/", { state: { role: res.data.role } });
       })
       .catch((err) => {
         openModal(err.response.data.message, true);
@@ -56,10 +58,22 @@ export default function Login({ setToken }) {
     <div className="auth-container">
       <Col span={9}>
         <div className="auth-form">
-          <h2>Login</h2>
+          <Row justify="space-between" align="middle">
+            {/* Juste un espace vide pour centrer Login et mettre à gauche l'icone de langue*/}
+            <Col span={8}></Col>{" "}
+            <Col span={8} style={{ textAlign: "center" }}>
+              <h2>{t("Authentication:login_title")}</h2>
+            </Col>
+            <Col span={8} style={{ textAlign: "center" }}>
+              <LanguageSwitcher
+                iconStyle={{ color: "#3b0062" }}
+                iconClassName="login-language-icon"
+              />
+            </Col>
+          </Row>
           <Form onFinish={handleSubmit(onSubmit)}>
             <div className="input-element">
-              <h5>Enter your email</h5>
+              <h5>{t("Authentication:email_title")}</h5>
               <Controller
                 name={"email"}
                 control={control}
@@ -67,7 +81,7 @@ export default function Login({ setToken }) {
                   <Input
                     onChange={onChange}
                     value={value}
-                    placeholder="Your email"
+                    placeholder={t("Authentication:email_placeholder")}
                     type="email"
                     required
                   />
@@ -76,7 +90,7 @@ export default function Login({ setToken }) {
             </div>
 
             <div className="input-element">
-              <h5>Your password</h5>
+              <h5>{t("Authentication:password_title")}</h5>
               <Controller
                 name={"password"}
                 control={control}
@@ -84,7 +98,7 @@ export default function Login({ setToken }) {
                   <Input.Password
                     onChange={onChange}
                     value={value}
-                    placeholder="Your password"
+                    placeholder={t("Authentication:password_placeholder")}
                     required
                   />
                 )}
@@ -97,11 +111,11 @@ export default function Login({ setToken }) {
                 htmlType="submit"
                 icon={<CheckOutlined />} // Utilisation de l'icône de antd
               >
-                LOGIN
+                {t("Authentication:login_button")}
               </Button>
 
               <Button type="link" onClick={register}>
-                Register
+                {t("Authentication:register_button")}
               </Button>
             </div>
           </Form>
@@ -115,7 +129,7 @@ export default function Login({ setToken }) {
             </Button>,
           ]}
         >
-          <p style={{ color: isErrorMessage ? 'red' : 'black' }}>{message}</p>
+          <p style={{ color: isErrorMessage ? "red" : "black" }}>{message}</p>
         </Modal>
       </Col>
     </div>

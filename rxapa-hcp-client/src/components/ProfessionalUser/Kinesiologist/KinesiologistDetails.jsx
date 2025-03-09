@@ -6,10 +6,22 @@ import axios from "axios";
 import Constants from "../../Utils/Constants";
 import useToken from "../../Authentication/useToken";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
-function KinesiologistDetails({ kinesiologist, onClose, refetchKinesiologists, openModal }) {
-  const { handleSubmit, control, setValue, formState: { errors } } = useForm();
+function KinesiologistDetails({
+  kinesiologist,
+  onClose,
+  refetchKinesiologists,
+  openModal,
+}) {
+  const {
+    handleSubmit,
+    control,
+    setValue,
+    formState: { errors },
+  } = useForm();
   const { token } = useToken();
+  const { t } = useTranslation();
 
   // Pré-remplir le formulaire avec les données du kinésiologue
   useEffect(() => {
@@ -25,30 +37,35 @@ function KinesiologistDetails({ kinesiologist, onClose, refetchKinesiologists, o
   const onSubmit = (data) => {
     const kinesiologistData = {
       ...data,
-      role: 'kinesiologist'
+      role: "kinesiologist",
     };
 
     axios
-      .put(`${Constants.SERVER_URL}/update-professional-user/${kinesiologist.id}`, kinesiologistData, {
-        headers: { Authorization: "Bearer " + token },
-      })
+      .put(
+        `${Constants.SERVER_URL}/update-professional-user/${kinesiologist.id}`,
+        kinesiologistData,
+        {
+          headers: { Authorization: "Bearer " + token },
+        }
+      )
       .then(() => {
         refetchKinesiologists();
         AntModal.success({
-          content: "Kinesiologist updated successfully!",
-          okText: 'Close',
+          content: t("Professionals:Kinesiologist:updating_success_msg"),
+          okText: t("Professionals:Kinesiologist:close_button"),
           centered: true,
           onOk: () => {
             onClose();
-          }
+          },
         });
       })
       .catch((err) => {
-        const errorMessage = err.response?.data?.message || "Error updating kinesiologist";
+        const errorMessage =
+          err.response?.data?.message || "Error updating kinesiologist";
         AntModal.error({
           content: errorMessage,
-          okText: 'Close',
-          centered: true
+          okText: t("Professionals:Doctors:close_button"),
+          centered: true,
         });
       });
   };
@@ -60,8 +77,8 @@ function KinesiologistDetails({ kinesiologist, onClose, refetchKinesiologists, o
           <Row gutter={16}>
             {/* First Name and Last Name fields */}
             <Col span={12}>
-              <Form.Item 
-                label="First Name" 
+              <Form.Item
+                label={t("Professionals:Kinesiologist:first_name_label")}
                 required
                 validateStatus={errors.firstname ? "error" : ""}
                 help={errors.firstname?.message}
@@ -69,20 +86,20 @@ function KinesiologistDetails({ kinesiologist, onClose, refetchKinesiologists, o
                 <Controller
                   name="firstname"
                   control={control}
-                  rules={{ 
+                  rules={{
                     required: "Le prénom est obligatoire",
                     minLength: {
                       value: 2,
-                      message: "Le prénom doit contenir au moins 2 caractères"
-                    }
+                      message: "Le prénom doit contenir au moins 2 caractères",
+                    },
                   }}
                   render={({ field }) => <Input {...field} />}
                 />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item 
-                label="Last Name" 
+              <Form.Item
+                label={t("Professionals:Kinesiologist:last_name_label")}
                 required
                 validateStatus={errors.lastname ? "error" : ""}
                 help={errors.lastname?.message}
@@ -90,12 +107,12 @@ function KinesiologistDetails({ kinesiologist, onClose, refetchKinesiologists, o
                 <Controller
                   name="lastname"
                   control={control}
-                  rules={{ 
+                  rules={{
                     required: "Le nom est obligatoire",
                     minLength: {
                       value: 2,
-                      message: "Le nom doit contenir au moins 2 caractères"
-                    }
+                      message: "Le nom doit contenir au moins 2 caractères",
+                    },
                   }}
                   render={({ field }) => <Input {...field} />}
                 />
@@ -106,8 +123,8 @@ function KinesiologistDetails({ kinesiologist, onClose, refetchKinesiologists, o
           <Row gutter={16}>
             {/* Email and Phone Number fields */}
             <Col span={12}>
-              <Form.Item 
-                label="Email" 
+              <Form.Item
+                label={t("Professionals:Kinesiologist:email")}
                 required
                 validateStatus={errors.email ? "error" : ""}
                 help={errors.email?.message}
@@ -119,16 +136,16 @@ function KinesiologistDetails({ kinesiologist, onClose, refetchKinesiologists, o
                     required: "L'email est obligatoire",
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: "Format d'email invalide"
-                    }
+                      message: "Format d'email invalide",
+                    },
                   }}
                   render={({ field }) => <Input type="email" {...field} />}
                 />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item 
-                label="Phone Number" 
+              <Form.Item
+                label={t("Professionals:Kinesiologist:phone_number")}
                 required
                 validateStatus={errors.phoneNumber ? "error" : ""}
                 help={errors.phoneNumber?.message}
@@ -136,12 +153,12 @@ function KinesiologistDetails({ kinesiologist, onClose, refetchKinesiologists, o
                 <Controller
                   name="phoneNumber"
                   control={control}
-                  rules={{ 
+                  rules={{
                     required: "Le numéro de téléphone est obligatoire",
                     pattern: {
                       value: /^[0-9+\s-]{8,}$/,
-                      message: "Format de numéro de téléphone invalide"
-                    }
+                      message: "Format de numéro de téléphone invalide",
+                    },
                   }}
                   render={({ field }) => <Input {...field} />}
                 />
@@ -152,7 +169,7 @@ function KinesiologistDetails({ kinesiologist, onClose, refetchKinesiologists, o
           <Row gutter={16}>
             {/* Status field */}
             <Col span={12}>
-              <Form.Item label="Status">
+              <Form.Item label={t("Professionals:Kinesiologist:status")}>
                 <Controller
                   name="active"
                   control={control}
@@ -160,8 +177,12 @@ function KinesiologistDetails({ kinesiologist, onClose, refetchKinesiologists, o
                     <Switch
                       checked={value}
                       onChange={onChange}
-                      checkedChildren="Active"
-                      unCheckedChildren="Inactive"
+                      checkedChildren={t(
+                        "Professionals:Kinesiologist:active_status"
+                      )}
+                      unCheckedChildren={t(
+                        "Professionals:Kinesiologist:inactive_status"
+                      )}
                     />
                   )}
                 />
@@ -171,7 +192,7 @@ function KinesiologistDetails({ kinesiologist, onClose, refetchKinesiologists, o
 
           <Form.Item>
             <Button type="primary" htmlType="submit" icon={<SaveOutlined />}>
-              Update Kinesiologist
+              {t("Professionals:Kinesiologist:update_kinesiologist_button")}
             </Button>
           </Form.Item>
         </Form>

@@ -6,9 +6,16 @@ import axios from "axios";
 import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 function PatientDetails({ patient, onClose, refetchPatients }) {
-  const { handleSubmit, control, setValue, formState: { errors } } = useForm();
+  const { t } = useTranslation();
+  const {
+    handleSubmit,
+    control,
+    setValue,
+    formState: { errors },
+  } = useForm();
   const { token } = useToken();
 
   useEffect(() => {
@@ -25,30 +32,35 @@ function PatientDetails({ patient, onClose, refetchPatients }) {
   const onSubmit = (data) => {
     const patientData = {
       ...data,
-      role: 'patient'
+      role: "patient",
     };
 
     axios
-      .put(`${Constants.SERVER_URL}/update-patient/${patient.id}`, patientData, {
-        headers: { Authorization: "Bearer " + token },
-      })
+      .put(
+        `${Constants.SERVER_URL}/update-patient/${patient.id}`,
+        patientData,
+        {
+          headers: { Authorization: "Bearer " + token },
+        }
+      )
       .then(() => {
         refetchPatients();
         AntModal.success({
-          content: "Patient updated successfully!",
-          okText: 'Close',
+          content: t("Patients:patient_update_success"),
+          okText: t("Patients:close_button"),
           centered: true,
           onOk: () => {
             onClose();
-          }
+          },
         });
       })
       .catch((err) => {
-        const errorMessage = err.response?.data?.message || "Error updating patient";
+        const errorMessage =
+          err.response?.data?.message || t("Patients:patient_update_failed");
         AntModal.error({
           content: errorMessage,
-          okText: 'Close',
-          centered: true
+          okText: t("Patients:close_button"),
+          centered: true,
         });
       });
   };
@@ -59,8 +71,8 @@ function PatientDetails({ patient, onClose, refetchPatients }) {
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item 
-                label="First Name" 
+              <Form.Item
+                label={t("Patients:first_name")}
                 required
                 validateStatus={errors.firstname ? "error" : ""}
                 help={errors.firstname?.message}
@@ -68,20 +80,20 @@ function PatientDetails({ patient, onClose, refetchPatients }) {
                 <Controller
                   name="firstname"
                   control={control}
-                  rules={{ 
-                    required: "Le prénom est obligatoire",
+                  rules={{
+                    required: t("Patients:first_name_required"),
                     minLength: {
                       value: 2,
-                      message: "Le prénom doit contenir au moins 2 caractères"
-                    }
+                      message: t("Patients:first_name_required_info"),
+                    },
                   }}
                   render={({ field }) => <Input {...field} />}
                 />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item 
-                label="Last Name" 
+              <Form.Item
+                label={t("Patients:last_name")}
                 required
                 validateStatus={errors.lastname ? "error" : ""}
                 help={errors.lastname?.message}
@@ -89,12 +101,12 @@ function PatientDetails({ patient, onClose, refetchPatients }) {
                 <Controller
                   name="lastname"
                   control={control}
-                  rules={{ 
-                    required: "Le nom est obligatoire",
+                  rules={{
+                    required: t("Patients:last_name_required"),
                     minLength: {
                       value: 2,
-                      message: "Le nom doit contenir au moins 2 caractères"
-                    }
+                      message: t("Patients:last_name_required_info"),
+                    },
                   }}
                   render={({ field }) => <Input {...field} />}
                 />
@@ -104,8 +116,8 @@ function PatientDetails({ patient, onClose, refetchPatients }) {
 
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item 
-                label="Email" 
+              <Form.Item
+                label={t("Patients:email")}
                 required
                 validateStatus={errors.email ? "error" : ""}
                 help={errors.email?.message}
@@ -114,19 +126,19 @@ function PatientDetails({ patient, onClose, refetchPatients }) {
                   name="email"
                   control={control}
                   rules={{
-                    required: "L'email est obligatoire",
+                    required: t("Patients:email_needed"),
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: "Format d'email invalide"
-                    }
+                      message: t("Patients:email_invalid"),
+                    },
                   }}
                   render={({ field }) => <Input type="email" {...field} />}
                 />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item 
-                label="Phone Number" 
+              <Form.Item
+                label={t("Patients:phone_number")}
                 required
                 validateStatus={errors.phoneNumber ? "error" : ""}
                 help={errors.phoneNumber?.message}
@@ -134,12 +146,12 @@ function PatientDetails({ patient, onClose, refetchPatients }) {
                 <Controller
                   name="phoneNumber"
                   control={control}
-                  rules={{ 
-                    required: "Le numéro de téléphone est obligatoire",
+                  rules={{
+                    required: t("Patients:phone_number_required"),
                     pattern: {
                       value: /^[0-9+\s-]{8,}$/,
-                      message: "Format de numéro de téléphone invalide"
-                    }
+                      message: t("Patients:phone_number_invalid"),
+                    },
                   }}
                   render={({ field }) => <Input {...field} />}
                 />
@@ -149,8 +161,8 @@ function PatientDetails({ patient, onClose, refetchPatients }) {
 
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item 
-                label="Number of Programs" 
+              <Form.Item
+                label={t("Patients:programs_quantity")}
                 required
                 validateStatus={errors.numberOfPrograms ? "error" : ""}
                 help={errors.numberOfPrograms?.message}
@@ -158,12 +170,12 @@ function PatientDetails({ patient, onClose, refetchPatients }) {
                 <Controller
                   name="numberOfPrograms"
                   control={control}
-                  rules={{ 
-                    required: "Le nombre de programmes est obligatoire",
+                  rules={{
+                    required: t("Patients:programs_required_quantity"),
                     min: {
                       value: 0,
-                      message: "Le nombre de programmes doit être supérieur ou égal à 0"
-                    }
+                      message: t("Patients:programs_quantity_invalid"),
+                    },
                   }}
                   render={({ field }) => <Input type="number" {...field} />}
                 />
@@ -173,8 +185,8 @@ function PatientDetails({ patient, onClose, refetchPatients }) {
 
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item 
-                label="Status" 
+              <Form.Item
+                label={t("Patients:status")}
                 required
                 validateStatus={errors.status ? "error" : ""}
                 help={errors.status?.message}
@@ -182,14 +194,24 @@ function PatientDetails({ patient, onClose, refetchPatients }) {
                 <Controller
                   name="status"
                   control={control}
-                  rules={{ required: "Le statut est obligatoire" }}
+                  rules={{ required: t("Patients:status_required") }}
                   render={({ field }) => (
                     <Select {...field}>
-                      <Select.Option value="active">Active</Select.Option>
-                      <Select.Option value="paused">Paused</Select.Option>
-                      <Select.Option value="waiting">Waiting</Select.Option>
-                      <Select.Option value="completed">Completed</Select.Option>
-                      <Select.Option value="abort">Abort</Select.Option>
+                      <Select.Option value="active">
+                        {t("Patients:status_active")}
+                      </Select.Option>
+                      <Select.Option value="paused">
+                        {t("Patients:status_paused")}
+                      </Select.Option>
+                      <Select.Option value="waiting">
+                        {t("Patients:status_waiting")}
+                      </Select.Option>
+                      <Select.Option value="completed">
+                        {t("Patients:status_completed")}
+                      </Select.Option>
+                      <Select.Option value="abort">
+                        {t("Patients:status_abort")}
+                      </Select.Option>
                     </Select>
                   )}
                 />
@@ -199,7 +221,7 @@ function PatientDetails({ patient, onClose, refetchPatients }) {
 
           <Form.Item>
             <Button type="primary" htmlType="submit" icon={<SaveOutlined />}>
-              Update Patient
+              {t("Patients:patient_update")}
             </Button>
           </Form.Item>
         </Form>

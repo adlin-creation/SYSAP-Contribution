@@ -1,4 +1,14 @@
-import { Row, Col, Input, Button, Form, Modal as AntModal, Tooltip } from "antd";
+import {
+  Row,
+  Col,
+  Select,
+  Input,
+  Button,
+  Form,
+  Modal as AntModal,
+  Tooltip,
+} from "antd";
+
 import { SendOutlined, KeyOutlined } from "@ant-design/icons";
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
@@ -6,16 +16,50 @@ import Constants from "../../Utils/Constants";
 import useToken from "../../Authentication/useToken";
 import PropTypes from "prop-types";
 import "./Styles.css";
+import { t } from "i18next";
 
 function CreateDoctor({ refetchDoctors }) {
-  const { handleSubmit, control, reset, formState: { errors } } = useForm();
+  const { Option } = Select;
+
+  const milieuxTravail = [
+    {
+      value: "Hôpital: SPA soins post-aigus",
+      label: "Hôpital: SPA soins post-aigus",
+    },
+    {
+      value: "Hôpital: UCDG unité courte durée gériatrique",
+      label: "Hôpital: UCDG unité courte durée gériatrique",
+    },
+    {
+      value: "Hôpital: UTRF unité transitoire de réadaptation fonctionnelle",
+      label: "Hôpital: UTRF unité transitoire de réadaptation fonctionnelle",
+    },
+    { value: "Hôpital: autre unité", label: "Hôpital: autre unité" },
+    { value: "CHSLD", label: "CHSLD" },
+    {
+      value: "RPA Résidence Privée pour aînés",
+      label: "RPA Résidence Privée pour aînés",
+    },
+    {
+      value: "Clinique de médecine familiale-GMF",
+      label: "Clinique de médecine familiale-GMF",
+    },
+    { value: "Clinique: autre", label: "Clinique: autre" },
+  ];
+
+  const {
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm();
   const { token } = useToken();
 
   const onSubmit = (data) => {
     const doctorData = {
       ...data,
-      role: 'doctor',
-      active: true
+      role: "doctor",
+      active: true,
     };
 
     axios
@@ -24,29 +68,67 @@ function CreateDoctor({ refetchDoctors }) {
       })
       .then((res) => {
         refetchDoctors();
-        openModal("Doctor created successfully!", false);
+        openModal("Physician created successfully!", false, data);
       })
-      .catch((err) => openModal(err.response?.data?.message || "Error creating doctor", true));
+      .catch((err) =>
+        openModal(
+          err.response?.data?.message || "Error creating physician",
+          true
+        )
+      );
   };
 
-  const openModal = (message, isError) => {
-    AntModal[isError ? 'error' : 'success']({
-      content: message,
-      okText: 'Close',
+  const sendPassword = (email, password) => {
+    const subject = encodeURIComponent("New physician Account");
+    const body = encodeURIComponent(
+      `Hello,\n\nHere are the details for the new doctor account:\n\nEmail: ${email}\nPassword: ${password}\n\nBest regards,`
+    );
+    const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
+    window.location.href = mailtoLink;
+  };
+
+  const openModal = (message, isError, passwordData) => {
+    AntModal[isError ? "error" : "success"]({
+      content: (
+        <div>
+          <p>{message}</p>
+          {!isError && passwordData && (
+            <div>
+              <p>
+                <strong>Email:</strong> {passwordData.email}
+              </p>
+              <p>
+                <strong>Password:</strong> {passwordData.password}
+              </p>
+              <button
+                onClick={() =>
+                  sendPassword(passwordData.email, passwordData.password)
+                }
+              >
+                Send Password
+              </button>
+            </div>
+          )}
+        </div>
+      ),
+      okText: "Close",
       centered: true,
       onOk: () => {
         if (!isError) {
-          reset();
+          reset(); // Réinitialiser le formulaire en cas de succès
         }
-      }
+      },
     });
   };
 
   const generatePassword = async () => {
     try {
-      const response = await axios.get(`${Constants.SERVER_URL}/generate-password`, {
-        headers: { Authorization: "Bearer " + token },
-      });
+      const response = await axios.get(
+        `${Constants.SERVER_URL}/generate-password`,
+        {
+          headers: { Authorization: "Bearer " + token },
+        }
+      );
       const generatedPassword = response.data.password;
       // Met à jour le champ password avec le mot de passe généré
       reset({ ...control._formValues, password: generatedPassword });
@@ -61,8 +143,8 @@ function CreateDoctor({ refetchDoctors }) {
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item 
-                label="First Name" 
+              <Form.Item
+                label={t("Professionals:Physicians:first_name_label")}
                 required
                 validateStatus={errors.firstname ? "error" : ""}
                 help={errors.firstname?.message}
@@ -70,20 +152,31 @@ function CreateDoctor({ refetchDoctors }) {
                 <Controller
                   name="firstname"
                   control={control}
-                  rules={{ 
-                    required: "Le prénom est obligatoire",
+                  rules={{
+                    required: t(
+                      "Professionals:Physicians:required_first_name_error"
+                    ),
                     minLength: {
                       value: 2,
-                      message: "Le prénom doit contenir au moins 2 caractères"
-                    }
+                      message: t(
+                        "Professionals:Physicians:first_name_min_length_error"
+                      ),
+                    },
                   }}
-                  render={({ field }) => <Input {...field} placeholder="Entrez le prénom" />}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      placeholder={t(
+                        "Professionals:Physicians:enter_first_name_placeholder"
+                      )}
+                    />
+                  )}
                 />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item 
-                label="Last Name" 
+              <Form.Item
+                label={t("Professionals:Physicians:last_name_label")}
                 required
                 validateStatus={errors.lastname ? "error" : ""}
                 help={errors.lastname?.message}
@@ -91,14 +184,25 @@ function CreateDoctor({ refetchDoctors }) {
                 <Controller
                   name="lastname"
                   control={control}
-                  rules={{ 
-                    required: "Le nom est obligatoire",
+                  rules={{
+                    required: t(
+                      "Professionals:Physicians:required_last_name_error"
+                    ),
                     minLength: {
                       value: 2,
-                      message: "Le nom doit contenir au moins 2 caractères"
-                    }
+                      message: t(
+                        "Professionals:Physicians:last_name_min_length_error"
+                      ),
+                    },
                   }}
-                  render={({ field }) => <Input {...field} placeholder="Entrez le nom" />}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      placeholder={t(
+                        "Professionals:Physicians:enter_last_name_placeholder"
+                      )}
+                    />
+                  )}
                 />
               </Form.Item>
             </Col>
@@ -106,8 +210,8 @@ function CreateDoctor({ refetchDoctors }) {
 
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item 
-                label="Email" 
+              <Form.Item
+                label={t("Professionals:Physicians:email")}
                 required
                 validateStatus={errors.email ? "error" : ""}
                 help={errors.email?.message}
@@ -116,19 +220,30 @@ function CreateDoctor({ refetchDoctors }) {
                   name="email"
                   control={control}
                   rules={{
-                    required: "L'email est obligatoire",
+                    required: t(
+                      "Professionals:Physicians:required_email_error"
+                    ),
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: "Format d'email invalide"
-                    }
+                      message: t(
+                        "Professionals:Physicians:invalid_email_format_error"
+                      ),
+                    },
                   }}
-                  render={({ field }) => <Input {...field} placeholder="Entrez l'adresse email" />}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      placeholder={t(
+                        "Professionals:Physicians:enter_email_placeholder"
+                      )}
+                    />
+                  )}
                 />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item 
-                label="Confirm Email" 
+              <Form.Item
+                label={t("Professionals:Physicians:confirm_email_label")}
                 required
                 validateStatus={errors.confirmEmail ? "error" : ""}
                 help={errors.confirmEmail?.message}
@@ -137,10 +252,21 @@ function CreateDoctor({ refetchDoctors }) {
                   name="confirmEmail"
                   control={control}
                   rules={{
-                    required: "La confirmation de l'email est obligatoire",
-                    validate: value => value === control._formValues.email || "Les emails ne correspondent pas"
+                    required: t(
+                      "Professionals:Physicians:required_email_confirmation_error"
+                    ),
+                    validate: (value) =>
+                      value === control._formValues.email ||
+                      t("Professionals:Physicians:email_mismatch_error"),
                   }}
-                  render={({ field }) => <Input {...field} placeholder="Confirmez l'adresse email" />}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      placeholder={t(
+                        "Professionals:Physicians:confirm_email_placeholder"
+                      )}
+                    />
+                  )}
                 />
               </Form.Item>
             </Col>
@@ -148,8 +274,8 @@ function CreateDoctor({ refetchDoctors }) {
 
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item 
-                label="Phone Number" 
+              <Form.Item
+                label={t("Professionals:Physicians:phone_number")}
                 required
                 validateStatus={errors.phoneNumber ? "error" : ""}
                 help={errors.phoneNumber?.message}
@@ -157,14 +283,58 @@ function CreateDoctor({ refetchDoctors }) {
                 <Controller
                   name="phoneNumber"
                   control={control}
-                  rules={{ 
-                    required: "Le numéro de téléphone est obligatoire",
+                  rules={{
+                    required: t(
+                      "Professionals:Physicians:required_phone_number_error"
+                    ),
                     pattern: {
                       value: /^[0-9+\s-]{8,}$/,
-                      message: "Format de numéro de téléphone invalide"
-                    }
+                      message: t(
+                        "Professionals:Physicians:invalid_phone_number_error"
+                      ),
+                    },
                   }}
-                  render={({ field }) => <Input {...field} placeholder="Entrez le numéro de téléphone" />}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      placeholder={t(
+                        "Professionals:Physicians:phone_number_placeholder"
+                      )}
+                    />
+                  )}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label="Work environment"
+                required
+                validateStatus={errors.workEnvironment ? "error" : ""}
+                help={errors.workEnvironment?.message}
+              >
+                <Controller
+                  name="workEnvironment"
+                  control={control}
+                  rules={{
+                    required: "Le milieu de travail est obligatoire",
+                    minLength: {
+                      value: 2,
+                      message:
+                        "Le milieu de travail doit contenir au moins 2 caractères",
+                    },
+                  }}
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      placeholder="Sélectionnez le milieu de travail"
+                    >
+                      {milieuxTravail.map((milieu) => (
+                        <Option key={milieu.value} value={milieu.value}>
+                          {milieu.label}
+                        </Option>
+                      ))}
+                    </Select>
+                  )}
                 />
               </Form.Item>
             </Col>
@@ -172,8 +342,8 @@ function CreateDoctor({ refetchDoctors }) {
 
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item 
-                label="Password" 
+              <Form.Item
+                label={t("Professionals:Physicians:password_label")}
                 required
                 validateStatus={errors.password ? "error" : ""}
                 help={errors.password?.message}
@@ -182,26 +352,34 @@ function CreateDoctor({ refetchDoctors }) {
                   <Controller
                     name="password"
                     control={control}
-                    rules={{ 
-                      required: "Le mot de passe est obligatoire",
+                    rules={{
+                      required: t(
+                        "Professionals:Physicians:required_password_error"
+                      ),
                       minLength: {
                         value: 8,
-                        message: "Le mot de passe doit contenir au moins 8 caractères"
+                        message: t(
+                          "Professionals:Physicians:password_min_length_error"
+                        ),
                       },
                       pattern: {
                         value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-                        message: "Le mot de passe doit contenir au moins une lettre et un chiffre"
-                      }
+                        message: t(
+                          "Professionals:Physicians:password_requirements_error"
+                        ),
+                      },
                     }}
                     render={({ field }) => (
                       <>
-                        <Input.Password 
-                          {...field} 
-                          placeholder="Entrez le mot de passe" 
-                          style={{ width: 'calc(100% - 40px)' }}
+                        <Input.Password
+                          {...field}
+                          placeholder={t(
+                            "Professionals:Physicians:password_placeholder"
+                          )}
+                          style={{ width: "calc(100% - 40px)" }}
                         />
                         <Tooltip title="Générer un mot de passe">
-                          <Button 
+                          <Button
                             icon={<KeyOutlined />}
                             onClick={generatePassword}
                           />
@@ -216,7 +394,7 @@ function CreateDoctor({ refetchDoctors }) {
 
           <Form.Item className="submit-button">
             <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
-              Create Doctor
+              {t("Professionals:Physicians:create_physician_button")}
             </Button>
           </Form.Item>
         </Form>

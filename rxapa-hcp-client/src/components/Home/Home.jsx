@@ -14,7 +14,7 @@ function Home() {
   if (!token) {
     return (
       <Layout>
-        <Content style={{ padding: '24px' }}>
+        <Content style={{ padding: "24px" }}>
           <Login setToken={setToken} />
         </Content>
       </Layout>
@@ -22,7 +22,7 @@ function Home() {
   }
   return (
     <Layout>
-      <Content style={{ padding: '24px' }}>
+      <Content style={{ padding: "24px" }}>
         <Row gutter={[24, 24]}>
           <Col xs={24} md={12}>
             <div className="home_text_head">
