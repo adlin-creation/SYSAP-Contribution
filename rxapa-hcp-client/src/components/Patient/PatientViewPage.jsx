@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import useToken from "../Authentication/useToken";
 import { useQuery } from "@tanstack/react-query";
@@ -15,7 +15,7 @@ export default function PatientData({ patient, onClose }) {
 
   // Récupérer les sessions avec useQuery
   const {
-    data: sessionsData,
+    data: sessionsData
   } = useQuery(["SessionRecord", patient.id], () => {
     return axios
       .get(patientSessionsUrl, {
@@ -26,9 +26,15 @@ export default function PatientData({ patient, onClose }) {
 
   const sessions = sessionsData || [];
 
-  const [currentSession, setCurrentSession] = useState(sessions.length);
+// Définir currentSession et le mettre à jour lorsque sessions change
+  const [currentSession, setCurrentSession] = useState(0); // Initialiser à 0 par défaut
 
-  console.log(sessions);
+  useEffect(() => {
+    if (sessions.length > 0) {
+      // Mettre à jour currentSession pour afficher la session la plus récente
+      setCurrentSession(sessions.length - 1);
+    }
+  }, [sessions]); // Déclencher cet effet lorsque sessions change
 
   const sessionData = sessions[currentSession] || {};
 
