@@ -59,16 +59,17 @@ export default function CreateProgram(props) {
     };
   }, []);
 
+  // Gerer le dropdown
   useEffect(() => {
     if (isDropdownVisible && buttonRef.current) {
       const buttonRect = buttonRef.current.getBoundingClientRect();
-      // Calcul du positionnement du dropdown
+    
       setDropdownPosition({
-        top: buttonRect.bottom + window.scrollY,  // Position au bas du bouton
-        left: buttonRect.left + window.scrollX,   // Alignement à gauche du bouton
+        top: buttonRect.bottom + window.scrollY, 
+        left: buttonRect.left + window.scrollX,   
       });
     }
-  }, [isDropdownVisible]);  // Recalculer à chaque fois que le dropdown devient visible
+  }, [isDropdownVisible]); 
 
   // Filtrer les séances en fonction de la recherche
   const filteredSessions = sessions.filter((session) =>
@@ -111,10 +112,7 @@ export default function CreateProgram(props) {
       formData.append("imageUrl", data.imageURL); // Ajout du lien
     }
 
-    
-    // formData.append("sessions", JSON.stringify(selectedSessions));
-
-    console.log("Selected sessions before submit:", selectedSessions);
+    console.log(t("Selected sessions before submit:"), selectedSessions);
 
 
     axios
@@ -146,11 +144,10 @@ export default function CreateProgram(props) {
 
   return (
     <Row justify="center" align="middle" style={{ minHeight: "50vh" }}>
-    <Row justify="center" align="middle" style={{ minHeight: "50vh" }}>
       <Col span={12}>
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
 
-          <Form.Item label="Please enter the name of the program : ">
+          <Form.Item label={t("Please enter the name of the program : ")}>
             <Controller
               name="name"
               control={control}
@@ -165,7 +162,7 @@ export default function CreateProgram(props) {
             />
           </Form.Item>
 
-          <Form.Item label="Please enter the description of the program : ">
+          <Form.Item label={t("Please enter the description of the program : ")}>
             <Controller
               name="description"
               control={control}
@@ -181,7 +178,7 @@ export default function CreateProgram(props) {
             />
           </Form.Item>
 
-          <Form.Item label="Please enter the duration of the program : ">
+          <Form.Item label={t("Please enter the duration of the program : ")}>
             <Controller
               name="duration"
               control={control}
@@ -198,7 +195,7 @@ export default function CreateProgram(props) {
             />
           </Form.Item>
 
-          <Form.Item label="Please select the unit of the duration">
+          <Form.Item label={t("Please select the unit of the duration")}>
             <Controller
               name="duration_unit"
               control={control}
@@ -211,7 +208,7 @@ export default function CreateProgram(props) {
             />
           </Form.Item>
           
-          <Form.Item label="Choose how to upload the program image:">
+          <Form.Item label={t("Choose how to upload the program image:")}>
             <Radio.Group
               value={uploadType}
               onChange={(e) => setUploadType(e.target.value)}
@@ -222,7 +219,7 @@ export default function CreateProgram(props) {
           </Form.Item>
 
           {uploadType === "file" && (
-            <Form.Item label="Upload the image of the program (optional):">
+            <Form.Item label={t("Upload the image of the program:")}>
               <Controller
                 name="image"
                 control={control}
@@ -251,7 +248,7 @@ export default function CreateProgram(props) {
           )}
 
           {uploadType === "url" && (
-            <Form.Item label="Enter the URL of the program image (optional):">
+            <Form.Item label={t("Enter the URL of the program image:")}>
               <Controller
               name="imageURL"
               control={control}
@@ -266,7 +263,7 @@ export default function CreateProgram(props) {
                     }}
                     onBlur={() => {
                       if (imageURL && !isValidImageURL(imageURL)) {
-                        setError("Please enter a direct URL (https://example.com/images/photo.jpg).");
+                        setError(t("Please enter a direct URL (https://example.com/images/photo.jpg)."));
                       }
                     }}
                     placeholder="Program Image URL"
@@ -279,7 +276,7 @@ export default function CreateProgram(props) {
           )}
 
           {/* Sélection des séances */}
-          <Form.Item label="Select sessions for the program:">
+          <Form.Item label={t("Select sessions for the program:")}>
             <Button
               name="sessions"
               type="primary"
@@ -293,7 +290,7 @@ export default function CreateProgram(props) {
               <div
                 ref={dropdownRef}
                 style={{
-                  top: dropdownPosition.top,  // Utilisation de la position calculée
+                  top: dropdownPosition.top, 
                   left: dropdownPosition.left, 
                 }}
               >
@@ -357,6 +354,3 @@ export default function CreateProgram(props) {
     </Row>
   );
 }
-
-
-//Vulnerability detected in the code by copilot ia. Hardcoded credentials are present in the code. The code is vulnerable to information disclosure.
