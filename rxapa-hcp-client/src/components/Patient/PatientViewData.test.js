@@ -155,42 +155,5 @@ describe("PatientViewPage Component", () => {
     });
 
 
-/**    Changer les tests dépendemmment du choix de l'équipe
 
-      it("displays loading state while fetching sessions", () => {
-        // Mock de useQuery pour simuler un chargement
-        useQuery.mockImplementation(() => ({
-            data: undefined,
-            isLoading: true,
-            isError: false,
-        }));
-
-        render(<PatientViewPage patient={mockPatient} onClose={() => { }} />);
-        expect(screen.getByText("Loading sessions...")).toBeInTheDocument();
-    });
-
-    it("displays error message when fetching sessions fails", () => {
-        // Mock de useQuery pour simuler une erreur
-        useQuery.mockImplementation(() => ({
-            data: undefined,
-            isLoading: false,
-            isError: true,
-        }));
-
-        render(<PatientViewPage patient={mockPatient} onClose={() => { }} />);
-        expect(screen.getByText("Error loading sessions")).toBeInTheDocument();
-    });
-
-    it("displays no sessions message when there are no sessions", () => {
-        // Mock de useQuery pour simuler une réponse vide
-        useQuery.mockImplementation(() => ({
-            data: [],
-            isLoading: false,
-            isError: false,
-        }));
-
-        render(<PatientViewPage patient={mockPatient} onClose={() => { }} />);
-        expect(screen.getByText("No sessions found for this patient.")).toBeInTheDocument();
-
-    }); **/
 });
