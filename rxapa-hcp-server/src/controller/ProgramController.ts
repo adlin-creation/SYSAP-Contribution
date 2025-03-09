@@ -5,6 +5,10 @@ import { Program } from "../model/Program";
 import { ProgramPhase } from "../model/ProgramPhase";
 import { Variant } from "../model/Variant";
 import { ProgramPhase_Program } from "../model/ProgramPhase_Program";
+import { validateProgram } from "../middleware/validateProgram";
+import { ProgramSession } from '../model/ProgramSession';
+
+import fs from "fs";
 
 /**
  * This function creates an instance of @type {Program}
@@ -20,35 +24,80 @@ import { ProgramPhase_Program } from "../model/ProgramPhase_Program";
  *
  * @author Hyacinth Ali
  */
-exports.createProgram = async (req: any, res: any, next: any) => {
-  // Extract the required attribute values to create an Exercise
-  const name = req.body.name;
-  const description = req.body.description;
-  const duration = req.body.duration;
+exports.createProgram = [ 
+    validateProgram, 
+    async (req: any, res: any, next: any) => {
+    // Extract the required attribute values to create an Exercise
+    const name = req.body.name;
+    const description = req.body.description;
+    const duration = req.body.duration;
+    const duration_unit = req.body.duration_unit;
+    const imageUrl = req.body.imageUrl;
+    const sessions = req.body;
+    // const sessions = req.body['sessions[]'];
 
-  /**
-   * @todo validate the input values
-   */
+    console.log("Parsed sessions:", sessions);
 
-  // Use sequelize (Database Framework) to create the Exercise
-  try {
-    const program = await Program.create({
-      name: name,
-      description: description,
-      duration: duration,
-    });
+    // Use sequelize (Database Framework) to create the Exercise
+    try {
+      
+      console.log("Body received:", req.body);
+      console.log("File received:", req.file);
+      console.log("Sessions received:", req.body.sessions);
 
-    res.status(201).json({ message: "Exercise program created" });
-  } catch (error: any) {
-    if (!error.statusCode) {
-      error.statusCode = 500;
+      const rawSessions = req.body.sessions;
+      console.log("Sessions received (raw):", rawSessions);
+
+      const sessions = rawSessions ? JSON.parse(rawSessions) : [];
+      console.log("Parsed sessions:", sessions);
+
+      // // Extraire les attributs nécessaires pour créer le programme
+      // const { name, description, duration, duration_unit, sessions } = req.body;
+
+      let imagePath = "";
+
+      if (req.file) {
+        imagePath = `/images/${req.file.filename}`; //Stockage local
+      } else if (imageUrl) {
+        console.log("Received Image URL:", imageUrl);
+        imagePath = imageUrl; // Si l'utilisateur a fourni un lien
+      } else {
+        return res
+        .status(400)
+        .json({ message: "No given image" });
+      }
+
+      const program = await Program.create({
+        name: name,
+        description: description,
+        duration: duration,
+        duration_unit : duration_unit,
+        image: imagePath,
+      });
+
+      // // Associer les sessions au programme
+      if (req.body.sessions) {
+        const sessionIds = req.body.sessions; // Un tableau de sessions
+        for (const sessionId of sessionIds) {
+          await ProgramSession.create({
+            programId: program.id,
+            sessionId,
+          });
+        }
+      }
+
+      res.status(201).json({ message: "Exercise program created" });
+    } catch (error: any) {
+      if (!error.statusCode) {
+        error.statusCode = 500;
+      }
+      return res
+        .status(error.statusCode)
+        .json({ message: "Failed to create an exercise program" });
     }
-    return res
-      .status(error.statusCode)
-      .json({ message: "Failed to create an exercise program" });
-  }
-  return res;
-};
+    return res;
+  },
+];
 
 /**
  * Retrieves all programs
