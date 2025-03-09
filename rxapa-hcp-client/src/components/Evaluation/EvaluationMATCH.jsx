@@ -89,13 +89,13 @@ function EvaluationMATCH({ onSubmit }) {
             paddingBottom: "10px",
           }}
         >
-          Résultats de l'évaluation
+          Évaluation MATCH
         </h3>
 
         <div style={{ marginBottom: "15px" }}>
           <strong>Scores individuels :</strong>
-          <p>A. Cardio-musculaire : {scoreCM}/5</p>
-          <p>B. Équilibre : {scoreBalance}/4</p>
+          <p>Cardio-musculaire : {scoreCM}/5</p>
+          <p>Équilibre : {scoreBalance}/4</p>
           <p>
             <strong>SCORE TOTAL : {totalScore}/9</strong>
           </p>
@@ -111,7 +111,7 @@ function EvaluationMATCH({ onSubmit }) {
         >
           <p>
             <strong>Programme MATCH recommandé : </strong>
-            <span style={{ fontWeight: "bold" }}>Programme {programColor}</span>
+            <span style={{ fontWeight: "bold" }}> {programColor}</span>
           </p>
         </div>
 
@@ -398,9 +398,9 @@ function EvaluationMATCH({ onSubmit }) {
               }
               style={{ marginBottom: "16px" }}
             >
-              <Radio value={true}>Le sujet peut marcher</Radio>
+              <Radio value={true}>Le patient peut marcher</Radio>
               <Radio value={false}>
-                Le sujet ne peut pas marcher
+                Le petient ne peut pas marcher
                 <span
                   style={{
                     fontSize: "0.9em",
