@@ -129,7 +129,7 @@ function EvaluationMATCH({ onSubmit }) {
             </p>
             <p>
               <strong>
-                Objectif de marche :{" "}
+                Objectif de marche / jour :{" "}
                 {calculateWalkingObjective(formData.walkingTime)} minutes
               </strong>
             </p>
