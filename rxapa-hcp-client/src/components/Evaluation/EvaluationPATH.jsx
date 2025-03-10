@@ -95,8 +95,18 @@ function EvaluationPATH({ onSubmit }) {
           <p>Équilibre : {scoreBalance}/4</p>
         </div>
 
-        <div style={{ marginBottom: "15px" }}>
-          <strong>Programme PATH : {programPath}</strong>
+        {/* Nouveau style avec fond grisé comme dans MATCH */}
+        <div
+          style={{
+            marginTop: "20px",
+            backgroundColor: "#f5f5f5",
+            padding: "15px",
+            borderRadius: "5px",
+          }}
+        >
+          <p>
+            <strong>Programme PATH : {programPath}</strong>
+          </p>
         </div>
 
         {formData.walkingTime && (
