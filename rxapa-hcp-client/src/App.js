@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import {
   Route,
   Routes,
@@ -106,6 +106,11 @@ function App() {
         key: "/patients",
         icon: <UserOutlined />,
         label: <Link to="/patients">{t("App:patients")}</Link>,
+      },
+      {
+        key: "/evaluations",
+        icon: <FormOutlined />,
+        label: <Link to="/evaluations">Évaluation</Link>,
       },
       {
         key: "healthcare-professional",
@@ -300,7 +305,14 @@ function App() {
               element={<KinesiologistPatients />}
             ></Route>
             <Route path="admins" element={<AdminMenu />}></Route>
-            <Route path="evaluations" element={<EvaluationSearch />}></Route>
+            <Route 
+              path="evaluations" 
+              element={
+                <Suspense fallback={<div>Loading evaluations...</div>}>
+                  <EvaluationSearch />
+                </Suspense>
+              }
+            ></Route>
             <Route path="evaluation-pace/:patientId" element={<EvaluationPACE />}></Route>
             <Route
               path="*"
