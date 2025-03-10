@@ -91,8 +91,8 @@ function EvaluationPATH({ onSubmit }) {
 
         <div style={{ marginBottom: "15px" }}>
           <strong>Scores individuels :</strong>
-          <p>A. Cardio-musculaire : {scoreCM}/5</p>
-          <p>B. Équilibre : {scoreBalance}/4</p>
+          <p>Cardio-musculaire : {scoreCM}/5</p>
+          <p>Équilibre : {scoreBalance}/4</p>
         </div>
 
         <div style={{ marginBottom: "15px" }}>
@@ -113,7 +113,7 @@ function EvaluationPATH({ onSubmit }) {
             </p>
             <p>
               <strong>
-                Objectif de marche :{" "}
+                Objectif de marche / jour :{" "}
                 {calculateWalkingObjective(formData.walkingTime)} minutes
               </strong>
             </p>
