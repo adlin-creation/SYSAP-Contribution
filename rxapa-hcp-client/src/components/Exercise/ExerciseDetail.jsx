@@ -67,7 +67,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
       <Col span={12}>
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
           {/* Champ de saisie pour le nom de l'exercice */}
-          <Form.Item label={t("Exercise Name")}>
+          <Form.Item label={t("Nom de l'exercice")}>
             <Controller
               name="name"
               control={control}
