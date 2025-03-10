@@ -1,0 +1,24 @@
+{
+  "create_cycle_button": "إنشاء دورة",
+  "enter_cycle_name": "يرجى إدخال اسم الدورة : ",
+  "update_cycle_name": "أدخل اسمًا آخر لتحديث اسم الدورة",
+  "enter_cycle_description": "يرجى إدخال وصف الدورة : ",
+  "update_cycle_description": "أدخل قيمة أخرى لتعديل الوصف",
+  "create_new_cycle": "إنشاء دورة جديدة",
+  "select_session": "اختر جلسة",
+  "weekly_cycle_name_placeholder": "اسم الدورة الأسبوعية",
+  "cycle_description_label": "يرجى إدخال وصف الدورة : ",
+  "weekly_cycle_description_placeholder": "وصف الدورة الأسبوعية",
+  "sessions_loading_title": "تحميل جميع الجلسات...",
+  "sessions_loading_error_message": "عذرًا، حدث خطأ أثناء تحميل الجلسات",
+  "cycle_sessions_loading_title": "تحميل جلسات الدورة...",
+  "cycle_sessions_loading_error_msg": "عذرًا، حدث خطأ أثناء تحميل جلسات الدورة",
+
+  "back_button": "رجوع",
+  "close_button": "إغلاق",
+  "submit_button": "إرسال",
+  "edit_button": "تعديل",
+  "delete_button": "حذف",
+  "update_button": "تحديث",
+  "add_session_button": "إضافة جلسة"
+}

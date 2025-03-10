@@ -1,0 +1,15 @@
+{
+  "login_title": "Inicio de sesión",
+  "email_title": "Introduzca su correo electrónico",
+  "email_placeholder": "Su correo electrónico",
+  "password_title": "Su contraseña",
+  "password_placeholder": "Su contraseña",
+  "login_button": "INICIAR SESIÓN",
+  "register_button": "Registrarse",
+  "signup_button": "REGÍSTRATE",
+  "back_button": "Volver",
+  "name_title": "Introduzca su nombre",
+  "name_placeholder": "Su nombre",
+  "confirm_password_title": "Confirme la contraseña",
+  "confirm_password_placeholder": "Confirme su contraseña"
+}
