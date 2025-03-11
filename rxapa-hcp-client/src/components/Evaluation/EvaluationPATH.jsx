@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import useToken from "../Authentication/useToken";
 import Constants from "../Utils/Constants";
+import { InfoCircleOutlined } from "@ant-design/icons";
 
 function EvaluationPATH({ onSubmit }) {
   const { patientId } = useParams();
@@ -215,12 +216,12 @@ function EvaluationPATH({ onSubmit }) {
       if (count >= 10) return 5; // G ≥ 10 levers
       if (count >= 5 && count <= 9) return 4; // F 5-9 levers
       if (count >= 3 && count <= 4) return 3; // E 3 à 4 levers
-      if (count >= 10) return 3; // D ≥ 10 levers (répété dans le document - utilisons le premier)
       return 0;
     } else {
       // Avec appui
+      if (count >= 10) return 3; // D ≥ 10 levers (répété dans le document - utilisons le premier)
       if (count >= 5 && count <= 9) return 2; // C 5-9 levers
-      if (count < 5) return 1; // B < 5 levers
+      if (count < 5 && count > 0) return 1; // B < 5 levers
       return 0;
     }
   };
@@ -239,7 +240,7 @@ function EvaluationPATH({ onSubmit }) {
     // Vérifier dans l'ordre selon le document
     if (tandem >= 3) return 4;
     if (semiTandem >= 5) return 3;
-    if (semiTandem < 5) return 2;
+    if (semiTandem < 5 && semiTandem > 0) return 2;
     if (feetTogether >= 5) return 1;
     return 0;
   };
@@ -297,6 +298,16 @@ function EvaluationPATH({ onSubmit }) {
 
           {/* Section B: ÉQUILIBRE */}
           <h2>ÉQUILIBRE</h2>
+          <div
+            style={{ marginBottom: "15px", fontStyle: "italic", color: "#666" }}
+          >
+            <InfoCircleOutlined style={{ marginRight: "5px" }} />
+            Si le patient ne peut pas se lever avec support, 
+            seulement faire le test d'équilibre pieds joints
+            <br/>
+            <InfoCircleOutlined style={{ marginRight: "5px" }} />
+            Si le patient n'arrive pas a garder un éuilibre dans une partie, entrer 0
+          </div>
           <Row gutter={16}>
             <Col span={8}>
               <Form.Item
