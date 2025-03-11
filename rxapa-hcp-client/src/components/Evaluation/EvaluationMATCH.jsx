@@ -164,7 +164,7 @@ function EvaluationMATCH({ onSubmit }) {
     const scoreCM = calculateChairTestScore();
     const scoreBalance = calculateBalanceScore();
     const scoreTotal = scoreCM + scoreBalance; // Assurez-vous de calculer le score total
-    const programMatch = scoreCM + "" + scoreBalance;
+    const programMatch = getProgramColor(scoreTotal);
   
     const payload = {
       idPatient: patientId,
