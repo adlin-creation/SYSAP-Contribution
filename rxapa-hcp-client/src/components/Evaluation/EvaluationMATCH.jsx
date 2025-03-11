@@ -63,10 +63,12 @@ function EvaluationMATCH({ onSubmit }) {
       }
     );
 
-    if (!formData.walkingTime) {
-      newErrors.walkingTime = "Le temps de marche est requis";
-    } else if (isNaN(formData.walkingTime) || formData.walkingTime <= 0) {
-      newErrors.walkingTime = "Veuillez entrer un temps de marche valide";
+    if (formData.canWalk) {
+      if (!formData.walkingTime) {
+        newErrors.walkingTime = "Le temps de marche est requis";
+      } else if (isNaN(formData.walkingTime) || formData.walkingTime <= 0) {
+        newErrors.walkingTime = "Veuillez entrer un temps de marche valide";
+      }
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -256,15 +258,15 @@ function EvaluationMATCH({ onSubmit }) {
 
     // Si le score cardio-musculaire est 0, seulement évaluer l'équilibre pieds joints
     const cardioScore = calculateChairTestScore();
-    if (cardioScore === 0) {
-      return feetTogether >= 5 ? 1 : 0;
+    if (cardioScore <= 1) {
+      return feetTogether >= 10 ? 1 : 0;
     }
 
     // Vérifier dans l'ordre selon le document
     if (tandem >= 3) return 4;
-    if (semiTandem >= 5) return 3;
-    if (semiTandem < 5) return 2;
-    if (feetTogether >= 5) return 1;
+    if (semiTandem >= 10) return 3;
+    if (semiTandem < 10 && semiTandem > 0) return 2;
+    if (feetTogether >= 10) return 1;
     return 0;
   };
 
@@ -304,6 +306,13 @@ function EvaluationMATCH({ onSubmit }) {
           {/* Section A: CARDIO-MUSCULAIRE */}
           <h2>CARDIO-MUSCULAIRE</h2>
           <Form.Item label="Test de la chaise en 30 secondes">
+            <div
+            style={{ marginBottom: "15px", fontStyle: "italic", color: "#666" }}
+          >
+            <InfoCircleOutlined style={{ marginRight: "5px" }} />
+            Commencer avec support. Si le patient réussi a faire 5 levers ou plus, 
+            refaire le test sans support
+          </div>
             <Radio.Group
               name="chairTestSupport"
               value={formData.chairTestSupport}
@@ -335,8 +344,11 @@ function EvaluationMATCH({ onSubmit }) {
             style={{ marginBottom: "15px", fontStyle: "italic", color: "#666" }}
           >
             <InfoCircleOutlined style={{ marginRight: "5px" }} />
-            Si le score Cardio-musculaire est ≤ 1, seulement prendre en compte
-            le score d'équilibre pieds joints
+            Si le patient ne peut pas accomplir 5 levers avec support, 
+            seulement faire le test d'équilibre pieds joints
+            <br/>
+            <InfoCircleOutlined style={{ marginRight: "5px" }} />
+            Si le patient n'arrive pas a garder un éuilibre dans une partie, entrer 0
           </div>
           <Row gutter={16}>
             <Col span={8}>
@@ -399,16 +411,6 @@ function EvaluationMATCH({ onSubmit }) {
               <Radio value={true}>Le patient peut marcher</Radio>
               <Radio value={false}>
                 Le petient ne peut pas marcher
-                <span
-                  style={{
-                    fontSize: "0.9em",
-                    marginLeft: "5px",
-                    color: "#888",
-                  }}
-                >
-                  (Capacité de marche à travailler - Objectif à réévaluer au
-                  cours du séjour)
-                </span>
               </Radio>
             </Radio.Group>
 
