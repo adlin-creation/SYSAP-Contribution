@@ -1,4 +1,6 @@
 import { Patient } from "../model/Patient";
+import { ProgramEnrollement } from "../model/ProgramEnrollement";
+import { SessionRecord } from "../model/SessionRecord";
 import {
   extractEmailFromToken,
   generateCode,
@@ -161,4 +163,29 @@ exports.getPatients = async (req: any, res: any, next: any) => {
       .json({ message: "Error loading patients from the database" });
   }
   return res;
+};
+
+exports.getPatientSessions = async (req: any, res: any, next: any) => {
+  const patientId = parseInt(req.params.id, 10);
+
+  try {
+    // Récupérer les programmes du patient
+    const patientPrograms = await ProgramEnrollement.findAll({
+      where: { PatientId: patientId },
+    });
+
+    // Récupérer les IDs des programmes du patient
+    const programIds = patientPrograms.map((pp: typeof ProgramEnrollement) => pp.id);
+
+    // Récupérer les sessions associées à ces programmes
+    const sessions = await SessionRecord.findAll({
+      where: { ProgramEnrollementId: programIds },
+    });
+
+    // Renvoyer les sessions au client
+    res.status(200).json(sessions);
+  } catch (error) {
+    console.error('Error fetching patient sessions:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 };

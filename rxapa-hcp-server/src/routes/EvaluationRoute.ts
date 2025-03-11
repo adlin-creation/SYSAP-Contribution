@@ -1,6 +1,5 @@
 import express from "express";
 const router = express.Router();
-
 const evaluationController = require("../controller/EvaluationController");
 
 // Routes pour les évaluations PACE
@@ -15,6 +14,7 @@ router.delete(
   "/evaluation-pace/:id",
   evaluationController.deletePaceEvaluation
 );
+
 // Routes pour les evaluations PATH
 router.post(
   "/create-path-evaluation",
@@ -28,6 +28,7 @@ router.delete(
   evaluationController.deletePathEvaluation
 );
 
+// Route de recherche de patients
 router.get("/patients/search", evaluationController.searchPatients);
 
 export default router;

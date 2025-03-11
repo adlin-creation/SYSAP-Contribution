@@ -1,4 +1,3 @@
-import { User } from "../model/User"; // Importation du modèle User pour interagir avec la base de données des utilisateurs
 import { Professional_User } from "../model/Professional_User"; // Importation du modèle Professional_User pour gérer les utilisateurs professionnels
 import jwt from "jsonwebtoken"; // Importation de jsonwebtoken pour la gestion des tokens JWT
 
@@ -12,10 +11,13 @@ const scryptPromise = promisify(scrypt); // Permet d'utiliser `scrypt` avec `asy
  */
 exports.signup = async (req: any, res: any) => {
   // Récupération des données envoyées par le frontend
-  const name = req.body.name;
+  const firstname = req.body.firstname;
+  const lastname = req.body.lastname;
   const email = req.body.email;
+  const role = req.body.role;
   const password = req.body.password;
   const confirmPassword = req.body.confirmPassword;
+  const phoneNumber = req.body.phoneNumber;
 
   // Hachage du mot de passe pour la sécurité
   const hashedPassword = await hash(password);
@@ -30,7 +32,7 @@ exports.signup = async (req: any, res: any) => {
 
   try {
     // Vérifier si l'utilisateur existe déjà dans la base de données
-    user = await User.findOne({ where: { email: email } });
+    user = await Professional_User.findOne({ where: { email: email } });
     if (user) {
       return res
         .status(500)
@@ -43,9 +45,12 @@ exports.signup = async (req: any, res: any) => {
 
   try {
     // Création d'un nouvel utilisateur avec les informations fournies
-    user = await User.create({
-      name: name,
+    user = await Professional_User.create({
+      firstname: firstname,
+      lastname: lastname,
       email: email,
+      role: role,
+      phoneNumber: phoneNumber, // Ajout de phoneNumber
       password: hashedPassword, // Stockage du mot de passe haché
     });
 
@@ -71,14 +76,12 @@ exports.login = async (req: any, res: any) => {
   let user;
 
   try {
-    // Vérifier si l'utilisateur existe dans la table `User`
-    user = await User.findOne({ where: { email: email } });
+    // Vérifier si l'utilisateur existe dans la table `User` 
 
     // Si l'utilisateur n'est pas trouvé, vérifier dans ProfessionalUser
-    if (!user) {
-      user = await Professional_User.findOne({ where: { email: email } });
-    }
-
+  
+    user = await Professional_User.findOne({ where: { email: email } });
+    
     // Si toujours non trouvé, renvoyer une erreur
     if (!user) {
       return res.status(401).json({ message: "The user doesn't exist" });
@@ -108,7 +111,7 @@ exports.login = async (req: any, res: any) => {
     {
       email: user.email, // Ajout de l'email au token
       key: user.key, // Ajout de l'ID utilisateur au token
-      role: user.role || "SuperAdmin", // Ajouter le rôle si disponible --- role: user.role || "user", // Ajout du rôle au token (par défaut "user")
+      role: user.role, // Ajouter le rôle si disponible --- role: user.role
     },
     `${process.env.TOKEN_SECRET_KEY}`, // Utilisation d'une clé secrète stockée dans les variables d'environnement
     { expiresIn: "2h" } // Expiration du token en 2 heures
@@ -117,7 +120,7 @@ exports.login = async (req: any, res: any) => {
   return res.status(200).json({
     token: token, // Envoi du token au frontend
     userId: user.key, // Envoi de l'ID utilisateur
-    role: user.role || "SuperAdmin", // role: user.role || "user", // Envoi du rôle utilisateur
+    role: user.role, // role: user.role, // Envoi du rôle utilisateur
     message: "Successfully logged in",
   });
 };

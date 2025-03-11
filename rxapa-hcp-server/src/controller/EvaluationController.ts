@@ -26,19 +26,20 @@ exports.createPaceEvaluation = async (req: any, res: any, next: any) => {
 
   const t = await sequelize.transaction();
 
+  
   try {
     const program = await Program.findOne({
-      where: {
-        name: scores.program,
+      where: { 
+        name: scores.program
       },
-      transaction: t,
+      transaction: t
     });
-
+  
     if (!program) {
       await t.rollback();
       return res.status(404).json({
         message: "Programme " + scores.program + " introuvable",
-        error: `Programme '${scores.program}' introuvable`,
+        error: `Programme '${scores.program}' introuvable`
       });
     }
 
@@ -46,7 +47,7 @@ exports.createPaceEvaluation = async (req: any, res: any, next: any) => {
       {
         idPatient: idPatient,
         //idKinesiologist,
-        idResultProgram: program.id,
+        idResultProgram: program.id
       },
       { transaction: t }
     );
@@ -86,15 +87,14 @@ exports.createPaceEvaluation = async (req: any, res: any, next: any) => {
     res.status(201).json({ evaluation, scores, objectifMarche });
   } catch (error: any) {
     console.error("ERREUR COMPLETE SERVEUR :", error);
-
     await t.rollback();
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({
+    res.status(error.statusCode).json({ 
       message: "Error creating evaluation",
       errorDetails: error.toString(),
-      stack: error.stack,
+      stack: error.stack
     });
   }
   return res;
@@ -536,21 +536,20 @@ exports.deletePathEvaluation = async (req: any, res: any, next: any) => {
 exports.searchPatients = async (req: Request, res: Response) => {
   try {
     const { term } = req.query;
-    if (!term)
-      return res.status(400).json({ message: "Terme de recherche requis" });
+    if (!term) return res.status(400).json({ message: "Terme de recherche requis" });
 
     // Nettoyage et séparation des termes
     const searchTerms = term.toString().trim().split(/\s+/);
-
+    
     let whereClause;
-
+    
     if (searchTerms.length === 1) {
       // Recherche simple sur un seul terme
       whereClause = {
         [Op.or]: [
           { firstname: { [Op.iLike]: `%${searchTerms[0]}%` } },
           { lastname: { [Op.iLike]: `%${searchTerms[0]}%` } },
-        ],
+        ]
       };
     } else {
       // Combinaisons prénom/nom
@@ -560,28 +559,25 @@ exports.searchPatients = async (req: Request, res: Response) => {
           {
             [Op.and]: [
               { firstname: { [Op.iLike]: `%${searchTerms[0]}%` } },
-              {
-                lastname: { [Op.iLike]: `%${searchTerms.slice(1).join(" ")}%` },
-              },
-            ],
+              { lastname: { [Op.iLike]: `%${searchTerms.slice(1).join(' ')}%` } },
+            ]
           },
           // Format "Nom Prénom" (si deux termes)
-          ...(searchTerms.length === 2
-            ? [
-                {
-                  [Op.and]: [
-                    { firstname: { [Op.iLike]: `%${searchTerms[1]}%` } },
-                    { lastname: { [Op.iLike]: `%${searchTerms[0]}%` } },
-                  ],
-                },
+          ...(searchTerms.length === 2 ? [
+            {
+              [Op.and]: [
+                { firstname: { [Op.iLike]: `%${searchTerms[1]}%` } },
+                { lastname: { [Op.iLike]: `%${searchTerms[0]}%` } },
               ]
-            : []),
-        ],
+            }
+          ] : [])
+        ]
       };
     }
 
     const patients = await Patient.findAll({ where: whereClause });
     res.status(200).json(patients);
+    
   } catch (error) {
     console.error("Erreur recherche:", error);
     res.status(500).json({ message: "Échec de la recherche" });
