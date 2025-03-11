@@ -41,10 +41,10 @@ export const getImage = (req: Request, res: Response) => {
  * Creates a new Exercise.
  */
 export const createExercise = async (req: Request, res: Response) => {
-  const { name, description, instructionalVideo, category, isSeating, targetAgeRange, fitnessLevel } = req.body;
+  const { name, description, category, fitnessLevel } = req.body;
   const exerciseImageFile = req.file;
 
-  if (!name || !description || !instructionalVideo) {
+  if (!name || !description || !category || !fitnessLevel) {
     return res.status(400).json({ message: "Tous les champs obligatoires doivent être remplis !" });
   }
 
@@ -54,10 +54,7 @@ export const createExercise = async (req: Request, res: Response) => {
     await Exercise.create({
       name,
       description,
-      instructionalVideo,
       category,
-      isSeating,
-      targetAgeRange,
       fitnessLevel,
       imageUrl,
     });
@@ -91,7 +88,7 @@ export const createExercise = async (req: Request, res: Response) => {
  */
 export const updateExercise = async (req: Request, res: Response) => {
   const exerciseKey = req.params.exerciseKey;
-  const { name, description, instructionalVideo, category, isSeating, targetAgeRange, fitnessLevel } = req.body;
+  const { name, description, category, fitnessLevel } = req.body;
 
   try {
     const exercise = await Exercise.findOne({ where: { key: exerciseKey } });
@@ -102,10 +99,7 @@ export const updateExercise = async (req: Request, res: Response) => {
     await exercise.update({
       name: name || exercise.name,
       description: description || exercise.description,
-      instructionalVideo: instructionalVideo || exercise.instructionalVideo,
       category: category || exercise.category,
-      isSeating: isSeating || exercise.isSeating,
-      targetAgeRange: targetAgeRange || exercise.targetAgeRange,
       fitnessLevel: fitnessLevel || exercise.fitnessLevel,
     });
 
