@@ -32,5 +32,7 @@
   "close_button": "Close",
   "delete_button": "Delete",
   "learn_more_button": "Learn more",
-  "update_button": "Update"
+  "update_button": "Update",
+  "modify": "Modify",
+  "save": "Save"
 }

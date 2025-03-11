@@ -32,5 +32,7 @@
   "close_button": "إغلاق",
   "delete_button": "حذف",
   "learn_more_button": "تعرف على المزيد",
-  "update_button": "تحديث"
+  "update_button": "تحديث",
+  "modify": "",
+  "save": ""
 }

@@ -67,7 +67,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
       <Col span={12}>
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
           {/* Champ de saisie pour le nom de l'exercice */}
-          <Form.Item label={t("Nom de l'exercice")}>
+          <Form.Item label={t("Exercises:exercise_name")}>
             <Controller
               name="name"
               control={control}
@@ -76,7 +76,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder="Entrez le nouveau nom d'exercice."
+                  placeholder={t("Exercises:exercise_name")}
                   required
                   disabled={!isEditing} // Si isEditing est false, les champs sont en lecture seule
                 />
@@ -85,7 +85,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
           </Form.Item>
 
           {/* Champ pour la catégorie de l'exercice */}
-          <Form.Item label="Catégorie de l'exercice">
+          <Form.Item label={t("Exercises:category_placeholder")}>
             <Controller
               name="category"
               control={control}
@@ -94,12 +94,12 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
                 <Select
                   onChange={onChange}
                   value={value}
-                  placeholder="Sélectionner une catégorie"
+                  placeholder={t("Exercises:category_placeholder")}
                   style={{ width: "100%" }}
                   allowClear
                   disabled={!isEditing} // Si isEditing est false, les champs sont en lecture seule
                 >
-                  {["Cardio", "Force", "Flexibilité", "Équilibre"].map((category) => (
+                  {[t("Exercises:aerobic"), t("Exercises:strength"), t("Exercises:endurance"), t("Exercises:flexibility"), t("Exercises:balance")].map((category) => (
                     <Select.Option key={category} value={category}>
                       {category}
                     </Select.Option>
@@ -110,7 +110,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
           </Form.Item>
 
           {/* Champ pour le niveau de forme physique */}
-          <Form.Item label={t("le niveau de forme physique attendu")}>
+          <Form.Item label={t("Exercises:fitness_level_placeholder")}>
             <Controller
               name="fitnessLevel"
               control={control}
@@ -119,12 +119,12 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
                 <Select
                   onChange={onChange}
                   value={value}
-                  placeholder="Sélectionner un niveau"
+                  placeholder={t("Exercises:fitness_level_placeholder")}
                   style={{ width: "100%" }}
                   allowClear
                   disabled={!isEditing} // Si isEditing est false, les champs sont en lecture seule
                 >
-                  {["Débutant", "Intermédiaire", "Avancé"].map((level) => (
+                  {[t("Exercises:easy"), t("Exercises:intermediate"), t("Exercises:advanced")].map((level) => (
                     <Select.Option key={level} value={level}>
                       {level}
                     </Select.Option>
@@ -135,7 +135,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
           </Form.Item>
 
           {/* Champ de saisie pour la description de l'exercice */}
-          <Form.Item label="Description d'exercice">
+          <Form.Item label={t("Exercises:exercise_description")}>
             <Controller
               name="description"
               control={control}
@@ -144,7 +144,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
                 <Input.TextArea
                   onChange={onChange}
                   value={value}
-                  placeholder="Entrez la nouvelle description de l'exercice."
+                  placeholder={t("Exercises:exercise_description")}
                   rows={4}
                   required
                   disabled={!isEditing} // Si isEditing est false, les champs sont en lecture seule
@@ -160,7 +160,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
                 type="primary"
                 onClick={startEditing} // Active le mode édition 
               >
-                Modifier
+                {t("Exercises:modify")}
               </Button>
             ) : (
               // Une fois en mode édition, afficher le bouton "Sauvegarder" pour soumettre les changements
@@ -169,7 +169,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
                 htmlType="submit" 
                 icon={<CheckOutlined />}
               >
-                Sauvegarder
+                {t("Exercises:save")}
               </Button>
             )}
           </Form.Item>
