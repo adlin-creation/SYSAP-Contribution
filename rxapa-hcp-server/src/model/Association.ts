@@ -28,6 +28,9 @@ import { Kinesiologist } from "./Kinesiologist";
 import { Follow_Patient } from "./Follow_Patient";
 import { Diagnostic } from "./Diagnostic";
 
+import { Evaluation } from "./Evaluation";
+import { Evaluation_PACE } from "./Evaluation_PACE";
+
 export function createAssociations() {
   /**
    * @todo The constraints should be true for production.
@@ -50,6 +53,49 @@ export function createAssociations() {
   //   //   allowNull: false,
   //   // },
   // });
+
+  // Evaluations
+  // Evaluation <> Patient (One-to-Many)
+  Evaluation.belongsTo(Patient, {
+    foreignKey: "idPatient",
+    onDelete: "RESTRICT",
+  });
+  Patient.hasMany(Evaluation, {
+    foreignKey: "idPatient",
+    onDelete: "RESTRICT",
+  });
+
+  // Evaluation <> Kinesiologist (One-to-Many)
+  Evaluation.belongsTo(Kinesiologist, {
+    foreignKey: "idKinesiologist",
+    onDelete: "RESTRICT",
+  });
+  Kinesiologist.hasMany(Evaluation, {
+    foreignKey: "idKinesiologist",
+    onDelete: "RESTRICT",
+  });
+
+  // Evaluation <> Program (One-to-Many)
+  Evaluation.belongsTo(Program, {
+    foreignKey: "idResultProgram",
+    onDelete: "RESTRICT",
+  });
+  Program.hasMany(Evaluation, {
+    foreignKey: "idResultProgram",
+    onDelete: "RESTRICT",
+  });
+
+  // Evaluation PACE
+  // Evaluation <> Evaluation_PACE (One-to-One)
+  Evaluation_PACE.belongsTo(Evaluation, {
+    foreignKey: "idPACE",
+    onDelete: "CASCADE",
+  });
+  Evaluation.hasOne(Evaluation_PACE, {
+    foreignKey: "idPACE",
+    onDelete: "CASCADE",
+  });
+
 
   Bloc.hasMany(Exercise_Bloc, {
     onDelete: "RESTRICT",
