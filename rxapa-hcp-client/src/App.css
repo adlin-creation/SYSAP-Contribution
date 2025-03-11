@@ -27,6 +27,11 @@
   right: 0;
 }
 
+.header-ar {
+  right: auto;
+  left: 0;
+}
+
 .header-content {
   display: flex;
   align-items: center;
@@ -54,12 +59,25 @@
   left: 0;
   top: 0;
   bottom: 0;
-  width: 15rem; /* Adjust this value based on your design */
+  width: 1rem; /* Adjust this value based on your design */
   z-index: 2;
+}
+
+.sider-ar {
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 5rem;
 }
 
 .site-layout {
   margin-left: 15rem; /* Adjust this value based on the width of your Sider */
+}
+
+.site-layout-ar {
+  margin-left: 0;
+  margin-right: 15rem;
+  width: calc(100% - 15rem);
 }
 
 .content {

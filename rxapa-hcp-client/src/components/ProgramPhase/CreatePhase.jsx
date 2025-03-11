@@ -203,6 +203,7 @@ export default function CreatePhase(props) {
           <Controller
             name={"endConditionValue"}
             control={control}
+            defaultValue=""
             render={({ field: { onChange, value } }) => (
               <TextField
                 onChange={onChange}
@@ -222,6 +223,7 @@ export default function CreatePhase(props) {
           <Controller
             name={"frequency"}
             control={control}
+            defaultValue=""
             render={({ field: { onChange, value } }) => (
               <TextField
                 onChange={onChange}

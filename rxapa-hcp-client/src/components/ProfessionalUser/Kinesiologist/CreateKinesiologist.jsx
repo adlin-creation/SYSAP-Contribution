@@ -59,50 +59,31 @@ function CreateKinesiologist({ refetchKinesiologists }) {
       )
       .then((res) => {
         refetchKinesiologists();
-        openModal(t("Professionals:Kinesiologist:creating_success_msg"), false, data);
+        openModal(t("Professionals:Kinesiologist:creating_success_msg"), false);
       })
       .catch((err) =>
         openModal(
           err.response?.data?.message ||
-            t("Professionals:Kinesiologist:creating_error_msg"),
+          t("Professionals:Kinesiologist:creating_error_msg"),
           true
         )
       );
   };
 
-  const sendPassword = (email, password) => {
-    const subject = encodeURIComponent('New Doctor Account');
-    const body = encodeURIComponent(`Hello,\n\nHere are the details for the new kinesioligst account:\n\nEmail: ${email}\nPassword: ${password}\n\nBest regards,`);
-    const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
-    window.location.href = mailtoLink;
-  };
 
-
-  const openModal = (message, isError, passwordData) => {
-    AntModal[isError ? 'error' : 'success']({
-      content: (
-        <div>
-          <p>{message}</p>
-          {!isError && passwordData && (
-            <div>
-              <p><strong>Email:</strong> {passwordData.email}</p>
-              <p><strong>Password:</strong> {passwordData.password}</p>
-              <button onClick={() => sendPassword(passwordData.email, passwordData.password)}>Send Password</button>
-            </div>
-          )}
-        </div>
-      ),
-      okText: 'Close',
+  const openModal = (message, isError) => {
+    AntModal[isError ? "error" : "success"]({
+      content: <p>{message}</p>,
+      okText: "Close",
       centered: true,
       onOk: () => {
         if (!isError) {
           reset(); // Réinitialiser le formulaire en cas de succès
         }
-      }
+      },
     });
   };
 
-  
   const generatePassword = async () => {
     try {
       const response = await axios.get(
@@ -307,14 +288,14 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                       message: "Le milieu de travail doit contenir au moins 2 caractères"
                     }
                   }}
-                  render={({ field }) => 
-                  <Select {...field} placeholder="Sélectionnez le milieu de travail">
-                    {milieuxTravail.map((milieu) => (
-                      <Option key={milieu.value} value={milieu.value}>
-                        {milieu.label}
-                      </Option>
-                    ))}
-                  </Select>}
+                  render={({ field }) =>
+                    <Select {...field} placeholder="Sélectionnez le milieu de travail">
+                      {milieuxTravail.map((milieu) => (
+                        <Option key={milieu.value} value={milieu.value}>
+                          {milieu.label}
+                        </Option>
+                      ))}
+                    </Select>}
                 />
               </Form.Item>
             </Col>

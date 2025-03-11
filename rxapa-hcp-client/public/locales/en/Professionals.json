@@ -1,14 +1,14 @@
 {
-  "Doctors": {
+  "Physicians": {
     "name": "Name",
     "status": "Status",
     "actions": "Actions",
     "email": "Email",
     "phone": "Phone",
-    "register_doctor": "Register a Doctor",
-    "register_doctor_title": "Register a new doctor",
-    "edit_doctor": "Edit doctor",
-    "updating_success_msg": "Doctor updated successfully!",
+    "register_physician": "Register a physician",
+    "register_physician_title": "Register a new physician",
+    "edit_physician": "Edit physician",
+    "updating_success_msg": "Physician updated successfully!",
     "first_name_label": "First name",
     "required_first_name_error": "First name is required",
     "first_name_min_length_error": "First name must be at least 2 characters long",
@@ -34,8 +34,8 @@
     "password_requirements_error": "Password must contain at least one letter and one number",
     "password_placeholder": "Enter password",
     "back_button": "Back",
-    "create_doctor_button": "Create doctor",
-    "total_doctors": "Total doctors",
+    "create_physician_button": "Create physician",
+    "total_physicians": "Total physicians",
     "active_status": "Active",
     "inactive_status": "Inactive",
     "patients_button": "Patients",
@@ -43,10 +43,10 @@
     "delete_button": "Delete",
     "close_button": "Close",
     "of": "of",
-    "doctors": "Doctors",
-    "update_doctor_button": "Update Doctor",
-    "back_to_doctors_button": "Back to Doctors",
-    "doctor_patients_title": "Doctor's patients"
+    "physicians": "Physicians",
+    "update_physician_button": "Update physician",
+    "back_to_physicians_button": "Back to physicians",
+    "physician_patients_title": "Physician's patients"
   },
   "Kinesiologist": {
     "name": "Name",
@@ -108,7 +108,6 @@
     "phone": "Phone",
     "register_admin_button": "Register an Admin",
     "register_new_admin": "Register a new Admin",
-    "edit_admin": "Edit Admin",
     "updating_success_msg": "Admin updated successfully!",
     "updating_admin_error_msg": "Error updating admin",
     "creating_success_msg": "Admin created successfully!",

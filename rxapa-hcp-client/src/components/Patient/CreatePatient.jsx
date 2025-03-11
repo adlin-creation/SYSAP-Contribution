@@ -17,7 +17,6 @@ import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import Constants from "../Utils/Constants";
 
-
 function CreatePatient({ refetchPatients, onClose }) {
   const { t } = useTranslation();
   const {
@@ -50,7 +49,7 @@ function CreatePatient({ refetchPatients, onClose }) {
     fetchPrograms();
   }, [token]);
 
-  const [showCaregiverForm, setShowCaregiverForm] = useState(false);  // État pour gérer la visibilité du formulaire
+  const [showCaregiverForm, setShowCaregiverForm] = useState(false); // État pour gérer la visibilité du formulaire
   const [hasCaregiver, setHasCaregiver] = useState(false);
   const [maxCaregiver, setmaxCaregiver] = useState(false);
 
@@ -58,7 +57,6 @@ function CreatePatient({ refetchPatients, onClose }) {
   const toggleCaregiverForm = () => {
     setShowCaregiverForm(!showCaregiverForm);
     setHasCaregiver(!hasCaregiver);
-
   };
 
   const addCaregiver = () => {
@@ -66,7 +64,6 @@ function CreatePatient({ refetchPatients, onClose }) {
       // Ajouter un soignant
       setCaregivers([...caregivers, { id: caregivers.length + 1 }]);
       setmaxCaregiver(!maxCaregiver);
-
     } else {
       // Retirer le dernier soignant
       setCaregivers(caregivers.slice(0, -1));
@@ -75,7 +72,6 @@ function CreatePatient({ refetchPatients, onClose }) {
   };
 
   const onSubmit = (data) => {
-
     const caregiversData = caregivers
       .map((_cg, index) => ({
         firstname: data[`caregiverFirstName${index + 1}`],
@@ -110,7 +106,6 @@ function CreatePatient({ refetchPatients, onClose }) {
       caregiversData.length > 0
         ? { patientData, caregivers: caregiversData }
         : patientData;
-
 
     axios
       .post(`${Constants.SERVER_URL}${endpoint}`, payload, {
@@ -338,7 +333,10 @@ function CreatePatient({ refetchPatients, onClose }) {
                       },
                     }}
                     render={({ field }) => (
-                      <Input {...field} placeholder={t("Patients:weight_placeholder")} />
+                      <Input
+                        {...field}
+                        placeholder={t("Patients:weight_placeholder")}
+                      />
                     )}
                   />
                 </Form.Item>
@@ -383,7 +381,9 @@ function CreatePatient({ refetchPatients, onClose }) {
                       <Form.Item
                         label={t("Patients:first_name")}
                         validateStatus={
-                          errors[`caregiverFirstName${index + 1}`] ? "error" : ""
+                          errors[`caregiverFirstName${index + 1}`]
+                            ? "error"
+                            : ""
                         }
                         help={errors[`caregiverFirstName${index + 1}`]?.message}
                       >
@@ -394,13 +394,15 @@ function CreatePatient({ refetchPatients, onClose }) {
                             required: t("Patients:first_name_required"),
                             minLength: {
                               value: 2,
-                              message: t("Patients:first_name_required_info")
+                              message: t("Patients:first_name_required_info"),
                             },
                           }}
                           render={({ field }) => (
                             <Input
                               {...field}
-                              placeholder={t("Patients:caregiver_first_name_input")}
+                              placeholder={t(
+                                "Patients:caregiver_first_name_input"
+                              )}
                             />
                           )}
                         />
@@ -421,13 +423,15 @@ function CreatePatient({ refetchPatients, onClose }) {
                             required: t("Patients:last_name_required"),
                             minLength: {
                               value: 2,
-                              message: t("Patients:last_name_required_info")
-                            }
+                              message: t("Patients:last_name_required_info"),
+                            },
                           }}
                           render={({ field }) => (
                             <Input
                               {...field}
-                              placeholder={t("Patients:caregiver_last_name_input")}
+                              placeholder={t(
+                                "Patients:caregiver_last_name_input"
+                              )}
                             />
                           )}
                         />
@@ -487,7 +491,7 @@ function CreatePatient({ refetchPatients, onClose }) {
                             required: t("Patients:email_needed"),
                             pattern: {
                               value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                              message: t("Patients:email_invalid")
+                              message: t("Patients:email_invalid"),
                             },
                           }}
                           render={({ field }) => (
@@ -535,9 +539,15 @@ function CreatePatient({ refetchPatients, onClose }) {
                           name={`program${index + 1}`}
                           control={control}
                           render={({ field }) => (
-                            <Select {...field} placeholder="Sélectionner un programme">
+                            <Select
+                              {...field}
+                              placeholder="Sélectionner un programme"
+                            >
                               {programList?.map((program) => (
-                                <Select.Option key={program.id} value={program.id}>
+                                <Select.Option
+                                  key={program.id}
+                                  value={program.id}
+                                >
                                   {program.name}
                                 </Select.Option>
                               ))}
@@ -558,7 +568,9 @@ function CreatePatient({ refetchPatients, onClose }) {
                           render={({ field }) => (
                             <DatePicker
                               {...field}
-                              placeholder={t("Patients:program_start_placeholder")}
+                              placeholder={t(
+                                "Patients:program_start_placeholder"
+                              )}
                               style={{ width: "100%" }}
                             />
                           )}
@@ -577,7 +589,9 @@ function CreatePatient({ refetchPatients, onClose }) {
                           render={({ field }) => (
                             <DatePicker
                               {...field}
-                              placeholder={t("Patients:program_end_placeholder")}
+                              placeholder={t(
+                                "Patients:program_end_placeholder"
+                              )}
                               style={{ width: "100%" }}
                             />
                           )}
@@ -597,8 +611,6 @@ function CreatePatient({ refetchPatients, onClose }) {
               </Button>
             </div>
           )}
-
-
 
           <Form.Item>
             <Button type="primary" htmlType="submit" icon={<SendOutlined />}>

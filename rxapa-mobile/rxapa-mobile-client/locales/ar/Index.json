@@ -1,0 +1,14 @@
+{
+    "entrer_code": "يرجى إدخال رمز.",
+    "entrer_votre_code": "أدخل رمزك",
+    "erreur_code_incorrect": "الرمز الذي تم إدخاله غير صحيح. يرجى المحاولة مرة أخرى.",
+    "authentification": "المصادقة",
+    "saisir_code_personnel": "يرجى إدخال رمزك الشخصي",
+    "connexion": "تسجيل الدخول",
+    "aucun_code_perso": "ليس لدي رمز شخصي",
+    "question_besoin_aide": "هل تحتاج إلى مساعدة؟",
+    "contact_aide_code": "إذا لم يكن لديك رمز شخصي أو إذا نسيته، يرجى الاتصال بـ:",
+    "contact_it": "قسم تكنولوجيا المعلومات:",
+    "contact_kine": "أخصائي العلاج الحركي للحصول على رمز صالح.",
+    "fermer": "إغلاق"
+}
