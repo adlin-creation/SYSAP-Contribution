@@ -33,10 +33,7 @@ describe("createExercise", () => {
             body: {
                 name: "Push-up",
                 description: "Un exercice de force au poids du corps qui sollicite principalement les pectoraux, les triceps et les épaules.",
-                instructionalVideo: " ",
                 category: "Force",
-                isSeating: false,
-                targetAgeRange: " ",
                 fitnessLevel: "Intermédiaire",
             },
             file: {
@@ -72,10 +69,7 @@ describe("createExercise", () => {
             key: "550e8400-e29b-41d4-a716-446655440000",
             name: "Push-up",
             description: "Un exercice de force au poids du corps qui sollicite principalement les pectoraux, les triceps et les épaules.",
-            instructionalVideo: " ",
             category: "Force",
-            isSeating: false,
-            targetAgeRange: " ",
             fitnessLevel: "Intermédiaire",
             imageUrl: "/uploads/image.jpg",
         });
@@ -85,10 +79,7 @@ describe("createExercise", () => {
         expect(mockCreate).toHaveBeenCalledWith({
             name: "Push-up",
             description: "Un exercice de force au poids du corps qui sollicite principalement les pectoraux, les triceps et les épaules.",
-            instructionalVideo: " ",
             category: "Force",
-            isSeating: false,
-            targetAgeRange: " ",
             fitnessLevel: "Intermédiaire",
             imageUrl: "/uploads/image.jpg",
         });
@@ -107,10 +98,7 @@ describe("createExercise", () => {
         expect(mockCreate).toHaveBeenCalledWith({
             name: "Push-up",
             description: "Un exercice de force au poids du corps qui sollicite principalement les pectoraux, les triceps et les épaules.",
-            instructionalVideo: " ",
             category: "Force",
-            isSeating: false,
-            targetAgeRange: " ",
             fitnessLevel: "Intermédiaire",
             imageUrl: "/uploads/image.jpg",
         });
