@@ -147,17 +147,16 @@ exports.createPathEvaluation = async (req: any, res: any, next: any) => {
 
     await Evaluation_PATH.create(
       {
-        // Section Cardio-musculaire
         idPATH: evaluation.id,
         chairTestSupport: chairTestSupport === "with",
         chairTestCount: parseInt(chairTestCount),
         scoreCM: scores.cardioMusculaire,
-        // Section Equilibre
-        balanceFeetTogether: parseFloat(balanceFeetTogether),
+        // Utilisez la bonne casse pour ces propriétés
+        BalanceFeetTogether: parseFloat(balanceFeetTogether),
         balanceSemiTandem: parseFloat(balanceSemiTandem),
         balanceTandem: parseFloat(balanceTandem),
         scoreBalance: scores.equilibre,
-        // Scores et vitesse
+        // Assurez-vous que scoreTotal est défini
         scoreTotal: scores.total,
         vitesseDeMarche: vitesse,
         objectifMarche: objectifMarche,

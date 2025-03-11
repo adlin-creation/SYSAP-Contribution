@@ -47,7 +47,7 @@ export const Evaluation_PATH = sequelize.define("Evaluation_PATH", {
   },
   // Objectif de marche
   vitesseDeMarche: {
-    type: dataTypes.INTEGER,
+    type: dataTypes.DOUBLE,
     allowNull: false,
   },
   objectifMarche: {

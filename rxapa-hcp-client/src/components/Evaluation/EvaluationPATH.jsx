@@ -152,6 +152,7 @@ function EvaluationPATH({ onSubmit }) {
       scores: {
         cardioMusculaire: scoreCM,
         equilibre: scoreBalance,
+        total: scoreCM + scoreBalance,
         program: programPath,
       },
     };
@@ -160,7 +161,7 @@ function EvaluationPATH({ onSubmit }) {
       console.error("Aucune donnée à envoyer");
       return;
     }
-    const endpoint = "/create-evaluation";
+    const endpoint = "/create-path-evaluation";
 
     try {
       console.log("Payload envoyé :", JSON.stringify(payload, null, 2));
