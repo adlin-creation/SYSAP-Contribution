@@ -140,11 +140,17 @@ exports.createMatchEvaluation = async (req: any, res: any, next: any) => {
       { transaction: t }
     );
 
-    const vitesse = walkingTime ? 4 / parseFloat(walkingTime) : 0;
+    // Convertir vitesse en nombre entier si nécessaire
+    const vitesseCalculee = walkingTime ? 4 / parseFloat(walkingTime) : 0;
+    // Option 1: Arrondir à 2 décimales
+    const vitesse = Math.round(vitesseCalculee * 100) / 100;
+    // Option 2: Si le modèle attend un entier, multiplier par 100
+    // const vitesse = Math.round(vitesseCalculee * 100);
+
     let objectifMarche = 1; // 10 min par défaut
-    if (vitesse >= 0.8) objectifMarche = 4; // 30 min
-    else if (vitesse > 0.6 && vitesse < 0.8) objectifMarche = 3; // 20 min
-    else if (vitesse > 0.4 && vitesse < 0.6) objectifMarche = 2; // 15 min
+    if (vitesseCalculee >= 0.8) objectifMarche = 4; // 30 min
+    else if (vitesseCalculee >= 0.6 && vitesseCalculee < 0.8) objectifMarche = 3; // 20 min
+    else if (vitesseCalculee >= 0.4 && vitesseCalculee < 0.6) objectifMarche = 2; // 15 min
 
     await Evaluation_MATCH.create(
       {
@@ -153,8 +159,7 @@ exports.createMatchEvaluation = async (req: any, res: any, next: any) => {
         chairTestSupport: chairTestSupport === "with",
         chairTestCount: parseInt(chairTestCount),
         scoreCM: scores.cardioMusculaire,
-        // Section Equilibre
-        balanceFeetTogether: parseFloat(balanceFeetTogether),
+        BalanceFeetTogether: parseFloat(balanceFeetTogether),
         balanceSemiTandem: parseFloat(balanceSemiTandem),
         balanceTandem: parseFloat(balanceTandem),
         scoreBalance: scores.equilibre,

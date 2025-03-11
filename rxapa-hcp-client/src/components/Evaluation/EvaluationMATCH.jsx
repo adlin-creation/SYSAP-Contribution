@@ -159,12 +159,11 @@ function EvaluationMATCH({ onSubmit }) {
   };
 
   const handleConfirm = async () => {
-    // Créer directement le payload avant l'envoi
     const scoreCM = calculateChairTestScore();
     const scoreBalance = calculateBalanceScore();
-    const totalScore = scoreCM + scoreBalance;
-    const programColor = getProgramColor(totalScore);
-
+    const scoreTotal = scoreCM + scoreBalance; // Assurez-vous de calculer le score total
+    const programMatch = scoreCM + "" + scoreBalance;
+  
     const payload = {
       idPatient: patientId,
       chairTestSupport: formData.chairTestSupport ? "with" : "without",
@@ -172,21 +171,20 @@ function EvaluationMATCH({ onSubmit }) {
       balanceFeetTogether: parseInt(formData.balanceFeetTogether, 10),
       balanceSemiTandem: parseInt(formData.balanceSemiTandem, 10),
       balanceTandem: parseInt(formData.balanceTandem, 10),
-      canWalk: formData.canWalk,
-      walkingTime: formData.canWalk ? parseFloat(formData.walkingTime) : null,
+      walkingTime: parseFloat(formData.walkingTime),
       scores: {
         cardioMusculaire: scoreCM,
         equilibre: scoreBalance,
-        totalScore: totalScore,
-        program: programColor,
-      },
+        total: scoreTotal, // Ajout du score total
+        program: programMatch,
+      }
     };
 
     if (!payload) {
       console.error("Aucune donnée à envoyer");
       return;
     }
-    const endpoint = "/create-evaluation";
+    const endpoint = "/create-match-evaluation";
 
     try {
       console.log("Payload envoyé :", JSON.stringify(payload, null, 2));

@@ -47,7 +47,7 @@ export const Evaluation_MATCH = sequelize.define("Evaluation_MATCH", {
   },
   // Objectif de marche
   vitesseDeMarche: {
-    type: dataTypes.INTEGER,
+    type: dataTypes.DOUBLE,
     allowNull: false,
   },
   objectifMarche: {
