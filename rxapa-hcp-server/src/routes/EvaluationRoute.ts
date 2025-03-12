@@ -15,6 +15,19 @@ router.delete(
   evaluationController.deletePaceEvaluation
 );
 
+// Routes pour les evaluations match
+router.post(
+  "/create-match-evaluation",
+  evaluationController.createMatchEvaluation
+);
+router.put("/evaluation-match/:id", evaluationController.updateMatchEvaluation);
+router.get("/evaluation-match/:id", evaluationController.getMatchEvaluation);
+router.get("/evaluations-match", evaluationController.getMatchEvaluations);
+router.delete(
+  "/evaluation-match/:id",
+  evaluationController.deleteMatchEvaluation
+);
+
 // Routes pour les evaluations PATH
 router.post(
   "/create-path-evaluation",
