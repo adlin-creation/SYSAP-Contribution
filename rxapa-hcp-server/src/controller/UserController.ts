@@ -3,6 +3,10 @@ import jwt from "jsonwebtoken"; // Importation de jsonwebtoken pour la gestion d
 
 import { scrypt, randomBytes, timingSafeEqual } from "crypto"; // Importation de fonctions pour le hachage des mots de passe
 import { promisify } from "util"; // Importation de promisify pour transformer scrypt en version asynchrone
+import { hashValue, verifyHash } from "../util/unikpass";
+import { Doctor } from "../model/Doctor";
+import { Kinesiologist } from "../model/Kinesiologist";
+import bcrypt from "bcrypt";
 
 const scryptPromise = promisify(scrypt); // Permet d'utiliser `scrypt` avec `async/await`
 
@@ -20,8 +24,8 @@ exports.signup = async (req: any, res: any) => {
   const phoneNumber = req.body.phoneNumber;
 
   // Hachage du mot de passe pour la sécurité
-  const hashedPassword = await hash(password);
-  const isEqualPassword = await verify(confirmPassword, hashedPassword);
+  const hashedPassword = await hashValue(password);
+  const isEqualPassword = await verifyHash(confirmPassword, hashedPassword);
 
   // Vérification si le mot de passe et la confirmation sont identiques
   if (!isEqualPassword) {
@@ -98,7 +102,7 @@ exports.login = async (req: any, res: any) => {
 
   // Vérification du mot de passe
   const hashedPassword = user.password;
-  const isEqualPassword = await verify(password, hashedPassword);
+  const isEqualPassword = await verifyHash(password, hashedPassword);
 
   if (!isEqualPassword) {
     return res
@@ -134,6 +138,51 @@ exports.logout = (req: any, res: any) => {
   return res.status(200).json({
     message: "Successfully logged out",
   });
+};
+
+/**
+ * Route permettant à un utilisateur de définir son mot de passe avec le code d'accès temporaire.
+ */
+export const setPassword = async (req: any, res: any) => {
+  const { email, code, newPassword } = req.body;
+
+  try {
+    // 🔹 1. Vérifier si l'utilisateur existe
+    let user = await Professional_User.findOne({ where: { email } });
+    if (!user) {
+      return res.status(404).json({ message: "Utilisateur non trouvé" });
+    }
+
+    // 🔹 2. Vérifier si l'utilisateur est bien un doctor ou kinesiologist
+    let professionalData = await Doctor.findOne({ where: { idDoctor: user.id } });
+    if (!professionalData) {
+      professionalData = await Kinesiologist.findOne({ where: { idKinesiologist: user.id } });
+    }
+
+    if (!professionalData) {
+      return res.status(403).json({ message: "Cet utilisateur ne peut pas définir de mot de passe" });
+    }
+
+    // 🔹 3. Vérifier si le code d’accès temporaire est correct
+    const isCodeValid = await bcrypt.compare(code, professionalData.unikPassHashed);
+    if (!isCodeValid) {
+      return res.status(400).json({ message: "Code d'accès invalide" });
+    }
+
+    // 🔹 4. Hacher le nouveau mot de passe avec bcrypt
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+    // 🔹 5. Mettre à jour le mot de passe et activer le compte
+    user.password = hashedNewPassword;
+    user.active = true;
+    await user.save();
+
+    return res.status(200).json({ message: "Mot de passe défini avec succès, compte activé !" });
+
+  } catch (error: any) {
+    console.error("Erreur lors de la mise à jour du mot de passe :", error);
+    return res.status(500).json({ message: "Erreur serveur lors de la mise à jour du mot de passe" });
+  }
 };
 
 /**

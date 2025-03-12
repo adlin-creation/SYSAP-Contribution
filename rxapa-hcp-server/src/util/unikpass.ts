@@ -1,6 +1,8 @@
 import * as crypto from "crypto";
 import nodemailer, { Transporter, SendMailOptions } from "nodemailer";
 import dotenv from "dotenv";
+import bcrypt from "bcrypt";
+
 dotenv.config();
 
 // Générer un code unique de n caractères
@@ -49,6 +51,16 @@ const sendEmail = (
     .catch((error) => {
       console.error("Erreur lors de l'envoi du code d'accès", error);
     });
+};
+
+// Fonction pour hacher une valeur (code d'accès ou mot de passe)
+export const hashValue = async (value: string): Promise<string> => {
+  return await bcrypt.hash(value, 10);
+};
+
+// Fonction pour vérifier une valeur hachée
+export const verifyHash = async (value: string, hashedValue: string): Promise<boolean> => {
+  return await bcrypt.compare(value, hashedValue);
 };
 
 export { sendEmail };
