@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import { Row, Col, Select } from "antd";
 import { useTranslation } from "react-i18next";
 
@@ -31,7 +32,7 @@ export default function FilterExercise({ updateSelectedValues }) {
               placeholder={t("Exercises:category_placeholder")}
               allowClear
             >
-              <Option value="ALL">{t("Exercises:all")}</Option> , 
+              <Option value="ALL">{t("Exercises:all")}</Option>
               <Option value="Aérobique">{t("Exercises:aerobic")}</Option>
               <Option value="Endurance">{t("Exercises:strength")}</Option>
               <Option value="Force">{t("Exercises:endurance")}</Option>
@@ -60,3 +61,8 @@ export default function FilterExercise({ updateSelectedValues }) {
     </div>
   );
 }
+
+// Définition des PropTypes
+FilterExercise.propTypes = {
+  updateSelectedValues: PropTypes.func.isRequired,
+};
