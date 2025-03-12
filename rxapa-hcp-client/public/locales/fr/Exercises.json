@@ -31,5 +31,7 @@
   "close_button": "Fermer",
   "delete_button": "Supprimer",
   "learn_more_button": "En savoir plus",
-  "update_button": "Mettre à jour"
+  "update_button": "Mettre à jour",
+  "modify": "Modifier",
+  "save": "Sauvegarder"
 }
