@@ -108,8 +108,14 @@ function EvaluationSearch() {
             Évaluation PACE
           </Button>
           {/* Boutons désactivés pour PATH */}
-          <Button type="dashed" disabled>
-            Évaluation PATH
+          <Button
+            type="primary"
+            onClick={() =>
+              (window.location.href = `/evaluation-path/${patient.id}`)
+            }
+            disabled={!patient.id}
+          > 
+          Évaluation PATH
           </Button>
           <Button
             type="primary"

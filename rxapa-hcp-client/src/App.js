@@ -25,6 +25,7 @@ import KinesiologistPatients from "./components/ProfessionalUser/Kinesiologist/K
 import AdminMenu from "./components/ProfessionalUser/Admin/AdminMenu";
 import EvaluationPACE from "./components/Evaluation/EvaluationPACE";
 import EvaluationMATCH from "./components/Evaluation/EvaluationMATCH";
+import EvaluationPATH from "./components/Evaluation/EvaluationPATH";
 import EvaluationSearch from "./components/Evaluation/EvaluationSearch";
 import useToken from "./components/Authentication/useToken"; // Import du hook personnalisé
 import Constants from "./components/Utils/Constants";
@@ -323,6 +324,14 @@ function App() {
               element={
                 <Suspense fallback={<div>Loading evaluation...</div>}>
                   <EvaluationMATCH />
+                </Suspense>
+              }
+            ></Route>
+            <Route 
+              path="evaluation-path/:patientId" 
+              element={
+                <Suspense fallback={<div>Loading evaluation...</div>}>
+                  <EvaluationPATH />
                 </Suspense>
               }
             ></Route>

@@ -28,7 +28,20 @@ router.delete(
   evaluationController.deleteMatchEvaluation
 );
 
-// Route commune pour la recherche de patients
+// Routes pour les evaluations PATH
+router.post(
+  "/create-path-evaluation",
+  evaluationController.createPathEvaluation
+);
+router.put("/evaluation-path/:id", evaluationController.updatePathEvaluation);
+router.get("/evaluation-path/:id", evaluationController.getPathEvaluation);
+router.get("/evaluations-path", evaluationController.getPathEvaluations);
+router.delete(
+  "/evaluation-path/:id",
+  evaluationController.deletePathEvaluation
+);
+
+// Route de recherche de patients
 router.get("/patients/search", evaluationController.searchPatients);
 
 export default router;

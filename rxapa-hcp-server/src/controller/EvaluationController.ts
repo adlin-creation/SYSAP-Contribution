@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
 import { Evaluation } from "../model/Evaluation";
 import { Evaluation_PACE } from "../model/Evaluation_PACE";
+import { Evaluation_PATH } from "../model/Evaluation_PATH";
+import { Evaluation_MATCH } from "../model/Evaluation_MATCH";
 import { sequelize } from "../util/database";
 import { Patient } from "../model/Patient";
 import { Program } from "../model/Program";
-import { Op } from "sequelize";
-import { Evaluation_MATCH } from "../model/Evaluation_MATCH";
+import { Op, Transaction } from "sequelize";
 
 exports.createPaceEvaluation = async (req: any, res: any, next: any) => {
   console.log("Requête reçue :", req.body);
@@ -87,7 +88,6 @@ exports.createPaceEvaluation = async (req: any, res: any, next: any) => {
     res.status(201).json({ evaluation, scores, objectifMarche });
   } catch (error: any) {
     console.error("ERREUR COMPLETE SERVEUR :", error);
-    
     await t.rollback();
     if (!error.statusCode) {
       error.statusCode = 500;
@@ -188,6 +188,90 @@ exports.createMatchEvaluation = async (req: any, res: any, next: any) => {
   }
   return res;
 };
+
+exports.createPathEvaluation = async (req: any, res: any, next: any) => {
+  console.log("Requête reçue pour évaluation PATH:", req.body);
+  const {
+    idPatient,
+    chairTestSupport,
+    chairTestCount,
+    balanceFeetTogether,
+    balanceSemiTandem,
+    balanceTandem,
+    walkingTime,
+    scores,
+  } = req.body;
+
+  const t = await sequelize.transaction();
+
+  try {
+    const program = await Program.findOne({
+      where: {
+        name: scores.program,
+      },
+      transaction: t,
+    });
+
+    if (!program) {
+      await t.rollback();
+      return res.status(404).json({
+        message: "Programme " + scores.program + " introuvable",
+        error: `Programme '${scores.program}' introuvable`,
+      });
+    }
+
+    const evaluation = await Evaluation.create(
+      {
+        idPatient: idPatient,
+        idResultProgram: program.id,
+      },
+      { transaction: t }
+    );
+
+    const vitesse = walkingTime ? 4 / parseFloat(walkingTime) : 0;
+    let objectifMarche = 1; // 10 min par défaut
+    if (vitesse >= 0.8) objectifMarche = 4; // 30 min
+    else if (vitesse > 0.6 && vitesse < 0.8) objectifMarche = 3; // 20 min
+    else if (vitesse > 0.4 && vitesse < 0.6) objectifMarche = 2; // 15 min
+
+    await Evaluation_PATH.create(
+      {
+        idPATH: evaluation.id,
+        chairTestSupport: chairTestSupport === "with",
+        chairTestCount: parseInt(chairTestCount),
+        scoreCM: scores.cardioMusculaire,
+        // Utilisez la bonne casse pour ces propriétés
+        BalanceFeetTogether: parseFloat(balanceFeetTogether),
+        balanceSemiTandem: parseFloat(balanceSemiTandem),
+        balanceTandem: parseFloat(balanceTandem),
+        scoreBalance: scores.equilibre,
+        // Assurez-vous que scoreTotal est défini
+        scoreTotal: scores.total,
+        vitesseDeMarche: vitesse,
+        objectifMarche: objectifMarche,
+      },
+      { transaction: t }
+    );
+
+    await t.commit();
+    res.status(201).json({ evaluation, scores, objectifMarche });
+  } catch (error: any) {
+    console.error("ERREUR COMPLETE SERVEUR :", error);
+
+    await t.rollback();
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    res.status(error.statusCode).json({
+      message: "Error creating PATH evaluation",
+      errorDetails: error.toString(),
+      stack: error.stack,
+    });
+  }
+  return res;
+};
+
+
 
 exports.updatePaceEvaluation = async (req: any, res: any, next: any) => {
   const evaluationId = req.params.id;
@@ -359,6 +443,107 @@ exports.updateMatchEvaluation = async (req: any, res: any, next: any) => {
   return res;
 };
 
+exports.updatePathEvaluation = async (req: any, res: any, next: any) => {
+  const evaluationId = req.params.id;
+  const {
+    chairTestSupport,
+    chairTestCount,
+    balanceFeetTogether,
+    balanceSemiTandem,
+    balanceTandem,
+    walkingTime,
+    scores,
+  } = req.body;
+
+  const t = await sequelize.transaction();
+
+  try {
+    // Vérifier si l'évaluation générale existe
+    const evaluation = await Evaluation.findByPk(evaluationId);
+    if (!evaluation) {
+      await t.rollback();
+      return res.status(404).json({ message: "Evaluation not found" });
+    }
+
+    // Vérifier si l'évaluation PATH existe
+    const pathEvaluation = await Evaluation_PATH.findOne({
+      where: { idPATH: evaluationId },
+    });
+
+    if (!pathEvaluation) {
+      await t.rollback();
+      return res.status(404).json({ message: "PATH evaluation not found" });
+    }
+
+    // Mettre à jour le programme si nécessaire
+    if (scores.program) {
+      const program = await Program.findOne({
+        where: { name: scores.program },
+        transaction: t,
+      });
+
+      if (!program) {
+        await t.rollback();
+        return res.status(404).json({
+          message: "Programme " + scores.program + " introuvable",
+        });
+      }
+
+      await evaluation.update(
+        { idResultProgram: program.id },
+        { transaction: t }
+      );
+    }
+
+    // Calculer la vitesse et l'objectif de marche
+    const vitesse = walkingTime ? 4 / parseFloat(walkingTime) : 0;
+    let objectifMarche = 1; // 10 min par défaut
+    if (vitesse >= 0.8) objectifMarche = 4; // 30 min
+    else if (vitesse >= 0.6 && vitesse < 0.8) objectifMarche = 3; // 20 min
+    else if (vitesse >= 0.4 && vitesse < 0.6) objectifMarche = 2; // 15 min
+
+    // Mettre à jour l'évaluation PATH
+    await pathEvaluation.update(
+      {
+        chairTestSupport: chairTestSupport === "with",
+        chairTestCount: parseInt(chairTestCount),
+        scoreCM: scores.cardioMusculaire,
+        balanceFeetTogether: parseFloat(balanceFeetTogether),
+        balanceSemiTandem: parseFloat(balanceSemiTandem),
+        balanceTandem: parseFloat(balanceTandem),
+        scoreBalance: scores.equilibre,
+        scoreTotal: scores.total,
+        vitesseDeMarche: vitesse,
+        objectifMarche: objectifMarche,
+      },
+      { transaction: t }
+    );
+
+    await t.commit();
+
+    res.status(200).json({
+      evaluation,
+      pathEvaluation,
+      scores,
+      message: "PATH evaluation updated successfully",
+    });
+  } catch (error: any) {
+    await t.rollback();
+    console.error("Error updating PATH evaluation:", error);
+
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+
+    res.status(error.statusCode).json({
+      message: "Error updating PATH evaluation",
+      errorDetails: error.toString(),
+      stack: error.stack,
+    });
+  }
+  return res;
+};
+
 /**
  * Returns a specific PACE evaluation based on ID.
  */
@@ -419,6 +604,37 @@ exports.getMatchEvaluation = async (req: any, res: any, next: any) => {
 };
 
 /**
+ * Returns a specific PATH evaluation based on ID.
+ */
+exports.getPathEvaluation = async (req: any, res: any, next: any) => {
+  const evaluationId = req.params.id;
+  try {
+    const evaluation = await Evaluation.findOne({
+      where: { id: evaluationId },
+      include: [
+        {
+          model: Evaluation_PATH,
+          required: true,
+        },
+      ],
+    });
+
+    if (!evaluation) {
+      return res.status(404).json({ message: "Evaluation not found" });
+    }
+    res.status(200).json(evaluation);
+  } catch (error: any) {
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    res
+      .status(error.statusCode)
+      .json({ message: "Error loading evaluation from the database" });
+  }
+  return res;
+};
+
+/**
  * Returns all PACE evaluations.
  */
 exports.getPaceEvaluations = async (req: any, res: any, next: any) => {
@@ -449,6 +665,31 @@ exports.getMatchEvaluations = async (req: any, res: any, next: any) => {
       include: [
         {
           model: Evaluation_MATCH,
+          required: true,
+        },
+      ],
+    });
+    res.status(200).json(evaluations);
+  } catch (error: any) {
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    res
+      .status(error.statusCode)
+      .json({ message: "Error loading evaluations from the database" });
+  }
+  return res;
+};
+
+/**
+ * Returns all PATH evaluations.
+ */
+exports.getPathEvaluations = async (req: any, res: any, next: any) => {
+  try {
+    const evaluations = await Evaluation.findAll({
+      include: [
+        {
+          model: Evaluation_PATH,
           required: true,
         },
       ],
@@ -525,6 +766,39 @@ exports.deleteMatchEvaluation = async (req: any, res: any, next: any) => {
   }
   return res;
 };
+
+/**
+ * Deletes a PATH evaluation.
+ */
+exports.deletePathEvaluation = async (req: any, res: any, next: any) => {
+  const evaluationId = req.params.id;
+  const t = await sequelize.transaction();
+
+  try {
+    const evaluation = await Evaluation.findByPk(evaluationId);
+    if (!evaluation) {
+      return res.status(404).json({ message: "Evaluation not found" });
+    }
+
+    await Evaluation_PATH.destroy({
+      where: { idPATH: evaluationId },
+      transaction: t,
+    });
+
+    await evaluation.destroy({ transaction: t });
+    await t.commit();
+
+    res.status(200).json({ message: "Evaluation deleted" });
+  } catch (error: any) {
+    await t.rollback();
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    res.status(error.statusCode).json({ message: "Error deleting evaluation" });
+  }
+  return res;
+};
+
 
 exports.searchPatients = async (req: Request, res: Response) => {
   try {

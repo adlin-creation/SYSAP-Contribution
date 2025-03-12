@@ -62,10 +62,7 @@ export default function CreateExercise(props) {
     const combinedData = {
       name: name,
       description: description,
-      instructionalVideo: " ",
-      isSeating: false,
       category: categoryInFrench,  // Utilisation de la catégorie traduite en français
-      targetAgeRange: " ",
       fitnessLevel: fitnessLevelInFrench,  // Utilisation du niveau de forme traduit
       exerciseImage: exerciseImage,
     };
@@ -77,10 +74,7 @@ export default function CreateExercise(props) {
     }
     formData.append("name", combinedData.name);
     formData.append("description", combinedData.description);
-    formData.append("instructionalVideo", combinedData.instructionalVideo);
-    formData.append("isSeating", "");
     formData.append("category", combinedData.category);
-    formData.append("targetAgeRange", combinedData.targetAgeRange);
     formData.append("fitnessLevel", combinedData.fitnessLevel);
 
     axios
