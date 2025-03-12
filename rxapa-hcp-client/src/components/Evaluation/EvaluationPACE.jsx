@@ -209,7 +209,7 @@ function EvaluationPACE({ onSubmit }) {
       console.error("Aucune donnée à envoyer");
       return;
     }
-    const endpoint = "/create-evaluation";
+    const endpoint = "/create-pace-evaluation";
     
     try {
       console.log("Payload envoyé :", JSON.stringify(payload, null, 2));
