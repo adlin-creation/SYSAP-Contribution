@@ -3,19 +3,35 @@ import app from "../server";
 import { Exercise } from "../model/Exercise";
 import { jest } from "@jest/globals";
 
+interface IExercise {
+  _id: string;
+  name: string;
+  duration: number;
+}
+
 jest.mock("../model/Exercise");
 
 describe("PUT /exercise/:exerciseId", () => {
-  afterEach(() => {
-    jest.restoreAllMocks();
+  beforeEach(() => {
+    jest.clearAllMocks();
+
+    (Exercise.findByIdAndUpdate as jest.MockedFunction<typeof Exercise.findByIdAndUpdate>)
+      .mockImplementation(
+        async (_id: string, data: Partial<IExercise>, options: { new: boolean }) => null
+      );
   });
 
   test("should update exercise and return updated data", async () => {
     const mockExerciseId = "65d8a6f6a49e8e001f7b1234";
-    const mockUpdateData = { name: "Updated Exercise", duration: 60 };
-    const mockUpdatedExercise = { _id: mockExerciseId, ...mockUpdateData };
+    const mockUpdateData: Partial<IExercise> = { name: "Updated Exercise", duration: 60 };
+    const mockUpdatedExercise: Required<Partial<IExercise>> = {
+      _id: mockExerciseId,
+      name: mockUpdateData.name ?? "Default Name",
+      duration: mockUpdateData.duration ?? 30,
+    };
 
-    jest.spyOn(Exercise, "findByIdAndUpdate").mockResolvedValue(mockUpdatedExercise);
+    (Exercise.findByIdAndUpdate as jest.MockedFunction<typeof Exercise.findByIdAndUpdate>)
+      .mockResolvedValue(mockUpdatedExercise);
 
     const res = await request(app)
       .put(`/exercise/${mockExerciseId}`)
@@ -31,7 +47,8 @@ describe("PUT /exercise/:exerciseId", () => {
   });
 
   test("should return 404 if exercise not found", async () => {
-    jest.spyOn(Exercise, "findByIdAndUpdate").mockResolvedValue(null);
+    (Exercise.findByIdAndUpdate as jest.MockedFunction<typeof Exercise.findByIdAndUpdate>)
+      .mockResolvedValue(null);
 
     const res = await request(app)
       .put("/exercise/65d8a6f6a49e8e001f7b0000")
@@ -42,9 +59,8 @@ describe("PUT /exercise/:exerciseId", () => {
   });
 
   test("should return 500 on database error", async () => {
-    jest.spyOn(Exercise, "findByIdAndUpdate").mockRejectedValue(
-      new Error("Database error")
-    );
+    (Exercise.findByIdAndUpdate as jest.MockedFunction<typeof Exercise.findByIdAndUpdate>)
+      .mockRejectedValue(new Error("Database error"));
 
     const res = await request(app)
       .put("/exercise/65d8a6f6a49e8e001f7b5678")
