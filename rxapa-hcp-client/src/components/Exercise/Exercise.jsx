@@ -4,11 +4,9 @@ import { Card } from "antd";
 import Constants from "../Utils/Constants";
 import { useTranslation } from "react-i18next";
 import "./Styles.css";
-import "./Styles.css";
 
 const { Meta } = Card;
 
-export default function Exercise({ exercise, onClick, onSelect }) {
 export default function Exercise({ exercise, onClick, onSelect }) {
   const { t } = useTranslation();
   
@@ -36,6 +34,7 @@ export default function Exercise({ exercise, onClick, onSelect }) {
     </Card>
   );
 }
+
 
 Exercise.propTypes = {
   exercise: PropTypes.shape({
