@@ -107,17 +107,23 @@ function EvaluationSearch() {
           >
             Évaluation PACE
           </Button>
-          {/* Bouton pour l'évaluation PATH */}
+          {/* Boutons désactivés pour PATH */}
           <Button
             type="primary"
             onClick={() =>
               (window.location.href = `/evaluation-path/${patient.id}`)
             }
             disabled={!patient.id}
-          >
-            Évaluation PATH
+          > 
+          Évaluation PATH
           </Button>
-          <Button type="dashed" disabled>
+          <Button
+            type="primary"
+            onClick={() =>
+              (window.location.href = `/evaluation-match/${patient.id}`)
+            }
+            disabled={!patient.id}
+          >
             Évaluation MATCH
           </Button>
         </div>
