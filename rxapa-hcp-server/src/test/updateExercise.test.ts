@@ -1,14 +1,13 @@
 import request from "supertest";
-import app from "../ 
-import {Exercise} from "../model/Exercise";
+import app from "../server";
+import { Exercise } from "../model/Exercise";
 import { jest } from "@jest/globals";
 
-// Mock Mongoose model
-jest.mock("../models/Exercise");
+jest.mock("../model/Exercise");
 
 describe("PUT /exercise/:exerciseId", () => {
   afterEach(() => {
-    jest.clearAllMocks(); // 清理 mock
+    jest.restoreAllMocks();
   });
 
   test("should update exercise and return updated data", async () => {
@@ -16,7 +15,7 @@ describe("PUT /exercise/:exerciseId", () => {
     const mockUpdateData = { name: "Updated Exercise", duration: 60 };
     const mockUpdatedExercise = { _id: mockExerciseId, ...mockUpdateData };
 
-    (Exercise.findByIdAndUpdate as jest.Mock).mockResolvedValue(mockUpdatedExercise);
+    jest.spyOn(Exercise, "findByIdAndUpdate").mockResolvedValue(mockUpdatedExercise);
 
     const res = await request(app)
       .put(`/exercise/${mockExerciseId}`)
@@ -32,7 +31,7 @@ describe("PUT /exercise/:exerciseId", () => {
   });
 
   test("should return 404 if exercise not found", async () => {
-    (Exercise.findByIdAndUpdate as jest.Mock).mockResolvedValue(null);
+    jest.spyOn(Exercise, "findByIdAndUpdate").mockResolvedValue(null);
 
     const res = await request(app)
       .put("/exercise/65d8a6f6a49e8e001f7b0000")
@@ -43,7 +42,9 @@ describe("PUT /exercise/:exerciseId", () => {
   });
 
   test("should return 500 on database error", async () => {
-    (Exercise.findByIdAndUpdate as jest.Mock).mockRejectedValue(new Error("Database error"));
+    jest.spyOn(Exercise, "findByIdAndUpdate").mockRejectedValue(
+      new Error("Database error")
+    );
 
     const res = await request(app)
       .put("/exercise/65d8a6f6a49e8e001f7b5678")
