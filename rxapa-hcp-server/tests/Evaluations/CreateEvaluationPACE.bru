@@ -1,0 +1,33 @@
+meta {
+  name: CreateEvaluationPACE
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base_url}}/evaluations
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "idPatient": 1,
+    "chairTestSupport": "with",
+    "chairTestCount": "5",
+    "balanceFeetTogether": "30",
+    "balanceSemiTandem": "25",
+    "balanceTandem": "20",
+    "balanceOneFooted": "10",
+    "frtSitting": "sitting",
+    "frtDistance": "15",
+    "walkingTime": "10",
+    "scores": {
+      "program": "MARRON IV",
+      "cardioMusculaire": 5,
+      "equilibre": 5,
+      "mobilite": 5,
+      "total": 15
+    }
+  }
+}

@@ -15,8 +15,12 @@ export const Variant = sequelize.define("Variant", {
     type: dataTypes.UUID,
     defaultValue: dataTypes.UUIDV4,
   },
-  level: {
-    type: dataTypes.ENUM("Easy", "Difficult"),
+  fitnessLevel: {
+    type: dataTypes.ENUM(
+      "Facile",
+      "Intermédiaire",
+      "Avancé"
+    ),
     allowNull: false,
   },
 });

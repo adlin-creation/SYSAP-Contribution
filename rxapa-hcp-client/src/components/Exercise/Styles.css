@@ -46,3 +46,91 @@
   padding-bottom: 40px;
   font-size: 14px;
 }
+
+.exercise-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px; /* Adds spacing between cards */
+  justify-content: center; /* Centers them */
+  padding: 20px;
+}
+
+.exercise-card {
+  width: 320px;
+  height: 320px;
+  overflow: hidden;
+  position: relative;
+}
+
+.exercise-background {
+  height: 220px;
+  width: 100%;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: transform 0.3s ease;
+}
+
+.exercise-card:hover .exercise-background {
+  transform: scale(1.05);
+}
+
+.filter-button-container {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+  width: 100%;
+  margin: 20px 0;
+}
+
+.filter-container {
+  flex-grow: 0.5;
+}
+
+.filter-title {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.filter-item {
+  margin-bottom: 20px;
+}
+
+.select-wide {
+  width: 100%;
+}
+
+
+.select-wide {
+  width: 100%; 
+}
+
+.create-button-container {
+  margin-left: auto; 
+}
+
+
+.exercise-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 10px;
+  text-align: center;
+  backdrop-filter: blur(5px);
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+}
+.exercise-info .ant-card-meta-title {
+  color: white !important;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.exercise-info .ant-card-meta-description {
+  color: lightgray !important;
+  font-size: 14px;
+}

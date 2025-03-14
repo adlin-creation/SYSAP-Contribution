@@ -22,24 +22,11 @@ export const Exercise = sequelize.define("Exercise", {
   description: {
     type: dataTypes.STRING,
   },
-  instructionalVideo: {
-    type: dataTypes.STRING,
-  },
   imageUrl: {
     type: dataTypes.STRING,
   },
-  isSeating: {
-    type: dataTypes.BOOLEAN,
-    allowNull: false,
-  },
   category: {
     type: dataTypes.ENUM("Aérobique", "Endurance", "Force", "Flexibilité", "Équilibre"),
-    allowNull: false,
-  },
-  targetAgeRange: {
-    type: dataTypes.ENUM(
-      " "
-    ),
     allowNull: false,
   },
   fitnessLevel: {

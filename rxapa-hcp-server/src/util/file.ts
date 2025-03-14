@@ -1,6 +1,6 @@
 import fs from "fs";
 
-exports.deleteFile = (filePath: string) => {
+export const deleteFile = (filePath: string) => {
   if (!filePath) {
     console.error("File path is empty. Cannot delete file.");
     return;

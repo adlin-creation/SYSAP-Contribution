@@ -18,6 +18,7 @@ import patientRoutes from "./routes/PatientRoute";
 import patientCaregiverRoutes from "./routes/PatientCaregiverRoute";
 import caregiverRoutes from "./routes/CaregiverRoute";
 import professionalUserRoutes from "./routes/ProfessionalUserRoute";
+import evaluationRoutes from "./routes/EvaluationRoute";
 
 import { errorHandler } from "./middleware/errorHandler"; // Import du middleware
 
@@ -31,7 +32,10 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "OPTIONS, GET, POST, PUT, PATCH, DELETE");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "OPTIONS, GET, POST, PUT, PATCH, DELETE"
+  );
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
   next();
 });
@@ -48,6 +52,7 @@ app.use(patientRoutes);
 app.use(patientCaregiverRoutes);
 app.use(caregiverRoutes);
 app.use(professionalUserRoutes);
+app.use(evaluationRoutes);
 
 // app.use("/", programPhaseRoutes);
 
