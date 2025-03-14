@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Row, Col, Form, Input, Button, Modal, Radio, Checkbox, Select } from "antd";
+import { Row, Col, Form, Input, Button, Modal, Checkbox, Select } from "antd";
 import { SendOutlined,PlusOutlined} from "@ant-design/icons";
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
@@ -10,24 +10,20 @@ import { useTranslation } from "react-i18next";
 
 export default function CreateProgram(props) {
   const { t } = useTranslation();
-  const { handleSubmit, control } = useForm();
+  const { handleSubmit, control,reset } = useForm();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isErrorMessage, setIsErrorMessage] = useState(false);
   const [message, setMessage] = useState("");
   const { token } = useToken();
 
-  const [sessions, setSessions] = useState([]); // Stocke les séances récupérées
-  const [selectedSessions, setSelectedSessions] = useState([]); // Stocke les séances sélectionnées
-  const [searchQuery, setSearchQuery] = useState(""); // Gère la recherche des séances
-  const [isDropdownVisible, setDropdownVisible] = useState(false); // Gère la visibilité du menu déroulant
+  const [sessions, setSessions] = useState([]); 
+  const [selectedSessions, setSelectedSessions] = useState([]); 
+  const [searchQuery, setSearchQuery] = useState(""); 
+  const [isDropdownVisible, setDropdownVisible] = useState(false); 
   const dropdownRef = useRef(null);
-  const buttonRef = useRef(null);  // Reference for the button
+  const buttonRef = useRef(null);  
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
-
-  const [imageURL, setImageURL] = useState(""); //Gère la saisie de l'url de l'image
-  const [error, setError] = useState("");
-
-  const [uploadType, setUploadType] = useState("file");
+  const [uploadType] = useState("file");
 
   // Récupération des séances depuis l'API
   useEffect(() => {
@@ -86,18 +82,12 @@ export default function CreateProgram(props) {
     }
   };
 
-  // Valider le format de l'url de l'image
-  // n'accepte que des url directs
-  const isValidImageURL = (url) => {
-    return /\.(jpeg|jpg|png|webp)$/i.test(url);
-  };
-
   const onSubmit = (data) => {
     const formData = new FormData();
 
     // Ajouter les sessions sélectionnées
     selectedSessions.forEach((sessionId) => {
-      formData.append("sessions[]", sessionId); // Ajouter les sessions sous le bon nom
+      formData.append("sessions[]", sessionId); 
     });
 
     // Ajouter les autres données du programme
@@ -107,9 +97,7 @@ export default function CreateProgram(props) {
 
     // Ajouter l'image si elle existe
     if (uploadType === "file" && data.image && data.image[0]) {
-      formData.append("image", data.image[0]); // Ajout du fichier
-    } else if (uploadType === "url" && data.imageURL) {
-      formData.append("imageUrl", data.imageURL); // Ajout du lien
+      formData.append("image", data.image[0]); 
     }
 
     console.log(t("Selected sessions before submit:"), selectedSessions);
@@ -123,9 +111,9 @@ export default function CreateProgram(props) {
         },
       })
       .then((res) => {
-        // Reload program list to include the new program
         props.refetchPrograms();
         openModal(res.data.message, false);
+        reset();
       })
       .catch((err) => openModal(err.response.data.message, true));
   };
@@ -208,72 +196,32 @@ export default function CreateProgram(props) {
             />
           </Form.Item>
           
-          <Form.Item label={t("Choose how to upload the program image:")}>
-            <Radio.Group
-              value={uploadType}
-              onChange={(e) => setUploadType(e.target.value)}
-            >
-              <Radio value="file">Upload File</Radio>
-              <Radio value="url">Enter URL</Radio>
-            </Radio.Group>
-          </Form.Item>
-
-          {uploadType === "file" && (
-            <Form.Item label={t("Upload the image of the program:")}>
-              <Controller
-                name="image"
-                control={control}
-                render={({ field: { onChange } }) => (
-                  <Input
-                    type="file"
-                    accept=".jpg, .jpeg, .png, .webp"
-                    onChange={(e) => {
-                      const file = e.target.files[0];
-                      if (file) {
-                        const allowedFormats = ["image/jpeg", "image/png", "image/webp"];
-                        if (!allowedFormats.includes(file.type)) {
-                          alert("Invalid file format. Please upload a .jpg, .png, or .webp file.");
-                          e.target.value = ""; // Reset the input if format is invalid
-                          return;
-                        }
-                        onChange(file); // Save the file if valid
-                      } else {
-                        onChange(null); // Clear the file if removed
-                      }
-                    }}
-                  />
-                )}
-              />
-            </Form.Item>
-          )}
-
-          {uploadType === "url" && (
-            <Form.Item label={t("Enter the URL of the program image:")}>
-              <Controller
-              name="imageURL"
+          <Form.Item label={t("Upload the image of the program:")}>
+            <Controller
+              name="image"
               control={control}
-              render={({ field: { onChange, value } }) => (
-                <>
-                  <Input
-                    value={value}
-                    onChange={(e) => {
-                      setImageURL(e.target.value);
-                      setError(""); // Réinitialise l'erreur lorsqu'on tape
-                      onChange(e);
-                    }}
-                    onBlur={() => {
-                      if (imageURL && !isValidImageURL(imageURL)) {
-                        setError(t("Please enter a direct URL (https://example.com/images/photo.jpg)."));
+              render={({ field: { onChange } }) => (
+                <Input
+                  type="file"
+                  accept=".jpg, .jpeg, .png, .webp"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      const allowedFormats = ["image/jpeg", "image/png", "image/webp"];
+                      if (!allowedFormats.includes(file.type)) {
+                        alert("Invalid file format. Please upload a .jpg, .png, or .webp file.");
+                        e.target.value = ""; 
+                        return;
                       }
-                    }}
-                    placeholder="Program Image URL"
-                  />
-                  {error && <p style={{ color: "red", marginTop: 5 }}>{error}</p>}
-                </>
+                      onChange(file);
+                    } else {
+                      onChange(null); 
+                    }
+                  }}
+                />
               )}
             />
-            </Form.Item>
-          )}
+          </Form.Item>
 
           {/* Sélection des séances */}
           <Form.Item label={t("Select sessions for the program:")}>
@@ -346,7 +294,6 @@ export default function CreateProgram(props) {
               </Button>,
             ]}
           >
-            <p style={{ color: isErrorMessage ? "red" : "green" }}>{message}</p>
             <p style={{ color: isErrorMessage ? "red" : "green" }}>{message}</p>
           </Modal>
         )}
