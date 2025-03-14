@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { PlusOutlined, ArrowLeftOutlined } from "@ant-design/icons"; // Import des icônes Ant Design
-import { Col, Row, Button, Modal } from "antd";
+import { PlusOutlined, ArrowLeftOutlined } from "@ant-design/icons";
+import { Col, Row, Button, Modal, Input, Select, Pagination } from "antd";
 import CreateProgram from "./CreateProgram";
 import Program from "./Program";
 import ProgramDetails from "./ProgramDetails";
@@ -26,6 +26,19 @@ export default function ProgramMenu() {
   const { t } = useTranslation();
   // selected program to be edited
   const [selectedProgram, setSelectedProgram] = useState(null);
+
+   // Search state
+   const [searchTerm, setSearchTerm] = useState("");
+
+    // New state variables for duration, duration unit, and description keywords
+  const [duration, setDuration] = useState("");
+  const [durationUnit, setDurationUnit] = useState("");
+  const [descriptionKeywords, setDescriptionKeywords] = useState("");
+
+  const durationUnits = [
+    { value: "days", label: t("Programs:days") }, // Jours
+    { value: "weeks", label: t("Programs:weeks") }, // Semaines
+  ];
 
   //////////////////////////////
   // DATA QUERY FOR PROGRAMS ///
@@ -109,6 +122,26 @@ export default function ProgramMenu() {
       .catch((err) => openModal(err.response.data.message, true));
   };
 
+  // Fonction pour gérer le terme de recherche
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  // Fonction pour gérer la durée
+  const handleDurationChange = (e) => {
+    setDuration(e.target.value);
+  };
+
+  // Fonction pour gérer l'unité de durée
+  const handleDurationUnitChange = (value) => {
+    setDurationUnit(value);
+  };
+
+  // Fonction pour gérer les mots-clés dans la description
+  const handleDescriptionKeywordsChange = (e) => {
+    setDescriptionKeywords(e.target.value);
+  };
+
   /**
    * Opens modal to provide feedback to the user.
    * @param {*} message - feedback message
@@ -134,15 +167,63 @@ export default function ProgramMenu() {
       {/* display program when neither create nor edit program is clicked */}
       {!buttonState.isCreateProgram && !buttonState.isEditProgram && (
         <div>
-          {/* creates a program button */}
-          <Button
-            onClick={handleButtonState}
-            name="create-program"
-            type="primary"
-            icon={<PlusOutlined />}
+          <Row className="program-header">
+            {/* creates a program button */}
+            <Col>
+              <Button
+                onClick={handleButtonState}
+                name="create-program"
+                type="primary"
+                icon={<PlusOutlined />}
+                className="create-button"
+              >
+                {t("Programs:create_program_button")}
+              </Button>
+            </Col>
+
+            {/* create a search bar*/}
+            <Col>
+              <Input
+                placeholder={t("Programs:Search_a_program")}
+                value={searchTerm}
+                onChange={handleSearchChange}
+                className="search-input"
+              />
+            </Col>
+          </Row>
+
+          {/* Add more program filter */}
+          <Row
+            gutter={[16, 16]}
+            style={{ justifyContent: "center", alignItems: "center" }}
           >
-            {t("Programs:create_program_button")}
-          </Button>
+            <Col>
+              <Input
+                placeholder={t("Programs:Search_by_duration")}
+                value={duration}
+                onChange={handleDurationChange}
+                type="number"
+                className="search-input"
+              />
+            </Col>
+            <Col>
+              <Select
+                placeholder={t("Programs:Search_by_duration_unit")}
+                value={durationUnit}
+                onChange={handleDurationUnitChange}
+                options={durationUnits}
+                className="search-input"
+              />
+            </Col>
+            <Col>
+              <Input
+                placeholder={t("Programs:Search_by_description_keywords")}
+                value={descriptionKeywords}
+                onChange={handleDescriptionKeywordsChange}
+                className="search-input"
+              />
+            </Col>
+          </Row>
 
           {/* Display existing programs */}
           <Row gutter={[16, 16]}>
