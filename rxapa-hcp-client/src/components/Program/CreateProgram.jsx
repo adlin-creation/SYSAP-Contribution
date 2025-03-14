@@ -285,7 +285,7 @@ export default function CreateProgram(props) {
 
           <Form.Item>
             <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
-            SUBMIT
+              {t("Programs:submit_button")}
             </Button>
           </Form.Item>
         </Form>
