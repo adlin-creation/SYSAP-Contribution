@@ -5,6 +5,9 @@ import { Program } from "../model/Program";
 import { ProgramPhase } from "../model/ProgramPhase";
 import { Variant } from "../model/Variant";
 import { ProgramPhase_Program } from "../model/ProgramPhase_Program";
+import { validateProgram } from "../middleware/validateProgram";
+import { ProgramSession } from '../model/ProgramSession';
+import fs from "fs";
 import { Op } from "sequelize";
 
 /**
