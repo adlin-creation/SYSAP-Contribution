@@ -164,20 +164,17 @@ export default function ExerciseMenu() {
               {t("Exercises:create_exercise")}
             </Button>
           </div>
-          <Row gutter={[16, 16]}>
-            {filteredExercises?.map((exercise) => {
-              return (
-                <Col xs={24} sm={12} md={8} lg={6} xl={4} key={exercise.key}>
-                  <Exercise
-                    onClick={() => handleButtonState("learn-more")}
-                    onSelect={handleSelectExercise}
-                    exercise={exercise}
-                    deleteExercise={deleteExercise}
-                  />
-                </Col>
-              );
-            })}
-          </Row>
+          <div className="exercise-container">
+            {filteredExercises?.map((exercise) => (
+              <Exercise
+                key={exercise.id}
+                exercise={exercise}
+                onClick={() => handleButtonState("learn-more")}
+                onSelect={handleSelectExercise}
+                deleteExercise={deleteExercise}
+              />
+            ))}
+          </div>
         </div>
       )}
 

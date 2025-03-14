@@ -68,7 +68,7 @@ function CreateDoctor({ refetchDoctors }) {
       })
       .then((res) => {
         refetchDoctors();
-        openModal("Physician created successfully!", false, data);
+        openModal("Physician created successfully!", false);
       })
       .catch((err) =>
         openModal(
@@ -78,39 +78,9 @@ function CreateDoctor({ refetchDoctors }) {
       );
   };
 
-  const sendPassword = (email, password) => {
-    const subject = encodeURIComponent("New physician Account");
-    const body = encodeURIComponent(
-      `Hello,\n\nHere are the details for the new doctor account:\n\nEmail: ${email}\nPassword: ${password}\n\nBest regards,`
-    );
-    const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
-    window.location.href = mailtoLink;
-  };
-
-  const openModal = (message, isError, passwordData) => {
+  const openModal = (message, isError) => {
     AntModal[isError ? "error" : "success"]({
-      content: (
-        <div>
-          <p>{message}</p>
-          {!isError && passwordData && (
-            <div>
-              <p>
-                <strong>Email:</strong> {passwordData.email}
-              </p>
-              <p>
-                <strong>Password:</strong> {passwordData.password}
-              </p>
-              <button
-                onClick={() =>
-                  sendPassword(passwordData.email, passwordData.password)
-                }
-              >
-                Send Password
-              </button>
-            </div>
-          )}
-        </div>
-      ),
+      content: <p>{message}</p>,
       okText: "Close",
       centered: true,
       onOk: () => {
