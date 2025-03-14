@@ -34,6 +34,8 @@ export default function ProgramMenu() {
   const [duration, setDuration] = useState("");
   const [durationUnit, setDurationUnit] = useState("");
   const [descriptionKeywords, setDescriptionKeywords] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize] = useState(8); // Nombre de programmes par page
 
   const durationUnits = [
     { value: "days", label: t("Programs:days") }, // Jours
@@ -142,6 +144,32 @@ export default function ProgramMenu() {
     setDescriptionKeywords(e.target.value);
   };
 
+  // Filtrer les programmes en fonction des critères
+  const filteredPrograms = programList?.filter((program) => {
+    const nameMatch = program.name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const durationMatch = duration
+      ? program.duration === parseInt(duration)
+      : true;
+    const durationUnitMatch = durationUnit
+      ? program.duration_unit === durationUnit
+      : true;
+    const descriptionMatch = descriptionKeywords
+      ? program.description
+          .toLowerCase()
+          .includes(descriptionKeywords.toLowerCase())
+      : true;
+
+    return nameMatch && durationMatch && durationUnitMatch && descriptionMatch;
+  });
+
+  // Programmes pour la page actuelle
+  const paginatedPrograms = filteredPrograms.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
   /**
    * Opens modal to provide feedback to the user.
    * @param {*} message - feedback message
@@ -225,9 +253,9 @@ export default function ProgramMenu() {
             </Col>
           </Row>
 
-          {/* Display existing programs */}
+          {/* Display filtered programs */}
           <Row gutter={[16, 16]}>
-            {programList?.map((program) => {
+            {paginatedPrograms?.map((program) => {
               return (
                 <Col xs={24} sm={12} md={8} lg={6} key={program.key}>
                   <Program
@@ -240,6 +268,20 @@ export default function ProgramMenu() {
               );
             })}
           </Row>
+
+          {/* Pagination */}
+          <Pagination
+            current={currentPage}
+            pageSize={pageSize}
+            total={filteredPrograms.length}
+            onChange={(page) => setCurrentPage(page)}
+            showSizeChanger={false}
+            style={{
+              textAlign: "center",
+              marginTop: "20px",
+              justifyContent: "center",
+            }}
+          />
         </div>
       )}
 
