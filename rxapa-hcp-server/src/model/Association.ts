@@ -27,6 +27,7 @@ import { Kinesiologist } from "./Kinesiologist";
 
 import { Follow_Patient } from "./Follow_Patient";
 import { Diagnostic } from "./Diagnostic";
+import { ProgramSession } from './ProgramSession'; 
 
 import { Evaluation } from "./Evaluation";
 import { Evaluation_PACE } from "./Evaluation_PACE";
@@ -420,5 +421,22 @@ export function createAssociations() {
     },
   });
   Alert.belongsTo(SessionRecord);
+
+  /**
+   * Creates many-to-many association between Program and Session
+  */
+
+  Program.belongsToMany(Session, {
+    through: ProgramSession,
+    foreignKey: "programId",
+    otherKey: "sessionId",
+    onDelete: "CASCADE",
+  });
+  Session.belongsToMany(Program, {
+    through: ProgramSession,
+    foreignKey: "sessionId",
+    otherKey: "programId",
+    onDelete: "CASCADE",
+  });
 
 }
