@@ -117,13 +117,19 @@ export default function CreateProgram(props) {
       })
       .catch((err) => openModal(err.response.data.message, true));
   };
-
+  /**
+   * Opens modal to provide feedback to the user.
+   * @param {*} message - feedback message
+   * @param {*} isError - true if it is an error message
+   */
   function openModal(message, isError) {
     setMessage(message);
     setIsErrorMessage(isError);
     setIsOpenModal(true);
   }
-
+  /**
+   * Close the modal
+   */
   function closeModal() {
     setIsOpenModal(false);
     setMessage("");
@@ -174,7 +180,7 @@ export default function CreateProgram(props) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder="Program Duration"
+                  placeholder={t("Programs:program_duration_placeholder")}
                   min="1"
                   type="number"
                   required
@@ -183,7 +189,7 @@ export default function CreateProgram(props) {
             />
           </Form.Item>
 
-          <Form.Item label={t("Programs:enter_program_duration_unit")}>
+          <Form.Item label="Please select the unit of the duration">
             <Controller
               name="duration_unit"
               control={control}
@@ -196,7 +202,7 @@ export default function CreateProgram(props) {
             />
           </Form.Item>
           
-          <Form.Item label={t("Programs:Upload_program_image")}>
+          <Form.Item label="Upload the image of the program:">
             <Controller
               name="image"
               control={control}
@@ -224,7 +230,7 @@ export default function CreateProgram(props) {
           </Form.Item>
 
           {/* Sélection des séances */}
-          <Form.Item label={t("Programs:Select_sessions_program:")}>
+          <Form.Item label="Select sessions for the program:">
             <Button
               name="sessions"
               type="primary"
@@ -244,7 +250,7 @@ export default function CreateProgram(props) {
               >
                 <Input
                   name="sessions"
-                  placeholder={t("Programs:program_sessions_placeholder")}
+                  placeholder="Search sessions..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="search-input"
