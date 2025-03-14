@@ -135,7 +135,7 @@ export default function CreateProgram(props) {
       <Col span={12}>
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
 
-          <Form.Item label={t("Please enter the name of the program : ")}>
+          <Form.Item label={t("Programs:enter_program_name")}>
             <Controller
               name="name"
               control={control}
@@ -150,7 +150,7 @@ export default function CreateProgram(props) {
             />
           </Form.Item>
 
-          <Form.Item label={t("Please enter the description of the program : ")}>
+          <Form.Item label={t("Programs:enter_program_description")}>
             <Controller
               name="description"
               control={control}
@@ -166,7 +166,7 @@ export default function CreateProgram(props) {
             />
           </Form.Item>
 
-          <Form.Item label={t("Please enter the duration of the program : ")}>
+          <Form.Item label={t("Programs:enter_program_duration")}>
             <Controller
               name="duration"
               control={control}
@@ -183,7 +183,7 @@ export default function CreateProgram(props) {
             />
           </Form.Item>
 
-          <Form.Item label={t("Please select the unit of the duration")}>
+          <Form.Item label={t("Programs:enter_program_duration_unit")}>
             <Controller
               name="duration_unit"
               control={control}
@@ -196,7 +196,7 @@ export default function CreateProgram(props) {
             />
           </Form.Item>
           
-          <Form.Item label={t("Upload the image of the program:")}>
+          <Form.Item label={t("Programs:Upload_program_image")}>
             <Controller
               name="image"
               control={control}
@@ -224,7 +224,7 @@ export default function CreateProgram(props) {
           </Form.Item>
 
           {/* Sélection des séances */}
-          <Form.Item label={t("Select sessions for the program:")}>
+          <Form.Item label={t("Programs:Select_sessions_program:")}>
             <Button
               name="sessions"
               type="primary"
@@ -244,7 +244,7 @@ export default function CreateProgram(props) {
               >
                 <Input
                   name="sessions"
-                  placeholder="Search sessions..."
+                  placeholder={t("Programs:program_sessions_placeholder")}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="search-input"
