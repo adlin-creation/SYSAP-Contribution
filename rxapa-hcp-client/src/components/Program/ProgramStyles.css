@@ -31,7 +31,7 @@
 .update-button:active {
   position: relative;
   top: 1px;
-}
+} 
 
 .delete-button {
   box-shadow: inset 0 1px 0 0 #cf866c;
@@ -47,14 +47,23 @@
   padding: 6px 16px;
   text-decoration: none;
   text-shadow: 0px 1px 0px #854629;
-}
+  margin-left: 20px;
+} 
+
 .delete-button:hover {
   background: linear-gradient(to bottom, #bc3315 5%, #d0451b 100%);
   background-color: #bc3315;
 }
+
 .delete-button:active {
   position: relative;
   top: 1px;
+}
+
+.espace-boutton{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
 
 /* dropdownStyles */
@@ -83,6 +92,7 @@
 .search-input {
   margin-bottom: 10px;
   margin-top: 10px;
+  width: 250px;
 }
 
 /* Message "No sessions found" */
@@ -95,3 +105,12 @@
 .confirm-button {
   margin-top: 10px;
 }
+
+/* ProgramMenu.css */
+.program-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
