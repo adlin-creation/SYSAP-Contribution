@@ -14,6 +14,8 @@ export const Program = sequelize.define("Program", {
   key: {
     type: dataTypes.UUID,
     defaultValue: dataTypes.UUIDV4,
+    allowNull: false,
+    unique: true,
   },
   name: {
     type: dataTypes.STRING,
@@ -21,11 +23,22 @@ export const Program = sequelize.define("Program", {
     unique: true,
   },
   description: {
-    type: dataTypes.STRING,
+    type: dataTypes.STRING(500),
     allowNull: false,
   },
   duration: {
     type: dataTypes.INTEGER,
     allowNull: false,
+    validate: {
+      min: 1, // Durée doit être ≥ 1 jour/semaine
+    },
   },
+  duration_unit: {
+    type: dataTypes.ENUM("days", "weeks"),
+    allowNull: false,
+  },
+  image: {
+    type: dataTypes.STRING, // Stocke soit une URL, soit un chemin de fichier
+    allowNull: true,
+  }
 });
