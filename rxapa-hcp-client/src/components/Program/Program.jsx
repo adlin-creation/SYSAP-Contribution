@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, List } from "antd";
 import { DeleteOutlined } from "@ant-design/icons"; // Import des icônes Ant Design
+import Constants from "../Utils/Constants";
 
 import "./ProgramStyles.css";
 import { useTranslation } from "react-i18next";
@@ -10,6 +11,12 @@ export default function Program({ onClick, onSelect, program, deleteProgram }) {
   return (
     <div className="program">
       <List style={{ textAlign: "center" }}>
+        <img
+          src={`${Constants.SERVER_URL}${program.image}`}
+          alt={program.name}
+          style={{ width: "100%", height: "auto", marginBottom: "20px" }}
+        />
+
         <h3>
           {t("Programs:name_title")}: {program.name}
         </h3>
@@ -19,10 +26,11 @@ export default function Program({ onClick, onSelect, program, deleteProgram }) {
         </h5>
         <br />
         <h5>
-          {t("Programs:duration_title")}: {program.duration}
+          {t("Programs:duration_title")}: {program.duration}{" "}
+          {program.duration_unit}
         </h5>
 
-        <div>
+        <div className="espace-boutton">
           <Button
             onClick={(event) => {
               // calls parent onClick function
@@ -40,6 +48,7 @@ export default function Program({ onClick, onSelect, program, deleteProgram }) {
               // calls parent function to delete the cycle
               deleteProgram(program);
             }}
+            name="delete-program"
             type="primary"
             danger
             icon={<DeleteOutlined />}

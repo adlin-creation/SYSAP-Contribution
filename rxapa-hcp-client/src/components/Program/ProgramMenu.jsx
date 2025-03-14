@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { PlusOutlined, ArrowLeftOutlined } from "@ant-design/icons"; // Import des icônes Ant Design
-import { Col, Row, Button, Modal } from "antd";
+import { PlusOutlined, ArrowLeftOutlined } from "@ant-design/icons";
+import { Col, Row, Button, Modal, Input, Select, Pagination } from "antd";
 import CreateProgram from "./CreateProgram";
 import Program from "./Program";
 import ProgramDetails from "./ProgramDetails";
@@ -26,6 +26,9 @@ export default function ProgramMenu() {
   const { t } = useTranslation();
   // selected program to be edited
   const [selectedProgram, setSelectedProgram] = useState(null);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize] = useState(8); // Nombre de programmes par page
 
   //////////////////////////////
   // DATA QUERY FOR PROGRAMS ///
@@ -109,6 +112,12 @@ export default function ProgramMenu() {
       .catch((err) => openModal(err.response.data.message, true));
   };
 
+  // Programmes pour la page actuelle
+  const paginatedPrograms = programList.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
   /**
    * Opens modal to provide feedback to the user.
    * @param {*} message - feedback message
@@ -146,7 +155,7 @@ export default function ProgramMenu() {
 
           {/* Display existing programs */}
           <Row gutter={[16, 16]}>
-            {programList?.map((program) => {
+            {paginatedPrograms?.map((program) => {
               return (
                 <Col xs={24} sm={12} md={8} lg={6} key={program.key}>
                   <Program
@@ -159,6 +168,20 @@ export default function ProgramMenu() {
               );
             })}
           </Row>
+
+          {/* Pagination */}
+          <Pagination
+            current={currentPage}
+            pageSize={pageSize}
+            total={programList.length}
+            onChange={(page) => setCurrentPage(page)}
+            showSizeChanger={false}
+            style={{
+              textAlign: "center",
+              marginTop: "20px",
+              justifyContent: "center",
+            }}
+          />
         </div>
       )}
 
