@@ -3,14 +3,11 @@ import request from "supertest"; // Importation de Supertest pour tester les rou
 import app from "../server"; // Importation de l'application Express principale
 import { Professional_User } from "../model/Professional_User"; // Importation du modèle ProfessionalUser pour interagir avec la base de données
 import { hash } from "../controller/UserController"; // Importation de la fonction de hachage
-import { describe, it, before } from "mocha"; // Mocha pour la structure des tests
-import { after } from "mocha";
-
 
 describe("Authentication API - Login", function () {
   
   // `before()` permet d’exécuter une préparation avant les tests.
-  before(async function () {
+  beforeEach(async function () {
     // Suppression de l'utilisateur "test@example.com" s'il existe déjà.
     await Professional_User.destroy({ where: { email: "test@example.com" } });
 
@@ -20,9 +17,11 @@ describe("Authentication API - Login", function () {
     // Création d’un utilisateur de test dans la base de données.
     await Professional_User.create({
       firstname: "test",
+      lastname: "test",
       email: "test@example.com",
+      phoneNumber: "1234567890",
+      role: "doctor",
       password: hashedPassword, // Stockage du mot de passe sécurisé
-      //role: "user", // Ajout d'un rôle pour tester les permissions
     });
   });
 
@@ -75,11 +74,8 @@ describe("Authentication API - Login", function () {
     expect(response.body).to.have.property("message", "The user doesn't exist");
   });
 
-  after(async function () {
-    // Suppression de l'utilisateur "test@example.com" apres le test.
+  afterAll(async function () {
     await Professional_User.destroy({ where: { email: "test@example.com" } });
-    console.log("Fermeture du serveur après les tests...");
-    process.exit(0); // Termine proprement le processus Node.js après les tests
   });
 
 });
