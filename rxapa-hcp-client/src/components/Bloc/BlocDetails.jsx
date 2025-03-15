@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Row, Col, Button, Input, Modal, Form } from "antd";
+import { Button, Input, Modal, Form } from "antd";
 import { PlusOutlined, CheckOutlined } from "@ant-design/icons";
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
@@ -9,9 +9,15 @@ import ExerciseTable from "./ExerciseTable";
 import AddExercise from "./AddExercise";
 import useToken from "../Authentication/useToken";
 import { useTranslation } from "react-i18next";
-// import ExerciseTable2 from "./ExerciseTable2";
 
-export default function BlocDetails({ blocKey, refetchBlocs }) {
+
+
+export default function BlocDetailsModal({
+  blocKey,
+  refetchBlocs,
+  isVisible,
+  onClose,
+}) {
   const { t } = useTranslation();
   const { handleSubmit, control } = useForm();
   const [isAddExercise, setIsAddExercise] = useState(false);
@@ -25,142 +31,94 @@ export default function BlocDetails({ blocKey, refetchBlocs }) {
     setIsAddExercise(true);
   }
 
-  // URL to retrieve all exercises
   const allExerciseUrl = `${Constants.SERVER_URL}/exercises`;
   const {
     data: allExercises,
-    isLoading: isExerciseLoading,
-    isError: isExerciseLoadingError,
-  } = useQuery(["all-exercises"], () => {
-    return axios
+  } = useQuery(["all-exercises"], () =>
+    axios
       .get(allExerciseUrl, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
+        headers: { Authorization: "Bearer " + token },
       })
-      .then((res) => {
-        return res.data;
-      });
-  });
+      .then((res) => res.data)
+  );
 
-  /**
-   * Opens modal to provide feedback to the user.
-   * @param {*} message - feedback message
-   * @param {*} isError - true if it is an error message
-   */
   function openModal(message, isError) {
     setMessage(message);
     setIsErrorMessage(isError);
     setIsOpenModal(true);
   }
 
-  /**
-   * Close the modal
-   */
   function closeModal() {
     setIsOpenModal(false);
     setMessage("");
     setIsErrorMessage(false);
   }
 
-  // URL to retrieve bloc with their exercises
   const blocUrl = `${Constants.SERVER_URL}/bloc/${blocKey}`;
-  console.log("The URL is ", blocUrl);
   const {
     data: bloc,
-    isLoading: isBlocLoading,
-    isError: isBlocLoadingError,
+    isLoading,
+    isError,
     refetch: refetchBloc,
-  } = useQuery(["bloc-exercises"], () => {
-    return axios
+  } = useQuery(["bloc-exercises", blocKey], () =>
+    axios
       .get(blocUrl, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
+        headers: { Authorization: "Bearer " + token },
       })
-      .then((res) => {
-        return res.data;
-      });
-  });
+      .then((res) => res.data)
+  );
 
-  //////////////////////////////////
-  /// QUERY VALIDATIONS          ///
-  //////////////////////////////////
-  if (isBlocLoading) {
-    return <h1>Bloc Loading...</h1>;
-  }
-  if (isBlocLoadingError) {
-    return <h1>Sorry, an error occurred while loading the bloc</h1>;
-  }
-
-  if (isExerciseLoading) {
-    return <h1>Exercises Loading...</h1>;
-  }
-  if (isExerciseLoadingError) {
-    return <h1>Sorry, an error occurred while loading exercises</h1>;
-  }
-
-  /**
-   * Update bloc details
-   */
   const onSubmit = (data) => {
     axios
       .put(`${Constants.SERVER_URL}/update-bloc/${blocKey}`, data, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
+        headers: { Authorization: "Bearer " + token },
       })
       .then((res) => {
         refetchBlocs();
+        refetchBloc();
         openModal(res.data.message, false);
+        onClose(); // Fermer la modal après la mise à jour
       })
-      .catch((err) => openModal(err.response.data.message, true));
+      .catch((err) => openModal(err.response?.data?.message || "Error", true));
   };
 
+  if (isLoading) return null;
+  if (isError) return <h1>{t("Blocs:loading_error")}</h1>;
+
   return (
-    <Row justify="center" align="middle" style={{ minHeight: "50vh" }}>
-      <Col span={12}>
-        <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
-          <Form.Item label={t("Blocs:new_bloc_name")}>
-            <Controller
-              name="name"
-              control={control}
-              defaultValue={bloc.name}
-              render={({ field: { onChange, value } }) => (
-                <Input
-                  onChange={onChange}
-                  value={value}
-                  placeholder={t("Blocs:enter_new_bloc_name")}
-                  allowClear
-                />
-              )}
-            />
-          </Form.Item>
+    <Modal
+      title={t("Blocs:details_title")}
+      open={isVisible}
+      onCancel={onClose}
+      footer={null}
+    >
+      <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
+        <Form.Item label={t("Blocs:new_bloc_name")}>
+          <Controller
+            name="name"
+            control={control}
+            defaultValue={bloc.name}
+            render={({ field: { onChange, value } }) => (
+              <Input onChange={onChange} value={value} allowClear />
+            )}
+          />
+        </Form.Item>
 
-          <Form.Item label={t("Blocs:new_description_label")}>
-            <Controller
-              name="description"
-              control={control}
-              defaultValue={bloc.description}
-              render={({ field: { onChange, value } }) => (
-                <Input.TextArea
-                  onChange={onChange}
-                  value={value}
-                  placeholder={t("Blocs:enter_new_description_placeholder")}
-                  allowClear
-                  rows={4}
-                />
-              )}
-            />
-          </Form.Item>
-
-          <Form.Item>
-            <Button type="primary" htmlType="submit" icon={<CheckOutlined />}>
-              {t("Blocs:update_button")}
-            </Button>
-          </Form.Item>
-        </Form>
-
+        <Form.Item label={t("Blocs:new_description_label")} readonly>
+          <Controller
+            name="description"
+            control={control}
+            defaultValue={bloc.description}
+            render={({ field: { onChange, value } }) => (
+              <Input.TextArea
+                onChange={onChange}
+                value={value}
+                rows={4}
+                allowClear
+              />
+            )}
+          />
+        </Form.Item>
         <div>
           <ExerciseTable exercises={bloc?.Exercise_Blocs} />
           <Button
@@ -173,26 +131,39 @@ export default function BlocDetails({ blocKey, refetchBlocs }) {
           </Button>
         </div>
 
-        {isAddExercise && (
-          <AddExercise
-            setIsAddExercise={setIsAddExercise}
-            refetchBloc={refetchBloc}
-            bloc={bloc}
-            allExercises={allExercises}
-          />
-        )}
+        <Button type="primary" htmlType="submit" icon={<CheckOutlined />}>
+          {t("Blocs:update_button")}
+        </Button>
 
-        {isOpenModal && (
-          <Modal
-            title="Notification"
-            open={isOpenModal}
-            onOk={closeModal}
-            onCancel={closeModal}
-          >
-            <p style={{ color: isErrorMessage ? "red" : "green" }}>{message}</p>
-          </Modal>
-        )}
-      </Col>
-    </Row>
+        <Button
+          type="primary"
+          onClick={() => setIsAddExercise(true)}
+          icon={<PlusOutlined />}
+          style={{ marginLeft: 8 }}
+        >
+          {t("Blocs:add_exercise_button")}
+        </Button>
+      </Form>
+
+      {isAddExercise && (
+        <AddExercise
+          setIsAddExercise={setIsAddExercise}
+          refetchBloc={refetchBloc}
+          bloc={bloc}
+          allExercises={allExercises}
+        />
+      )}
+
+      {isOpenModal && (
+        <Modal
+          title="Notification"
+          open={isOpenModal}
+          onOk={closeModal}
+          onCancel={closeModal}
+        >
+          <p style={{ color: isErrorMessage ? "red" : "green" }}>{message}</p>
+        </Modal>
+      )}
+    </Modal>
   );
 }
