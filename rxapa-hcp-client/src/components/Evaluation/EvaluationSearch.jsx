@@ -96,7 +96,7 @@ function EvaluationSearch() {
       title: "Actions",
       key: "actions",
       render: (_, patient) => (
-        <div className="space-x-2">
+        <div style={{ display: 'flex', gap: '12px' }}>
           {/* Bouton pour accéder à l'évaluation du patient */}
           <Button
             type="primary"
@@ -107,7 +107,6 @@ function EvaluationSearch() {
           >
             Évaluation PACE
           </Button>
-          {/* Boutons désactivés pour PATH */}
           <Button
             type="primary"
             onClick={() =>
