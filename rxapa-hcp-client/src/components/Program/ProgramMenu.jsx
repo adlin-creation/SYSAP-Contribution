@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { PlusOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 import { Col, Row, Button, Modal, Input, Select, Pagination } from "antd";
-import { PlusOutlined, ArrowLeftOutlined } from "@ant-design/icons";
-import { Col, Row, Button, Modal, Input, Select, Pagination } from "antd";
 import CreateProgram from "./CreateProgram";
 import Program from "./Program";
 import ProgramDetails from "./ProgramDetails";
@@ -214,7 +212,7 @@ export default function ProgramMenu() {
             {/* create a search bar*/}
             <Col>
               <Input
-                placeholder={t("Programs:Search_a_program")}
+                placeholder= "Search a program"
                 value={searchTerm}
                 onChange={handleSearchChange}
                 className="search-input"
@@ -229,7 +227,7 @@ export default function ProgramMenu() {
           >
             <Col>
               <Input
-                placeholder={t("Programs:Search_by_duration")}
+                placeholder="Search by duration"
                 value={duration}
                 onChange={handleDurationChange}
                 type="number"
@@ -238,7 +236,7 @@ export default function ProgramMenu() {
             </Col>
             <Col>
               <Select
-                placeholder={t("Programs:Search_by_duration_unit")}
+                placeholder="Search by duration unit"
                 value={durationUnit}
                 onChange={handleDurationUnitChange}
                 options={durationUnits}
@@ -247,7 +245,7 @@ export default function ProgramMenu() {
             </Col>
             <Col>
               <Input
-                placeholder={t("Programs:Search_by_description_keywords")}
+                placeholder="Search by description keywords"
                 value={descriptionKeywords}
                 onChange={handleDescriptionKeywordsChange}
                 className="search-input"
@@ -305,10 +303,10 @@ export default function ProgramMenu() {
             </Button>
           </Col>
           <Col flex="auto" style={{ textAlign: "center" }}>
-            <h2 style={{ marginBottom: 0 }}>
-              {buttonState.isCreateProgram
+            <h2>
+            {buttonState.isCreateProgram
                 ? t("Programs:create_program")
-                : t("Programs:edit_title") + " " + `${selectedProgram?.name}`}
+                : `${t("Programs:edit_title")} ${selectedProgram?.name}`}
             </h2>
           </Col>
           <Col span={4} />
