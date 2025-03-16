@@ -38,8 +38,9 @@ export default function ProgramMenu() {
   const [pageSize] = useState(8); // Nombre de programmes par page
 
   const durationUnits = [
-    { value: "days", label: t("Programs:days") }, // Jours
-    { value: "weeks", label: t("Programs:weeks") }, // Semaines
+    {value: "", label: "Search by duration unit"},
+    { value: "days", label: "days" }, 
+    { value: "weeks", label: "weeks" }, 
   ];
 
   //////////////////////////////
