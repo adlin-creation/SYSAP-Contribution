@@ -3,13 +3,13 @@ import jwt from "jsonwebtoken";
 import { Professional_User } from "../model/Professional_User";
 
 interface AuthRequest extends Request {
-  user?: any; // on stockera l'objet user trouvé
-  userRole?: string; // on stockera "superadmin" ou "admin"/"doctor"/"kinesiologist"
+  user?: any;       // on y stocke l'objet user trouvé en base
+  userRole?: string; // on y stocke le rôle (admin, doctor, kinesiologist, superadmin)
 }
 
 /**
- * Middleware qui vérifie le token JWT et identifie le rôle de l'utilisateur
- */
+ 
+Middleware qui vérifie le token JWT et identifie le rôle de l'utilisateur*/
 export default async function isAuth(
   req: AuthRequest,
   res: Response,
@@ -28,26 +28,19 @@ export default async function isAuth(
     // Vérifie le token
     const decoded: any = jwt.verify(token, process.env.TOKEN_SECRET_KEY as string);
 
-    // Cherche dans User
-    let user = await Professional_User.findOne({ where: { email: decoded.email } });
-    if (user) {
-      // => c'est un "superadmin" (dans votre logique)
-      req.user = user; 
-      req.userRole = "superadmin";
-      return next();
+    // Cherche l'utilisateur dans Professional_User (quel que soit le rôle)
+    const user = await Professional_User.findOne({ where: { email: decoded.email } });
+
+    if (!user) {
+      // Si on ne trouve personne
+      return res.status(401).json({ message: "Utilisateur introuvable" });
     }
 
-    // Sinon cherche dans Professional_User
-    user = await Professional_User.findOne({ where: { email: decoded.email } });
-    if (user) {
-      // => admin, doctor ou kinesiologist
-      req.user = user;
-      req.userRole = user.role;
-      return next();
-    }
+    // On assigne l'utilisateur et son rôle
+    req.user = user;
+    req.userRole = user.role; // => 'admin', 'doctor', 'kinesiologist', 'superadmin', etc.
 
-    // Si pas trouvé du tout
-    return res.status(401).json({ message: "Utilisateur introuvable" });
+    return next();
   } catch (error) {
     return res.status(401).json({ message: "Token invalide ou expiré" });
   }
