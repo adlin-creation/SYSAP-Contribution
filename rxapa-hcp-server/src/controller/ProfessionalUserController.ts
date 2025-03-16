@@ -8,10 +8,11 @@ import { ProgramEnrollement } from "../model/ProgramEnrollement";
 import crypto from 'crypto';
 import bcrypt from "bcrypt";
 import { hash } from './UserController';
-import {
-  generateCode,
-  sendEmail,
-} from "../util/unikpass";
+import { hashValue, verifyHash } from "../util/unikpass";
+
+import { generateCode, sendEmail } from "../util/unikpass";
+
+console.log("generateCode:", generateCode);
 
 /**
  * Creates a new professional user.
@@ -28,9 +29,10 @@ export const createProfessionalUser = async (req: any, res: any, next: any) => {
 
     // 🔹 Générer un code d’accès temporaire (6 caractères)
     const code = generateCode(6); // Générer un code à 6 caractères
+    console.log("Code généré :", code); // Vérifier si le code est bien généré
 
     // 🔹 Hacher le code d’accès temporaire
-    const unikPassHashed = await bcrypt.hash(code, 10); // Hash avec bcrypt ✅
+    const unikPassHashed = await bcrypt.hash(code, 10); // Hash avec bcrypt 
 
     // 🔹 Créer l'utilisateur professionnel avec `active: false`
     const newProfessionalUser = await Professional_User.create({

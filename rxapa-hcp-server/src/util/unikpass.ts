@@ -5,20 +5,19 @@ import bcrypt from "bcrypt";
 
 dotenv.config();
 
-// Générer un code unique de n caractères
-export const generateCode = (length: number = 6): string => {
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  const bytes = crypto.randomBytes(length); // Génère des octets aléatoires
-  let result = "";
+console.log("✅ Environnement chargé avec dotenv:", process.env ? "OK" : "❌ ERREUR");
+
+export const generateCode = (length: number): string => {
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let code = "";
 
   for (let i = 0; i < length; i++) {
-    const randomIndex = bytes[i] % characters.length; // Assure que l'indice est dans la plage des caractères
-    result += characters.charAt(randomIndex);
+    code += characters.charAt(Math.floor(Math.random() * characters.length));
   }
 
-  return result;
+  return code; // 🔹 Assure-toi qu'on retourne bien une valeur
 };
+
 
 const transporter: Transporter = nodemailer.createTransport({
   service: "gmail",
