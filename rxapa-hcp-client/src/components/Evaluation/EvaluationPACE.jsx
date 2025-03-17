@@ -411,7 +411,7 @@ function EvaluationPACE({ onSubmit }) {
   };
 
   const onClose = () => {
-    window.location.reload();
+    navigate('/evaluations');
   };
 
   return (

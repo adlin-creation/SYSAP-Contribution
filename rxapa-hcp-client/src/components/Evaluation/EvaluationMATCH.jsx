@@ -341,7 +341,7 @@ function EvaluationMATCH({ onSubmit }) {
   };
 
   const onClose = () => {
-    window.location.reload();
+    navigate('/evaluations');
   };
 
   return (

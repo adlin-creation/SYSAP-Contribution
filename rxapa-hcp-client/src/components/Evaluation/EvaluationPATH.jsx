@@ -314,7 +314,7 @@ function EvaluationPATH({ onSubmit }) {
   };
 
   const onClose = () => {
-    window.location.reload();
+    navigate('/evaluations');
   };
 
   return (
