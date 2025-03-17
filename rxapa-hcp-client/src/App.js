@@ -46,7 +46,7 @@ import {
   UsergroupAddOutlined,
   MedicineBoxOutlined,
   HeartOutlined,
-  FormOutlined, // Ajoutez cette ligne
+  FormOutlined, // Icône pour les évaluations
 } from "@ant-design/icons";
 import "antd/dist/reset.css";
 import "./App.css";
@@ -168,6 +168,11 @@ function App() {
                 // On ré-appelle filterMenuItems pour ses enfants
                 children: filterMenuItems(item.children),
               };
+            }
+
+            // RESTRICTION ÉVALUATIONS: seulement les kinésiologues y ont accès
+            if (item.key === "/evaluations" && location.state.role !== "kinesiologist") {
+              return null;
             }
 
             // CAS ADMIN: l'admin ne voit PAS l'onglet "admins"
@@ -303,38 +308,57 @@ function App() {
               element={<KinesiologistPatients />}
             ></Route>
             <Route path="admins" element={<AdminMenu />}></Route>
+            
+            {/* Routes pour les évaluations - protégées */}
             <Route
               path="evaluations"
               element={
-                <Suspense fallback={<div>Loading evaluations...</div>}>
-                  <EvaluationSearch />
-                </Suspense>
+                role === "kinesiologist" ? (
+                  <Suspense fallback={<div>Loading evaluations...</div>}>
+                    <EvaluationSearch />
+                  </Suspense>
+                ) : (
+                  <Navigate to="/" replace />
+                )
               }
             ></Route>
             <Route
               path="evaluation-pace/:patientId"
               element={
-                <Suspense fallback={<div>Loading evaluation...</div>}>
-                  <EvaluationPACE />
-                </Suspense>
+                role === "kinesiologist" ? (
+                  <Suspense fallback={<div>Loading evaluation...</div>}>
+                    <EvaluationPACE />
+                  </Suspense>
+                ) : (
+                  <Navigate to="/" replace />
+                )
               }
             ></Route>
             <Route
               path="evaluation-match/:patientId"
               element={
-                <Suspense fallback={<div>Loading evaluation...</div>}>
-                  <EvaluationMATCH />
-                </Suspense>
+                role === "kinesiologist" ? (
+                  <Suspense fallback={<div>Loading evaluation...</div>}>
+                    <EvaluationMATCH />
+                  </Suspense>
+                ) : (
+                  <Navigate to="/" replace />
+                )
               }
             ></Route>
             <Route 
               path="evaluation-path/:patientId" 
               element={
-                <Suspense fallback={<div>Loading evaluation...</div>}>
-                  <EvaluationPATH />
-                </Suspense>
+                role === "kinesiologist" ? (
+                  <Suspense fallback={<div>Loading evaluation...</div>}>
+                    <EvaluationPATH />
+                  </Suspense>
+                ) : (
+                  <Navigate to="/" replace />
+                )
               }
             ></Route>
+            
             <Route
               path="*"
               element={
