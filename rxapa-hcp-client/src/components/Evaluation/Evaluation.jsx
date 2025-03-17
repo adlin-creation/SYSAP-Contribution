@@ -207,14 +207,18 @@ function Evaluation({ evaluationType, getInitialFormData, calculateScores, rende
         }
       );
 
-      // Gérer le succès
+      // Fermer la modale des résultats
+      setIsModalVisible(false);
+
+      // Afficher un message de succès
       Modal.success({
         title: "Succès",
         content: "Évaluation enregistrée avec succès",
+        onOk: () => {
+          // Rediriger vers la page des évaluations après confirmation
+          navigate('/evaluations');
+        }
       });
-
-      // Recharger la page
-      window.location.reload();
     } catch (error) {
       console.error("Erreur détaillée :", {
         status: error.response?.status,
