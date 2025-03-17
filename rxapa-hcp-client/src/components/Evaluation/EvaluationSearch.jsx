@@ -132,54 +132,55 @@ function EvaluationSearch() {
 
   return (
     <div className="p-6">
-      <Card title={t("search_title")} className="shadow-sm">
-        <div className="mb-6">
-          <div className="flex gap-4">
-            {/* Champs de recherche*/}
-            <Input
-              placeholder={t("search_placeholder")}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              onPressEnter={handleSearch}
-              prefix={<SearchOutlined />}
-              suffix={
-                searchTerm && (
-                  <Button
-                    onClick={clearSearch}
-                    size="small"
-                    icon={<CloseOutlined />}
-                  />
-                )
-              }
-              className="flex-grow"
-            />
-            {/* Bouton de recherche */}
-            <Button type="primary" onClick={handleSearch} loading={loading}>
-              Rechercher
-            </Button>
-          </div>
-        </div>
-
-        {/* Affichage messages d'erreur */}
-        {errorMessage ? (
-          <div className="text-center py-8 text-red-500">
-            {errorMessage === "Aucun patient trouvé."
-              ? t("error_no_patients")
-              : t("error_search")}
-          </div>
-        ) : (
-          // Tableau d'affichage des patientss
-          <Table
-            columns={columns}
-            dataSource={patients}
-            rowKey="id"
-            loading={loading}
-            pagination={{ pageSize: 5 }}
-            bordered
+  <Card title={t("search_title")} className="shadow-sm">
+    <div className="mb-6">
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        {/* Champs de recherche */}
+        <div style={{ flex: 1, marginRight: '8px' }}>
+          <Input
+            placeholder={t("search_placeholder")}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onPressEnter={handleSearch}
+            prefix={<SearchOutlined />}
+            suffix={
+              searchTerm && (
+                <Button
+                  onClick={clearSearch}
+                  size="small"
+                  icon={<CloseOutlined />}
+                />
+              )
+            }
           />
-        )}
-      </Card>
+        </div>
+        {/* Bouton de recherche */}
+        <Button type="primary" onClick={handleSearch} loading={loading}>
+          Rechercher
+        </Button>
+      </div>
     </div>
+
+    {/* Affichage messages d'erreur */}
+    {errorMessage ? (
+      <div className="text-center py-8 text-red-500">
+        {errorMessage === "Aucun patient trouvé."
+          ? t("error_no_patients")
+          : t("error_search")}
+      </div>
+    ) : (
+      // Tableau d'affichage des patients
+      <Table
+        columns={columns}
+        dataSource={patients}
+        rowKey="id"
+        loading={loading}
+        pagination={{ pageSize: 5 }}
+        bordered
+      />
+    )}
+  </Card>
+</div>
   );
 }
 
