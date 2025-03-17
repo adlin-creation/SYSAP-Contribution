@@ -170,8 +170,10 @@ function App() {
               };
             }
 
-            // RESTRICTION ÉVALUATIONS: seulement les kinésiologues y ont accès
-            if (item.key === "/evaluations" && location.state.role !== "kinesiologist") {
+            // RESTRICTION ÉVALUATIONS: seulement les kinésiologues et les admins y ont accès
+            if (item.key === "/evaluations" && 
+                location.state.role !== "kinesiologist" && 
+                location.state.role !== "admin") {
               return null;
             }
 
@@ -308,12 +310,10 @@ function App() {
               element={<KinesiologistPatients />}
             ></Route>
             <Route path="admins" element={<AdminMenu />}></Route>
-            
-            {/* Routes pour les évaluations - protégées */}
             <Route
               path="evaluations"
               element={
-                role === "kinesiologist" ? (
+                (role === "kinesiologist" || role === "admin") ? (
                   <Suspense fallback={<div>Loading evaluations...</div>}>
                     <EvaluationSearch />
                   </Suspense>
@@ -325,7 +325,7 @@ function App() {
             <Route
               path="evaluation-pace/:patientId"
               element={
-                role === "kinesiologist" ? (
+                (role === "kinesiologist" || role === "admin") ? (
                   <Suspense fallback={<div>Loading evaluation...</div>}>
                     <EvaluationPACE />
                   </Suspense>
@@ -337,7 +337,7 @@ function App() {
             <Route
               path="evaluation-match/:patientId"
               element={
-                role === "kinesiologist" ? (
+                (role === "kinesiologist" || role === "admin") ? (
                   <Suspense fallback={<div>Loading evaluation...</div>}>
                     <EvaluationMATCH />
                   </Suspense>
@@ -349,7 +349,7 @@ function App() {
             <Route 
               path="evaluation-path/:patientId" 
               element={
-                role === "kinesiologist" ? (
+                (role === "kinesiologist" || role === "admin") ? (
                   <Suspense fallback={<div>Loading evaluation...</div>}>
                     <EvaluationPATH />
                   </Suspense>
