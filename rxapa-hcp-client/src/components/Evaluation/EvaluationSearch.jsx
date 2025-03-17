@@ -133,7 +133,7 @@ function EvaluationSearch() {
   return (
     <div className="p-6">
   <Card title={t("search_title")} className="shadow-sm">
-    <div className="mb-6">
+    <div className="mb-6" style={{ marginBottom: '16px' }}>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         {/* Champs de recherche */}
         <div style={{ flex: 1, marginRight: '8px' }}>
