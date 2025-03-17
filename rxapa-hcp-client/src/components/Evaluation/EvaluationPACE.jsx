@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Row, Col, Input, Button, Form, Radio, Modal } from "antd";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import useToken from "../Authentication/useToken";
 import Constants from "../Utils/Constants";
@@ -8,7 +8,8 @@ import { useTranslation } from "react-i18next";
 
 function EvaluationPACE({ onSubmit }) {
   const { t } = useTranslation("Evaluations");
-  const { patientId } = useParams(); // Récupère l'ID depuis l'URL
+  const { patientId } = useParams();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     // Section A
     chairTestSupport: true,

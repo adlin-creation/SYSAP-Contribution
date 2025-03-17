@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Row, Col, Input, Button, Form, Radio, Modal } from "antd";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import useToken from "../Authentication/useToken";
 import Constants from "../Utils/Constants";
@@ -8,6 +8,7 @@ import { InfoCircleOutlined } from "@ant-design/icons";
 
 function EvaluationPATH({ onSubmit }) {
   const { patientId } = useParams();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     // Section Cardio-musculaire
     chairTestSupport: true,
