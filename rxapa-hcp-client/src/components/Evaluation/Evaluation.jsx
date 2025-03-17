@@ -21,18 +21,18 @@ function Evaluation({ evaluationType, getInitialFormData, calculateScores, rende
 
   // Fonction pour déterminer si un test d'équilibre doit être activé
   const isBalanceTestEnabled = (testName) => {
+    // Définir le seuil selon le type d'évaluation
+    const threshold = evaluationType === "PATH" ? 5 : 10;
+    
     switch (testName) {
       case 'balanceFeetTogether':
         return true; // Toujours activé
       case 'balanceSemiTandem':
-        // Activé si le test pieds joints est ≥ 10
-        return parseFloat(formData.balanceFeetTogether || 0) >= 10;
+        return parseFloat(formData.balanceFeetTogether || 0) >= threshold;
       case 'balanceTandem':
-        // Activé si le semi-tandem est ≥ 10
-        return parseFloat(formData.balanceSemiTandem || 0) >= 10;
+        return parseFloat(formData.balanceSemiTandem || 0) >= threshold;
       case 'balanceOneFooted':
-        // Utilisé uniquement pour PACE
-        return parseFloat(formData.balanceTandem || 0) >= 10;
+        return parseFloat(formData.balanceTandem || 0) >= threshold;
       default:
         return false;
     }
