@@ -1,0 +1,294 @@
+import React, { useState } from "react";
+import { Row, Col, Input, Button, Form, Radio, Modal } from "antd";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import useToken from "../Authentication/useToken";
+import Constants from "../Utils/Constants";
+import { InfoCircleOutlined } from "@ant-design/icons";
+
+/**
+ * Classe abstraite pour les composants d'évaluation
+ * Cette classe contient les fonctionnalités communes aux évaluations MATCH, PACE et PATH
+ */
+function Evaluation({ evaluationType, getInitialFormData, calculateScores, renderFormFields, buildPayload, buildModalContent }) {
+  const { patientId } = useParams();
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState(getInitialFormData());
+  const { token } = useToken();
+  const [errors, setErrors] = useState({});
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState(null);
+
+  // Fonction pour déterminer si un test d'équilibre doit être activé
+  const isBalanceTestEnabled = (testName) => {
+    switch (testName) {
+      case 'balanceFeetTogether':
+        return true; // Toujours activé
+      case 'balanceSemiTandem':
+        // Activé si le test pieds joints est ≥ 10
+        return parseFloat(formData.balanceFeetTogether || 0) >= 10;
+      case 'balanceTandem':
+        // Activé si le semi-tandem est ≥ 10
+        return parseFloat(formData.balanceSemiTandem || 0) >= 10;
+      case 'balanceOneFooted':
+        // Utilisé uniquement pour PACE
+        return parseFloat(formData.balanceTandem || 0) >= 10;
+      default:
+        return false;
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    
+    setFormData((prev) => {
+      if (name === 'balanceFeetTogether') {
+        // Si pieds joints < 10 ou vide, réinitialiser les tests suivants
+        if (value === "" || parseFloat(value) < 10) {
+          const updatedForm = {
+            ...prev,
+            [name]: value,
+            balanceSemiTandem: "",
+            balanceTandem: "",
+          };
+          
+          // Seulement pour PACE qui a un test d'équilibre supplémentaire
+          if ('balanceOneFooted' in prev) {
+            updatedForm.balanceOneFooted = "";
+          }
+          
+          return updatedForm;
+        }
+      } else if (name === 'balanceSemiTandem') {
+        // Si semi-tandem < 10 ou vide, réinitialiser les tests suivants
+        if (value === "" || parseFloat(value) < 10) {
+          const updatedForm = {
+            ...prev,
+            [name]: value,
+            balanceTandem: "",
+          };
+          
+          // Seulement pour PACE
+          if ('balanceOneFooted' in prev) {
+            updatedForm.balanceOneFooted = "";
+          }
+          
+          return updatedForm;
+        }
+      } else if (name === 'balanceTandem' && 'balanceOneFooted' in prev) {
+        // Uniquement pour PACE - si tandem < 10, réinitialiser one-footed
+        if (value === "" || parseFloat(value) < 10) {
+          return {
+            ...prev,
+            [name]: value,
+            balanceOneFooted: "",
+          };
+        }
+      } else if (name === "frtPosition" && value === "armNotWorking") {
+        // Spécifique à PACE
+        return {
+          ...prev,
+          [name]: value,
+          frtDistance: "",
+        };
+      }
+      
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
+
+    // Réinitialiser les erreurs pour le champ modifié
+    if (errors[name]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    // Validation commune
+    if (!formData.chairTestCount) {
+      newErrors.chairTestCount = "Le nombre de levers est requis";
+    } else if (isNaN(formData.chairTestCount) || formData.chairTestCount < 0) {
+      newErrors.chairTestCount = "Veuillez entrer un nombre valide";
+    }
+
+    // Valider seulement le test d'équilibre "pieds joints", qui est toujours obligatoire
+    if (!formData.balanceFeetTogether) {
+      newErrors.balanceFeetTogether = "Le temps est requis";
+    } else if (isNaN(formData.balanceFeetTogether) || formData.balanceFeetTogether < 0) {
+      newErrors.balanceFeetTogether = "Veuillez entrer un temps valide";
+    }
+    
+    // Valider les autres tests d'équilibre s'ils contiennent des valeurs
+    const balanceTests = ['balanceSemiTandem', 'balanceTandem', 'balanceOneFooted'];
+    balanceTests.forEach(test => {
+      if (formData[test] !== undefined && formData[test] && 
+          (isNaN(formData[test]) || formData[test] < 0)) {
+        newErrors[test] = "Veuillez entrer un temps valide";
+      }
+    });
+
+    // Validation spécifique à PACE pour FRT
+    if (formData.frtPosition !== undefined && formData.frtPosition !== "armNotWorking") {
+      if (!formData.frtDistance) {
+        newErrors.frtDistance = "La distance est requise";
+      } else if (isNaN(formData.frtDistance) || formData.frtDistance < 0) {
+        newErrors.frtDistance = "Veuillez entrer une distance valide";
+      }
+    }
+
+    // Validation du temps de marche - logique différente pour MATCH
+    if (evaluationType === "MATCH" && formData.canWalk) {
+      if (!formData.walkingTime) {
+        newErrors.walkingTime = "Le temps de marche est requis";
+      } else if (isNaN(formData.walkingTime) || formData.walkingTime <= 0) {
+        newErrors.walkingTime = "Veuillez entrer un temps de marche valide";
+      }
+    } else if (evaluationType !== "MATCH") {
+      // Pour PATH et PACE, le temps de marche est toujours requis
+      if (!formData.walkingTime) {
+        newErrors.walkingTime = "Le temps de marche est requis";
+      } else if (isNaN(formData.walkingTime) || formData.walkingTime <= 0) {
+        newErrors.walkingTime = "Veuillez entrer un temps de marche valide";
+      }
+    }
+
+    return newErrors;
+  };
+
+  const handleSubmit = () => {
+    const newErrors = validateForm();
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    // Calculer les scores en utilisant la fonction fournie par la classe fille
+    const scores = calculateScores(formData, isBalanceTestEnabled);
+    
+    // Construire le contenu de la modale en utilisant la fonction fournie par la classe fille
+    setModalMessage(buildModalContent(scores, formData));
+    
+    setIsModalVisible(true);
+  };
+
+  const handleConfirm = async () => {
+    // Calculer les scores à nouveau
+    const scores = calculateScores(formData, isBalanceTestEnabled);
+    
+    // Construire le payload en utilisant la fonction fournie par la classe fille
+    const payload = buildPayload(formData, scores, patientId, isBalanceTestEnabled);
+
+    if (!payload) {
+      console.error("Aucune donnée à envoyer");
+      return;
+    }
+    
+    const endpoint = `/create-${evaluationType.toLowerCase()}-evaluation`;
+
+    try {
+      console.log("Payload envoyé :", JSON.stringify(payload, null, 2));
+
+      const response = await axios.post(
+        `${Constants.SERVER_URL}${endpoint}`,
+        payload,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      // Gérer le succès
+      Modal.success({
+        title: "Succès",
+        content: "Évaluation enregistrée avec succès",
+      });
+
+      // Recharger la page
+      window.location.reload();
+    } catch (error) {
+      console.error("Erreur détaillée :", {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message,
+        payload: payload,
+      });
+
+      Modal.error({
+        title: "Erreur",
+        content:
+          error.response?.data?.message ||
+          error.response?.data ||
+          error.message ||
+          "Échec de l'enregistrement des données",
+      });
+    }
+  };
+
+  const calculateWalkingObjective = (walkingTime) => {
+    if (!walkingTime || walkingTime <= 0) return null;
+
+    const speed = 4 / parseFloat(walkingTime);
+
+    if (speed < 0.4) return 10;
+    if (speed >= 0.4 && speed < 0.6) return 15;
+    if (speed >= 0.6 && speed < 0.8) return 20;
+    if (speed >= 0.8) return 30;
+
+    return null;
+  };
+
+  const onClose = () => {
+    navigate('/evaluations');
+  };
+
+  return (
+    <Row justify="center">
+      <Col span={16}>
+        <Form
+          layout="vertical"
+          onFinish={handleSubmit}
+          initialValues={formData}
+        >
+          {/* Rendu des champs de formulaire spécifiques à chaque évaluation */}
+          {renderFormFields(formData, handleChange, errors, isBalanceTestEnabled, calculateWalkingObjective)}
+
+          <Form.Item>
+            <Button onClick={() => onClose()} style={{ marginRight: 8 }}>
+              Annuler
+            </Button>
+            <Button type="primary" htmlType="submit">
+              Soumettre
+            </Button>
+          </Form.Item>
+        </Form>
+      </Col>
+      <Modal
+        title="Résultats"
+        open={isModalVisible}
+        onCancel={() => setIsModalVisible(false)}
+        footer={[
+          <Button key="close" onClick={() => setIsModalVisible(false)}>
+            Fermer
+          </Button>,
+          <Button key="submit" type="primary" onClick={handleConfirm}>
+            Confirmer
+          </Button>,
+        ]}
+      >
+        {modalMessage}
+      </Modal>
+    </Row>
+  );
+}
+
+export default Evaluation;
