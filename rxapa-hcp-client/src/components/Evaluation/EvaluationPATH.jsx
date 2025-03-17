@@ -25,12 +25,54 @@ function EvaluationPATH({ onSubmit }) {
   const [errors, setErrors] = useState({});
   const [submissionData, setSubmissionData] = useState(null);
 
+  // Fonction pour déterminer si un test d'équilibre doit être activé
+  const isBalanceTestEnabled = (testName) => {
+    switch (testName) {
+      case 'balanceFeetTogether':
+        return true; // Toujours activé
+      case 'balanceSemiTandem':
+        // Activé si le test pieds joints est ≥ 10, indépendamment du nombre de levers
+        return parseFloat(formData.balanceFeetTogether || 0) >= 10;
+      case 'balanceTandem':
+        // Activé si le semi-tandem est >= 10
+        return parseFloat(formData.balanceSemiTandem || 0) >= 10;
+      default:
+        return false;
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    
+    setFormData((prev) => {
+      if (name === 'balanceFeetTogether') {
+        // Si pieds joints < 10 ou vide, réinitialiser semi-tandem et tandem
+        if (value === "" || parseFloat(value) < 10) {
+          return {
+            ...prev,
+            [name]: value,
+            balanceSemiTandem: "",
+            balanceTandem: "",
+          };
+        }
+      }
+      
+      if (name === 'balanceSemiTandem') {
+        // Si semi-tandem < 10 ou vide, réinitialiser tandem
+        if (value === "" || parseFloat(value) < 10) {
+          return {
+            ...prev,
+            [name]: value,
+            balanceTandem: "",
+          };
+        }
+      }
+      
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
 
     if (errors[name]) {
       setErrors((prev) => ({
@@ -53,15 +95,24 @@ function EvaluationPATH({ onSubmit }) {
       newErrors.chairTestCount = "Veuillez entrer un nombre valide";
     }
 
-    ["balanceFeetTogether", "balanceSemiTandem", "balanceTandem"].forEach(
-      (field) => {
-        if (!formData[field]) {
-          newErrors[field] = "Le temps est requis";
-        } else if (isNaN(formData[field]) || formData[field] < 0) {
-          newErrors[field] = "Veuillez entrer un temps valide";
-        }
-      }
-    );
+    // Valider seulement le test d'équilibre "pieds joints", qui est toujours obligatoire
+    if (!formData.balanceFeetTogether) {
+      newErrors.balanceFeetTogether = "Le temps est requis";
+    } else if (isNaN(formData.balanceFeetTogether) || formData.balanceFeetTogether < 0) {
+      newErrors.balanceFeetTogether = "Veuillez entrer un temps valide";
+    }
+    
+    // Les autres tests d'équilibre (semi-tandem et tandem) ne sont plus obligatoires
+    // Vérifier seulement si une valeur a été entrée et qu'elle est valide
+    if (formData.balanceSemiTandem && 
+        (isNaN(formData.balanceSemiTandem) || formData.balanceSemiTandem < 0)) {
+      newErrors.balanceSemiTandem = "Veuillez entrer un temps valide";
+    }
+    
+    if (formData.balanceTandem && 
+        (isNaN(formData.balanceTandem) || formData.balanceTandem < 0)) {
+      newErrors.balanceTandem = "Veuillez entrer un temps valide";
+    }
 
     if (!formData.walkingTime) {
       newErrors.walkingTime = "Le temps de marche est requis";
@@ -147,8 +198,10 @@ function EvaluationPATH({ onSubmit }) {
       chairTestSupport: formData.chairTestSupport ? "with" : "without",
       chairTestCount: parseInt(formData.chairTestCount, 10),
       balanceFeetTogether: parseInt(formData.balanceFeetTogether, 10),
-      balanceSemiTandem: parseInt(formData.balanceSemiTandem, 10),
-      balanceTandem: parseInt(formData.balanceTandem, 10),
+      balanceSemiTandem: isBalanceTestEnabled('balanceSemiTandem') ? 
+                        parseInt(formData.balanceSemiTandem || 0, 10) : 0,
+      balanceTandem: isBalanceTestEnabled('balanceTandem') ? 
+                    parseInt(formData.balanceTandem || 0, 10) : 0,
       walkingTime: parseFloat(formData.walkingTime),
       scores: {
         cardioMusculaire: scoreCM,
@@ -209,7 +262,7 @@ function EvaluationPATH({ onSubmit }) {
     const count = parseInt(formData.chairTestCount);
     const withSupport = formData.chairTestSupport;
 
-    if (count === 0) return 0;
+    if (isNaN(count) || count === 0) return 0;
 
     if (!withSupport) {
       // Sans appui
@@ -227,9 +280,11 @@ function EvaluationPATH({ onSubmit }) {
   };
 
   const calculateBalanceScore = () => {
-    const feetTogether = parseFloat(formData.balanceFeetTogether);
-    const semiTandem = parseFloat(formData.balanceSemiTandem);
-    const tandem = parseFloat(formData.balanceTandem);
+    const feetTogether = parseFloat(formData.balanceFeetTogether || 0);
+    const semiTandem = isBalanceTestEnabled('balanceSemiTandem') ? 
+                       parseFloat(formData.balanceSemiTandem || 0) : 0;
+    const tandem = isBalanceTestEnabled('balanceTandem') ? 
+                  parseFloat(formData.balanceTandem || 0) : 0;
 
     // Si le score cardio-musculaire est 0, seulement évaluer l'équilibre pieds joints
     const cardioScore = calculateChairTestScore();
@@ -334,6 +389,7 @@ function EvaluationPATH({ onSubmit }) {
                   value={formData.balanceSemiTandem}
                   onChange={handleChange}
                   placeholder="Entrez le temps"
+                  disabled={!isBalanceTestEnabled('balanceSemiTandem')}
                 />
               </Form.Item>
             </Col>
@@ -348,6 +404,7 @@ function EvaluationPATH({ onSubmit }) {
                   value={formData.balanceTandem}
                   onChange={handleChange}
                   placeholder="Entrez le temps"
+                  disabled={!isBalanceTestEnabled('balanceTandem')}
                 />
               </Form.Item>
             </Col>

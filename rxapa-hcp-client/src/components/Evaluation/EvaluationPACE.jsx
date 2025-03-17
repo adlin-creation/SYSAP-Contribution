@@ -31,9 +31,50 @@ function EvaluationPACE({ onSubmit }) {
   const [errors, setErrors] = useState({});
   const [submissionData, setSubmissionData] = useState(null);
 
+  // Fonction pour déterminer si un test d'équilibre doit être activé
+  const isBalanceTestEnabled = (testName) => {
+    switch (testName) {
+      case 'balanceFeetTogether':
+        return true; // Toujours activé
+      case 'balanceSemiTandem':
+        return parseFloat(formData.balanceFeetTogether || 0) >= 10;
+      case 'balanceTandem':
+        return parseFloat(formData.balanceSemiTandem || 0) >= 10;
+      case 'balanceOneFooted':
+        return parseFloat(formData.balanceTandem || 0) >= 10;
+      default:
+        return false;
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => {
+      // Pour les champs d'équilibre, réinitialiser les champs suivants si la valeur est inférieure à 10
+      if (name === 'balanceFeetTogether' && (value === "" || parseFloat(value) < 10)) {
+        return {
+          ...prev,
+          [name]: value,
+          balanceSemiTandem: "",
+          balanceTandem: "",
+          balanceOneFooted: "",
+        };
+      } else if (name === 'balanceSemiTandem' && (value === "" || parseFloat(value) < 10)) {
+        return {
+          ...prev,
+          [name]: value,
+          balanceTandem: "",
+          balanceOneFooted: "",
+        };
+      } else if (name === 'balanceTandem' && (value === "" || parseFloat(value) < 10)) {
+        return {
+          ...prev,
+          [name]: value,
+          balanceOneFooted: "",
+        };
+      }
+      
+      // Pour frtPosition
       if (name === "frtPosition" && value === "armNotWorking") {
         return {
           ...prev,
@@ -41,6 +82,7 @@ function EvaluationPACE({ onSubmit }) {
           frtDistance: "",
         };
       }
+      
       return {
         ...prev,
         [name]: value,
@@ -68,16 +110,19 @@ function EvaluationPACE({ onSubmit }) {
       newErrors.chairTestCount = t("error_stand_invalid");
     }
 
-    [
-      "balanceFeetTogether",
-      "balanceSemiTandem",
-      "balanceTandem",
-      "balanceOneFooted",
-    ].forEach((field) => {
-      if (!formData[field]) {
-        newErrors[field] = t("error_time_required");
-      } else if (isNaN(formData[field]) || formData[field] < 0) {
-        newErrors[field] = t("error_time_invalid");
+    // Pieds joints est le seul test d'équilibre obligatoire
+    if (!formData.balanceFeetTogether) {
+      newErrors.balanceFeetTogether = t("error_time_required");
+    } else if (isNaN(formData.balanceFeetTogether) || formData.balanceFeetTogether < 0) {
+      newErrors.balanceFeetTogether = t("error_time_invalid");
+    }
+
+    // Valider les autres tests d'équilibre seulement s'ils sont activés et ont une valeur
+    const otherBalanceTests = ['balanceSemiTandem', 'balanceTandem', 'balanceOneFooted'];
+    otherBalanceTests.forEach(test => {
+      if (isBalanceTestEnabled(test) && formData[test] && 
+          (isNaN(formData[test]) || formData[test] < 0)) {
+        newErrors[test] = t("error_time_invalid");
       }
     });
 
@@ -172,7 +217,6 @@ function EvaluationPACE({ onSubmit }) {
     );
 
     setIsModalVisible(true);
-    setIsModalVisible(true); // Ouvre la modale
   };
 
   const handleConfirm = async () => {
@@ -188,9 +232,12 @@ function EvaluationPACE({ onSubmit }) {
       chairTestSupport: formData.chairTestSupport ? "with" : "without",
       chairTestCount: parseInt(formData.chairTestCount, 10),
       balanceFeetTogether: parseInt(formData.balanceFeetTogether, 10),
-      balanceSemiTandem: parseInt(formData.balanceSemiTandem, 10),
-      balanceTandem: parseInt(formData.balanceTandem, 10),
-      balanceOneFooted: parseInt(formData.balanceOneFooted, 10),
+      balanceSemiTandem: isBalanceTestEnabled('balanceSemiTandem') ? 
+                         parseInt(formData.balanceSemiTandem || 0, 10) : 0,
+      balanceTandem: isBalanceTestEnabled('balanceTandem') ? 
+                    parseInt(formData.balanceTandem || 0, 10) : 0,
+      balanceOneFooted: isBalanceTestEnabled('balanceOneFooted') ? 
+                       parseInt(formData.balanceOneFooted || 0, 10) : 0,
       frtSitting: formData.frtPosition === true ? "sitting" : 
                   formData.frtPosition === false ? "standing" : 
                   "not_working",
@@ -267,10 +314,13 @@ function EvaluationPACE({ onSubmit }) {
   };
 
   const calculateBalanceScore = () => {
-    const feetTogether = parseFloat(formData.balanceFeetTogether);
-    const semiTandem = parseFloat(formData.balanceSemiTandem);
-    const tandem = parseFloat(formData.balanceTandem);
-    const oneFooted = parseFloat(formData.balanceOneFooted);
+    const feetTogether = parseFloat(formData.balanceFeetTogether || 0);
+    const semiTandem = isBalanceTestEnabled('balanceSemiTandem') ? 
+                      parseFloat(formData.balanceSemiTandem || 0) : 0;
+    const tandem = isBalanceTestEnabled('balanceTandem') ? 
+                  parseFloat(formData.balanceTandem || 0) : 0;
+    const oneFooted = isBalanceTestEnabled('balanceOneFooted') ? 
+                     parseFloat(formData.balanceOneFooted || 0) : 0;
 
     if (oneFooted >= 10) return 6;
     if (oneFooted >= 5) return 5;
@@ -441,6 +491,7 @@ function EvaluationPACE({ onSubmit }) {
                   value={formData.balanceSemiTandem}
                   onChange={handleChange}
                   placeholder={t("time_placeholder")}
+                  disabled={!isBalanceTestEnabled('balanceSemiTandem')}
                 />
               </Form.Item>
             </Col>
@@ -466,6 +517,7 @@ function EvaluationPACE({ onSubmit }) {
                   value={formData.balanceTandem}
                   onChange={handleChange}
                   placeholder={t("time_placeholder")}
+                  disabled={!isBalanceTestEnabled('balanceTandem')}
                 />
               </Form.Item>
             </Col>
@@ -489,6 +541,7 @@ function EvaluationPACE({ onSubmit }) {
                   value={formData.balanceOneFooted}
                   onChange={handleChange}
                   placeholder={t("time_placeholder")}
+                  disabled={!isBalanceTestEnabled('balanceOneFooted')}
                 />
               </Form.Item>
             </Col>
