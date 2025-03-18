@@ -84,6 +84,7 @@ exports.updateCaregiver = async (req: any, res: any, next: any) => {
 //   return res;
 // };
 
+
 exports.deleteCaregiver = async (req: any, res: any, next: any) => {
   const caregiverId = req.params.id;
 
@@ -124,16 +125,23 @@ exports.deleteCaregiver = async (req: any, res: any, next: any) => {
       }
     });
 
-    const programIdsCount = programs_Enrollements_patient.length;
+    const occurrences = programs_Enrollements_patient.reduce(
+      (acc: number, program: { dataValues: { ProgramId: string } }) => {
+        return program.dataValues.ProgramId === program_Enrollement.ProgramId ? acc + 1 : acc;
+      },
+      0 // Accumulateur initialisé à 0
+    );
 
-    console.log(caregiver);
-    console.log(patient_Caregiver);
-    console.log(program_Enrollement);
-    console.log(patient);
-    console.log(programs_Enrollements_patient);
-    console.log(programIdsCount);
+    // console.log(caregiver);
+    // console.log(patient_Caregiver);
+    // console.log(program_Enrollement);
+    // console.log(patient);
+    // console.log(programs_Enrollements_patient);
+    // console.log(occurrences);
+    // console.log(patient.numberOfCaregivers);
 
-    if (programIdsCount === 1) {
+
+    if (occurrences === 1  ) {
       patient.numberOfPrograms -= 1;
     }
     
@@ -167,6 +175,7 @@ exports.deleteCaregiver = async (req: any, res: any, next: any) => {
     res.status(500).json({ message: "Error processing request" });
   }
 };
+
 
 /**
  * Returns a specific caregiver based on their ID.
