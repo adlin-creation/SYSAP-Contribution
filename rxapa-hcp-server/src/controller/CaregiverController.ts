@@ -3,6 +3,7 @@ import { Patient_Caregiver } from "../model/Patient_Caregiver";
 import { ProgramEnrollement } from "../model/ProgramEnrollement";
 import { Patient } from "../model/Patient";
 import * as bcrypt from "bcrypt";
+import { sequelize } from "../util/database"; // Ajout de l'import de l'instance sequelize
 
 /**
  * Creates a new caregiver.
@@ -65,22 +66,106 @@ exports.updateCaregiver = async (req: any, res: any, next: any) => {
 /**
  * Deletes a caregiver.
  */
+// exports.deleteCaregiver = async (req: any, res: any, next: any) => {
+//   const caregiverId = req.params.id;
+//   try {
+//     const caregiver = await Caregiver.findByPk(caregiverId);
+//     if (!caregiver) {
+//       return res.status(404).json({ message: "Caregiver not found" });
+//     }
+//     await caregiver.destroy();
+//     res.status(200).json({ message: "Caregiver deleted" });
+//   } catch (error: any) {
+//     if (!error.statusCode) {
+//       error.statusCode = 500;
+//     }
+//     res.status(error.statusCode).json({ message: "Error deleting caregiver" });
+//   }
+//   return res;
+// };
+
 exports.deleteCaregiver = async (req: any, res: any, next: any) => {
   const caregiverId = req.params.id;
+
   try {
+    // Trouver le soignant
     const caregiver = await Caregiver.findByPk(caregiverId);
     if (!caregiver) {
       return res.status(404).json({ message: "Caregiver not found" });
     }
-    await caregiver.destroy();
-    res.status(200).json({ message: "Caregiver deleted" });
-  } catch (error: any) {
-    if (!error.statusCode) {
-      error.statusCode = 500;
+
+    // Trouver la relation Patient-Caregiver
+    const patient_Caregiver = await Patient_Caregiver.findOne({
+      where: {
+        CaregiverId: caregiver.id
+      }
+    });
+
+    if (!patient_Caregiver) {
+      return res.status(404).json({ message: "Patient-Caregiver relation not found" });
     }
-    res.status(error.statusCode).json({ message: "Error deleting caregiver" });
+
+    // Trouver l'enregistrement de programme
+    const program_Enrollement = await ProgramEnrollement.findByPk(patient_Caregiver.ProgramEnrollementId);
+    if (!program_Enrollement) {
+      return res.status(404).json({ message: "Program Enrollement not found" });
+    }
+
+    // Trouver le patient associé
+    const patient = await Patient.findByPk(program_Enrollement.PatientId);
+    if (!patient) {
+      return res.status(404).json({ message: "Patient not found" });
+    }
+
+    // Trouver tous les enregistrements de programmes du patient
+    const programs_Enrollements_patient = await ProgramEnrollement.findAll({
+      where: {
+        PatientId: patient.id
+      }
+    });
+
+    const programIdsCount = programs_Enrollements_patient.length;
+
+    console.log(caregiver);
+    console.log(patient_Caregiver);
+    console.log(program_Enrollement);
+    console.log(patient);
+    console.log(programs_Enrollements_patient);
+    console.log(programIdsCount);
+
+    if (programIdsCount === 1) {
+      patient.numberOfPrograms -= 1;
+    }
+    
+    // Toujours décrémenter le nombre de soignants
+    patient.numberOfCaregivers -= 1;
+
+    // Démarrer la transaction
+    const transaction = await sequelize.transaction();
+
+    try {
+      // Enregistrer les modifications du patient
+      await patient.save({ transaction });
+
+      // Supprimer le soignant, la relation patient-soignant et l'enregistrement de programme
+      await patient_Caregiver.destroy({ transaction });
+      await program_Enrollement.destroy({ transaction });
+      await caregiver.destroy({ transaction });
+
+      // Commit de la transaction si tout se passe bien
+      await transaction.commit();
+
+      res.status(200).json({ message: "Caregiver deleted" });
+    } catch (error) {
+      // Rollback en cas d'erreur
+      await transaction.rollback();
+      console.error("Transaction failed:", error);
+      res.status(500).json({ message: "Error deleting caregiver" });
+    }
+  } catch (error) {
+    console.error("Unexpected error:", error);
+    res.status(500).json({ message: "Error processing request" });
   }
-  return res;
 };
 
 /**
