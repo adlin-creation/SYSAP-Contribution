@@ -42,14 +42,24 @@ describe('EvaluationMATCH Component', () => {
   it('renders the component without crashing', () => {
     render(<EvaluationMATCH />);
     
-    
     expect(screen.getByText('CARDIO-MUSCULAIRE')).toBeInTheDocument();
     expect(screen.getByText('ÉQUILIBRE (Debout, sans aide)')).toBeInTheDocument();
     expect(screen.getByText('OBJECTIF DE MARCHE')).toBeInTheDocument();
     
-    
     expect(screen.getByText('Annuler')).toBeInTheDocument();
     expect(screen.getByText('Soumettre')).toBeInTheDocument();
   });
+
+  it('displays the chair test options correctly', () => {
+    render(<EvaluationMATCH />);
+    
+    expect(screen.getByText('Test de la chaise en 30 secondes')).toBeInTheDocument();
+    expect(screen.getByText('Avec appui')).toBeInTheDocument();
+    expect(screen.getByText('Sans appui')).toBeInTheDocument();
+    
+    const withSupportRadio = screen.getByText('Avec appui').closest('label').querySelector('input');
+    expect(withSupportRadio.checked).toBeTruthy();
+  });
+
 
 });
