@@ -8,6 +8,8 @@ import {
 } from "../util/unikpass"; // Assure-toi que le chemin est correct pour ton utilitaire
 import jwt from "jsonwebtoken";
 import * as bcrypt from "bcrypt";
+import { Patient_Caregiver } from "../model/Patient_Caregiver";
+import { Caregiver } from "../model/Caregiver";
 
 /**
  * Creates a new patient.
@@ -189,3 +191,75 @@ exports.getPatientSessions = async (req: any, res: any, next: any) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+
+
+exports.getPatientDetails = async (req: any, res: any, next: any) => {
+  try {
+    const patientId = req.params.id;
+
+    if (!patientId) {
+      return res.status(400).json({ message: "Patient ID is required" });
+    }
+
+    console.log(`Fetching program enrollments for patient ID: ${patientId}`);
+    const programEnrollements = await ProgramEnrollement.findAll({
+      where: { PatientId: patientId }
+    });
+
+    if (!programEnrollements.length) {
+      return res.status(404).json({ message: "No program enrollments found for this patient" });
+    }
+    console.log(`Found ${programEnrollements.length} program enrollments:`);
+    console.log(programEnrollements);  // Détail des données récupérées
+
+    console.log("Fetching all patient caregivers");
+    const allPatientCaregivers = await Patient_Caregiver.findAll();
+
+    console.log(`Found ${allPatientCaregivers.length} patient caregivers:`);
+    console.log(allPatientCaregivers);  // Détail des données récupérées
+
+    const PatientCaregivers = allPatientCaregivers.filter((patientCaregiver: { ProgramEnrollementId: any; }) =>
+      programEnrollements.some(
+        (enrollment: { id: any; }) => enrollment.id === patientCaregiver.ProgramEnrollementId
+      )
+    );
+
+    console.log(`Filtered caregivers: Found ${PatientCaregivers.length} related to the program enrollments:`);
+    console.log(PatientCaregivers);  // Détail des données filtrées
+
+    if (!PatientCaregivers.length) {
+      return res.status(404).json({ message: "No caregivers found for this patient" });
+    }
+
+    // Extraction des IDs des soignants
+    const caregiverIds = PatientCaregivers.map((pc: { CaregiverId: any; }) => pc.CaregiverId);
+    console.log(`Caregiver IDs to fetch: ${caregiverIds.join(", ")}`);
+
+    console.log(`Fetching caregiver details for IDs: ${caregiverIds.join(", ")}`);
+    const caregivers = await Caregiver.findAll({
+      where: { id: caregiverIds } // Filtrage avec les IDs extraits
+    });
+
+    console.log(`Found ${caregivers.length} caregivers:`);
+    console.log(caregivers);  // Détail des données des soignants récupérées
+
+    if (!caregivers.length) {
+      return res.status(404).json({ message: "No caregivers details found" });
+    }
+
+    // Retourner les données sous forme de JSON
+    res.status(200).json({
+      caregivers,
+      patientCaregivers: PatientCaregivers,
+      programEnrollements
+    });
+
+  } catch (error) {
+    console.error("Error fetching patient details:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+
