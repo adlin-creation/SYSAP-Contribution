@@ -101,6 +101,25 @@ describe('EvaluationMATCH Component', () => {
     expect(semiTandemInput).toBeDisabled();
   });
 
+  it('enables semi-tandem balance test when feet together time is sufficient', async () => {
+    render(<EvaluationMATCH />);
+    
+    // Configurer un score cardio-musculaire suffisant (> 1)
+    const chairTestInput = screen.getByPlaceholderText('Entrez le nombre');
+    fireEvent.change(chairTestInput, { target: { value: '10' } });
+    
+    // Remplir le temps pieds joints avec une valeur suffisante
+    const balanceInputs = screen.getAllByPlaceholderText('Entrez le temps');
+    const feetTogetherInput = balanceInputs[0]; 
+    fireEvent.change(feetTogetherInput, { target: { value: '10' } });
+    
+    // Vérifier que le champ semi-tandem est activé
+    const semiTandemInput = balanceInputs[1]; 
+    
+    expect(semiTandemInput).not.toBeDisabled();
+  });
+
+
 
 
 
