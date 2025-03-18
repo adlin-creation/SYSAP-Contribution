@@ -158,6 +158,23 @@ describe('EvaluationMATCH Component', () => {
     expect(screen.queryByText('Temps nécessaire pour marcher 4 mètres (secondes)')).not.toBeInTheDocument();
   });
 
+  it('calculates walking speed correctly', async () => {
+    render(<EvaluationMATCH />);
+    
+    // Sélectionner "Le patient peut marcher"
+    const canWalkRadio = screen.getByText('Le patient peut marcher');
+    fireEvent.click(canWalkRadio);
+    
+    // Entrer une valeur de temps de marcher
+    const walkingTimeInput = screen.getByPlaceholderText('Entrez le temps en secondes');
+    fireEvent.change(walkingTimeInput, { target: { value: '5' } });
+    
+    // Attendre que l'interface se mette à jour
+    await waitFor(() => {
+      expect(screen.getByText(/Vitesse de marche/)).toBeInTheDocument();
+      expect(screen.getByText(/0.80 m\/s/)).toBeInTheDocument();
+    });
+  });
 
 
 
