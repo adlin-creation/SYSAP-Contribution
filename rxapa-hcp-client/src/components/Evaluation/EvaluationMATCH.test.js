@@ -212,6 +212,46 @@ describe('EvaluationMATCH Component', () => {
   });
 
 
+  it('calculates chair test score correctly when using support', async () => {
+    render(<EvaluationMATCH />);
+
+    // Sélectionner "Avec appui"
+    const withSupportRadio = screen.getByText('Avec appui');
+    fireEvent.click(withSupportRadio);
+
+    // Tester différentes valeurs et vérifier le score correspondant
+    const chairTestInput = screen.getByPlaceholderText('Entrez le nombre');
+
+    // 0 levée → Score 0
+    fireEvent.change(chairTestInput, { target: { value: '0' } });
+    fireEvent.blur(chairTestInput);
+    await waitFor(() => {
+      expect(screen.getByText(/Score du test de la chaise : 0/)).toBeInTheDocument();
+    });
+
+    // 4 levées → Score 1
+    fireEvent.change(chairTestInput, { target: { value: '4' } });
+    fireEvent.blur(chairTestInput);
+    await waitFor(() => {
+      expect(screen.getByText(/Score du test de la chaise : 1/)).toBeInTheDocument();
+    });
+
+    // 7 levées → Score 2
+    fireEvent.change(chairTestInput, { target: { value: '7' } });
+    fireEvent.blur(chairTestInput);
+    await waitFor(() => {
+      expect(screen.getByText(/Score du test de la chaise : 2/)).toBeInTheDocument();
+    });
+
+    // 10 levées → Score 3
+    fireEvent.change(chairTestInput, { target: { value: '10' } });
+    fireEvent.blur(chairTestInput);
+    await waitFor(() => {
+      expect(screen.getByText(/Score du test de la chaise : 3/)).toBeInTheDocument();
+    });
+  });
+
+
 
 
 
