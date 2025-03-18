@@ -38,4 +38,18 @@ describe('EvaluationMATCH Component', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
+
+  it('renders the component without crashing', () => {
+    render(<EvaluationMATCH />);
+    
+    
+    expect(screen.getByText('CARDIO-MUSCULAIRE')).toBeInTheDocument();
+    expect(screen.getByText('ÉQUILIBRE (Debout, sans aide)')).toBeInTheDocument();
+    expect(screen.getByText('OBJECTIF DE MARCHE')).toBeInTheDocument();
+    
+    
+    expect(screen.getByText('Annuler')).toBeInTheDocument();
+    expect(screen.getByText('Soumettre')).toBeInTheDocument();
+  });
+
 });
