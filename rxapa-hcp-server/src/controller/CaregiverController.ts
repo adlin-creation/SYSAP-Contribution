@@ -66,26 +66,7 @@ exports.updateCaregiver = async (req: any, res: any, next: any) => {
 /**
  * Deletes a caregiver.
  */
-// exports.deleteCaregiver = async (req: any, res: any, next: any) => {
-//   const caregiverId = req.params.id;
-//   try {
-//     const caregiver = await Caregiver.findByPk(caregiverId);
-//     if (!caregiver) {
-//       return res.status(404).json({ message: "Caregiver not found" });
-//     }
-//     await caregiver.destroy();
-//     res.status(200).json({ message: "Caregiver deleted" });
-//   } catch (error: any) {
-//     if (!error.statusCode) {
-//       error.statusCode = 500;
-//     }
-//     res.status(error.statusCode).json({ message: "Error deleting caregiver" });
-//   }
-//   return res;
-// };
-
-
-exports.deleteCaregiver = async (req: any, res: any, next: any) => {
+export const deleteCaregiver = async (req: any, res: any, next: any) => {
   const caregiverId = req.params.id;
 
   try {
@@ -131,14 +112,6 @@ exports.deleteCaregiver = async (req: any, res: any, next: any) => {
       },
       0 // Accumulateur initialisé à 0
     );
-
-    // console.log(caregiver);
-    // console.log(patient_Caregiver);
-    // console.log(program_Enrollement);
-    // console.log(patient);
-    // console.log(programs_Enrollements_patient);
-    // console.log(occurrences);
-    // console.log(patient.numberOfCaregivers);
 
 
     if (occurrences === 1  ) {
