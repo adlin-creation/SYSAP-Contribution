@@ -61,5 +61,14 @@ describe('EvaluationMATCH Component', () => {
     expect(withSupportRadio.checked).toBeTruthy();
   });
 
+  it('shows all balance test inputs', () => {
+    render(<EvaluationMATCH />);
+    
+    expect(screen.getByText('Temps Pieds joints (secondes)')).toBeInTheDocument();
+    expect(screen.getByText('Temps Semi-tandem (secondes)')).toBeInTheDocument();
+    expect(screen.getByText('Temps Tandem (secondes)')).toBeInTheDocument();
+  });
+
+
 
 });
