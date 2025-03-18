@@ -522,7 +522,6 @@ describe('EvaluationMATCH Component', () => {
       expect(axios.post).not.toHaveBeenCalled();
     });
     
-    
   });
 
   // Tests des fonctions de calcul isolées (simulées)
