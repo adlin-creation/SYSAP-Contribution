@@ -83,6 +83,25 @@ describe('EvaluationMATCH Component', () => {
     expect(screen.getByText('Le patient ne peut pas marcher')).toBeInTheDocument();
   });
 
+  it('disables semi-tandem balance test when feet together time is insufficient', async () => {
+    render(<EvaluationMATCH />);
+    
+    
+    const chairTestInput = screen.getByPlaceholderText('Entrez le nombre');
+    fireEvent.change(chairTestInput, { target: { value: '10' } });
+    
+    
+    const balanceInputs = screen.getAllByPlaceholderText('Entrez le temps');
+    const feetTogetherInput = balanceInputs[0]; // Premier champ (pieds joints)
+    fireEvent.change(feetTogetherInput, { target: { value: '5' } }); // < 10 sec
+    
+    
+    const semiTandemInput = balanceInputs[1]; // Deuxième champ (semi-tandem)
+    
+    expect(semiTandemInput).toBeDisabled();
+  });
+
+
 
 
 });
