@@ -15,4 +15,20 @@ export const Patient_Caregiver = sequelize.define("Patient_Caregiver", {
     type: dataTypes.DATE,
     allowNull: false,
   },
+  CaregiverId: {
+    type: dataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'Caregivers', // Le nom du modèle référencé
+      key: 'id', // La clé primaire du modèle référencé
+    }
+  },
+  ProgramEnrollementId: {
+    type: dataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'ProgramEnrollements', // Le nom du modèle référencé
+      key: 'id', // La clé primaire du modèle référencé
+    }
+  }
 });
