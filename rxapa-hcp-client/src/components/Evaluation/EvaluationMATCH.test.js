@@ -125,6 +125,8 @@ describe('EvaluationMATCH Component', () => {
     const balanceInputs = screen.getAllByPlaceholderText('Entrez le temps');
     const feetTogetherInput = balanceInputs[0]; 
     fireEvent.change(feetTogetherInput, { target: { value: '10' } });
+   
+    
     
     // remplir le temps semi-tandem avec une valeur insuffisante
     const semiTandemInput = balanceInputs[1];
@@ -135,6 +137,18 @@ describe('EvaluationMATCH Component', () => {
     
     expect(tandemInput).toBeDisabled();
   });
+
+
+
+  it('displays walking time input when patient can walk', async () => {
+    render(<EvaluationMATCH />);
+    
+    const canWalkRadio = screen.getByText('Le patient peut marcher');
+    fireEvent.click(canWalkRadio);
+    
+    expect(screen.getByText('Temps nécessaire pour marcher 4 mètres (secondes)')).toBeInTheDocument();
+  });
+
 
 
 
