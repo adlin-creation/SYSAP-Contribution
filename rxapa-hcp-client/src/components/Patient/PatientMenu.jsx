@@ -120,16 +120,16 @@ export default function PatientMenu({ role }) {
       const caregivers = await fetchCaregiversDetails(patient_caregivers);
       console.log("Détails des soignants :", caregivers);
 
-      openCaregiversModal(caregivers, patient_caregivers, programEnrollements);
+      openCaregiversModal(patient, caregivers, patient_caregivers, programEnrollements);
     } catch (err) {
       console.error("Erreur :", err.message);
       openModal(err.message, true);
     }
   };
 
-  const openCaregiversModal = (caregivers, patient_caregivers, programEnrollements) => {
+  const openCaregiversModal = (patient, caregivers, patient_caregivers, programEnrollements) => {
     
-    AntModal.info({
+    const modal = AntModal.info({
       title: (
         <div style={{ fontSize: "18px", fontWeight: "bold" }}>
           Liste des soignants
@@ -152,7 +152,7 @@ export default function PatientMenu({ role }) {
                   type="link"
                   danger
                   icon={<DeleteOutlined />}
-                  onClick={() => deleteCaregiver(c.id )}
+                  onClick={() => deleteCaregiver(c.id, patient,modal )}
                 >
                   {t("Supprimer")}
                 </Button>,
@@ -171,7 +171,7 @@ export default function PatientMenu({ role }) {
     });
   };
 
-  const deleteCaregiver = (id) => {
+  const deleteCaregiver = (id, patient,modal) => {
     AntModal.confirm({
       title: "Confirmer la suppression",
       content: "Êtes-vous sûr de vouloir supprimer ce soignant ?",
@@ -184,6 +184,9 @@ export default function PatientMenu({ role }) {
             headers: { Authorization: "Bearer " + token },
           });
           console.log(data);
+          modal.destroy();
+          refetchPatients();
+          handleGetCaregivers(patient);
         } catch (err) {
           console.log("Erreur lors de la suppression de l'aide soignant ");
         }       
