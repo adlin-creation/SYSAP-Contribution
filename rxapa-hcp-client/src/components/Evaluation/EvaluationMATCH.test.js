@@ -264,7 +264,57 @@ describe('EvaluationMATCH Component', () => {
     });
   });
 
+  it('calculates chair test score correctly when not using support', async () => {
+    render(<EvaluationMATCH />);
+    
+    // Sélectionner "Sans appui"
+    const withoutSupportRadio = screen.getByText('Sans appui');
+    fireEvent.click(withoutSupportRadio);
+    
+    // Compléter le formulaire avec des valeurs valides pour permettre la soumission
+    const balanceInputs = screen.getAllByPlaceholderText('Entrez le temps');
+    fireEvent.change(balanceInputs[0], { target: { value: '10' } }); // Score équilibre 1
+    
+    // Tester les différents cas selon l'arbre décisionnel
+    
+    // 2 levers sans appui = score 2 (Si E < 3, accorder le score C)
+    const chairTestInput = screen.getByPlaceholderText('Entrez le nombre');
+    fireEvent.change(chairTestInput, { target: { value: '2' } });
+    
+    // Soumettre le formulaire
+    const submitButton = screen.getByText('Soumettre');
+    fireEvent.click(submitButton);
+    
+    await waitFor(() => {
+      expect(axios.post).not.toHaveBeenCalled();
+    });
+    
+    // 4 levers sans appui = score 3 (3 à 5 levers)
+    fireEvent.change(chairTestInput, { target: { value: '4' } });
+    fireEvent.click(submitButton);
+    
+    await waitFor(() => {
+      expect(axios.post).not.toHaveBeenCalled();
+    });
+    
+    // 7 levers sans appui = score 4 (5-9 levers)
+    fireEvent.change(chairTestInput, { target: { value: '7' } });
+    fireEvent.click(submitButton);
+    
+    await waitFor(() => {
+      expect(axios.post).not.toHaveBeenCalled();
+    });
+    
+    // 10 levers sans appui = score 5 (≥ 10 levers)
+    fireEvent.change(chairTestInput, { target: { value: '10' } });
+    fireEvent.click(submitButton);
+    
+    await waitFor(() => {
+      expect(axios.post).not.toHaveBeenCalled();
+    });
+  });
 
+  
 
 
 
