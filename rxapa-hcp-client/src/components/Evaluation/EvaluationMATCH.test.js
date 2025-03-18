@@ -69,6 +69,14 @@ describe('EvaluationMATCH Component', () => {
     expect(screen.getByText('Temps Tandem (secondes)')).toBeInTheDocument();
   });
 
+  it('shows walking options correctly', () => {
+    render(<EvaluationMATCH />);
+    
+    expect(screen.getByText('Test 4 mètres – vitesse de marche confortable')).toBeInTheDocument();
+    expect(screen.getByText('Le patient peut marcher')).toBeInTheDocument();
+    expect(screen.getByText('Le patient ne peut pas marcher')).toBeInTheDocument();
+  });
+
 
 
 });
