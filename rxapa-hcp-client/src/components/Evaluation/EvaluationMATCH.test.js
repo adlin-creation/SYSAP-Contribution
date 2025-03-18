@@ -119,6 +119,24 @@ describe('EvaluationMATCH Component', () => {
     expect(semiTandemInput).not.toBeDisabled();
   });
 
+  it('disables tandem balance test when semi-tandem time is insufficient', async () => {
+    render(<EvaluationMATCH />);
+    
+    const balanceInputs = screen.getAllByPlaceholderText('Entrez le temps');
+    const feetTogetherInput = balanceInputs[0]; 
+    fireEvent.change(feetTogetherInput, { target: { value: '10' } });
+    
+    // remplir le temps semi-tandem avec une valeur insuffisante
+    const semiTandemInput = balanceInputs[1];
+    fireEvent.change(semiTandemInput, { target: { value: '5' } });
+    
+    // Vérifier que le champ tandem est désactivé
+    const tandemInput = balanceInputs[2];
+    
+    expect(tandemInput).toBeDisabled();
+  });
+
+
 
 
 
