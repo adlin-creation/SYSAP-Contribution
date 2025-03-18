@@ -31,6 +31,7 @@ export default function PatientMenu({ role }) {
   const [isCreatePatient, setIsCreatePatient] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState(null);
 
+
   const { token } = useToken();
 
   const patientUrl = `${Constants.SERVER_URL}/patients`;
@@ -105,6 +106,7 @@ export default function PatientMenu({ role }) {
     }
   };
 
+
   // Fonction principale pour gérer la recuperation en cascade jusqu'aux aides soignants
   const handleGetCaregivers = async (patient) => {
     console.log(patient);
@@ -126,6 +128,7 @@ export default function PatientMenu({ role }) {
   };
 
   const openCaregiversModal = (caregivers, patient_caregivers, programEnrollements) => {
+    
     AntModal.info({
       title: (
         <div style={{ fontSize: "18px", fontWeight: "bold" }}>
@@ -144,7 +147,16 @@ export default function PatientMenu({ role }) {
                     onClick={() => viewCaregiverDetails(c, patient_caregivers, programEnrollements)}
                   >
                     {t("voir les details")}
-                  </Button>
+                  </Button>,
+                  <Button
+                  type="link"
+                  danger
+                  icon={<DeleteOutlined />}
+                  onClick={() => deleteCaregiver(c.id )}
+                >
+                  {t("Supprimer")}
+                </Button>,
+                  
                 ]}
               >
                 <p><MailOutlined /> {c.email}</p>
@@ -156,6 +168,26 @@ export default function PatientMenu({ role }) {
       ) : <p>{t("Aucune aide soignante disponible")}</p>,
       onOk() { },
       width: "80%",
+    });
+  };
+
+  const deleteCaregiver = (id) => {
+    AntModal.confirm({
+      title: "Confirmer la suppression",
+      content: "Êtes-vous sûr de vouloir supprimer ce soignant ?",
+      okText: "Oui",
+      cancelText: "Annuler",
+      onOk: async () => {
+        
+        try {
+          const { data } = await axios.delete(`${Constants.SERVER_URL}/delete-caregiver/${id}`, {
+            headers: { Authorization: "Bearer " + token },
+          });
+          console.log(data);
+        } catch (err) {
+          console.log("Erreur lors de la suppression de l'aide soignant ");
+        }       
+      },
     });
   };
 
