@@ -176,6 +176,41 @@ describe('EvaluationMATCH Component', () => {
     });
   });
 
+  it('calculates walking objective based on speed correctly', async () => {
+    render(<EvaluationMATCH />);
+    
+    // Sélectionner "Le patient peut marcher"
+    const canWalkRadio = screen.getByText('Le patient peut marcher');
+    fireEvent.click(canWalkRadio);
+    
+    // Tester différentes valeurs de vitesse et leurs objectifs correspondants
+    const walkingTimeInput = screen.getByPlaceholderText('Entrez le temps en secondes');
+
+    // < 0.4 m/s → Objectif : 10 minutes
+    fireEvent.change(walkingTimeInput, { target: { value: '11' } }); // ≈ 0.36 m/s
+    await waitFor(() => {
+      expect(screen.getByText(/Objectif de marche : 10 minutes par jour/)).toBeInTheDocument();
+    });
+
+    // 0.4 à < 0.6 m/s → Objectif : 15 minutes
+    fireEvent.change(walkingTimeInput, { target: { value: '8' } }); // ≈ 0.5 m/s
+    await waitFor(() => {
+      expect(screen.getByText(/Objectif de marche : 15 minutes par jour/)).toBeInTheDocument();
+    });
+
+    // 0.6 à < 0.8 m/s → Objectif : 20 minutes
+    fireEvent.change(walkingTimeInput, { target: { value: '6' } }); // ≈ 0.67 m/s
+    await waitFor(() => {
+      expect(screen.getByText(/Objectif de marche : 20 minutes par jour/)).toBeInTheDocument();
+    });
+
+    // ≥ 0.8 m/s → Objectif : 30 minutes
+    fireEvent.change(walkingTimeInput, { target: { value: '5' } }); // 0.8 m/s
+    await waitFor(() => {
+      expect(screen.getByText(/Objectif de marche : 30 minutes par jour/)).toBeInTheDocument();
+    });
+  });
+
 
 
 
