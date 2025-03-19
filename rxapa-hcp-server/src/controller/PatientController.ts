@@ -202,22 +202,20 @@ exports.getPatientDetails = async (req: any, res: any, next: any) => {
       return res.status(400).json({ message: "Patient ID is required" });
     }
 
-    console.log(`Fetching program enrollments for patient ID: ${patientId}`);
     const programEnrollements = await ProgramEnrollement.findAll({
       where: { PatientId: patientId }
     });
 
+
     if (!programEnrollements.length) {
-      return res.status(404).json({ message: "No program enrollments found for this patient" });
+      return res.status(200).json({
+        caregivers: [],
+        patientCaregivers: [],
+        programEnrollements: []
+      });
     }
-    console.log(`Found ${programEnrollements.length} program enrollments:`);
-    console.log(programEnrollements);  // Détail des données récupérées
 
-    console.log("Fetching all patient caregivers");
     const allPatientCaregivers = await Patient_Caregiver.findAll();
-
-    console.log(`Found ${allPatientCaregivers.length} patient caregivers:`);
-    console.log(allPatientCaregivers);  // Détail des données récupérées
 
     const PatientCaregivers = allPatientCaregivers.filter((patientCaregiver: { ProgramEnrollementId: any; }) =>
       programEnrollements.some(
@@ -225,24 +223,16 @@ exports.getPatientDetails = async (req: any, res: any, next: any) => {
       )
     );
 
-    console.log(`Filtered caregivers: Found ${PatientCaregivers.length} related to the program enrollments:`);
-    console.log(PatientCaregivers);  // Détail des données filtrées
-
     if (!PatientCaregivers.length) {
       return res.status(404).json({ message: "No caregivers found for this patient" });
     }
 
     // Extraction des IDs des soignants
     const caregiverIds = PatientCaregivers.map((pc: { CaregiverId: any; }) => pc.CaregiverId);
-    console.log(`Caregiver IDs to fetch: ${caregiverIds.join(", ")}`);
 
-    console.log(`Fetching caregiver details for IDs: ${caregiverIds.join(", ")}`);
     const caregivers = await Caregiver.findAll({
       where: { id: caregiverIds } // Filtrage avec les IDs extraits
     });
-
-    console.log(`Found ${caregivers.length} caregivers:`);
-    console.log(caregivers);  // Détail des données des soignants récupérées
 
     if (!caregivers.length) {
       return res.status(404).json({ message: "No caregivers details found" });

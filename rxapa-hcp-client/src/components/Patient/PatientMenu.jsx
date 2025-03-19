@@ -55,7 +55,6 @@ export default function PatientMenu({ role }) {
       const response = await axios.get(`${Constants.SERVER_URL}/patientDetails/${patient.id}`, {
         headers: { Authorization: "Bearer " + token },
       });
-      console.log(response);
       const { caregivers, patientCaregivers, programEnrollements } = response.data;
       openCaregiversModal(patient, caregivers, patientCaregivers, programEnrollements);
     } catch (err) {
