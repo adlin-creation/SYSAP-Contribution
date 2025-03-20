@@ -231,14 +231,14 @@ function EvaluationMATCH({ onSubmit }) {
   };
 
   const exportPdf = async () => {
-    const date = new Date();
     const scoreCM = calculateChairTestScore();
     const scoreBalance = calculateBalanceScore();
     const scoreTotal = scoreCM + scoreBalance; // Assurez-vous de calculer le score total
     const programMatch = getProgramColor(scoreTotal);
-  
+    const date = new Date().toISOString().split("T")[0];
+
     const payload = {
-      date: date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear(),
+      date: date,
       idPatient: patientId,
       chairTestSupport: formData.chairTestSupport ? "with" : "without",
       chairTestCount: parseInt(formData.chairTestCount, 10),
@@ -254,7 +254,7 @@ function EvaluationMATCH({ onSubmit }) {
       }
     };
 
-    await exportMatchPdf(payload);
+    await exportMatchPdf(payload, token);
   };
 
   const calculateChairTestScore = () => {

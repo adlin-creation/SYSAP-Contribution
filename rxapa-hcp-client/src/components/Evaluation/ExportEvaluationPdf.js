@@ -1,6 +1,9 @@
 import { PDFDocument, rgb } from 'pdf-lib';
+import axios from "axios";
+import Constants from "../Utils/Constants";
 
-export const exportMatchPdf = async(evaluationData) => {
+
+export const exportMatchPdf = async(evaluationData, token) => {
   try {
     console.log('Full evaluationData:', evaluationData);
     const url = '/evaluation_pdf/Arbre_decisionnel_MATCH.pdf';
@@ -12,7 +15,33 @@ export const exportMatchPdf = async(evaluationData) => {
     const firstPage = pages[0];
     
     firstPage.drawText(evaluationData.date, {x: 120, y: 708, size: 12});
-    // patient
+
+    const patient = await axios.get(
+      `${Constants.SERVER_URL}/patient/${parseInt(evaluationData.idPatient)}`,
+      { headers: { Authorization: "Bearer " + token } }
+    );
+
+    const lines = [
+      "Patient:",
+      `${patient.data.firstname} ${patient.data.lastname}`,
+      `Date de naissance: ${patient.data.birthday}`,
+      `Poids: ${patient.data.weight} ${patient.data.weightUnit}`
+    ];
+    
+    // Set initial position and line height
+    const startX = 315;
+    const startY = 763;
+    const fontSize = 12;
+    const lineHeight = fontSize * 1.0; 
+    
+    // Draw each line separately
+    lines.forEach((line, index) => {
+      firstPage.drawText(line, {
+        x: startX,
+        y: startY - (index * lineHeight), // Move down for each subsequent line
+        size: fontSize,
+      });
+    });
     // kine
 
     firstPage.drawText("" + evaluationData.chairTestCount, {x: 70, y: 543, size: 12});
@@ -108,11 +137,11 @@ export const exportMatchPdf = async(evaluationData) => {
     const blob = new Blob([pdfBytes], { type: 'application/pdf' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = 'match-evaluation.pdf'; // Set the filename here
+    link.download = `${evaluationData.date}_${patient.data.lastname}_${patient.data.firstname}_MATCH.pdf`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    URL.revokeObjectURL(link.href); // Clean up memory
+    URL.revokeObjectURL(link.href);
 
   } catch (error) {
     console.error('PDF generation failed:', error);
