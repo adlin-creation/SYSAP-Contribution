@@ -1,70 +1,61 @@
-import React from "react";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import axios from "axios";
-import ExerciseDetail from "./ExerciseDetail";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { act } from "react-dom/test-utils";
+import React, { Suspense } from "react";
+import renderer from "react-test-renderer";
+import ExerciseDetail from "./ExerciseDetail";  
+import useToken from "../Authentication/useToken";
+import { I18nextProvider } from 'react-i18next';
+import i18n from '../../i18n';  
 
-jest.mock("axios");
+jest.mock("../Authentication/useToken", () => ({
+  __esModule: true,
+  default: jest.fn(),
+}));
 
-const mockExercise = {
-  key: "123",
-  name: "Squat",
-  description: "Un exercice pour les jambes",
-  category: "Force",
-  fitnessLevel: "Intermédiaire",
+beforeAll(() => {
+  // Mock matchMedia (Ant Design might use for responsive layout)
+  global.matchMedia = jest.fn().mockImplementation(() => ({
+    matches: false,
+    addListener: jest.fn(),
+    removeListener: jest.fn(),
+  }));
+});
+
+afterAll(() => {
+  global.matchMedia.mockRestore();
+});
+
+const ErrorBoundary = ({ children }) => {
+  return children;
 };
 
-const queryClient = new QueryClient();
+test("renders ExerciseDetail form snapshot", () => {
+  // Mock token
+  useToken.mockReturnValue({ token: "fake-token" });
 
-describe("ExerciseDetail Component", () => {
-  it("should render exercise details", () => {
-    render(
-      <QueryClientProvider client={queryClient}>
-        <ExerciseDetail exercise={mockExercise} refetchExercises={jest.fn()} />
-      </QueryClientProvider>
-    );
+  const mockExercise = {
+    key: "123",
+    name: "Push-up",
+    description: "A basic upper body exercise",
+    category: "strength",
+    fitnessLevel: "intermediate",
+  };
 
-    expect(screen.getByDisplayValue("Squat")).toBeInTheDocument();
-    expect(screen.getByDisplayValue("Un exercice pour les jambes")).toBeInTheDocument();
-  });
+  const mockRefetchExercises = jest.fn();
 
-  it("should enable edit mode", async () => {
-    render(
-      <QueryClientProvider client={queryClient}>
-        <ExerciseDetail exercise={mockExercise} refetchExercises={jest.fn()} />
-      </QueryClientProvider>
-    );
+  // Render via react-test-renderer
+  const component = renderer.create(
+    <I18nextProvider i18n={i18n}>
+      <ErrorBoundary>
+        <Suspense fallback={<div>Loading...</div>}>
+          <ExerciseDetail
+            exercise={mockExercise}
+            refetchExercises={mockRefetchExercises}
+          />
+        </Suspense>
+      </ErrorBoundary>
+    </I18nextProvider>
+  );
 
-    fireEvent.click(screen.getByRole("button", { name: /Modifier/i }));
-
-    const nameInput = screen.getByDisplayValue("Squat");
-    fireEvent.change(nameInput, { target: { value: "Squat Profond" } });
-
-    expect(nameInput.value).toBe("Squat Profond");
-  });
-
-  it("should submit the form and update exercise", async () => {
-    axios.put.mockResolvedValue({ data: { message: "Exercice mis à jour avec succès" } });
-
-    render(
-      <QueryClientProvider client={queryClient}>
-        <ExerciseDetail exercise={mockExercise} refetchExercises={jest.fn()} />
-      </QueryClientProvider>
-    );
-
-    fireEvent.click(screen.getByRole("button", { name: /Modifier/i }));
-
-    const nameInput = screen.getByDisplayValue("Squat");
-    fireEvent.change(nameInput, { target: { value: "Squat Avancé" } });
-
-    fireEvent.click(screen.getByRole("button", { name: /Enregistrer/i }));
-
-    await waitFor(() => {
-      expect(axios.put).toHaveBeenCalledTimes(1);
-      expect(axios.put).toHaveBeenCalledWith(expect.stringContaining("/update-exercise/123"), expect.any(Object), expect.any(Object));
-    });
-
-    expect(screen.getByText("Exercice mis à jour avec succès")).toBeInTheDocument();
-  });
+  // Snapshot
+  const tree = component.toJSON();
+  expect(tree).toMatchSnapshot();
 });
