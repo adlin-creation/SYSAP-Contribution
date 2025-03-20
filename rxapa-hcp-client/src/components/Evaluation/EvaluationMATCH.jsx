@@ -5,6 +5,7 @@ import axios from "axios";
 import useToken from "../Authentication/useToken";
 import Constants from "../Utils/Constants";
 import { InfoCircleOutlined } from "@ant-design/icons";
+import { exportMatchPdf } from "./ExportEvaluationPdf";
 
 function EvaluationMATCH({ onSubmit }) {
   const { patientId } = useParams();
@@ -227,6 +228,33 @@ function EvaluationMATCH({ onSubmit }) {
           "Échec de l'enregistrement des données",
       });
     }
+  };
+
+  const exportPdf = async () => {
+    const date = new Date();
+    const scoreCM = calculateChairTestScore();
+    const scoreBalance = calculateBalanceScore();
+    const scoreTotal = scoreCM + scoreBalance; // Assurez-vous de calculer le score total
+    const programMatch = getProgramColor(scoreTotal);
+  
+    const payload = {
+      date: date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear(),
+      idPatient: patientId,
+      chairTestSupport: formData.chairTestSupport ? "with" : "without",
+      chairTestCount: parseInt(formData.chairTestCount, 10),
+      balanceFeetTogether: parseInt(formData.balanceFeetTogether, 10),
+      balanceSemiTandem: parseInt(formData.balanceSemiTandem, 10),
+      balanceTandem: parseInt(formData.balanceTandem, 10),
+      walkingTime: parseFloat(formData.walkingTime),
+      scores: {
+        cardioMusculaire: scoreCM,
+        equilibre: scoreBalance,
+        total: scoreTotal, // Ajout du score total
+        program: programMatch,
+      }
+    };
+
+    await exportMatchPdf(payload);
   };
 
   const calculateChairTestScore = () => {
@@ -469,6 +497,9 @@ function EvaluationMATCH({ onSubmit }) {
           <Button key="submit" type="primary" onClick={handleConfirm}>
             Confirmer
           </Button>,
+          <Button key ="export" onClick={exportPdf}>
+            Exporter en PDF
+          </Button>
         ]}
       >
         {modalMessage}
