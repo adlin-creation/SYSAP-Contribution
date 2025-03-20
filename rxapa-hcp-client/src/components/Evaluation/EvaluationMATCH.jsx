@@ -491,14 +491,14 @@ function EvaluationMATCH({ onSubmit }) {
         open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         footer={[
+          <Button key ="export" onClick={exportPdf}>
+            Télécharger en PDF
+          </Button>,
           <Button key="close" onClick={() => setIsModalVisible(false)}>
             Fermer
           </Button>,
           <Button key="submit" type="primary" onClick={handleConfirm}>
             Confirmer
-          </Button>,
-          <Button key ="export" onClick={exportPdf}>
-            Exporter en PDF
           </Button>
         ]}
       >
