@@ -66,6 +66,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
     setValue("description", exercise.description);
     setValue("category", exercise.category);
     setValue("fitnessLevel", exercise.fitnessLevel);
+    setValue("videoUrl", exercise.videoUrl);
   };
 
   return (
@@ -159,6 +160,23 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
             />
           </Form.Item>
 
+          <Form.Item label={t("Exercises:exercise_video")}>
+            <Controller
+              name="videoUrl"
+              control={control}
+              defaultValue={exercise.videoUrl}
+              render={({ field: { onChange, value } }) => (
+                <Input
+                  onChange={onChange}
+                  value={value}
+                  placeholder={t("Exercises:exercise_video")}
+                  required
+                  disabled={!isEditing} 
+                />
+              )}
+            />
+          </Form.Item>
+
           {/* Button for editing or saving */}
           <Form.Item>
             {!isEditing ? (
@@ -210,6 +228,7 @@ ExerciseDetail.propTypes = {
     description: PropTypes.string.isRequired,
     category: PropTypes.string.isRequired,
     fitnessLevel: PropTypes.string.isRequired,
+    videoUrl: PropTypes.string.isRequired,
   }).isRequired,
   refetchExercises: PropTypes.func.isRequired,
 };
