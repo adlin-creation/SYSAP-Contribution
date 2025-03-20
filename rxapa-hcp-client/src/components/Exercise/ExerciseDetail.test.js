@@ -37,6 +37,7 @@ test("renders ExerciseDetail form snapshot", () => {
     description: "A basic upper body exercise",
     category: "strength",
     fitnessLevel: "intermediate",
+    videoUrl: "https://www.youtube.com/watch?v=8CE4ijWlQ18",
   };
 
   const mockRefetchExercises = jest.fn();
