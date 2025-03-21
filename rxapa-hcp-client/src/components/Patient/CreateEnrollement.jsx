@@ -152,7 +152,7 @@ function CreateEnrollement({ refetchPatients }) {
                     },
                   }}
                   render={({ field }) => (
-                    <Input {...field} placeholder={t("last_name_input")} />
+                    <Input {...field} placeholder={t("Patients:last_name_input")} />
                   )}
                 />
               </Form.Item>
@@ -526,7 +526,7 @@ function CreateEnrollement({ refetchPatients }) {
 
           <Form.Item>
             <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
-              {t("create_enrollement")}
+              {t("Patients:create_enrollement")}
             </Button>
           </Form.Item>
         </Form>
@@ -536,7 +536,7 @@ function CreateEnrollement({ refetchPatients }) {
           onCancel={closeModal}
           footer={[
             <Button key="close" onClick={closeModal}>
-              {t("close_button")}
+              {t("Patients:close_button")}
             </Button>,
           ]}
         >

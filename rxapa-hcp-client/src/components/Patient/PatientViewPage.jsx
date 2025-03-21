@@ -63,14 +63,14 @@ export default function PatientData({ patient, onClose }) {
 
   // Transformation des moyennes en tableau d'objets avec des couleurs personnalisées
   const averagesArray = hasSessions ? [
-    { name: "Difficulty", value: parseFloat(averages.difficulty), fill: "#8884d8" },
-    { name: "Pain", value: parseFloat(averages.pain), fill: "#82ca9d" },
-    { name: "Exercises", value: parseFloat(averages.exercises), fill: "#ff7300" },
+    { name: t("Patients:difficulty"), value: parseFloat(averages.difficulty), fill: "#8884d8" },
+    { name: t("Patients:pain"), value: parseFloat(averages.pain), fill: "#82ca9d" },
+    { name: t("Patients:exercises"), value: parseFloat(averages.exercises), fill: "#ff7300" },
   ] : [];
 
   return (
     <div className="patient-data-container">
-      <h1>{t("Patient Data")}</h1>
+      <h1>{t("Patients:patient_data")}</h1>
       <Card>
         <h2>{`${patient.firstname} ${patient.lastname}`}</h2>
         <p><strong>{t("Patients:email")}:</strong> {patient.email}</p>
@@ -79,7 +79,7 @@ export default function PatientData({ patient, onClose }) {
         <p><strong>{t("Patients:programs")}:</strong> {patient.numberOfPrograms}</p>
       </Card>
 
-      <h2>Session Data</h2>
+      <h2>{t("Patients:session_data")}</h2>
       <Card>
         {hasSessions ? (
           <div className="session-data-container">
@@ -87,19 +87,19 @@ export default function PatientData({ patient, onClose }) {
             <div className="session-info">
               <div className="session-buttons">
                 <Button onClick={() => setCurrentSession((prev) => Math.max(prev - 1, 0))}>
-                  Previous
+                  {t("Patients:button_previous")}
                 </Button>
                 <Button onClick={() => setCurrentSession((prev) => Math.min(prev + 1, sessions.length - 1))}>
-                  Next
+                  {t("Patients:button_next")}
                 </Button>
               </div>
 
               {/* Données de la session */}
-              <p><strong>Session:</strong> {currentSession + 1}</p>
-              <p><strong>Date:</strong> {sessionData.date}</p>
-              <p><strong>Difficulty Level:</strong> {sessionData.difficultyLevel}</p>
-              <p><strong>Pain Level:</strong> {sessionData.painLevel}</p>
-              <p><strong>Accomplished Exercice:</strong> {sessionData.accomplishedExercice}</p>
+              <p><strong>{t("Patients:session")}</strong> {currentSession + 1}</p>
+              <p><strong>{t("Patients:date")}</strong> {sessionData.date}</p>
+              <p><strong>{t("Patients:difficulty_level")}</strong> {sessionData.difficultyLevel}</p>
+              <p><strong>{t("Patients:pain_level")}</strong> {sessionData.painLevel}</p>
+              <p><strong>{t("Patients:accomplished_exercise")}</strong> {sessionData.accomplishedExercice}</p>
             </div>
 
             {/* Graphique Session Data */}
@@ -117,21 +117,21 @@ export default function PatientData({ patient, onClose }) {
           </div>
         ) : (
           <Empty
-            description={<span>{t("Aucune session disponible pour ce patient")}</span>}
+            description={<span>{t("Patients:no_exercice_patient")}</span>}
             image={Empty.PRESENTED_IMAGE_SIMPLE}
           />
         )}
       </Card>
 
-      <h2>Average Since Inception</h2>
+      <h2>{t("Patients:no_exercice_patient")}</h2>
       <Card>
         {hasSessions ? (
           <div className="average-data-container">
             {/* Informations des moyennes */}
             <div className="average-info">
-              <p><strong>Difficulty Level:</strong> {averages.difficulty}</p>
-              <p><strong>Pain Level:</strong> {averages.pain}</p>
-              <p><strong>Accomplished Exercice:</strong> {averages.exercises}</p>
+              <p><strong>{t("Patients:difficulty_level")}</strong> {averages.difficulty}</p>
+              <p><strong>{t("Patients:pain_level")}</strong> {averages.pain}</p>
+              <p><strong>{t("Patients:accomplished_exercise")}</strong> {averages.exercises}</p>
             </div>
 
             {/* Graphique Average Since Inception */}
@@ -147,7 +147,7 @@ export default function PatientData({ patient, onClose }) {
           </div>
         ) : (
           <Empty
-            description={<span>{t("Aucune session disponible pour calculer les moyennes")}</span>}
+            description={<span>{t("Patients:no_session_available_average")}</span>}
             image={Empty.PRESENTED_IMAGE_SIMPLE}
           />
         )}

@@ -42,7 +42,7 @@ function CreatePatient({ refetchPatients, onClose }) {
         });
         setProgramList(response.data);
       } catch (error) {
-        console.error("Erreur lors de la récupération des programmes", error);
+        console.error(t("Patients:error_program_load"), error);
       }
     };
 
@@ -113,10 +113,10 @@ function CreatePatient({ refetchPatients, onClose }) {
       })
       .then((res) => {
         refetchPatients();
-        openModal(t("create_patient_success"), false);
+        openModal(t("Patients:create_patient_success"), false);
       })
       .catch((err) =>
-        openModal(err.response.data.message || t("create_patient_failed"), true)
+        openModal(err.response.data.message || t("Patients:create_patient_failed"), true)
       );
   };
 
@@ -125,7 +125,7 @@ function CreatePatient({ refetchPatients, onClose }) {
     setIsErrorMessage(isError);
     AntModal[isError ? "error" : "success"]({
       content: message,
-      okText: "Close",
+      okText: t("Patients:close_buton"),
       centered: true,
       onOk: () => {
         if (!isError) {
@@ -366,7 +366,7 @@ function CreatePatient({ refetchPatients, onClose }) {
             icon={<UserAddOutlined />}
             style={{ marginBottom: 24 }}
           >
-            {hasCaregiver ? "Without Caregiver" : "With Caregiver"}
+            {hasCaregiver ? t("Patients:without_caregiver") : t("Patients:with_caregiver") }
           </Button>
           {showCaregiverForm && (
             <div>
@@ -534,14 +534,14 @@ function CreatePatient({ refetchPatients, onClose }) {
                   </Row>
                   <Row gutter={16}>
                     <Col span={24}>
-                      <Form.Item label="Programme" name="program">
+                      <Form.Item label={t("Patients:program")} name="program">
                         <Controller
                           name={`program${index + 1}`}
                           control={control}
                           render={({ field }) => (
                             <Select
                               {...field}
-                              placeholder="Sélectionner un programme"
+                              placeholder={t("Patients:program_selection")}
                             >
                               {programList?.map((program) => (
                                 <Select.Option

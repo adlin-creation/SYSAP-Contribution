@@ -55,7 +55,7 @@ export default function PatientMenu({ role }) {
       console.log(data);
       return data.find((prog) => prog.id === ProgramEnrollement.ProgramId);
     } catch (err) {
-      throw new Error(err.response?.data?.message || "Erreur lors de la récupération des programmes.");
+      throw new Error(err.response?.data?.message || t("Patients:fetch_error_programs"));
     }
   };
 
@@ -67,7 +67,7 @@ export default function PatientMenu({ role }) {
       });
       return data.filter((prog) => prog.PatientId === patientId);
     } catch (err) {
-      throw new Error(err.response?.data?.message || "Erreur lors de la récupération des Programmes d'enrôlement.");
+      throw new Error(err.response?.data?.message || t("Patients:fetch_error_programs_subscribe"));
     }
   };
 
@@ -83,7 +83,7 @@ export default function PatientMenu({ role }) {
         )
       );
     } catch (err) {
-      throw new Error(err.response?.data?.message || "Erreur lors de la récupération des soignants.");
+      throw new Error(err.response?.data?.message || t("Patients:fetch_error_caregiver."));
     }
   };
 
@@ -101,7 +101,7 @@ export default function PatientMenu({ role }) {
       );
       return caregiversDetails;
     } catch (err) {
-      throw new Error(err.response?.data?.message || "Erreur lors de la récupération des détails des soignants.");
+      throw new Error(err.response?.data?.message || t("Patients:fetch_error_detail_caregiver."));
     }
   };
 
@@ -110,17 +110,17 @@ export default function PatientMenu({ role }) {
     console.log(patient);
     try {
       const programEnrollements = await fetchProgramEnrollements(patient.id);
-      console.log("Enregistrements du patient :", programEnrollements);
+      console.log(t("Patients:add_caregiver"), programEnrollements);
 
       const patient_caregivers = await fetchPatientCaregivers(programEnrollements);
-      console.log("Soignants associés :", patient_caregivers);
+      console.log(t("Patients:caregiver_link"), patient_caregivers);
 
       const caregivers = await fetchCaregiversDetails(patient_caregivers);
-      console.log("Détails des soignants :", caregivers);
+      console.log(t("Patients:caregiver_details"), caregivers);
 
       openCaregiversModal(caregivers, patient_caregivers, programEnrollements);
     } catch (err) {
-      console.error("Erreur :", err.message);
+      console.error(t("Patients:error"), err.message);
       openModal(err.message, true);
     }
   };
@@ -143,7 +143,7 @@ export default function PatientMenu({ role }) {
                     icon={<LinkOutlined />}
                     onClick={() => viewCaregiverDetails(c, patient_caregivers, programEnrollements)}
                   >
-                    {t("voir les details")}
+                    {t("Patients:show_details")}
                   </Button>
                 ]}
               >
@@ -153,7 +153,7 @@ export default function PatientMenu({ role }) {
             </Col>
           ))}
         </Row>
-      ) : <p>{t("Aucune aide soignante disponible")}</p>,
+      ) : <p>{t("Patients:caregiver_available")}</p>,
       onOk() { },
       width: "80%",
     });
@@ -261,7 +261,7 @@ export default function PatientMenu({ role }) {
       key: "numberOfPrograms",
     },
     {
-      title: "Caregivers",
+      title: t("Patients:caregivers"),
       key: "caregivers",
       render: (record) => (
         <Button type="link" onClick={() => handleGetCaregivers(record)}>
@@ -302,9 +302,9 @@ export default function PatientMenu({ role }) {
 
   const showCaregiverWarning = () => {
     AntModal.warning({
-      title: "Deletion impossible.",
-      content: "Please delete the associated caregivers before deleting this patient.",
-      okText: "OK",
+      title: t("Patients:delete_impossible"),
+      content: t("Patients:delete_caregiver_message"),
+      okText: t("Patients:ok_button"),
     });
   };
 
@@ -313,9 +313,9 @@ export default function PatientMenu({ role }) {
       title: t("Patients:delete_patient_alert"),
       icon: <ExclamationCircleOutlined />,
       content: `${patient.firstname} ${patient.lastname}`,
-      okText: "Yes",
-      okType: "danger",
-      cancelText: "No",
+      okText: t("Patients:yes_button"),
+      okType: t("Patients:danger_message"),
+      cancelText: t("Patients:no_button"),
       onOk: () => {
         console.log(patient);
         if (patient.numberOfCaregivers === 0) {
@@ -419,7 +419,7 @@ export default function PatientMenu({ role }) {
           onCancel={closeModal}
           footer={[
             <Button key="close" onClick={closeModal}>
-              Close
+              {t("Patients:close_button")}
             </Button>,
           ]}
           style={{ color: isErrorMessage ? "#ff4d4f" : "#52c41a" }}
