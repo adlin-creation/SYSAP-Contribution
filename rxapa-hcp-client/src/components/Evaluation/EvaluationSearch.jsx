@@ -19,7 +19,7 @@ function EvaluationSearch() {
   const handleSearch = async () => {
     if (!searchTerm.trim()) {
       // Vérifie si l'entrée est vide
-      message.warning("Veuillez entrer un nom.");
+      message.warning(t("missing_name_warning"));
       return;
     }
 
@@ -93,7 +93,7 @@ function EvaluationSearch() {
       key: "Birthday",
     },
     {
-      title: "Actions",
+      title: t("actions_title"),
       key: "actions",
       render: (_, patient) => (
         <div className="space-x-2">
@@ -105,7 +105,7 @@ function EvaluationSearch() {
             }
             disabled={!patient.id}
           >
-            Évaluation PACE
+            {t("button_pace")}
           </Button>
           {/* Boutons désactivés pour PATH */}
           <Button
@@ -114,8 +114,8 @@ function EvaluationSearch() {
               (window.location.href = `/evaluation-path/${patient.id}`)
             }
             disabled={!patient.id}
-          > 
-          Évaluation PATH
+          >
+            {t("button_path")}
           </Button>
           <Button
             type="primary"
@@ -124,7 +124,7 @@ function EvaluationSearch() {
             }
             disabled={!patient.id}
           >
-            Évaluation MATCH
+            {t("button_match")}
           </Button>
         </div>
       ),
@@ -156,7 +156,7 @@ function EvaluationSearch() {
             />
             {/* Bouton de recherche */}
             <Button type="primary" onClick={handleSearch} loading={loading}>
-              Rechercher
+              {t("search_button")}
             </Button>
           </div>
         </div>

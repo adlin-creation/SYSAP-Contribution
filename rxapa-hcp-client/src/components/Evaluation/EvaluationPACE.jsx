@@ -84,7 +84,7 @@ function EvaluationPACE({ onSubmit }) {
     if (formData.frtPosition !== "armNotWorking") {
       // Seulement valider si ce n'est pas "Ne lève pas les bras"
       if (!formData.frtDistance) {
-        newErrors.frtDistance = "La distance est requise";
+        newErrors.frtDistance = t("error_distance_required");
       }
     }
 
@@ -116,18 +116,26 @@ function EvaluationPACE({ onSubmit }) {
             paddingBottom: "10px",
           }}
         >
-          {t("modal_results_eval")}
+          {t("modal_results_eval_pace")}
         </h3>
 
         <div style={{ marginBottom: "15px" }}>
           <strong>{t("individual_scores")}</strong>
-          <p>{t("cardio_score")} : {scoreA}/6</p>
-          <p>{t("balance_score")} : {scoreB}/6</p>
-          <p>{t("mobility_score")}: {scoreC}/6</p>
+          <p>
+            {t("cardio_score")} : {scoreA}/6
+          </p>
+          <p>
+            {t("balance_score")} : {scoreB}/6
+          </p>
+          <p>
+            {t("mobility_score")}: {scoreC}/6
+          </p>
         </div>
 
         <div style={{ marginBottom: "15px" }}>
-          <strong>{t("total_score")} : {totalScore}/18</strong>
+          <strong>
+            {t("total_score")} : {totalScore}/18
+          </strong>
         </div>
 
         <div
@@ -139,7 +147,9 @@ function EvaluationPACE({ onSubmit }) {
           }}
         >
           <p>
-            <strong>{t("level")} : {level}</strong>
+            <strong>
+              {t("level")} : {level}
+            </strong>
           </p>
           <p>
             <strong>
@@ -191,46 +201,55 @@ function EvaluationPACE({ onSubmit }) {
       balanceSemiTandem: parseInt(formData.balanceSemiTandem, 10),
       balanceTandem: parseInt(formData.balanceTandem, 10),
       balanceOneFooted: parseInt(formData.balanceOneFooted, 10),
-      frtSitting: formData.frtPosition === true ? "sitting" : 
-                  formData.frtPosition === false ? "standing" : 
-                  "not_working",
-      frtDistance: formData.frtPosition === "armNotWorking" ? 0 : parseInt(formData.frtDistance, 10),
+      frtSitting:
+        formData.frtPosition === true
+          ? "sitting"
+          : formData.frtPosition === false
+          ? "standing"
+          : "not_working",
+      frtDistance:
+        formData.frtPosition === "armNotWorking"
+          ? 0
+          : parseInt(formData.frtDistance, 10),
       walkingTime: parseFloat(formData.walkingTime),
       scores: {
         cardioMusculaire: scoreA,
         equilibre: scoreB,
         mobilite: scoreC,
         total: scoreTotal,
-        program: determineFrenchColor(scoreA, scoreB, scoreC) + " " + determineLevel(scoreTotal)
-      }
+        program:
+          determineFrenchColor(scoreA, scoreB, scoreC) +
+          " " +
+          determineLevel(scoreTotal),
+      },
     };
-  
+
     if (!payload) {
       console.error("Aucune donnée à envoyer");
       return;
     }
     const endpoint = "/create-pace-evaluation";
-    
+
     try {
       console.log("Payload envoyé :", JSON.stringify(payload, null, 2));
-      
+
       const response = await axios.post(
-        `${Constants.SERVER_URL}${endpoint}`, 
+        `${Constants.SERVER_URL}${endpoint}`,
         payload, // Utilisez directement le payload ici
         {
-          headers: { 
+          headers: {
             Authorization: "Bearer " + token,
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
         }
       );
-      
-      // Gérer le succès 
+
+      // Gérer le succès
       Modal.success({
         title: "Succès",
-        content: "Évaluation enregistrée avec succès"
+        content: "Évaluation enregistrée avec succès",
       });
-      
+
       // Recharger la page
       window.location.reload();
     } catch (error) {
@@ -238,15 +257,16 @@ function EvaluationPACE({ onSubmit }) {
         status: error.response?.status,
         data: error.response?.data,
         message: error.message,
-        payload: payload
+        payload: payload,
       });
-      
+
       Modal.error({
         title: "Erreur",
-        content: error.response?.data?.message || 
-                 error.response?.data || 
-                 error.message || 
-                 "Échec de l'enregistrement des données"
+        content:
+          error.response?.data?.message ||
+          error.response?.data ||
+          error.message ||
+          "Échec de l'enregistrement des données",
       });
     }
   };
@@ -336,7 +356,7 @@ function EvaluationPACE({ onSubmit }) {
   // pour que le programme envoyé a la BD est francais
   const determineFrenchColor = (scoreA, scoreB, scoreC) => {
     const min = Math.min(scoreA, scoreB, scoreC);
-    
+
     if (scoreA === scoreB && scoreB === scoreC) return "MARRON";
     if (scoreA === scoreB && scoreA === min) return "VERT";
     if (scoreB === scoreC && scoreB === min) return "ORANGE";
@@ -394,17 +414,15 @@ function EvaluationPACE({ onSubmit }) {
           </Form.Item>
 
           <h2>{t("sectionB_title")}</h2>
-          <div style={{ marginBottom: 16 }}>
-            {t("balance_instructions")}
-          </div>
+          <div style={{ marginBottom: 16 }}>{t("balance_instructions")}</div>
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
                 label={
-                  <span style={{ display: 'flex', alignItems: 'center' }}>
+                  <span style={{ display: "flex", alignItems: "center" }}>
                     {t("feet_together")}
-                    <img 
-                      src={require('./images/pace_balance_joint.png')}
+                    <img
+                      src={require("./images/pace_balance_joint.png")}
                       alt="Joint Feet"
                       style={{ marginLeft: 8, height: 24 }}
                     />
@@ -422,20 +440,20 @@ function EvaluationPACE({ onSubmit }) {
               </Form.Item>
             </Col>
             <Col span={12}>
-            <Form.Item
-              label={
-                <span style={{ display: 'flex', alignItems: 'center' }}>
-                  {t("feet_semi_tandem")}
-                  <img 
-                    src={require('./images/pace_balance_semi_tandem.png')}
-                    alt="Semi tandem Feet"
-                    style={{ marginLeft: 8, height: 24 }}
-                  />
-                </span>
-              }
-              validateStatus={errors.balanceSemiTandem ? "error" : ""}
-              help={errors.balanceSemiTandem}
-            >
+              <Form.Item
+                label={
+                  <span style={{ display: "flex", alignItems: "center" }}>
+                    {t("feet_semi_tandem")}
+                    <img
+                      src={require("./images/pace_balance_semi_tandem.png")}
+                      alt="Semi tandem Feet"
+                      style={{ marginLeft: 8, height: 24 }}
+                    />
+                  </span>
+                }
+                validateStatus={errors.balanceSemiTandem ? "error" : ""}
+                help={errors.balanceSemiTandem}
+              >
                 <Input
                   name="balanceSemiTandem"
                   value={formData.balanceSemiTandem}
@@ -449,10 +467,10 @@ function EvaluationPACE({ onSubmit }) {
             <Col span={12}>
               <Form.Item
                 label={
-                  <span style={{ display: 'flex', alignItems: 'center' }}>
-                  {t("feet_tandem")}
-                    <img 
-                      src={require('./images/pace_balance_tandem.png')}
+                  <span style={{ display: "flex", alignItems: "center" }}>
+                    {t("feet_tandem")}
+                    <img
+                      src={require("./images/pace_balance_tandem.png")}
                       alt="Tandem Feet"
                       style={{ marginLeft: 8, height: 24 }}
                     />
@@ -472,10 +490,10 @@ function EvaluationPACE({ onSubmit }) {
             <Col span={12}>
               <Form.Item
                 label={
-                  <span style={{ display: 'flex', alignItems: 'center' }}>
-                  {t("feet_unipodal")}
-                    <img 
-                      src={require('./images/pace_balance_unipodal.png')}
+                  <span style={{ display: "flex", alignItems: "center" }}>
+                    {t("feet_unipodal")}
+                    <img
+                      src={require("./images/pace_balance_unipodal.png")}
                       alt="Unipodal Foot"
                       style={{ marginLeft: 8, height: 24 }}
                     />
@@ -496,7 +514,7 @@ function EvaluationPACE({ onSubmit }) {
 
           {/* Section C: MOBILITÉ & STABILITÉ DU TRONC */}
           <h2>{t("sectionC_title")}</h2>
-          <Form.Item label={t("frt_label")}>
+          <Form.Item label={t("functional_reach_test_label")}>
             <Radio.Group
               name="frtPosition"
               value={formData.frtPosition}
@@ -550,10 +568,10 @@ function EvaluationPACE({ onSubmit }) {
 
           <Form.Item>
             <Button onClick={() => onClose()} style={{ marginRight: 8 }}>
-            {t("button_cancel")}
+              {t("button_cancel")}
             </Button>
             <Button type="primary" htmlType="submit">
-            {t("button_submit")}
+              {t("button_submit")}
             </Button>
           </Form.Item>
         </Form>

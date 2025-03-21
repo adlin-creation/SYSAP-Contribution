@@ -5,8 +5,10 @@ import axios from "axios";
 import useToken from "../Authentication/useToken";
 import Constants from "../Utils/Constants";
 import { InfoCircleOutlined } from "@ant-design/icons";
+import { useTranslation } from "react-i18next";
 
 function EvaluationPATH({ onSubmit }) {
+  const { t } = useTranslation("Evaluations");
   const { patientId } = useParams();
   const [formData, setFormData] = useState({
     // Section Cardio-musculaire
@@ -48,25 +50,25 @@ function EvaluationPATH({ onSubmit }) {
 
     // Validation
     if (!formData.chairTestCount) {
-      newErrors.chairTestCount = "Le nombre de levers est requis";
+      newErrors.chairTestCount = t("error_stand_required");
     } else if (isNaN(formData.chairTestCount) || formData.chairTestCount < 0) {
-      newErrors.chairTestCount = "Veuillez entrer un nombre valide";
+      newErrors.chairTestCount = t("error_stand_invalid");
     }
 
     ["balanceFeetTogether", "balanceSemiTandem", "balanceTandem"].forEach(
       (field) => {
         if (!formData[field]) {
-          newErrors[field] = "Le temps est requis";
+          newErrors[field] = t("error_time_required");
         } else if (isNaN(formData[field]) || formData[field] < 0) {
-          newErrors[field] = "Veuillez entrer un temps valide";
+          newErrors[field] = t("error_time_invalid");
         }
       }
     );
 
     if (!formData.walkingTime) {
-      newErrors.walkingTime = "Le temps de marche est requis";
+      newErrors.walkingTime = t("error_walktime_required");
     } else if (isNaN(formData.walkingTime) || formData.walkingTime <= 0) {
-      newErrors.walkingTime = "Veuillez entrer un temps de marche valide";
+      newErrors.walkingTime = t("error_walktime_invalid");
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -87,13 +89,17 @@ function EvaluationPATH({ onSubmit }) {
             paddingBottom: "10px",
           }}
         >
-          Évaluation PATH
+          {t("modal_results_eval_path")}
         </h3>
 
         <div style={{ marginBottom: "15px" }}>
-          <strong>Scores individuels :</strong>
-          <p>Cardio-musculaire : {scoreCM}/5</p>
-          <p>Équilibre : {scoreBalance}/4</p>
+          <strong>{t("individual_scores")}</strong>
+          <p>
+            {t("cardio_score")} : {scoreCM}/5
+          </p>
+          <p>
+            {t("balance_score")}: {scoreBalance}/4
+          </p>
         </div>
 
         {/* Nouveau style avec fond grisé comme dans MATCH */}
@@ -106,7 +112,9 @@ function EvaluationPATH({ onSubmit }) {
           }}
         >
           <p>
-            <strong>Programme PATH : {programPath}</strong>
+            <strong>
+              {t("path_program")} : <span dir="ltr">{programPath}</span>
+            </strong>
           </p>
         </div>
 
@@ -119,13 +127,14 @@ function EvaluationPATH({ onSubmit }) {
             }}
           >
             <p>
-              Vitesse de marche :{" "}
-              {(4 / parseFloat(formData.walkingTime)).toFixed(2)} m/s
+              {t("walk_speed")} :{" "}
+              {(4 / parseFloat(formData.walkingTime)).toFixed(2)}{" "}
+              {t("speed_unit")}
             </p>
             <p>
               <strong>
-                Objectif de marche / jour :{" "}
-                {calculateWalkingObjective(formData.walkingTime)} minutes
+                {t("daily_walking_goal")} :{" "}
+                {calculateWalkingObjective(formData.walkingTime)} {t("minutes")}
               </strong>
             </p>
           </div>
@@ -271,20 +280,20 @@ function EvaluationPATH({ onSubmit }) {
           initialValues={formData}
         >
           {/* Section A: CARDIO-MUSCULAIRE */}
-          <h2>CARDIO-MUSCULAIRE</h2>
-          <Form.Item label="Test de la chaise en 30 secondes">
+          <h2>{t("sectionA_title")}</h2>
+          <Form.Item label={t("chair_test_label")}>
             <Radio.Group
               name="chairTestSupport"
               value={formData.chairTestSupport}
               onChange={handleChange}
             >
-              <Radio value={true}>Avec appui</Radio>
-              <Radio value={false}>Sans appui</Radio>
+              <Radio value={true}>{t("with_support")}</Radio>
+              <Radio value={false}>{t("without_support")}</Radio>
             </Radio.Group>
           </Form.Item>
 
           <Form.Item
-            label="Nombre de levers"
+            label={t("stand_count")}
             validateStatus={errors.chairTestCount ? "error" : ""}
             help={errors.chairTestCount}
           >
@@ -292,26 +301,25 @@ function EvaluationPATH({ onSubmit }) {
               name="chairTestCount"
               value={formData.chairTestCount}
               onChange={handleChange}
-              placeholder="Entrez le nombre"
+              placeholder={t("stand_count_placeholder")}
             />
           </Form.Item>
 
           {/* Section B: ÉQUILIBRE */}
-          <h2>ÉQUILIBRE</h2>
+          <h2>{t("sectionB_title")}</h2>
           <div
             style={{ marginBottom: "15px", fontStyle: "italic", color: "#666" }}
           >
             <InfoCircleOutlined style={{ marginRight: "5px" }} />
-            Si le patient ne peut pas se lever avec support, 
-            seulement faire le test d'équilibre pieds joints
-            <br/>
+            {t("path_evaluation_information_1")}
+            <br />
             <InfoCircleOutlined style={{ marginRight: "5px" }} />
-            Si le patient n'arrive pas a garder un éuilibre dans une partie, entrer 0
+            {t("path_evaluation_information_2")}
           </div>
           <Row gutter={16}>
             <Col span={8}>
               <Form.Item
-                label="Temps Pieds joints (secondes)"
+                label={t("feet_together")}
                 validateStatus={errors.balanceFeetTogether ? "error" : ""}
                 help={errors.balanceFeetTogether}
               >
@@ -319,13 +327,13 @@ function EvaluationPATH({ onSubmit }) {
                   name="balanceFeetTogether"
                   value={formData.balanceFeetTogether}
                   onChange={handleChange}
-                  placeholder="Entrez le temps"
+                  placeholder={t("time_placeholder")}
                 />
               </Form.Item>
             </Col>
             <Col span={8}>
               <Form.Item
-                label="Temps Semi-tandem (secondes)"
+                label={t("feet_semi_tandem")}
                 validateStatus={errors.balanceSemiTandem ? "error" : ""}
                 help={errors.balanceSemiTandem}
               >
@@ -333,13 +341,13 @@ function EvaluationPATH({ onSubmit }) {
                   name="balanceSemiTandem"
                   value={formData.balanceSemiTandem}
                   onChange={handleChange}
-                  placeholder="Entrez le temps"
+                  placeholder={t("time_placeholder")}
                 />
               </Form.Item>
             </Col>
             <Col span={8}>
               <Form.Item
-                label="Temps Tandem (secondes)"
+                label={t("feet_tandem")}
                 validateStatus={errors.balanceTandem ? "error" : ""}
                 help={errors.balanceTandem}
               >
@@ -347,16 +355,16 @@ function EvaluationPATH({ onSubmit }) {
                   name="balanceTandem"
                   value={formData.balanceTandem}
                   onChange={handleChange}
-                  placeholder="Entrez le temps"
+                  placeholder={t("time_placeholder")}
                 />
               </Form.Item>
             </Col>
           </Row>
 
           {/* Section C: VITESSE DE MARCHE */}
-          <h2>VITESSE DE MARCHE</h2>
+          <h2>{t("SectionC_path_evaluation_title")}</h2>
           <Form.Item
-            label="Test 4 mètres - Temps nécessaire pour marcher 4-mètres (secondes)"
+            label={t("walk_test_label")}
             validateStatus={errors.walkingTime ? "error" : ""}
             help={errors.walkingTime}
           >
@@ -369,7 +377,7 @@ function EvaluationPATH({ onSubmit }) {
                   handleChange(e);
                 }
               }}
-              placeholder="Entrez le temps en secondes"
+              placeholder={t("walktime_placeholder")}
             />
             {formData.walkingTime && !errors.walkingTime && (
               <div style={{ marginTop: 8, color: "#666" }}>
@@ -381,24 +389,24 @@ function EvaluationPATH({ onSubmit }) {
 
           <Form.Item>
             <Button onClick={() => onClose()} style={{ marginRight: 8 }}>
-              Annuler
+              {t("button_cancel")}
             </Button>
             <Button type="primary" htmlType="submit">
-              Soumettre
+              {t("button_submit")}
             </Button>
           </Form.Item>
         </Form>
       </Col>
       <Modal
-        title="Résultats"
+        title={t("modal_results_title")}
         open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         footer={[
           <Button key="close" onClick={() => setIsModalVisible(false)}>
-            Fermer
+            {t("button_close")}
           </Button>,
           <Button key="submit" type="primary" onClick={handleConfirm}>
-            Confirmer
+            {t("button_confirm")}
           </Button>,
         ]}
       >

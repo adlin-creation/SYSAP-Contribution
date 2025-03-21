@@ -5,6 +5,7 @@ import axios from "axios";
 import useToken from "../Authentication/useToken";
 import Constants from "../Utils/Constants";
 import { InfoCircleOutlined } from "@ant-design/icons";
+import { useTranslation } from "react-i18next";
 
 function EvaluationMATCH({ onSubmit }) {
   const { patientId } = useParams();
@@ -24,6 +25,7 @@ function EvaluationMATCH({ onSubmit }) {
   const { token } = useToken();
   const [errors, setErrors] = useState({});
   const [submissionData, setSubmissionData] = useState(null);
+  const { t } = useTranslation("Evaluations");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -48,26 +50,26 @@ function EvaluationMATCH({ onSubmit }) {
 
     // Validation
     if (!formData.chairTestCount) {
-      newErrors.chairTestCount = "Le nombre de levers est requis";
+      newErrors.chairTestCount = t("error_stand_required");
     } else if (isNaN(formData.chairTestCount) || formData.chairTestCount < 0) {
-      newErrors.chairTestCount = "Veuillez entrer un nombre valide";
+      newErrors.chairTestCount = t("error_stand_invalid");
     }
 
     ["balanceFeetTogether", "balanceSemiTandem", "balanceTandem"].forEach(
       (field) => {
         if (!formData[field]) {
-          newErrors[field] = "Le temps est requis";
+          newErrors[field] = t("error_time_required");
         } else if (isNaN(formData[field]) || formData[field] < 0) {
-          newErrors[field] = "Veuillez entrer un temps valide";
+          newErrors[field] = t("error_time_invalid");
         }
       }
     );
 
     if (formData.canWalk) {
       if (!formData.walkingTime) {
-        newErrors.walkingTime = "Le temps de marche est requis";
+        newErrors.walkingTime = t("error_walktime_required");
       } else if (isNaN(formData.walkingTime) || formData.walkingTime <= 0) {
-        newErrors.walkingTime = "Veuillez entrer un temps de marche valide";
+        newErrors.walkingTime = t("error_walktime_invalid");
       }
     }
 
@@ -91,15 +93,21 @@ function EvaluationMATCH({ onSubmit }) {
             paddingBottom: "10px",
           }}
         >
-          Évaluation MATCH
+          {t("modal_results_eval_match")}
         </h3>
 
         <div style={{ marginBottom: "15px" }}>
-          <strong>Scores individuels :</strong>
-          <p>Cardio-musculaire : {scoreCM}/5</p>
-          <p>Équilibre : {scoreBalance}/4</p>
+          <strong>{t("individual_scores")} :</strong>
           <p>
-            <strong>SCORE TOTAL : {totalScore}/9</strong>
+            {t("cardio_score")} : {scoreCM}/5
+          </p>
+          <p>
+            {t("balance_score")} : {scoreBalance}/4
+          </p>
+          <p>
+            <strong>
+              {t("total_score")} : {totalScore}/9
+            </strong>
           </p>
         </div>
 
@@ -112,7 +120,7 @@ function EvaluationMATCH({ onSubmit }) {
           }}
         >
           <p>
-            <strong>Programme MATCH recommandé : </strong>
+            <strong>{t("recommended_match_program")} : </strong>
             <span style={{ fontWeight: "bold" }}> {programColor}</span>
           </p>
         </div>
@@ -126,13 +134,14 @@ function EvaluationMATCH({ onSubmit }) {
             }}
           >
             <p>
-              Vitesse de marche :{" "}
-              {(4 / parseFloat(formData.walkingTime)).toFixed(2)} m/s
+              {t("walk_speed")} :{" "}
+              {(4 / parseFloat(formData.walkingTime)).toFixed(2)}{" "}
+              {t("speed_unit")}
             </p>
             <p>
               <strong>
-                Objectif de marche / jour :{" "}
-                {calculateWalkingObjective(formData.walkingTime)} minutes
+                {t("daily_walking_goal")} :{" "}
+                {calculateWalkingObjective(formData.walkingTime)} {t("minutes")}
               </strong>
             </p>
           </div>
@@ -147,10 +156,7 @@ function EvaluationMATCH({ onSubmit }) {
             }}
           >
             <p>
-              <strong>
-                Capacité de marche à travailler (Objectif à réévaluer au cours
-                du séjour)
-              </strong>
+              <strong>{t("walking_capacity_to_improve")}</strong>
             </p>
           </div>
         )}
@@ -165,7 +171,7 @@ function EvaluationMATCH({ onSubmit }) {
     const scoreBalance = calculateBalanceScore();
     const scoreTotal = scoreCM + scoreBalance; // Assurez-vous de calculer le score total
     const programMatch = getProgramColor(scoreTotal);
-  
+
     const payload = {
       idPatient: patientId,
       chairTestSupport: formData.chairTestSupport ? "with" : "without",
@@ -179,7 +185,7 @@ function EvaluationMATCH({ onSubmit }) {
         equilibre: scoreBalance,
         total: scoreTotal, // Ajout du score total
         program: programMatch,
-      }
+      },
     };
 
     if (!payload) {
@@ -284,10 +290,10 @@ function EvaluationMATCH({ onSubmit }) {
   };
 
   const getProgramColor = (totalScore) => {
-    if (totalScore <= 1) return "ROUGE";
-    if (totalScore <= 3) return "JAUNE";
-    if (totalScore <= 5) return "ORANGE";
-    if (totalScore <= 7) return "VERT";
+    if (totalScore <= 1) return t("color_red");
+    if (totalScore <= 3) return t("color_yellow");
+    if (totalScore <= 5) return t("color_orange");
+    if (totalScore <= 7) return t("color_green");
     return "BLEU";
   };
 
@@ -304,15 +310,18 @@ function EvaluationMATCH({ onSubmit }) {
           initialValues={formData}
         >
           {/* Section A: CARDIO-MUSCULAIRE */}
-          <h2>CARDIO-MUSCULAIRE</h2>
-          <Form.Item label="Test de la chaise en 30 secondes">
+          <h2>{t("sectionA_title")}</h2>
+          <Form.Item label={t("chair_test_label")}>
             <div
-            style={{ marginBottom: "15px", fontStyle: "italic", color: "#666" }}
-          >
-            <InfoCircleOutlined style={{ marginRight: "5px" }} />
-            Commencer avec support. Si le patient réussi a faire 5 levers ou plus, 
-            refaire le test sans support
-          </div>
+              style={{
+                marginBottom: "15px",
+                fontStyle: "italic",
+                color: "#666",
+              }}
+            >
+              <InfoCircleOutlined style={{ marginRight: "5px" }} />
+              {t("start_with_support")}
+            </div>
             <Radio.Group
               name="chairTestSupport"
               value={formData.chairTestSupport}
@@ -320,8 +329,8 @@ function EvaluationMATCH({ onSubmit }) {
                 setFormData({ ...formData, chairTestSupport: e.target.value })
               }
             >
-              <Radio value={true}>Avec appui</Radio>
-              <Radio value={false}>Sans appui</Radio>
+              <Radio value={true}>{t("with_support")}</Radio>
+              <Radio value={false}>{t("without_support")}</Radio>
             </Radio.Group>
           </Form.Item>
 
@@ -339,21 +348,20 @@ function EvaluationMATCH({ onSubmit }) {
           </Form.Item>
 
           {/* Section B: ÉQUILIBRE */}
-          <h2>ÉQUILIBRE (Debout, sans aide)</h2>
+          <h2>{t("SectionB_match_evaluation_title")}</h2>
           <div
             style={{ marginBottom: "15px", fontStyle: "italic", color: "#666" }}
           >
             <InfoCircleOutlined style={{ marginRight: "5px" }} />
-            Si le patient ne peut pas accomplir 5 levers avec support, 
-            seulement faire le test d'équilibre pieds joints
-            <br/>
+            {t("match_evaluation_information_1")}
+            <br />
             <InfoCircleOutlined style={{ marginRight: "5px" }} />
-            Si le patient n'arrive pas a garder un éuilibre dans une partie, entrer 0
+            {t("match_evaluation_information_2")}
           </div>
           <Row gutter={16}>
             <Col span={8}>
               <Form.Item
-                label="Temps Pieds joints (secondes)"
+                label={t("feet_together")}
                 validateStatus={errors.balanceFeetTogether ? "error" : ""}
                 help={errors.balanceFeetTogether}
                 tooltip="< 10 secondes = Score 0, ≥ 10 secondes = Score 1"
@@ -362,13 +370,13 @@ function EvaluationMATCH({ onSubmit }) {
                   name="balanceFeetTogether"
                   value={formData.balanceFeetTogether}
                   onChange={handleChange}
-                  placeholder="Entrez le temps"
+                  placeholder={t("time_placeholder")}
                 />
               </Form.Item>
             </Col>
             <Col span={8}>
               <Form.Item
-                label="Temps Semi-tandem (secondes)"
+                label={t("feet_semi_tandem")}
                 validateStatus={errors.balanceSemiTandem ? "error" : ""}
                 help={errors.balanceSemiTandem}
                 tooltip="< 10 secondes = Score 2, ≥ 10 secondes = Score 3"
@@ -377,13 +385,13 @@ function EvaluationMATCH({ onSubmit }) {
                   name="balanceSemiTandem"
                   value={formData.balanceSemiTandem}
                   onChange={handleChange}
-                  placeholder="Entrez le temps"
+                  placeholder={t("time_placeholder")}
                 />
               </Form.Item>
             </Col>
             <Col span={8}>
               <Form.Item
-                label="Temps Tandem (secondes)"
+                label={t("feet_tandem")}
                 validateStatus={errors.balanceTandem ? "error" : ""}
                 help={errors.balanceTandem}
                 tooltip="≥ 3 secondes = Score 4"
@@ -392,15 +400,15 @@ function EvaluationMATCH({ onSubmit }) {
                   name="balanceTandem"
                   value={formData.balanceTandem}
                   onChange={handleChange}
-                  placeholder="Entrez le temps"
+                  placeholder={t("time_placeholder")}
                 />
               </Form.Item>
             </Col>
           </Row>
 
           {/* Section C: VITESSE DE MARCHE */}
-          <h2>OBJECTIF DE MARCHE</h2>
-          <Form.Item label="Test 4 mètres – vitesse de marche confortable">
+          <h2>{t("walk_objective")}</h2>
+          <Form.Item label={t("match_walk_objective")}>
             <Radio.Group
               value={formData.canWalk}
               onChange={(e) =>
@@ -408,15 +416,13 @@ function EvaluationMATCH({ onSubmit }) {
               }
               style={{ marginBottom: "16px" }}
             >
-              <Radio value={true}>Le patient peut marcher</Radio>
-              <Radio value={false}>
-                Le petient ne peut pas marcher
-              </Radio>
+              <Radio value={true}>{t("patient_can_walk")}</Radio>
+              <Radio value={false}>{t("patient_cannot_walk")}</Radio>
             </Radio.Group>
 
             {formData.canWalk && (
               <Form.Item
-                label="Temps nécessaire pour marcher 4 mètres (secondes)"
+                label={t("time_needed_walk_4m")}
                 validateStatus={errors.walkingTime ? "error" : ""}
                 help={errors.walkingTime}
               >
@@ -429,7 +435,7 @@ function EvaluationMATCH({ onSubmit }) {
                       handleChange(e);
                     }
                   }}
-                  placeholder="Entrez le temps en secondes"
+                  placeholder={t("time_placeholder")}
                 />
                 {formData.walkingTime && !errors.walkingTime && (
                   <div style={{ marginTop: 8, color: "#666" }}>
@@ -450,24 +456,24 @@ function EvaluationMATCH({ onSubmit }) {
 
           <Form.Item>
             <Button onClick={() => onClose()} style={{ marginRight: 8 }}>
-              Annuler
+              {t("button_cancel")}
             </Button>
             <Button type="primary" htmlType="submit">
-              Soumettre
+              {t("button_submit")}
             </Button>
           </Form.Item>
         </Form>
       </Col>
       <Modal
-        title="Résultats"
+        title={t("modal_results_title")}
         open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         footer={[
           <Button key="close" onClick={() => setIsModalVisible(false)}>
-            Fermer
+            {t("button_close")}
           </Button>,
           <Button key="submit" type="primary" onClick={handleConfirm}>
-            Confirmer
+            {t("button_confirm")}
           </Button>,
         ]}
       >

@@ -13,7 +13,7 @@ i18n
       "Blocs",
       "Cycles",
       "Exercises",
-      "Evaluation",
+      "Evaluations",
       "Patients",
       "Phases",
       "Professionals",

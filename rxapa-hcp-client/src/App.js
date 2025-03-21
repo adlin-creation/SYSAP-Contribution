@@ -111,7 +111,7 @@ function App() {
       {
         key: "/evaluations",
         icon: <FormOutlined />,
-        label: <Link to="/evaluations">Évaluation</Link>,
+        label: <Link to="/evaluations">{t("App:evaluation")}</Link>,
       },
       {
         key: "healthcare-professional",
@@ -327,8 +327,8 @@ function App() {
                 </Suspense>
               }
             ></Route>
-            <Route 
-              path="evaluation-path/:patientId" 
+            <Route
+              path="evaluation-path/:patientId"
               element={
                 <Suspense fallback={<div>Loading evaluation...</div>}>
                   <EvaluationPATH />
