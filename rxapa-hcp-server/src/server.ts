@@ -1,8 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
 const path = require("path");
-// Handles binary (files) data
-import multer from "multer";
 
 import { createAssociations } from "./model/Association";
 
@@ -20,46 +18,24 @@ import patientRoutes from "./routes/PatientRoute";
 import patientCaregiverRoutes from "./routes/PatientCaregiverRoute";
 import caregiverRoutes from "./routes/CaregiverRoute";
 import professionalUserRoutes from "./routes/ProfessionalUserRoute";
+import evaluationRoutes from "./routes/EvaluationRoute";
 
 import { errorHandler } from "./middleware/errorHandler"; // Import du middleware
 
 const app = express();
 
-const bodyParser = require("body-parser");
-
-// image storage configuration object
-const imageStorage = multer.diskStorage({
-  // image destination function
-  destination: (req: any, file, cb) => {
-    // null should the error message response; otherwise, store the image in
-    // images folder
-    cb(null, "images");
-  },
-  // image name function
-  // null should the error message response; otherwise, store the image
-  // with current timesatmp and the origunal image name
-  filename: (req: any, file: any, cb: any) => {
-    cb(null, Date.now() + "_" + file.originalname);
-  },
-});
-
-// filter files to be accepted as an image
-const fileFilter = (req: any, file: any, cb: any) => {
-  if (file.mimetype === "image/png" || file.mimetype === "image/jpg" || file.mimetype === "image/jpeg") {
-    cb(null, true);
-  } else {
-    cb(null, false);
-  }
-};
-
 // //Reads .env file and makes it accessible via process.env
 dotenv.config();
 
-app.use(bodyParser.json());
-app.use(multer({ storage: imageStorage, fileFilter: fileFilter }).single("exerciseImage"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "OPTIONS, GET, POST, PUT, PATCH, DELETE");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "OPTIONS, GET, POST, PUT, PATCH, DELETE"
+  );
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
   next();
 });
@@ -76,6 +52,7 @@ app.use(patientRoutes);
 app.use(patientCaregiverRoutes);
 app.use(caregiverRoutes);
 app.use(professionalUserRoutes);
+app.use(evaluationRoutes);
 
 // app.use("/", programPhaseRoutes);
 

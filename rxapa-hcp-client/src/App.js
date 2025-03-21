@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import {
   Route,
   Routes,
@@ -23,6 +23,10 @@ import DoctorPatients from "./components/ProfessionalUser/Doctor/DoctorPatients"
 import KinesiologistMenu from "./components/ProfessionalUser/Kinesiologist/KinesiologistMenu";
 import KinesiologistPatients from "./components/ProfessionalUser/Kinesiologist/KinesiologistPatients";
 import AdminMenu from "./components/ProfessionalUser/Admin/AdminMenu";
+import EvaluationPACE from "./components/Evaluation/EvaluationPACE";
+import EvaluationMATCH from "./components/Evaluation/EvaluationMATCH";
+import EvaluationPATH from "./components/Evaluation/EvaluationPATH";
+import EvaluationSearch from "./components/Evaluation/EvaluationSearch";
 import useToken from "./components/Authentication/useToken"; // Import du hook personnalisé
 import Constants from "./components/Utils/Constants";
 import LanguageSwitcher from "./components/LanguageSwitcher/LanguageSwitcher";
@@ -42,6 +46,7 @@ import {
   UsergroupAddOutlined,
   MedicineBoxOutlined,
   HeartOutlined,
+  FormOutlined, // Ajoutez cette ligne
 } from "@ant-design/icons";
 import "antd/dist/reset.css";
 import "./App.css";
@@ -104,6 +109,11 @@ function App() {
         label: <Link to="/patients">{t("App:patients")}</Link>,
       },
       {
+        key: "/evaluations",
+        icon: <FormOutlined />,
+        label: <Link to="/evaluations">Évaluation</Link>,
+      },
+      {
         key: "healthcare-professional",
         icon: <UsergroupAddOutlined />,
         label: t("App:professionals"),
@@ -161,10 +171,7 @@ function App() {
             }
 
             // CAS ADMIN: l'admin ne voit PAS l'onglet "admins"
-            if (
-              location.state.role === "admin" &&
-              item.key === "/admins"
-            ) {
+            if (location.state.role === "admin" && item.key === "/admins") {
               return null;
             }
 
@@ -296,6 +303,38 @@ function App() {
               element={<KinesiologistPatients />}
             ></Route>
             <Route path="admins" element={<AdminMenu />}></Route>
+            <Route
+              path="evaluations"
+              element={
+                <Suspense fallback={<div>Loading evaluations...</div>}>
+                  <EvaluationSearch />
+                </Suspense>
+              }
+            ></Route>
+            <Route
+              path="evaluation-pace/:patientId"
+              element={
+                <Suspense fallback={<div>Loading evaluation...</div>}>
+                  <EvaluationPACE />
+                </Suspense>
+              }
+            ></Route>
+            <Route
+              path="evaluation-match/:patientId"
+              element={
+                <Suspense fallback={<div>Loading evaluation...</div>}>
+                  <EvaluationMATCH />
+                </Suspense>
+              }
+            ></Route>
+            <Route 
+              path="evaluation-path/:patientId" 
+              element={
+                <Suspense fallback={<div>Loading evaluation...</div>}>
+                  <EvaluationPATH />
+                </Suspense>
+              }
+            ></Route>
             <Route
               path="*"
               element={

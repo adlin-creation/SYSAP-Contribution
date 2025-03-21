@@ -108,13 +108,20 @@ export const updateExercise = async (req: Request, res: Response) => {
     res.status(200).json({ message: "Exercice mis à jour avec succès." });
   } catch (error: unknown) {
 
+
     if (error instanceof Error) {
       if (error.name === "SequelizeUniqueConstraintError") {
         res.status(409).json({ message: "Un exercice avec ce nom existe déjà !" });
       } else {
         res.status(500).json({ message: "Erreur lors de la mise à jour de l'exercice.", error: error.message });
       }
+      if (error.name === "SequelizeUniqueConstraintError") {
+        res.status(409).json({ message: "Un exercice avec ce nom existe déjà !" });
+      } else {
+        res.status(500).json({ message: "Erreur lors de la mise à jour de l'exercice.", error: error.message });
+      }
     } else {
+      res.status(500).json({ message: "Erreur inconnue lors de la mise à jour de l'exercice." });
       res.status(500).json({ message: "Erreur inconnue lors de la mise à jour de l'exercice." });
     }
   }
