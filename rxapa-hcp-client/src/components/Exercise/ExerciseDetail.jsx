@@ -1,8 +1,6 @@
 import React from "react";
 import { Row, Col, Input, Button, Form, Modal, Select } from "antd";
 import { CheckOutlined } from "@ant-design/icons";
-import { Row, Col, Input, Button, Form, Modal, Select } from "antd";
-import { CheckOutlined } from "@ant-design/icons";
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
 import useToken from "../Authentication/useToken";
@@ -10,12 +8,9 @@ import Constants from "../Utils/Constants";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types"; // Import PropTypes
 import "./Styles.css";
-import PropTypes from "prop-types"; // Import PropTypes
-import "./Styles.css";
 
 export default function ExerciseDetail({ exercise, refetchExercises }) {
   const { t } = useTranslation();
-  const { handleSubmit, control, setValue } = useForm();
   const { handleSubmit, control, setValue } = useForm();
   const { token } = useToken();
 
@@ -25,14 +20,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
   const [message, setMessage] = React.useState(""); 
   const [isSubmitting, setIsSubmitting] = React.useState(false); 
   const [isSaveClicked, setIsSaveClicked] = React.useState(false); 
-  const [isEditing, setIsEditing] = React.useState(false); 
-  const [isOpenModal, setIsOpenModal] = React.useState(false); 
-  const [isErrorMessage, setIsErrorMessage] = React.useState(false); 
-  const [message, setMessage] = React.useState(""); 
-  const [isSubmitting, setIsSubmitting] = React.useState(false); 
-  const [isSaveClicked, setIsSaveClicked] = React.useState(false); 
 
-  // Function to open the modal with a message
   // Function to open the modal with a message
   function openModal(message, isError) {
     setMessage(message);
@@ -41,16 +29,13 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
   }
 
   // Function to close the modal
-  // Function to close the modal
   function closeModal() {
     setIsOpenModal(false);
     setMessage("");
     setIsErrorMessage(false);
     setIsSaveClicked(false); 
-    setIsSaveClicked(false); 
   }
 
-  // Submit handler
   // Submit handler
   const onSubmit = (data) => {
     if (isSaveClicked) {
@@ -90,8 +75,6 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
           {/* Field for exercise name */}
           <Form.Item label={t("Exercises:exercise_name")}>
-          {/* Field for exercise name */}
-          <Form.Item label={t("Exercises:exercise_name")}>
             <Controller
               name="name"
               control={control}
@@ -101,67 +84,13 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
                   onChange={onChange}
                   value={value}
                   placeholder={t("Exercises:exercise_name")}
-                  placeholder={t("Exercises:exercise_name")}
                   required
-                  disabled={!isEditing} 
                   disabled={!isEditing} 
                 />
               )}
             />
           </Form.Item>
 
-          {/* Field for category */}
-          <Form.Item label={t("Exercises:category_placeholder")}>
-            <Controller
-              name="category"
-              control={control}
-              defaultValue={exercise.category}
-              render={({ field: { onChange, value } }) => (
-                <Select
-                  onChange={onChange}
-                  value={value}
-                  placeholder={t("Exercises:category_placeholder")}
-                  style={{ width: "100%" }}
-                  allowClear
-                  disabled={!isEditing} 
-                >
-                  {[t("Exercises:aerobic"), t("Exercises:strength"), t("Exercises:endurance"), t("Exercises:flexibility"), t("Exercises:balance")].map((category) => (
-                    <Select.Option key={category} value={category}>
-                      {category}
-                    </Select.Option>
-                  ))}
-                </Select>
-              )}
-            />
-          </Form.Item>
-
-          {/* Field for fitness level */}
-          <Form.Item label={t("Exercises:fitness_level_placeholder")}>
-            <Controller
-              name="fitnessLevel"
-              control={control}
-              defaultValue={exercise.fitnessLevel}
-              render={({ field: { onChange, value } }) => (
-                <Select
-                  onChange={onChange}
-                  value={value}
-                  placeholder={t("Exercises:fitness_level_placeholder")}
-                  style={{ width: "100%" }}
-                  allowClear
-                  disabled={!isEditing} 
-                >
-                  {[t("Exercises:easy"), t("Exercises:intermediate"), t("Exercises:advanced")].map((level) => (
-                    <Select.Option key={level} value={level}>
-                      {level}
-                    </Select.Option>
-                  ))}
-                </Select>
-              )}
-            />
-          </Form.Item>
-
-          {/* Field for exercise description */}
-          <Form.Item label={t("Exercises:exercise_description")}>
           {/* Field for category */}
           <Form.Item label={t("Exercises:category_placeholder")}>
             <Controller
@@ -223,7 +152,6 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
                   onChange={onChange}
                   value={value}
                   placeholder={t("Exercises:exercise_description")}
-                  placeholder={t("Exercises:exercise_description")}
                   rows={4}
                   required
                   disabled={!isEditing}
@@ -250,26 +178,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
           </Form.Item>
 
           {/* Button for editing or saving */}
-          {/* Button for editing or saving */}
           <Form.Item>
-            {!isEditing ? (
-              <Button
-                type="primary"
-                onClick={startEditing} 
-              >
-                {t("Exercises:modify")}
-              </Button>
-            ) : (
-              <Button
-                type="primary"
-                htmlType="submit"
-                icon={<CheckOutlined />}
-                loading={isSubmitting}
-                onClick={() => setIsSaveClicked(true)} 
-              >
-                {t("Exercises:save")}
-              </Button>
-            )}
             {!isEditing ? (
               <Button
                 type="primary"
@@ -292,7 +201,6 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
         </Form>
 
         {/* Modal after submission */}
-        {/* Modal after submission */}
         {isOpenModal && (
           <Modal
             title="Feedback"
@@ -300,7 +208,6 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
             onCancel={closeModal}
             footer={[
               <Button key="close" onClick={closeModal}>
-                {t("Close")}
                 {t("Close")}
               </Button>,
             ]}
