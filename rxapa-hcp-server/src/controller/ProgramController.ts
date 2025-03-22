@@ -7,8 +7,8 @@ import { Variant } from "../model/Variant";
 import { ProgramPhase_Program } from "../model/ProgramPhase_Program";
 import { validateProgram } from "../middleware/validateProgram";
 import { ProgramSession } from '../model/ProgramSession';
-
 import fs from "fs";
+import { Op } from "sequelize";
 
 /**
  * This function creates an instance of @type {Program}
@@ -390,5 +390,78 @@ exports.updateProgram = async (req: any, res: any, next: any) => {
     return res
       .status(error.statusCode)
       .json({ message: `Failed to update the program` });
+  }
+};
+
+/**
+ * Search program by key words
+ */
+interface ProgramFilters {
+  id?: number;
+  name?: string;
+  duration?: number;
+  duration_unit?: "days" | "weeks";
+  description_keywords?: string;
+}
+
+// Utiliser ce type dans la fonction
+export const searchPrograms = async (req: any, res: any, next: any) => {
+  try {
+    const filters = req.query as ProgramFilters;
+
+    const whereClause: any = {}; // Clause de recherche
+
+    // Recherche par id
+    if (filters.id) {
+      whereClause.id = filters.id;
+    }
+
+    // Recherche par nom
+    if (filters.name) {
+      whereClause.name = {
+        [Op.iLike]: `%${filters.name}%`,
+      };
+    }
+
+    // Recherche par durée et unité de durée 
+    if (filters.duration && filters.duration_unit) {
+      whereClause.duration = filters.duration;
+      whereClause.duration_unit = filters.duration_unit;
+    }
+
+    // Recherche uniquement par durée
+    if (filters.duration && !filters.duration_unit) {
+      whereClause.duration = filters.duration;
+    }
+
+    // Recherche uniquement par unité de durée
+    if (!filters.duration && filters.duration_unit) {
+      whereClause.duration_unit = filters.duration_unit;
+    }
+
+    // Recherche par mots-clés dans la description
+    if (filters.description_keywords) {
+      whereClause.description = {
+        [Op.iLike]: `%${filters.description_keywords}%`,
+      };
+    }
+
+    // Exécution de la requête de recherche
+    const programs = await Program.findAll({
+      where: whereClause,
+    });
+
+    // Si aucun programme n'est trouvé
+    if (programs.length === 0) {
+      return res.status(404).json({ message: "Aucun programme trouvé" });
+    }
+
+    // Retourner les programmes trouvés
+    res.json(programs);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "Erreur serveur lors de la recherche des programmes" });
   }
 };

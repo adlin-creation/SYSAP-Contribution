@@ -12,6 +12,8 @@ router.get("/program/:programKey", isAuth, programController.getProgram);
 
 router.get("/programs", isAuth, programController.getPrograms);
 
+router.get("/search", isAuth, programController.searchPrograms);
+
 router.post(
   "/:programKey/add-phase",
   isAuth,
