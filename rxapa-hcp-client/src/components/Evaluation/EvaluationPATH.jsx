@@ -5,6 +5,7 @@ import axios from "axios";
 import useToken from "../Authentication/useToken";
 import Constants from "../Utils/Constants";
 import { InfoCircleOutlined } from "@ant-design/icons";
+import { exportPathPdf } from "./ExportEvaluationPdf";
 
 function EvaluationPATH({ onSubmit }) {
   const { patientId } = useParams();
@@ -153,7 +154,7 @@ function EvaluationPATH({ onSubmit }) {
       scores: {
         cardioMusculaire: scoreCM,
         equilibre: scoreBalance,
-        total: scoreCM + scoreBalance,
+        total: scoreCM +  scoreBalance, // Ajout du score total
         program: programPath,
       },
     };
@@ -204,6 +205,31 @@ function EvaluationPATH({ onSubmit }) {
       });
     }
   };
+
+  const exportPdf = async () => {
+      const scoreCM = calculateChairTestScore();
+      const scoreBalance = calculateBalanceScore();
+      const programPath = scoreCM + "" + scoreBalance;
+      const date = new Date().toISOString().split("T")[0];
+  
+      const payload = {
+        date: date,
+        idPatient: patientId,
+        chairTestSupport: formData.chairTestSupport ? "with" : "without",
+        chairTestCount: parseInt(formData.chairTestCount, 10),
+        balanceFeetTogether: parseInt(formData.balanceFeetTogether, 10),
+        balanceSemiTandem: parseInt(formData.balanceSemiTandem, 10),
+        balanceTandem: parseInt(formData.balanceTandem, 10),
+        walkingTime: parseFloat(formData.walkingTime),
+        scores: {
+          cardioMusculaire: scoreCM,
+          equilibre: scoreBalance,
+          program: programPath,
+        }
+      };
+  
+      await exportPathPdf(payload, token);
+    };
 
   const calculateChairTestScore = () => {
     const count = parseInt(formData.chairTestCount);
@@ -394,6 +420,9 @@ function EvaluationPATH({ onSubmit }) {
         open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         footer={[
+          <Button key ="export" onClick={exportPdf}>
+            Télécharger en PDF
+          </Button>,
           <Button key="close" onClick={() => setIsModalVisible(false)}>
             Fermer
           </Button>,

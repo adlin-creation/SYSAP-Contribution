@@ -282,3 +282,369 @@ export const exportMatchPdf = async(evaluationData, token) => {
     alert('Failed to generate PDF. Please check the console for details.');
   }
 }
+
+
+export const exportPathPdf = async(evaluationData, token) => {
+  try {
+    console.log("Evaluation Data : ", evaluationData);
+    const url = '/evaluation_pdf/Arbre_decisionnel_PATH.pdf';
+    const existingPdfBytes = await fetch(url).then(res => res.arrayBuffer());
+    const pdfDoc = await PDFDocument.load(existingPdfBytes);
+    const pages = pdfDoc.getPages();
+    const firstPage = pages[0];
+    
+    // DATE
+    firstPage.drawText(evaluationData.date, {x: 120, y: 708, size: 12});
+
+    // DONNEES DE PATIENT
+    const patient = await axios.get(
+      `${Constants.SERVER_URL}/patient/${parseInt(evaluationData.idPatient)}`,
+      { headers: { Authorization: "Bearer " + token } }
+    );
+
+    const lines = [
+      "Patient:",
+      `${patient.data.firstname} ${patient.data.lastname}`,
+      `Date de naissance: ${patient.data.birthday}`,
+      `Poids: ${patient.data.weight} ${patient.data.weightUnit}`
+    ];
+    
+    const startX = 315;
+    const startY = 750;
+    const fontSize = 12;
+    const lineHeight = fontSize * 1.0; 
+    
+    lines.forEach((line, index) => {
+      firstPage.drawText(line, {
+        x: startX,
+        y: startY - (index * lineHeight), // Move down for each subsequent line
+        size: fontSize,
+      });
+    });
+
+    // TODO: Nom de kine
+
+
+    // CARDIO-MUSCULAIRE
+    firstPage.drawText(`${evaluationData.chairTestCount}`, {x: 42, y: 536, size: 12});
+
+    if (evaluationData.chairTestSupport === "with") {
+      firstPage.drawLine({
+        start: {x: 207.5, y: 526},
+        end: {x: 249, y: 526},
+        thickness: 2,
+        color: rgb(1, 0, 0),
+      });
+    } else if (evaluationData.chairTestSupport === "without") {
+      firstPage.drawLine({
+        start: {x: 207.5, y: 579},
+        end: {x: 249, y: 579},
+        thickness: 2,
+        color: rgb(1, 0, 0),
+      });
+    }
+    
+    switch (evaluationData.scores.cardioMusculaire) {
+      case 0:
+        firstPage.drawCircle({
+          x: 532,
+          y: 516,
+          size: 10,
+          borderWidth: 2,
+          borderColor: rgb(1, 0, 0)
+        });
+        break;
+      case 1:
+        firstPage.drawCircle({
+          x: 532,
+          y: 531,
+          size: 10,
+          borderWidth: 2,
+          borderColor: rgb(1, 0, 0)
+        });
+        break;
+      case 2:
+        firstPage.drawCircle({
+          x: 532,
+          y: 546,
+          size: 10,
+          borderWidth: 2,
+          borderColor: rgb(1, 0, 0)
+        });
+      break;
+      case 3:
+        if (evaluationData.chairTestSupport === "with") {
+          firstPage.drawCircle({
+            x: 532,
+            y: 561,
+            size: 10,
+            borderWidth: 2,
+            borderColor: rgb(1, 0, 0)
+          });
+        } else if (evaluationData.chairTestSupport === "without") {
+          firstPage.drawCircle({
+            x: 532,
+            y: 576,
+            size: 10,
+            borderWidth: 2,
+            borderColor: rgb(1, 0, 0)
+          });
+        }
+        break;
+      case 4:
+        firstPage.drawCircle({
+          x: 532,
+          y: 592,
+          size: 10,
+          borderWidth: 2,
+          borderColor: rgb(1, 0, 0)
+        });
+        break;
+      case 5:
+        firstPage.drawCircle({
+          x: 532,
+          y: 607,
+          size: 10,
+          borderWidth: 2,
+          borderColor: rgb(1, 0, 0)
+        });
+        break;
+      default:
+    }
+
+    // EQUILIBRE
+    firstPage.drawText(`(Temps réalisé: ${evaluationData.balanceFeetTogether} sec)`, {
+        x: 26,
+        y: 440,
+        size: 11,
+    });
+
+    firstPage.drawText(`(Temps réalisé: ${evaluationData.balanceSemiTandem} sec)`, {
+      x: 26,
+      y: 407,
+      size: 11,
+    });
+
+    firstPage.drawText(`${evaluationData.balanceSemiTandem}`, {
+      x: 104,
+      y: 377,
+      size: 11,
+    });
+
+    switch (evaluationData.scores.equilibre) {
+      case 0:
+        firstPage.drawCircle({
+          x: 532,
+          y: 456,
+          size: 10,
+          borderWidth: 2,
+          borderColor: rgb(1, 0, 0)
+        });
+        break;
+      case 1:
+        firstPage.drawCircle({
+          x: 532,
+          y: 441,
+          size: 10,
+          borderWidth: 2,
+          borderColor: rgb(1, 0, 0)
+        });
+        break;
+      case 2:
+        firstPage.drawCircle({
+          x: 532,
+          y: 425,
+          size: 10,
+          borderWidth: 2,
+          borderColor: rgb(1, 0, 0)
+        });
+      break;
+      case 3:
+        firstPage.drawCircle({
+          x: 532,
+          y: 408,
+          size: 10,
+          borderWidth: 2,
+          borderColor: rgb(1, 0, 0)
+        });
+        break;
+      case 4:
+        firstPage.drawCircle({
+          x: 532,
+          y: 380,
+          size: 10,
+          borderWidth: 2,
+          borderColor: rgb(1, 0, 0)
+        });
+        break;
+      default:
+    }
+
+    // SCORE ET PROGRAMMME RECOMMANDE
+    switch (evaluationData.scores.cardioMusculaire) {
+      case 0:
+        firstPage.drawCircle({
+          x: 205,
+          y: 324,
+          size: 7,
+          borderWidth: 2,
+          borderColor: rgb(1, 0, 0)
+        });
+        break;
+      case 1:
+        firstPage.drawCircle({
+          x: 222,
+          y: 324,
+          size: 7,
+          borderWidth: 2,
+          borderColor: rgb(1, 0, 0)
+        });
+        break;
+      case 2:
+        firstPage.drawCircle({
+          x: 241.5,
+          y: 324,
+          size: 7,
+          borderWidth: 2,
+          borderColor: rgb(1, 0, 0)
+        });
+        break;
+      case 3:
+        firstPage.drawCircle({
+          x: 260.5,
+          y: 324,
+          size: 7,
+          borderWidth: 2,
+          borderColor: rgb(1, 0, 0)
+        });
+        break;
+      case 4:
+        firstPage.drawCircle({
+          x: 280,
+          y: 324,
+          size: 7,
+          borderWidth: 2,
+          borderColor: rgb(1, 0, 0)
+        });
+        break;
+      case 5:
+        firstPage.drawCircle({
+          x: 299.5,
+          y: 324,
+          size: 7,
+          borderWidth: 2,
+          borderColor: rgb(1, 0, 0)
+        });
+        break;
+      default:
+    }
+
+
+    switch (evaluationData.scores.equilibre) {
+      case 0:
+        firstPage.drawCircle({
+          x: 205,
+          y: 310.5,
+          size: 7,
+          borderWidth: 2,
+          borderColor: rgb(1, 0, 0)
+        });
+        break;
+      case 1:
+        firstPage.drawCircle({
+          x: 222,
+          y: 310.5,
+          size: 7,
+          borderWidth: 2,
+          borderColor: rgb(1, 0, 0)
+        });
+        break;
+      case 2:
+        firstPage.drawCircle({
+          x: 241.5,
+          y: 310.5,
+          size: 7,
+          borderWidth: 2,
+          borderColor: rgb(1, 0, 0)
+        });
+        break;
+      case 3:
+        firstPage.drawCircle({
+          x: 260.5,
+          y: 310.5,
+          size: 7,
+          borderWidth: 2,
+          borderColor: rgb(1, 0, 0)
+        });
+        break;
+      case 4:
+        firstPage.drawCircle({
+          x: 280,
+          y: 310.5,
+          size: 7,
+          borderWidth: 2,
+          borderColor: rgb(1, 0, 0)
+        });
+        break;
+      default:
+    }
+
+    firstPage.drawText(evaluationData.scores.program, {x: 455, y: 281, size: 15})
+
+    // TEMPS DE MARCHE
+    if (isNaN(evaluationData.walkingTime)) {
+      firstPage.drawText('+', {x: 31, y: 161, size: 20, rotate: degrees(45)});
+    } else {
+      const walkingSpeed = 4 / evaluationData.walkingTime;
+      firstPage.drawText('+', {x: 31.5, y: 153, size: 20, rotate: degrees(45)});
+      firstPage.drawText(`${evaluationData.walkingTime}`, {x: 228, y:157, size: 12})
+      firstPage.drawText(`${evaluationData.walkingTime}`, {x: 228, y:157, size: 12})
+      firstPage.drawText(`${walkingSpeed.toFixed(2)}`, {x: 440, y:157, size: 12})
+
+      if (walkingSpeed < 0.4) {
+        firstPage.drawLine({
+          start: {x: 188, y: 115},
+          end: {x: 220, y: 115},
+          thickness: 2,
+          color: rgb(1, 0, 0)
+        });
+      } else if (walkingSpeed < 0.6) {
+        firstPage.drawLine({
+          start: {x: 290, y: 115},
+          end: {x: 322, y: 115},
+          thickness: 2,
+          color: rgb(1, 0, 0)
+        });
+      } else if (walkingSpeed < 0.8) {
+        firstPage.drawLine({
+          start: {x: 403, y: 115},
+          end: {x: 435, y: 115},
+          thickness: 2,
+          color: rgb(1, 0, 0)
+        });
+      } else {
+        firstPage.drawLine({
+          start: {x: 518, y: 115},
+          end: {x: 550, y: 115},
+          thickness: 2,
+          color: rgb(1, 0, 0)
+        });
+      }
+    }
+    
+    // TELECHARGEMENT VERS UTILISATEUR
+    const pdfBytes = await pdfDoc.save();
+    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `${evaluationData.date}_${patient.data.lastname}_${patient.data.firstname}_MATCH.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(link.href);
+
+  } catch (error) {
+    console.error('PDF generation failed:', error);
+    alert('Failed to generate PDF. Please check the console for details.');
+  }
+}
