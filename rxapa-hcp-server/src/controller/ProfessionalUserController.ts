@@ -6,11 +6,13 @@ import { Follow_Patient } from "../model/Follow_Patient";
 import { Patient } from "../model/Patient";
 import { ProgramEnrollement } from "../model/ProgramEnrollement";
 import crypto from 'crypto';
+import bcrypt from "bcrypt";
 import { hash } from './UserController';
-import {
-  generateCode,
-  sendEmail,
-} from "../util/unikpass";
+import { hashValue, verifyHash } from "../util/unikpass";
+
+import { generateCode, sendEmail } from "../util/unikpass";
+
+console.log("generateCode:", generateCode);
 
 /**
  * Creates a new professional user.
@@ -19,58 +21,69 @@ export const createProfessionalUser = async (req: any, res: any, next: any) => {
   const { firstname, lastname, email, phoneNumber, password, role, workEnvironment } = req.body;
 
   try {
-    // Vérifier si l'utilisateur existe déjà
+    // 🔹 Vérifier si l'utilisateur existe déjà
     const existingUser = await Professional_User.findOne({ where: { email } });
     if (existingUser) {
-      return res.status(409).json({ message: "existing professionnel user with this email" });
+      return res.status(409).json({ message: "existing professional user with this email" });
     }
 
-    // Hacher le mot de passe
-    const hashedPassword = await hash(password);
-
-    // Créer l'utilisateur professionnel 
-    const newProfessionalUser = await Professional_User.create(
-      {
-        firstname,
-        lastname,
-        email,
-        phoneNumber,
-        password: hashedPassword,
-        role,
-      },
-    );
-
-    // Générer un code unique et le hacher
+    // 🔹 Générer un code d’accès temporaire (6 caractères)
     const code = generateCode(6); // Générer un code à 6 caractères
-    const unikPassHashed = await hash(code); // Hacher le code
+    console.log("Code généré :", code); // Vérifier si le code est bien généré
 
+    // 🔹 Hacher le code d’accès temporaire
+    const unikPassHashed = await bcrypt.hash(code, 10); // Hash avec bcrypt 
+
+    // 🔹 Créer l'utilisateur professionnel avec `active: false`
+    const newProfessionalUser = await Professional_User.create({
+      firstname,
+      lastname,
+      email,
+      phoneNumber,
+      password: unikPassHashed, // Stocke le code d’accès temporaire dans password
+      role,
+      active: false, // L'utilisateur est inactif par défaut
+    });
+
+    // 🔹 Ajouter les informations spécifiques en fonction du rôle
     if (role === 'admin') {
       await Admin.create({ idAdmin: newProfessionalUser.id });
 
     } else if (role === 'doctor') {
-      await Doctor.create(
-        { idDoctor: newProfessionalUser.id, workEnvironment, unikPassHashed },
-      );
+      await Doctor.create({
+        idDoctor: newProfessionalUser.id,
+        workEnvironment,
+        unikPassHashed, // Stocke aussi le code temporaire ici
+      });
 
     } else if (role === 'kinesiologist') {
-      await Kinesiologist.create(
-        { idKinesiologist: newProfessionalUser.id, workEnvironment, unikPassHashed },
+      await Kinesiologist.create({
+        idKinesiologist: newProfessionalUser.id,
+        workEnvironment,
+        unikPassHashed, // Stocke aussi le code temporaire ici
+      });
+    }
+
+    // 🔹 Envoyer le code d’accès par email aux `doctor` et `kinesiologist`
+    if (role === 'doctor' || role === 'kinesiologist') {
+      await sendEmail(
+        email,
+        "Votre code d'accès RXAPA",
+        `Bonjour ${firstname},\n\nVotre code d'accès temporaire est : ${code}\n\nVeuillez l'utiliser pour définir votre mot de passe sur notre plateforme.\n`
       );
     }
 
-    if (role === 'doctor' || role === 'kinesiologist') {
-      await sendEmail(email, "Votre code d'accès RXAPA", code);
-    }
+    return res.status(201).json({ message: "Utilisateur créé avec succès, en attente d'activation." });
 
-    res.status(201).json(newProfessionalUser);
   } catch (error: any) {
+    console.error("Erreur lors de la création de l'utilisateur :", error);
+
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    next(error); // Pour une meilleure gestion des erreurs
-    res.status(error.statusCode).json({ message: error.message || "Error creating professional user" });
+
+    return res.status(error.statusCode).json({ message: "Error creating professional user" });
   }
-  return res;
 };
 
 /**

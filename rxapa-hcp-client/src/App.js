@@ -30,6 +30,7 @@ import EvaluationSearch from "./components/Evaluation/EvaluationSearch";
 import useToken from "./components/Authentication/useToken"; // Import du hook personnalisé
 import Constants from "./components/Utils/Constants";
 import LanguageSwitcher from "./components/LanguageSwitcher/LanguageSwitcher";
+import SetNewPassword from "./components/Authentication/SetNewPassword";
 import { useTranslation } from "react-i18next";
 
 import { Layout, Menu, Button, Avatar, Dropdown } from "antd";
@@ -233,6 +234,8 @@ function App() {
       <Content className="content">
         <Routes>
           <Route path="login" element={<Login setToken={setToken} />}></Route>
+          <Route path="/set-new-password" element={<SetNewPassword />} /> {/* 🔹 Ajout ici */}
+
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </Content>
@@ -279,6 +282,7 @@ function App() {
         <Content className="content">
           <Routes>
             <Route path="/" element={<Home />}></Route>
+
             <Route path="exercises" element={<ExerciseMenu />}></Route>
             <Route path="blocs" element={<BlocMenu />}></Route>
             <Route path="sessions" element={<SessionMenu />}></Route>
