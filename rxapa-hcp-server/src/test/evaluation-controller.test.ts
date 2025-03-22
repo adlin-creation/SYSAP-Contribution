@@ -8,7 +8,6 @@ import { Patient } from "../model/Patient";
 import { sequelize } from "../util/database";
 import { Op } from "sequelize";
 
-// Importer les méthodes du contrôleur
 const {
   createPaceEvaluation,
   getPaceEvaluation,
@@ -34,7 +33,6 @@ describe("EvaluationController", () => {
   let mockNext: jest.Mock;
   let mockTransaction: any;
 
-  // Configuration commune pour tous les tests
   beforeEach(() => {
     mockReq = {};
     mockRes = {
@@ -56,15 +54,13 @@ describe("EvaluationController", () => {
 
   // ======== TESTS DE CRÉATION D'ÉVALUATION ========
   describe("Tests de création d'évaluations", () => {
-    // Configuration commune pour la création d'évaluations
     const setupCreateTest = (evaluationType: string) => {
-      // Définir les types de l'objet baseBody et scores
       interface TestScores {
         program: string;
         cardioMusculaire: number;
         equilibre: number;
         total: number;
-        mobilite?: number; // Propriété optionnelle pour PACE
+        mobilite?: number;
       }
 
       interface TestBody {
@@ -76,12 +72,11 @@ describe("EvaluationController", () => {
         balanceTandem: string;
         walkingTime: string;
         scores: TestScores;
-        balanceOneFooted?: string; // Propriété optionnelle pour PACE
-        frtSitting?: string | boolean; // Propriété optionnelle pour PACE
-        frtDistance?: string; // Propriété optionnelle pour PACE
+        balanceOneFooted?: string;
+        frtSitting?: string | boolean;
+        frtDistance?: string;
       }
 
-      // Base commune pour tous les types d'évaluation
       const baseBody: TestBody = {
         idPatient: 1,
         chairTestSupport: "with",
@@ -98,7 +93,6 @@ describe("EvaluationController", () => {
         },
       };
 
-      // Ajouter des champs spécifiques pour PACE
       if (evaluationType === "PACE") {
         baseBody.balanceOneFooted = "10";
         baseBody.frtSitting = "sitting";
@@ -109,7 +103,6 @@ describe("EvaluationController", () => {
       mockReq.body = baseBody;
     };
 
-    // Définir les types d'évaluation à tester
     const evaluationTypes = [
       {
         method: createPaceEvaluation,
@@ -142,29 +135,23 @@ describe("EvaluationController", () => {
       errorMsg,
     } of evaluationTypes) {
       it(`devrait créer une nouvelle évaluation ${name} avec succès`, async () => {
-        // Configuration
         setupCreateTest(name);
 
-        // Mock du programme
         const mockProgram = { id: 1, name: "MARRON IV" };
         jest.spyOn(Program, "findOne").mockResolvedValue(mockProgram as any);
 
-        // Mock de l'évaluation principale
         const mockEvaluation = { id: 1, idPatient: 1, idResultProgram: 1 };
         jest
           .spyOn(Evaluation, "create")
           .mockResolvedValue(mockEvaluation as any);
 
-        // Mock de l'évaluation spécifique (PACE, MATCH ou PATH)
         const mockSpecificEvaluation = { id: 1, [idField]: 1 };
         jest
           .spyOn(evaluationModel, "create")
           .mockResolvedValue(mockSpecificEvaluation as any);
 
-        // Exécuter la méthode
         await method(mockReq as Request, mockRes as Response, mockNext);
 
-        // Vérifications
         expect(mockTransaction.commit).toHaveBeenCalled();
         expect(mockRes.status).toHaveBeenCalledWith(201);
         expect(mockRes.json).toHaveBeenCalledWith(
@@ -177,14 +164,12 @@ describe("EvaluationController", () => {
       });
 
       it(`devrait gérer le cas où le programme n'est pas trouvé pour ${name}`, async () => {
-        // Configuration minimale avec juste le programme
         mockReq.body = {
           scores: {
             program: "PROGRAMME INEXISTANT",
           },
         };
 
-        // Programme non trouvé
         jest.spyOn(Program, "findOne").mockResolvedValue(null);
 
         await method(mockReq as Request, mockRes as Response, mockNext);
@@ -200,14 +185,11 @@ describe("EvaluationController", () => {
       });
 
       it(`devrait gérer les erreurs de base de données lors de la création ${name}`, async () => {
-        // Configuration
         setupCreateTest(name);
 
-        // Mock du programme
         const mockProgram = { id: 1, name: "MARRON IV" };
         jest.spyOn(Program, "findOne").mockResolvedValue(mockProgram as any);
 
-        // Simuler une erreur lors de la création
         const dbError = new Error("Database error");
         jest.spyOn(Evaluation, "create").mockRejectedValue(dbError);
 
@@ -225,24 +207,20 @@ describe("EvaluationController", () => {
       });
     }
 
-    // Test spécifique pour le calcul de la vitesse et l'objectif de marche (PACE seulement)
     it("devrait calculer correctement l'objectif de marche en fonction de la vitesse", async () => {
-      // Tester différentes vitesses et les objectifs attendus
       const testCases = [
-        { walkingTime: "10", expectedSpeed: 0.4, expectedObjectif: 2 }, // vitesse = 4/10 = 0.4, objectif = 15 min
-        { walkingTime: "5", expectedSpeed: 0.8, expectedObjectif: 4 }, // vitesse = 4/5 = 0.8, objectif = 30 min
-        { walkingTime: "6", expectedSpeed: 4 / 6, expectedObjectif: 3 }, // vitesse = 4/6 = 0.67, objectif = 20 min
-        { walkingTime: "20", expectedSpeed: 0.2, expectedObjectif: 1 }, // vitesse = 4/20 = 0.2, objectif = 10 min
+        { walkingTime: "10", expectedSpeed: 0.4, expectedObjectif: 2 },
+        { walkingTime: "5", expectedSpeed: 0.8, expectedObjectif: 4 },
+        { walkingTime: "6", expectedSpeed: 4 / 6, expectedObjectif: 3 },
+        { walkingTime: "20", expectedSpeed: 0.2, expectedObjectif: 1 },
       ];
 
       for (const testCase of testCases) {
         jest.clearAllMocks();
 
-        // Configuration pour PACE avec walkingTime variable
         setupCreateTest("PACE");
         mockReq.body.walkingTime = testCase.walkingTime;
 
-        // Mock du programme et de l'évaluation
         const mockProgram = { id: 1, name: "MARRON IV" };
         jest.spyOn(Program, "findOne").mockResolvedValue(mockProgram as any);
 
@@ -268,7 +246,6 @@ describe("EvaluationController", () => {
           mockNext
         );
 
-        // Vérifier que la vitesse et l'objectif sont correctement calculés
         expect(createSpy).toHaveBeenCalledWith(
           expect.objectContaining({
             vitesseDeMarche: testCase.expectedSpeed,
@@ -282,12 +259,10 @@ describe("EvaluationController", () => {
 
   // ======== TESTS DE RÉCUPÉRATION D'ÉVALUATION ========
   describe("Tests de récupération d'évaluations", () => {
-    // Configuration pour les méthodes de récupération individuelle
     const setupGetTest = (id = "1") => {
       mockReq.params = { id };
     };
 
-    // Méthodes de récupération individuelle
     const singleGetMethods = [
       {
         method: getPaceEvaluation,
@@ -312,7 +287,6 @@ describe("EvaluationController", () => {
       },
     ];
 
-    // Tests groupés pour les méthodes de récupération individuelle
     for (const { method, name, modelKey, idKey } of singleGetMethods) {
       it(`devrait récupérer une évaluation ${name} spécifique`, async () => {
         setupGetTest();
@@ -362,14 +336,12 @@ describe("EvaluationController", () => {
       });
     }
 
-    // Méthodes de récupération de toutes les évaluations
     const allGetMethods = [
       { method: getPaceEvaluations, name: "PACE", model: Evaluation_PACE },
       { method: getMatchEvaluations, name: "MATCH", model: Evaluation_MATCH },
       { method: getPathEvaluations, name: "PATH", model: Evaluation_PATH },
     ];
 
-    // Tests groupés pour les méthodes de récupération de toutes les évaluations
     for (const { method, name } of allGetMethods) {
       it(`devrait récupérer toutes les évaluations ${name}`, async () => {
         const mockEvaluations = [{ id: 1 }, { id: 2 }];
@@ -397,10 +369,9 @@ describe("EvaluationController", () => {
       });
     }
   });
+
   // ======== TESTS DE MISE À JOUR D'ÉVALUATION ========
   describe("Tests de mise à jour d'évaluations", () => {
-    // Configuration commune pour les tests de mise à jour
-    // Configuration commune pour les tests de mise à jour avec définition explicite des types
     const setupUpdateTest = () => {
       mockReq.params = { id: "1" };
 
@@ -409,7 +380,7 @@ describe("EvaluationController", () => {
         cardioMusculaire: number;
         equilibre: number;
         total: number;
-        mobilite?: number; // Propriété optionnelle pour PACE
+        mobilite?: number;
       }
 
       interface UpdateBody {
@@ -420,9 +391,9 @@ describe("EvaluationController", () => {
         balanceTandem: string;
         walkingTime: string;
         scores: UpdateScores;
-        balanceOneFooted?: string; // Propriété optionnelle pour PACE
-        frtSitting?: boolean; // Propriété optionnelle pour PACE (true/false plutôt que string)
-        frtDistance?: string; // Propriété optionnelle pour PACE
+        balanceOneFooted?: string;
+        frtSitting?: boolean;
+        frtDistance?: string;
       }
 
       const updateBody: UpdateBody = {
@@ -440,7 +411,6 @@ describe("EvaluationController", () => {
         },
       };
 
-      // Ajouter des champs spécifiques pour PACE
       updateBody.balanceOneFooted = "15";
       updateBody.frtSitting = true;
       updateBody.frtDistance = "20";
@@ -449,7 +419,6 @@ describe("EvaluationController", () => {
       mockReq.body = updateBody;
     };
 
-    // Définir les types d'évaluation à mettre à jour
     const updateMethods = [
       {
         method: updatePaceEvaluation,
@@ -507,7 +476,6 @@ describe("EvaluationController", () => {
           .mockResolvedValue(mockEvaluation as any);
         findMethod.mockResolvedValue(mockSpecificEvaluation as any);
 
-        // Si test pour MATCH ou PATH, mock du programme
         if (
           name !== "PACE" &&
           mockReq.body &&
@@ -614,7 +582,6 @@ describe("EvaluationController", () => {
       });
     }
 
-    // Tests spécifiques pour les méthodes MATCH et PATH avec programme non trouvé
     const programUpdateMethods = [
       { method: updateMatchEvaluation, name: "MATCH" },
       { method: updatePathEvaluation, name: "PATH" },
@@ -661,12 +628,10 @@ describe("EvaluationController", () => {
 
   // ======== TESTS DE SUPPRESSION D'ÉVALUATIONS ========
   describe("Tests de suppression d'évaluations", () => {
-    // Configuration pour les tests de suppression
     const setupDeleteTest = (id = "1") => {
       mockReq.params = { id };
     };
 
-    // Définir les types d'évaluation à supprimer
     const deleteMethods = [
       {
         method: deletePaceEvaluation,
@@ -744,7 +709,6 @@ describe("EvaluationController", () => {
       });
     }
 
-    // Test spécifique pour la gestion des erreurs lors de la suppression de l'évaluation PACE spécifique
     it("devrait gérer les erreurs lors de la suppression de l'évaluation PACE spécifique", async () => {
       setupDeleteTest();
 
@@ -815,7 +779,6 @@ describe("EvaluationController", () => {
 
       await searchPatients(mockReq as Request, mockRes as Response);
 
-      // Vérifier que la recherche utilise le bon critère
       expect(Patient.findAll).toHaveBeenCalledWith({
         where: {
           [Op.or]: [
@@ -838,18 +801,15 @@ describe("EvaluationController", () => {
 
       await searchPatients(mockReq as Request, mockRes as Response);
 
-      // Vérifier que la recherche est faite avec les bons critères combinés
       expect(Patient.findAll).toHaveBeenCalledWith({
         where: {
           [Op.or]: [
-            // Format "Prénom Nom"
             {
               [Op.and]: [
                 { firstname: { [Op.iLike]: "%John%" } },
                 { lastname: { [Op.iLike]: "%Doe%" } },
               ],
             },
-            // Format "Nom Prénom"
             {
               [Op.and]: [
                 { firstname: { [Op.iLike]: "%Doe%" } },
@@ -867,7 +827,6 @@ describe("EvaluationController", () => {
     it("devrait gérer les erreurs de base de données lors de la recherche", async () => {
       mockReq.query = { term: "John" };
 
-      // Simuler une erreur de base de données
       jest
         .spyOn(Patient, "findAll")
         .mockRejectedValue(new Error("Database error"));
