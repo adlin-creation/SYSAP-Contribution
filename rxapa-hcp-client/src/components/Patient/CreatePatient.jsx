@@ -116,7 +116,10 @@ function CreatePatient({ refetchPatients, onClose }) {
         openModal(t("Patients:create_patient_success"), false);
       })
       .catch((err) =>
-        openModal(err.response.data.message || t("Patients:create_patient_failed"), true)
+        openModal(
+          err.response.data.message || t("Patients:create_patient_failed"),
+          true
+        )
       );
   };
 
@@ -366,7 +369,9 @@ function CreatePatient({ refetchPatients, onClose }) {
             icon={<UserAddOutlined />}
             style={{ marginBottom: 24 }}
           >
-            {hasCaregiver ? t("Patients:without_caregiver") : t("Patients:with_caregiver") }
+            {hasCaregiver
+              ? t("Patients:without_caregiver")
+              : t("Patients:with_caregiver")}
           </Button>
           {showCaregiverForm && (
             <div>
@@ -558,19 +563,17 @@ function CreatePatient({ refetchPatients, onClose }) {
                     </Col>
 
                     <Col span={12}>
-                      <Form.Item label={t("Patients:program_start")} required>
+                      <Form.Item label={t("Patients:date_start")} required>
                         <Controller
                           name={`programStart${index + 1}`}
                           control={control}
                           rules={{
-                            required: t("Patients:program_start_required"),
+                            required: t("Patients:date_start_required"),
                           }}
                           render={({ field }) => (
                             <DatePicker
                               {...field}
-                              placeholder={t(
-                                "Patients:program_start_placeholder"
-                              )}
+                              placeholder={t("Patients:date_start_placeholder")}
                               style={{ width: "100%" }}
                             />
                           )}
@@ -579,19 +582,17 @@ function CreatePatient({ refetchPatients, onClose }) {
                     </Col>
 
                     <Col span={12}>
-                      <Form.Item label={t("Patients:program_end")} required>
+                      <Form.Item label={t("Patients:date_end")} required>
                         <Controller
                           name={`programEnd${index + 1}`}
                           control={control}
                           rules={{
-                            required: t("Patients:program_end_required"),
+                            required: t("Patients:pdate_end_required"),
                           }}
                           render={({ field }) => (
                             <DatePicker
                               {...field}
-                              placeholder={t(
-                                "Patients:program_end_placeholder"
-                              )}
+                              placeholder={t("Patients:date_end_placeholder")}
                               style={{ width: "100%" }}
                             />
                           )}
@@ -607,7 +608,9 @@ function CreatePatient({ refetchPatients, onClose }) {
                 icon={<UserAddOutlined />}
                 style={{ marginBottom: 24 }}
               >
-                {maxCaregiver ? "Remove Caregiver" : "Add Caregiver"}
+                {maxCaregiver
+                  ? t("Patients:button_caregiver_remove")
+                  : t("Patients:button_caregiver_add")}
               </Button>
             </div>
           )}

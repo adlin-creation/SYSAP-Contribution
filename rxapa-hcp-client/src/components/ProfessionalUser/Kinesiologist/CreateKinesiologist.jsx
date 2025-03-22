@@ -18,19 +18,32 @@ import "./Styles.css";
 import { useTranslation } from "react-i18next";
 
 function CreateKinesiologist({ refetchKinesiologists }) {
-
-
   const { Option } = Select;
 
   const milieuxTravail = [
-    { value: "Hôpital: SPA soins post-aigus", label: "Hôpital: SPA soins post-aigus" },
-    { value: "Hôpital: UCDG unité courte durée gériatrique", label: "Hôpital: UCDG unité courte durée gériatrique" },
-    { value: "Hôpital: UTRF unité transitoire de réadaptation fonctionnelle", label: "Hôpital: UTRF unité transitoire de réadaptation fonctionnelle" },
+    {
+      value: "Hôpital: SPA soins post-aigus",
+      label: "Hôpital: SPA soins post-aigus",
+    },
+    {
+      value: "Hôpital: UCDG unité courte durée gériatrique",
+      label: "Hôpital: UCDG unité courte durée gériatrique",
+    },
+    {
+      value: "Hôpital: UTRF unité transitoire de réadaptation fonctionnelle",
+      label: "Hôpital: UTRF unité transitoire de réadaptation fonctionnelle",
+    },
     { value: "Hôpital: autre unité", label: "Hôpital: autre unité" },
     { value: "CHSLD", label: "CHSLD" },
-    { value: "RPA Résidence Privée pour aînés", label: "RPA Résidence Privée pour aînés" },
-    { value: "Clinique de médecine familiale-GMF", label: "Clinique de médecine familiale-GMF" },
-    { value: "Clinique: autre", label: "Clinique: autre" }
+    {
+      value: "RPA Résidence Privée pour aînés",
+      label: "RPA Résidence Privée pour aînés",
+    },
+    {
+      value: "Clinique de médecine familiale-GMF",
+      label: "Clinique de médecine familiale-GMF",
+    },
+    { value: "Clinique: autre", label: "Clinique: autre" },
   ];
 
   const { t } = useTranslation();
@@ -64,12 +77,11 @@ function CreateKinesiologist({ refetchKinesiologists }) {
       .catch((err) =>
         openModal(
           err.response?.data?.message ||
-          t("Professionals:Kinesiologist:creating_error_msg"),
+            t("Professionals:Kinesiologist:creating_error_msg"),
           true
         )
       );
   };
-
 
   const openModal = (message, isError) => {
     AntModal[isError ? "error" : "success"]({
@@ -273,7 +285,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
             </Col>
             <Col span={12}>
               <Form.Item
-                label="Work environment"
+                label={t("Professionals:Kinesiologist:work_environment_label")}
                 required
                 validateStatus={errors.workEnvironment ? "error" : ""}
                 help={errors.workEnvironment?.message}
@@ -282,20 +294,30 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                   name="workEnvironment"
                   control={control}
                   rules={{
-                    required: "Le milieu de travail est obligatoire",
+                    required: t(
+                      "Professionals:Kinesiologist:work_environment_required"
+                    ),
                     minLength: {
                       value: 2,
-                      message: "Le milieu de travail doit contenir au moins 2 caractères"
-                    }
+                      message: t(
+                        "Professionals:Kinesiologist:work_environment_min_length"
+                      ),
+                    },
                   }}
-                  render={({ field }) =>
-                    <Select {...field} placeholder="Sélectionnez le milieu de travail">
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      placeholder={t(
+                        "Professionals:Kinesiologist:work_environment_placeholder"
+                      )}
+                    >
                       {milieuxTravail.map((milieu) => (
                         <Option key={milieu.value} value={milieu.value}>
                           {milieu.label}
                         </Option>
                       ))}
-                    </Select>}
+                    </Select>
+                  )}
                 />
               </Form.Item>
             </Col>

@@ -83,7 +83,7 @@ export default function CreateBloc(props) {
                 <Input.TextArea
                   onChange={onChange}
                   value={value}
-                  placeholder={t("Blocs:exercise_description")}
+                  placeholder={t("Blocs:bloc_description")}
                   required
                 />
               )}

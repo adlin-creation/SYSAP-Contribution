@@ -31,7 +31,6 @@ import useToken from "./components/Authentication/useToken"; // Import du hook p
 import Constants from "./components/Utils/Constants";
 import LanguageSwitcher from "./components/LanguageSwitcher/LanguageSwitcher";
 import { useTranslation } from "react-i18next";
-
 import { Layout, Menu, Button, Avatar, Dropdown } from "antd";
 import {
   HomeOutlined,

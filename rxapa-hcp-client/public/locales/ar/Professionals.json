@@ -46,7 +46,11 @@
     "physicians": "الأطباء",
     "update_physician_button": "تحديث الطبيب",
     "back_to_physicians_button": "العودة إلى الأطباء",
-    "physician_patients_title": "مرضى الطبيب"
+    "physician_patients_title": "مرضى الطبيب",
+    "work_environment_label": "بيئة العمل",
+    "work_environment_required": "بيئة العمل مطلوبة",
+    "work_environment_min_length": "يجب أن تحتوي بيئة العمل على حرفين على الأقل",
+    "work_environment_placeholder": "اختر بيئة العمل"
   },
   "Kinesiologist": {
     "name": "الاسم",
@@ -98,7 +102,11 @@
     "kinesiologists": "أخصائيي الحركة",
     "update_kinesiologist_button": "تحديث أخصائي الحركة",
     "back_to_kinesiologists_button": "العودة إلى أخصائيي الحركة",
-    "kinesiologist_patients_title": "مرضى أخصائي الحركة"
+    "kinesiologist_patients_title": "مرضى أخصائي الحركة",
+    "work_environment_label": "بيئة العمل",
+    "work_environment_required": "بيئة العمل مطلوبة",
+    "work_environment_min_length": "يجب أن تحتوي بيئة العمل على حرفين على الأقل",
+    "work_environment_placeholder": "اختر بيئة العمل"
   },
   "Admins": {
     "name": "الاسم",

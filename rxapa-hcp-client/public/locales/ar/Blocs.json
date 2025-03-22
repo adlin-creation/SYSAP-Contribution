@@ -3,9 +3,9 @@
   "create_new_bloc": "إنشاء كتلة تمارين جديدة",
   "edit_bloc": "تعديل كتلة التمارين ",
   "enter_bloc_name": "يرجى إدخال اسم كتلة التمارين: ",
-  "exercise_name": "اسم التمرين",
+  "bloc_name": "اسم كتلة التمارين",
   "enter_bloc_description": "يرجى إدخال وصف الكتلة تمارين: ",
-  "exercise_description": "وصف التمرين",
+  "bloc_description": "وصف كتلة التمارين",
   "submit_button": "إرسال",
 
   "edit_button": "تعديل",

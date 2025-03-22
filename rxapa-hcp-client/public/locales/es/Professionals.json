@@ -46,7 +46,11 @@
     "physicians": "Médicos",
     "update_physician_button": "Actualizar médico",
     "back_to_physicians_button": "Volver a médicos",
-    "physician_patients_title": "Pacientes del médico"
+    "physician_patients_title": "Pacientes del médico",
+    "work_environment_label": "Entorno de trabajo",
+    "work_environment_required": "El entorno de trabajo es obligatorio",
+    "work_environment_min_length": "El entorno de trabajo debe contener al menos 2 caracteres",
+    "work_environment_placeholder": "Seleccione el entorno de trabajo"
   },
   "Kinesiologist": {
     "name": "Nombre",
@@ -98,7 +102,11 @@
     "kinesiologists": "Kinesiólogos",
     "update_kinesiologist_button": "Actualizar kinesiólogo",
     "back_to_kinesiologists_button": "Volver a kinesiólogos",
-    "kinesiologist_patients_title": "Pacientes del kinesiólogo"
+    "kinesiologist_patients_title": "Pacientes del kinesiólogo",
+    "work_environment_label": "Entorno de trabajo",
+    "work_environment_required": "El entorno de trabajo es obligatorio",
+    "work_environment_min_length": "El entorno de trabajo debe contener al menos 2 caracteres",
+    "work_environment_placeholder": "Seleccione el entorno de trabajo"
   },
   "Admins": {
     "name": "Nombre",

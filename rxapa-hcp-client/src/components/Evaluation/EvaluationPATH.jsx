@@ -382,7 +382,8 @@ function EvaluationPATH({ onSubmit }) {
             {formData.walkingTime && !errors.walkingTime && (
               <div style={{ marginTop: 8, color: "#666" }}>
                 Vitesse de marche :{" "}
-                {(4 / parseFloat(formData.walkingTime)).toFixed(2)} m/s
+                {(4 / parseFloat(formData.walkingTime)).toFixed(2)}{" "}
+                {t("speed_unit")}
               </div>
             )}
           </Form.Item>

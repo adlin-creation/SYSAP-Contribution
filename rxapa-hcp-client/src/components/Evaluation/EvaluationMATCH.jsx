@@ -335,7 +335,7 @@ function EvaluationMATCH({ onSubmit }) {
           </Form.Item>
 
           <Form.Item
-            label="Nombre de levers"
+            label={t("stand_count")}
             validateStatus={errors.chairTestCount ? "error" : ""}
             help={errors.chairTestCount}
           >
@@ -343,7 +343,7 @@ function EvaluationMATCH({ onSubmit }) {
               name="chairTestCount"
               value={formData.chairTestCount}
               onChange={handleChange}
-              placeholder="Entrez le nombre"
+              placeholder={t("stand_count_placeholder")}
             />
           </Form.Item>
 
@@ -439,8 +439,9 @@ function EvaluationMATCH({ onSubmit }) {
                 />
                 {formData.walkingTime && !errors.walkingTime && (
                   <div style={{ marginTop: 8, color: "#666" }}>
-                    Vitesse de marche :{" "}
-                    {(4 / parseFloat(formData.walkingTime)).toFixed(2)} m/s
+                    {t("walk_speed")} :{" "}
+                    {(4 / parseFloat(formData.walkingTime)).toFixed(2)}{" "}
+                    {t("speed_unit")}
                     <div style={{ marginTop: 4 }}>
                       <strong>
                         Objectif de marche :{" "}

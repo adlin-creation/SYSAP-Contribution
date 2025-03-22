@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Row, Col, Form, Input, Button, Modal, Checkbox, Select } from "antd";
-import { SendOutlined,PlusOutlined} from "@ant-design/icons";
+import { SendOutlined, PlusOutlined } from "@ant-design/icons";
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
 import "./ProgramStyles.css";
@@ -9,19 +9,19 @@ import useToken from "../Authentication/useToken";
 import { useTranslation } from "react-i18next";
 
 export default function CreateProgram(props) {
-  const { t } = useTranslation();
-  const { handleSubmit, control,reset } = useForm();
+  const { t } = useTranslation("Programs");
+  const { handleSubmit, control, reset } = useForm();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isErrorMessage, setIsErrorMessage] = useState(false);
   const [message, setMessage] = useState("");
   const { token } = useToken();
 
-  const [sessions, setSessions] = useState([]); 
-  const [selectedSessions, setSelectedSessions] = useState([]); 
-  const [searchQuery, setSearchQuery] = useState(""); 
-  const [isDropdownVisible, setDropdownVisible] = useState(false); 
+  const [sessions, setSessions] = useState([]);
+  const [selectedSessions, setSelectedSessions] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isDropdownVisible, setDropdownVisible] = useState(false);
   const dropdownRef = useRef(null);
-  const buttonRef = useRef(null);  
+  const buttonRef = useRef(null);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
   const [uploadType] = useState("file");
 
@@ -32,7 +32,7 @@ export default function CreateProgram(props) {
         headers: {
           Authorization: "Bearer " + token,
         },
-      }) 
+      })
       .then((res) => {
         console.log("Données reçues :", res.data);
         setSessions(res.data);
@@ -42,8 +42,8 @@ export default function CreateProgram(props) {
       });
   }, [token]);
 
-   //Fermer la liste deroulante si on clique en dehors
-   useEffect(() => {
+  //Fermer la liste deroulante si on clique en dehors
+  useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownVisible(false);
@@ -59,19 +59,18 @@ export default function CreateProgram(props) {
   useEffect(() => {
     if (isDropdownVisible && buttonRef.current) {
       const buttonRect = buttonRef.current.getBoundingClientRect();
-    
+
       setDropdownPosition({
-        top: buttonRect.bottom + window.scrollY, 
-        left: buttonRect.left + window.scrollX,   
+        top: buttonRect.bottom + window.scrollY,
+        left: buttonRect.left + window.scrollX,
       });
     }
-  }, [isDropdownVisible]); 
+  }, [isDropdownVisible]);
 
   // Filtrer les séances en fonction de la recherche
   const filteredSessions = sessions.filter((session) =>
     session.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
 
   const handleSessionSelection = (sessionId) => {
     const isSelected = selectedSessions.includes(sessionId);
@@ -87,7 +86,7 @@ export default function CreateProgram(props) {
 
     // Ajouter les sessions sélectionnées
     selectedSessions.forEach((sessionId) => {
-      formData.append("sessions[]", sessionId); 
+      formData.append("sessions[]", sessionId);
     });
 
     // Ajouter les autres données du programme
@@ -97,11 +96,10 @@ export default function CreateProgram(props) {
 
     // Ajouter l'image si elle existe
     if (uploadType === "file" && data.image && data.image[0]) {
-      formData.append("image", data.image[0]); 
+      formData.append("image", data.image[0]);
     }
 
     console.log(t("Selected sessions before submit:"), selectedSessions);
-
 
     axios
       .post(`${Constants.SERVER_URL}/create-program`, formData, {
@@ -140,8 +138,7 @@ export default function CreateProgram(props) {
     <Row justify="center" align="middle" style={{ minHeight: "50vh" }}>
       <Col span={12}>
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
-
-          <Form.Item label={t("Programs:enter_program_name")}>
+          <Form.Item label={t("enter_program_name")}>
             <Controller
               name="name"
               control={control}
@@ -149,14 +146,14 @@ export default function CreateProgram(props) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder={t("Programs:program_name_placeholder")}
+                  placeholder={t("program_name_placeholder")}
                   required
                 />
               )}
             />
           </Form.Item>
 
-          <Form.Item label={t("Programs:enter_program_description")}>
+          <Form.Item label={t("enter_program_description")}>
             <Controller
               name="description"
               control={control}
@@ -164,7 +161,7 @@ export default function CreateProgram(props) {
                 <Input.TextArea
                   onChange={onChange}
                   value={value}
-                  placeholder={t("Programs:program_description_placeholder")}
+                  placeholder={t("program_description_placeholder")}
                   rows={4}
                   required
                 />
@@ -172,7 +169,7 @@ export default function CreateProgram(props) {
             />
           </Form.Item>
 
-          <Form.Item label={t("Programs:enter_program_duration")}>
+          <Form.Item label={t("enter_program_duration")}>
             <Controller
               name="duration"
               control={control}
@@ -180,7 +177,7 @@ export default function CreateProgram(props) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder={t("Programs:program_duration_placeholder")}
+                  placeholder={t("program_duration_placeholder")}
                   min="1"
                   type="number"
                   required
@@ -189,20 +186,20 @@ export default function CreateProgram(props) {
             />
           </Form.Item>
 
-          <Form.Item label="Please select the unit of the duration">
+          <Form.Item label={t("duration_unit_label")}>
             <Controller
               name="duration_unit"
               control={control}
               render={({ field: { onChange, value } }) => (
                 <Select onChange={onChange} value={value} required>
-                  <Select.Option value="days">Jours</Select.Option>
-                  <Select.Option value="weeks">Semaines</Select.Option>
+                  <Select.Option value="days">{t("days")}</Select.Option>
+                  <Select.Option value="weeks">{t("weeks")}</Select.Option>
                 </Select>
               )}
             />
           </Form.Item>
-          
-          <Form.Item label="Upload the image of the program:">
+
+          <Form.Item label={t("program_image_label")}>
             <Controller
               name="image"
               control={control}
@@ -213,15 +210,21 @@ export default function CreateProgram(props) {
                   onChange={(e) => {
                     const file = e.target.files[0];
                     if (file) {
-                      const allowedFormats = ["image/jpeg", "image/png", "image/webp"];
+                      const allowedFormats = [
+                        "image/jpeg",
+                        "image/png",
+                        "image/webp",
+                      ];
                       if (!allowedFormats.includes(file.type)) {
-                        alert("Invalid file format. Please upload a .jpg, .png, or .webp file.");
-                        e.target.value = ""; 
+                        alert(
+                          "Invalid file format. Please upload a .jpg, .png, or .webp file."
+                        );
+                        e.target.value = "";
                         return;
                       }
                       onChange(file);
                     } else {
-                      onChange(null); 
+                      onChange(null);
                     }
                   }}
                 />
@@ -230,22 +233,22 @@ export default function CreateProgram(props) {
           </Form.Item>
 
           {/* Sélection des séances */}
-          <Form.Item label="Select sessions for the program:">
+          <Form.Item label={t("session_selection_label")}>
             <Button
               name="sessions"
               type="primary"
               icon={<PlusOutlined />}
               onClick={() => setDropdownVisible(!isDropdownVisible)}
             >
-              Select Sessions
+              {t("button_select_sessions")}
             </Button>
 
             {isDropdownVisible && (
               <div
                 ref={dropdownRef}
                 style={{
-                  top: dropdownPosition.top, 
-                  left: dropdownPosition.left, 
+                  top: dropdownPosition.top,
+                  left: dropdownPosition.left,
                 }}
               >
                 <Input
@@ -285,7 +288,7 @@ export default function CreateProgram(props) {
 
           <Form.Item>
             <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
-              {t("Programs:submit_button")}
+              {t("submit_button")}
             </Button>
           </Form.Item>
         </Form>
@@ -296,7 +299,7 @@ export default function CreateProgram(props) {
             onCancel={closeModal}
             footer={[
               <Button key="close" onClick={closeModal}>
-                {t("Programs:close_button")}
+                {t("close_button")}
               </Button>,
             ]}
           >

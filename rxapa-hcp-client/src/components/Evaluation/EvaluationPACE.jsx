@@ -168,12 +168,13 @@ function EvaluationPACE({ onSubmit }) {
           >
             <p>
               {t("speed_calculation")} :{" "}
-              {(4 / parseFloat(formData.walkingTime)).toFixed(2)} m/s
+              {(4 / parseFloat(formData.walkingTime)).toFixed(2)}{" "}
+              {t("speed_unit")}
             </p>
             <p>
               <strong>
                 {t("walk_objective")} :{" "}
-                {calculateWalkingObjective(formData.walkingTime)} minutes
+                {calculateWalkingObjective(formData.walkingTime)} {t("minutes")}
               </strong>
             </p>
           </div>
@@ -561,7 +562,8 @@ function EvaluationPACE({ onSubmit }) {
             {formData.walkingTime && !errors.walkingTime && (
               <div style={{ marginTop: 8, color: "#666" }}>
                 {t("walk_speed")} :{" "}
-                {(4 / parseFloat(formData.walkingTime)).toFixed(2)} m/s
+                {(4 / parseFloat(formData.walkingTime)).toFixed(2)}{" "}
+                {t("speed_unit")}
               </div>
             )}
           </Form.Item>

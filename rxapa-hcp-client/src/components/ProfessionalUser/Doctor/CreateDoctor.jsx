@@ -277,7 +277,7 @@ function CreateDoctor({ refetchDoctors }) {
             </Col>
             <Col span={12}>
               <Form.Item
-                label="Work environment"
+                label={t("Professionals:Physicians:work_environment_label")}
                 required
                 validateStatus={errors.workEnvironment ? "error" : ""}
                 help={errors.workEnvironment?.message}
@@ -286,17 +286,22 @@ function CreateDoctor({ refetchDoctors }) {
                   name="workEnvironment"
                   control={control}
                   rules={{
-                    required: "Le milieu de travail est obligatoire",
+                    required: t(
+                      "Professionals:Physicians:work_environment_required"
+                    ),
                     minLength: {
                       value: 2,
-                      message:
-                        "Le milieu de travail doit contenir au moins 2 caractères",
+                      message: t(
+                        "Professionals:Physicians:work_environment_min_length"
+                      ),
                     },
                   }}
                   render={({ field }) => (
                     <Select
                       {...field}
-                      placeholder="Sélectionnez le milieu de travail"
+                      placeholder={t(
+                        "Professionals:Physicians:work_environment_placeholder"
+                      )}
                     >
                       {milieuxTravail.map((milieu) => (
                         <Option key={milieu.value} value={milieu.value}>

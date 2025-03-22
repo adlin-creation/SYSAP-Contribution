@@ -6,6 +6,13 @@
   "program_description_placeholder": "Descripción del programa",
   "enter_program_duration": "Por favor, ingrese la duración del programa:",
   "program_duration_placeholder": "Duración del programa",
+  "duration_unit_label": "Por favor, seleccione la unidad de duración",
+  "days": "Días",
+  "weeks": "Semanas",
+  "program_image_label": "Cargue la imagen del programa:",
+  "session_selection_label": "Seleccione las sesiones para el programa :",
+  "button_select_sessions": "Seleccionar sesiones",
+
   "add_program_phase": "Agregar fase del programa",
   "loading_program_phases": "Cargando fases del programa...",
   "loading_program_phases_error": "Ocurrió un error al cargar las fases del programa",

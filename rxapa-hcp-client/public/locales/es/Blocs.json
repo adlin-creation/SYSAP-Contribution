@@ -3,9 +3,9 @@
   "create_new_bloc": "Crear un nuevo bloque",
   "edit_bloc": "Editar bloque",
   "enter_bloc_name": "Por favor, ingrese el nombre del bloque : ",
-  "exercise_name": "Nombre del ejercicio",
+  "bloc_name": "Nombre del bloque",
   "enter_bloc_description": "Por favor, ingrese la descripción del bloque : ",
-  "exercise_description": "Descripción del ejercicio",
+  "bloc_description": "Descripción del bloque",
   "submit_button": "ENVIAR",
 
   "edit_button": "EDITAR",
