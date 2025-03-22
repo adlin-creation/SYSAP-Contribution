@@ -128,7 +128,7 @@ function CreatePatient({ refetchPatients, onClose }) {
     setIsErrorMessage(isError);
     AntModal[isError ? "error" : "success"]({
       content: message,
-      okText: t("Patients:close_buton"),
+      okText: t("Patients:close_button"),
       centered: true,
       onOk: () => {
         if (!isError) {
