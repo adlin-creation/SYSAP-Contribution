@@ -68,7 +68,7 @@ function CreateDoctor({ refetchDoctors }) {
       })
       .then((res) => {
         refetchDoctors();
-        openModal("Physician created successfully!", false);
+        openModal(t("Professionals:Physicians:succes_creation_physician"), false);
       })
       .catch((err) =>
         openModal(

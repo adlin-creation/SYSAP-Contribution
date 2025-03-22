@@ -33,6 +33,9 @@
   "delete_button": "حذف",
   "learn_more_button": "تعرف على المزيد",
   "update_button": "تحديث",
-  "modify": "",
-  "save": ""
+  "modify": "تعديل",
+  "save": "حفظ", 
+  "feedback": "تعليق",
+  "ok": "حسنًا"
+
 }

@@ -50,7 +50,14 @@
     "work_environment_label": "Environnement de travail",
     "work_environment_required": "Le milieu de travail est obligatoire",
     "work_environment_min_length": "Le milieu de travail doit contenir au moins 2 caractères",
-    "work_environment_placeholder": "Sélectionnez le milieu de travail"
+    "work_environment_placeholder": "Sélectionnez le milieu de travail", 
+    "succes_creation_physician": "Médecin créé avec succès !", 
+    "confirm_deletion_physician": "Êtes-vous sûr de vouloir supprimer ce médecin ?", 
+    "deletion_physician_success": "Médecin supprimé avec succès", 
+    "error_deletion_physician": "Erreur lors de la suppression du médecin", 
+    "no_physicians_found": "Aucun médecin trouvé"
+
+
   },
   "Kinesiologist": {
     "name": "Nom",
@@ -106,7 +113,13 @@
     "work_environment_label": "Environnement de travail",
     "work_environment_required": "Le milieu de travail est obligatoire",
     "work_environment_min_length": "Le milieu de travail doit contenir au moins 2 caractères",
-    "work_environment_placeholder": "Sélectionnez le milieu de travail"
+    "work_environment_placeholder": "Sélectionnez le milieu de travail",
+    "error_update_kinesiologist": "Erreur lors de la mise à jour du kinésithérapeute",
+    "confirm_deletion_kinesiologist": "Êtes-vous sûr de vouloir supprimer ce kinésithérapeute ?",
+    "creation_succes_kinesiologist": "Kinésithérapeute créé avec succès", 
+    "error_deletion_kinesiologist": "Erreur lors de la suppression du kinésithérapeute"
+
+
   },
   "Admins": {
     "name": "Nom",
@@ -156,6 +169,15 @@
     "close_button": "Fermer",
     "of": "de",
     "admins": "Administrateurs",
-    "update_admin_button": "Mettre à jour l'administrateurs"
+    "update_admin_button": "Mettre à jour l'administrateurs",
+    "delete_confirm": "Êtes-vous sûr de vouloir supprimer cet administrateur ?", 
+    "delete_info": "Cela supprimera définitivement",
+    "yes": "Oui",
+    "no": "Non", 
+    "delete_success": "Administrateur supprimé avec succès", 
+    "delete_error": "Erreur lors de la suppression de l'administrateur", 
+    "no_admin_found": "Aucun administrateur trouvé",
+    "create_password" : "Générer un mot de passe",
+
   }
 }

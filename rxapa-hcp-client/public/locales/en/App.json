@@ -15,5 +15,6 @@
   "admins": "Admins",
   "profile": "Profile",
   "settings": "Settings",
-  "logout": "Logout"
+  "logout": "Logout",
+  "ok" : "OK"
 }

@@ -282,7 +282,9 @@ function CreateAdmin({ refetchAdmins }) {
                           )}
                           style={{ width: "calc(100% - 40px)" }}
                         />
-                        <Tooltip title="Générer un mot de passe">
+                        <Tooltip title={t(
+                          "Professionals:Admins:password_requirements_error"
+                        )}>
                           <Button
                             icon={<KeyOutlined />}
                             onClick={generatePassword}

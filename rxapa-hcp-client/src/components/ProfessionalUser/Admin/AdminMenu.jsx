@@ -95,11 +95,11 @@ export default function AdminMenu() {
 
   const handleDelete = (admin) => {
     AntModal.confirm({
-      title: "Are you sure you want to delete this admin?",
-      content: `This will permanently delete ${admin.firstname} ${admin.lastname}`,
-      okText: "Yes",
+      title: t("Professionals:Admins:delete_confirm"),
+      content: t("Professionals:Admins:delete_info") + ` ${admin.firstname} ${admin.lastname}`,
+      okText: t("Professionals:Admins:yes") ,
       okType: "danger",
-      cancelText: "No",
+      cancelText: t("Professionals:Admins:no"),
       onOk() {
         axios
           .delete(
@@ -110,11 +110,11 @@ export default function AdminMenu() {
           )
           .then(() => {
             refetchAdmins();
-            openModal("Admin successfully deleted", false);
+            openModal(t("Professionals:Admins:delete_success"), false);
           })
           .catch((err) =>
             openModal(
-              err.response?.data?.message || "Error deleting admin",
+              err.response?.data?.message || t("Professionals:Admins:delete_error"),
               true
             )
           );
@@ -187,7 +187,7 @@ export default function AdminMenu() {
           rowKey="id"
           loading={isLoading}
           locale={{
-            emptyText: <Empty description="No admins found" />,
+            emptyText: <Empty description={t("Professionals:Admins:no_admin_found")} />,
           }}
           pagination={{
             pageSize: 10,

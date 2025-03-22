@@ -1,8 +1,10 @@
 import React from "react";
 import ReactDom from "react-dom";
 import "./Modal.css";
+import { useTranslation } from "react-i18next";
 
 function Modal({ closeModal, message, isErrorMessage }) {
+  const { t } = useTranslation();
   return ReactDom.createPortal(
     <div className="modalBackground">
       <div className="modalContainer">
@@ -22,7 +24,7 @@ function Modal({ closeModal, message, isErrorMessage }) {
           {/* <button onClick={closeModal} id="cancelBtn">
             Cancel
           </button> */}
-          <button onClick={closeModal}>OK</button>
+          <button onClick={closeModal}>{t("App:ok")}</button>
         </div>
       </div>
     </div>,

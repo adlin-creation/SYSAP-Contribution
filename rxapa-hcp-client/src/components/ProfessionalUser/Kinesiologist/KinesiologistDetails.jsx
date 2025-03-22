@@ -61,7 +61,7 @@ function KinesiologistDetails({
       })
       .catch((err) => {
         const errorMessage =
-          err.response?.data?.message || "Error updating kinesiologist";
+          err.response?.data?.message || t("Professionals:Kinesiologist:error_update_kinesiologist");
         AntModal.error({
           content: errorMessage,
           okText: t("Professionals:Doctors:close_button"),

@@ -33,5 +33,7 @@
   "learn_more_button": "En savoir plus",
   "update_button": "Mettre à jour",
   "modify": "Modifier",
-  "save": "Sauvegarder"
+  "save": "Sauvegarder", 
+  "feedback": "Retour d'information", 
+  "ok": "OK"
 }

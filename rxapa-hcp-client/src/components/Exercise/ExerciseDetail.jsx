@@ -185,7 +185,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
         {/* Modal after submission */}
         {isOpenModal && (
           <Modal
-            title="Feedback"
+            title={t("Exercises:feedback")}
             open={isOpenModal}
             onCancel={closeModal}
             footer={[

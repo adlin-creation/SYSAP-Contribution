@@ -33,6 +33,8 @@
   "delete_button": "Eliminar",
   "learn_more_button": "Saber más",
   "update_button": "Actualizar",
-  "modify": "",
-  "save": ""
+  "modify": "Modificar",
+  "save": "Guardar", 
+  "feedback": "Retroalimentación", 
+  "ok": "OK"
 }

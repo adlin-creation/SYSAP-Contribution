@@ -102,8 +102,8 @@ export default function DoctorMenu() {
 
   const handleDelete = (doctor) => {
     AntModal.confirm({
-      title: "Are you sure you want to delete this physician?",
-      content: `This will permanently delete ${doctor.firstname} ${doctor.lastname}`,
+      title: t("Professionals:Physicians:confirm_deletion_physician"),
+      content: t("Professionals:Admins:delete_info") + ` ${doctor.firstname} ${doctor.lastname}`,
       okText: "Yes",
       okType: "danger",
       cancelText: "No",
@@ -117,11 +117,11 @@ export default function DoctorMenu() {
           )
           .then(() => {
             refetchDoctors();
-            openModal("physician successfully deleted", false);
+            openModal(t("Professionals:Physicians:deletion_physician_success"), false);
           })
           .catch((err) =>
             openModal(
-              err.response?.data?.message || "Error deleting physician",
+              err.response?.data?.message || (t("Professionals:Physicians:error_deletion_physician"),
               true
             )
           );
@@ -195,7 +195,7 @@ export default function DoctorMenu() {
           rowKey="id"
           loading={isLoading}
           locale={{
-            emptyText: <Empty description="No physicians found" />,
+            emptyText: <Empty description={t("Professionals:Physicians:no_physicians_found")} />,
           }}
           pagination={{
             pageSize: 10,

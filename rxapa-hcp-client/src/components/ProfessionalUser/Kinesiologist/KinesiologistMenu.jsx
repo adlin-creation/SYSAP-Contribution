@@ -102,8 +102,8 @@ export default function KinesiologistMenu() {
 
   const handleDelete = (kinesiologist) => {
     AntModal.confirm({
-      title: "Are you sure you want to delete this kinesiologist?",
-      content: `This will permanently delete ${kinesiologist.firstname} ${kinesiologist.lastname}`,
+      title: t("Professionals:Kinesiologist:confirm_deletion_kinesiologist") ,
+      content: t("Professionals:Admins:delete_info") + ` ${kinesiologist.firstname} ${kinesiologist.lastname}`,
       okText: "Yes",
       okType: "danger",
       cancelText: "No",
@@ -117,11 +117,11 @@ export default function KinesiologistMenu() {
           )
           .then(() => {
             refetchKinesiologists();
-            openModal("Kinesiologist successfully deleted", false);
+            openModal(t("Professionals:Kinesiologist:creation_succes_kinesiologist"), false);
           })
           .catch((err) =>
             openModal(
-              err.response?.data?.message || "Error deleting kinesiologist",
+              err.response?.data?.message || t("Professionals:Kinesiologist:error_deletion_kinesiologist"),
               true
             )
           );

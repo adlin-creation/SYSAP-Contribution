@@ -50,7 +50,12 @@
     "work_environment_label": "Work environment",
     "work_environment_required": "The work environment is required",
     "work_environment_min_length": "The work environment must contain at least 2 character",
-    "work_environment_placeholder": "Select the work environment"
+    "work_environment_placeholder": "Select the work environment",
+    "succes_creation_physician": "Physician created successfully!",
+    "confirm_deletion_physician": "Are you sure you want to delete this physician?",
+    "deletion_physician_success": "physician successfully deleted",
+    "error_deletion_physician": "Error deleting physician",
+    "no_physicians_found": "No physicians found"
   },
   "Kinesiologist": {
     "name": "Name",
@@ -106,7 +111,11 @@
     "work_environment_label": "Work environment",
     "work_environment_required": "The work environment is required",
     "work_environment_min_length": "The work environment must contain at least 2 character",
-    "work_environment_placeholder": "Select the work environment"
+    "work_environment_placeholder": "Select the work environment",
+    "error_update_kinesiologist": "Error updating kinesiologist",
+    "confirm_deletion_kinesiologist": "Are you sure you want to delete this kinesiologist?",
+    "creation_succes_kinesiologist": "Kinesiologist successfully deleted",
+    "error_deletion_kinesiologist": "Error deleting kinesiologist"
   },
   "Admins": {
     "name": "Name",
@@ -147,7 +156,7 @@
     "password_placeholder": "Enter password",
     "back_button": "Back",
     "create_admin_button": "Create Admin",
-    "total_admins": "Total kinesiologist",
+    "total_admins": "Total Admin",
     "active_status": "Active",
     "inactive_status": "Inactive",
     "edit_button": "Edit",
@@ -156,6 +165,14 @@
     "close_button": "Close",
     "of": "of",
     "admins": "Admins",
-    "update_admin_button": "Update admin"
+    "update_admin_button": "Update admin",
+    "delete_confirm": "Are you sure you want to delete this admin?",
+    "delete_info": "This will permanently delete",
+    "yes": "Yes",
+    "no": "No",
+    "delete_success": "Admin successfully deleted",
+    "delete_error": "Error deleting admin",
+    "no_admin_found": "No admins found", 
+    "create_password": "Generate a password"
   }
 }

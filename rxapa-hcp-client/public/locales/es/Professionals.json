@@ -50,7 +50,14 @@
     "work_environment_label": "Entorno de trabajo",
     "work_environment_required": "El entorno de trabajo es obligatorio",
     "work_environment_min_length": "El entorno de trabajo debe contener al menos 2 caracteres",
-    "work_environment_placeholder": "Seleccione el entorno de trabajo"
+    "work_environment_placeholder": "Seleccione el entorno de trabajo", 
+    "succes_creation_physician": "¡Médico creado con éxito!", 
+    "confirm_deletion_physician": "¿Está seguro de que desea eliminar a este médico?", 
+    "deletion_physician_success": "Médico eliminado con éxito", 
+    "error_deletion_physician": "Error al eliminar al médico", 
+    "no_physicians_found": "No se encontraron médicos"
+
+
   },
   "Kinesiologist": {
     "name": "Nombre",
@@ -106,7 +113,14 @@
     "work_environment_label": "Entorno de trabajo",
     "work_environment_required": "El entorno de trabajo es obligatorio",
     "work_environment_min_length": "El entorno de trabajo debe contener al menos 2 caracteres",
-    "work_environment_placeholder": "Seleccione el entorno de trabajo"
+    "work_environment_placeholder": "Seleccione el entorno de trabajo", 
+    "error_update_kinesiologist": "Error al actualizar el kinesiólogo",
+    "confirm_deletion_kinesiologist": "¿Está seguro de que desea eliminar a este kinesiólogo?", 
+    "creation_succes_kinesiologist": "Kinesiólogo creado con éxito", 
+    "error_deletion_kinesiologist": "Error al eliminar al kinesiólogo"
+
+
+
   },
   "Admins": {
     "name": "Nombre",
@@ -157,6 +171,14 @@
     "close_button": "Cerrar",
     "of": "de",
     "admins": "Administradores",
-    "update_admin_button": "Actualizar administrador"
+    "update_admin_button": "Actualizar administrador",
+    "delete_confirm": "¿Está seguro de que desea eliminar este administrador?", 
+    "delete_info": "Esto eliminará permanentemente", 
+    "yes": "Sí",
+    "no": "No", 
+    "delete_success": "Administrador eliminado con éxito", 
+    "delete_error": "Error al eliminar el administrador", 
+    "no_admin_found": "No se encontraron administradores", 
+    "create_password": "Generar una contraseña"
   }
 }
