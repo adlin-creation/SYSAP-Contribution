@@ -7,6 +7,7 @@ import "./Styles.css";
 import axios from "axios";
 import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
+import i18n from "i18next";
 import { useTranslation } from "react-i18next";
 
 export default function CreateBloc(props) {
@@ -43,16 +44,18 @@ export default function CreateBloc(props) {
       .post(`${Constants.SERVER_URL}/create-bloc`, data, {
         headers: {
           Authorization: "Bearer " + token,
+          "Accept-Language": i18n.language,
         },
       })
       .then((res) => {
-        openModal(res.data.message, false);
+        console.log("Server Response:", res.data.message);
+        openModal(t(`Backend:${res.data.message}`), false);
         // update the list of blocs
         props.refetchBlocs();
       })
       .catch((err) => {
         //const errorMessage = err.response ? err.response.data.message : "An error occurred";
-        openModal(err.response.data.message, true);
+        openModal(t(`Backend:${err.response.data.message}`), true);
       });
   };
 

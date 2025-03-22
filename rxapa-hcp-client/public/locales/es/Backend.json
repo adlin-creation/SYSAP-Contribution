@@ -1,0 +1,17 @@
+{
+  "bloc_creation_success": "Bloque creado con éxito",
+  "same_name_bloc_message": "Ya existe un bloque con el mismo nombre.",
+  "modify_bloc_name_message": "Por favor, modifique el nombre del bloque y envíelo de nuevo.",
+  "bloc_creation_failure_message": "Error al crear el bloque",
+  "contact_developer_message": "Por favor, contacte al desarrollador con una breve descripción de cómo se puede reproducir este error.",
+  "cannot_find_exercise_message": "No se puede encontrar el ejercicio",
+  "cannot_find_bloc_message": "No se puede encontrar el bloque",
+  "exercise_adding_success_message": "Ejercicio agregado con éxito al bloque",
+  "exercise_add_fail": "Error al agregar el ejercicio {{exerciseName}} al bloque",
+  "database_bloc_loading_error": "Error al cargar los bloques desde la base de datos",
+  "bloc_update_success": "El bloque ha sido actualizado",
+  "bloc_update_fail": "Error al actualizar el bloque {{blocName}}",
+  "bloc_not_found": "El bloque no existe en la base de datos",
+  "bloc_deleted_successfully": "Bloque eliminado con éxito",
+  "bloc_deletion_failed": "Error al eliminar el bloque"
+}

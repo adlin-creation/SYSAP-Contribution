@@ -1,0 +1,17 @@
+{
+  "bloc_creation_success": "Bloc créé avec succès",
+  "same_name_bloc_message": "Un bloc avec le même nom existe déjà.",
+  "modify_bloc_name_message": "Veuillez modifier le nom du bloc, puis soumettre à nouveau.",
+  "bloc_creation_failure_message": "Échec de la création du bloc",
+  "contact_developer_message": "Veuillez contacter le développeur avec une brève description de la façon dont cette erreur peut être reproduite.",
+  "cannot_find_exercise_message": "Impossible de trouver l'exercice",
+  "cannot_find_bloc_message": "Impossible de trouver le bloc",
+  "exercise_adding_success_message": "Exercice ajouté avec succès à un bloc",
+  "exercise_add_fail": "Échec de l'ajout de l'exercice {{exerciseName}} à un bloc",
+  "database_bloc_loading_error": "Erreur lors du chargement des blocs depuis la base de données",
+  "bloc_update_success": "Le bloc a été mis à jour",
+  "bloc_update_fail": "Échec de la mise à jour du bloc {{blocName}}",
+  "bloc_not_found": "Le bloc n'existe pas dans la base de données",
+  "bloc_deleted_successfully": "Bloc supprimé avec succès",
+  "bloc_deletion_failed": "Échec de la suppression du bloc"
+}

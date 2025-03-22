@@ -1,0 +1,17 @@
+{
+  "bloc_creation_success": "Successfully created a Bloc",
+  "same_name_bloc_message": "A bloc with the same name already exists.",
+  "modify_bloc_name_message": "Please modify the name of the bloc and then submit again.",
+  "bloc_creation_failure_message": "Failed to create a Bloc",
+  "contact_developer_message": "Please contact the developer with a brief description of how this error can be reproduced.",
+  "cannot_find_exercise_message": "Can't find the exercise",
+  "cannot_find_bloc_message": "Can't find the bloc",
+  "exercise_adding_success_message": "Successfully added the exercise to a bloc",
+  "exercise_add_fail": "Failed to add the {{exerciseName}} exercise to a bloc",
+  "database_bloc_loading_error": "Error loading the blocs from the database",
+  "bloc_update_success": "The bloc has been updated",
+  "bloc_update_fail": "Failed to update the {{blocName}}",
+  "bloc_not_found": "The bloc doesn't exist in the database",
+  "bloc_deleted_successfully": "Successfully deleted the bloc",
+  "bloc_deletion_failed": "Failed to delete the bloc"
+}

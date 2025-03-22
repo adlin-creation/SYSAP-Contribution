@@ -108,7 +108,7 @@ export default function BlocMenu() {
       })
       .then((res) => {
         refetchBlocs();
-        openModal(res.data.message, false); // Pass false as it's a success
+        openModal(t(`Backend:${res.data.message}`), false); // Pass false as it's a success
       })
       .catch((err) => openModal(err.response.data.message, true)); // Pass true as it's an error
   };

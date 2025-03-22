@@ -1,0 +1,17 @@
+{
+  "bloc_creation_success": "تم إنشاء كتلة التمارين بنجاح",
+  "same_name_bloc_message": "توجد بالفعل كتلة تمارين بنفس الاسم.",
+  "modify_bloc_name_message": "يرجى تعديل اسم كتلة التمارين ثم إعادة الإرسال.",
+  "bloc_creation_failure_message": "فشل في إنشاء كتلة التمارين",
+  "contact_developer_message": "يرجى التواصل مع المطور مع وصف موجز لكيفية إعادة إنتاج هذا الخطأ.",
+  "cannot_find_exercise_message": "لا يمكن العثور على التمرين",
+  "cannot_find_bloc_message": "لا يمكن العثور على كتلة التمارين",
+  "exercise_adding_success_message": "تمت إضافة التمرين إلى كتلة التمارين بنجاح",
+  "exercise_add_fail": "فشل في إضافة التمرين {{exerciseName}} إلى كتلة التمارين",
+  "database_bloc_loading_error": "خطأ في تحميل كتل التمارين من قاعدة البيانات",
+  "bloc_update_success": "تم تحديث كتلة التمارين بنجاح",
+  "bloc_update_fail": "فشل في تحديث كتلة التمارين {{blocName}}",
+  "bloc_not_found": "كتلة التمارين غير موجودة في قاعدة البيانات",
+  "bloc_deleted_successfully": "تم حذف كتلة التمارين بنجاح",
+  "bloc_deletion_failed": "فشل في حذف كتلة التمارين"
+}

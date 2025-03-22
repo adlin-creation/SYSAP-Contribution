@@ -29,7 +29,7 @@ exports.createBloc = async (req: any, res: any, next: any) => {
       description: description,
     });
 
-    res.status(201).json({ message: "Successfuly created a Bloc" });
+    res.status(201).json({ message: "bloc_creation_success" });
     // Otherwise, the action was not successful. Hence, let the user know that
     // his request was unsuccessful.
   } catch (error: any) {
@@ -40,14 +40,13 @@ exports.createBloc = async (req: any, res: any, next: any) => {
 
     if (error.name == "SequelizeUniqueConstraintError") {
       res.json({
-        messageTitle: "A bloc with the same name already exists.",
-        message: "Please modify the name of the bloc and then submit again.",
+        messageTitle: "same_name_bloc_message",
+        message: "modify_bloc_name_message",
       });
     } else {
       res.json({
-        messageTitle: "Failed to create a Bloc",
-        message:
-          "Please contact the developer with a brief description of how this error can be reproduced.",
+        messageTitle: "bloc_creation_failure_message",
+        message: "contact_developer_message",
       });
     }
   }
@@ -81,7 +80,7 @@ exports.addExercise = async (req: any, res: any, next: any) => {
   try {
     exercise = await Exercise.findOne({ where: { name: exerciseName } });
   } catch (error) {
-    res.json({ message: "Can't find the exercise ", exerciseName });
+    res.json({ message: "cannot_find_exercise_message", exerciseName });
   }
 
   // Get the bloc
@@ -91,7 +90,7 @@ exports.addExercise = async (req: any, res: any, next: any) => {
       where: { key: blocKey },
     });
   } catch (error) {
-    res.json({ message: "Can't find the bloc" });
+    res.json({ message: "cannot_find_bloc_message" });
   }
 
   const rank = (await bloc.countExercise_Blocs()) + 1;
@@ -106,16 +105,15 @@ exports.addExercise = async (req: any, res: any, next: any) => {
       restingInstruction: restingInstruction,
       minutes: minutes,
     });
-    res
-      .status(201)
-      .json({ message: "Successfully added the exercise to a bloc" });
+    res.status(201).json({ message: "exercise_adding_success_message" });
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
     res.status(error.statusCode);
     res.json({
-      message: `Failed to add the ${exerciseName} exercise to a bloc`,
+      message: "exercise_add_fail",
+      exerciseName: exerciseName,
     });
     return res;
   }
@@ -132,7 +130,7 @@ exports.getBlocs = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.json({ message: "Error loading the blocs from the database" });
+    res.json({ message: "database_bloc_loading_error" });
   }
   return res;
 };
@@ -162,7 +160,7 @@ exports.getBloc = async (req: any, res: any, next: any) => {
       error.statusCode = 500;
     }
     res.status(error.statusCode);
-    res.json({ message: "Error loading a bloc from the database" });
+    res.json({ message: "database_bloc_loading_error" });
   }
 };
 
@@ -184,12 +182,12 @@ exports.updateBloc = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.json({ message: "Error: Can't find the bloc" });
+    res.json({ message: "cannot_find_bloc_message" });
     return res;
   }
 
   if (bloc == null) {
-    res.json({ message: "Error: Can't find the bloc" });
+    res.json({ message: "cannot_find_bloc_message" });
     return res;
   }
 
@@ -204,14 +202,14 @@ exports.updateBloc = async (req: any, res: any, next: any) => {
       description: description || bloc.description,
     });
 
-    res.status(200).json({ message: `The bloc has been updated` });
+    res.status(200).json({ message: `bloc_update_success` });
     // Otherwise, the action was not successful. Hence, let the user know that
     // his request was unsuccessful.
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.json({ message: "Failed to update the " + { blocName } });
+    res.json({ message: "bloc_update_fail", blocName: blocName });
   }
 };
 
@@ -231,19 +229,17 @@ exports.deleteBloc = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    return res
-      .status(error.statusCode)
-      .json({ message: "The bloc doesn't exist in the database" });
+    return res.status(error.statusCode).json({ message: "bloc_not_found" });
   }
   try {
     await bloc.destroy();
-    return res.status(200).json({ message: "Successfully deleted the bloc" });
+    return res.status(200).json({ message: "bloc_deleted_successfully" });
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
     return res
       .status(error.statusCode)
-      .json({ message: "Failed to delete the bloc" });
+      .json({ message: "bloc_deletion_failed" });
   }
 };
