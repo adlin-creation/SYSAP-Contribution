@@ -52,8 +52,7 @@ describe("EvaluationController", () => {
     jest.clearAllMocks();
   });
 
-  // ======== TESTS DE CRÉATION D'ÉVALUATION ========
-  describe("Tests de création d'évaluations", () => {
+  describe("Create tests", () => {
     const setupCreateTest = (evaluationType: string) => {
       interface TestScores {
         program: string;
@@ -134,7 +133,7 @@ describe("EvaluationController", () => {
       idField,
       errorMsg,
     } of evaluationTypes) {
-      it(`devrait créer une nouvelle évaluation ${name} avec succès`, async () => {
+      it(`should create a new ${name} evaluation successfully`, async () => {
         setupCreateTest(name);
 
         const mockProgram = { id: 1, name: "MARRON IV" };
@@ -163,7 +162,7 @@ describe("EvaluationController", () => {
         );
       });
 
-      it(`devrait gérer le cas où le programme n'est pas trouvé pour ${name}`, async () => {
+      it(`should handle the case where program is not found for ${name}`, async () => {
         mockReq.body = {
           scores: {
             program: "PROGRAMME INEXISTANT",
@@ -184,7 +183,7 @@ describe("EvaluationController", () => {
         );
       });
 
-      it(`devrait gérer les erreurs de base de données lors de la création ${name}`, async () => {
+      it(`should handle database errors during ${name} creation`, async () => {
         setupCreateTest(name);
 
         const mockProgram = { id: 1, name: "MARRON IV" };
@@ -207,7 +206,7 @@ describe("EvaluationController", () => {
       });
     }
 
-    it("devrait calculer correctement l'objectif de marche en fonction de la vitesse", async () => {
+    it("should correctly calculate walking objective based on speed", async () => {
       const testCases = [
         { walkingTime: "10", expectedSpeed: 0.4, expectedObjectif: 2 },
         { walkingTime: "5", expectedSpeed: 0.8, expectedObjectif: 4 },
@@ -257,8 +256,7 @@ describe("EvaluationController", () => {
     });
   });
 
-  // ======== TESTS DE RÉCUPÉRATION D'ÉVALUATION ========
-  describe("Tests de récupération d'évaluations", () => {
+  describe("Get tests", () => {
     const setupGetTest = (id = "1") => {
       mockReq.params = { id };
     };
@@ -288,7 +286,7 @@ describe("EvaluationController", () => {
     ];
 
     for (const { method, name, modelKey, idKey } of singleGetMethods) {
-      it(`devrait récupérer une évaluation ${name} spécifique`, async () => {
+      it(`should retrieve a specific ${name} evaluation`, async () => {
         setupGetTest();
 
         const mockEvaluation = {
@@ -308,7 +306,7 @@ describe("EvaluationController", () => {
         expect(mockRes.json).toHaveBeenCalledWith(mockEvaluation);
       });
 
-      it(`devrait gérer le cas où l'évaluation ${name} n'est pas trouvée`, async () => {
+      it(`should handle the case where ${name} evaluation is not found`, async () => {
         setupGetTest("999");
 
         jest.spyOn(Evaluation, "findOne").mockResolvedValue(null);
@@ -321,7 +319,7 @@ describe("EvaluationController", () => {
         });
       });
 
-      it(`devrait gérer les erreurs de base de données pour la récupération de ${name}`, async () => {
+      it(`should handle database errors when retrieving ${name}`, async () => {
         setupGetTest();
 
         const dbError = new Error(`Database error for ${name}`);
@@ -343,7 +341,7 @@ describe("EvaluationController", () => {
     ];
 
     for (const { method, name } of allGetMethods) {
-      it(`devrait récupérer toutes les évaluations ${name}`, async () => {
+      it(`should retrieve all ${name} evaluations`, async () => {
         const mockEvaluations = [{ id: 1 }, { id: 2 }];
 
         jest
@@ -356,7 +354,7 @@ describe("EvaluationController", () => {
         expect(mockRes.json).toHaveBeenCalledWith(mockEvaluations);
       });
 
-      it(`devrait gérer les erreurs de base de données pour la récupération de toutes les évaluations ${name}`, async () => {
+      it(`should handle database errors when retrieving all ${name} evaluations`, async () => {
         const dbError = new Error(`Database error for ${name}`);
         jest.spyOn(Evaluation, "findAll").mockRejectedValue(dbError);
 
@@ -370,8 +368,7 @@ describe("EvaluationController", () => {
     }
   });
 
-  // ======== TESTS DE MISE À JOUR D'ÉVALUATION ========
-  describe("Tests de mise à jour d'évaluations", () => {
+  describe("Update tests", () => {
     const setupUpdateTest = () => {
       mockReq.params = { id: "1" };
 
@@ -458,7 +455,7 @@ describe("EvaluationController", () => {
       errorMsg,
       responseKey,
     } of updateMethods) {
-      it(`devrait mettre à jour une évaluation ${name} existante`, async () => {
+      it(`should update an existing ${name} evaluation`, async () => {
         setupUpdateTest();
 
         const mockEvaluation = {
@@ -502,7 +499,7 @@ describe("EvaluationController", () => {
         );
       });
 
-      it(`devrait gérer le cas où l'évaluation ${name} n'est pas trouvée pour mise à jour`, async () => {
+      it(`should handle the case where ${name} evaluation is not found for update`, async () => {
         setupUpdateTest();
 
         jest.spyOn(Evaluation, "findByPk").mockResolvedValue(null);
@@ -516,7 +513,7 @@ describe("EvaluationController", () => {
         });
       });
 
-      it(`devrait gérer le cas où l'évaluation ${name} spécifique n'est pas trouvée`, async () => {
+      it(`should handle the case where specific ${name} evaluation is not found`, async () => {
         setupUpdateTest();
 
         const mockEvaluation = {
@@ -537,7 +534,7 @@ describe("EvaluationController", () => {
         });
       });
 
-      it(`devrait gérer les erreurs de base de données lors de la mise à jour ${name}`, async () => {
+      it(`should handle database errors during ${name} update`, async () => {
         setupUpdateTest();
 
         const mockEvaluation = {
@@ -588,7 +585,7 @@ describe("EvaluationController", () => {
     ];
 
     for (const { method, name } of programUpdateMethods) {
-      it(`devrait gérer le cas où le programme à mettre à jour n'est pas trouvé pour ${name}`, async () => {
+      it(`should handle the case where program to update is not found for ${name}`, async () => {
         setupUpdateTest();
 
         if (mockReq.body && mockReq.body.scores) {
@@ -626,8 +623,7 @@ describe("EvaluationController", () => {
     }
   });
 
-  // ======== TESTS DE SUPPRESSION D'ÉVALUATIONS ========
-  describe("Tests de suppression d'évaluations", () => {
+  describe("Delete tests", () => {
     const setupDeleteTest = (id = "1") => {
       mockReq.params = { id };
     };
@@ -651,7 +647,7 @@ describe("EvaluationController", () => {
     ];
 
     for (const { method, name, model } of deleteMethods) {
-      it(`devrait supprimer une évaluation ${name} existante`, async () => {
+      it(`should delete an existing ${name} evaluation`, async () => {
         setupDeleteTest();
 
         const mockEvaluation = {
@@ -673,7 +669,7 @@ describe("EvaluationController", () => {
         });
       });
 
-      it(`devrait gérer le cas où l'évaluation ${name} n'est pas trouvée pour suppression`, async () => {
+      it(`should handle the case where ${name} evaluation is not found for deletion`, async () => {
         setupDeleteTest("999");
 
         jest.spyOn(Evaluation, "findByPk").mockResolvedValue(null);
@@ -686,7 +682,7 @@ describe("EvaluationController", () => {
         });
       });
 
-      it(`devrait gérer les erreurs lors de la suppression de l'évaluation ${name} principale`, async () => {
+      it(`should handle errors when deleting the main ${name} evaluation`, async () => {
         setupDeleteTest();
 
         const mockEvaluation = {
@@ -709,7 +705,7 @@ describe("EvaluationController", () => {
       });
     }
 
-    it("devrait gérer les erreurs lors de la suppression de l'évaluation PACE spécifique", async () => {
+    it("should handle errors when deleting the specific PACE evaluation", async () => {
       setupDeleteTest();
 
       const mockEvaluation = {
@@ -738,9 +734,8 @@ describe("EvaluationController", () => {
     });
   });
 
-  // ======== TESTS DE RECHERCHE DE PATIENTS ========
-  describe("searchPatients", () => {
-    it("devrait retourner des patients en fonction du terme de recherche", async () => {
+  describe("Search tests", () => {
+    it("should return patients based on search term", async () => {
       mockReq.query = { term: "John Doe" };
 
       const mockPatients = [
@@ -756,7 +751,7 @@ describe("EvaluationController", () => {
       expect(mockRes.json).toHaveBeenCalledWith(mockPatients);
     });
 
-    it("devrait gérer le cas où aucun terme de recherche n'est fourni", async () => {
+    it("should handle the case where no search term is provided", async () => {
       mockReq.query = {};
 
       await searchPatients(mockReq as Request, mockRes as Response);
@@ -767,7 +762,7 @@ describe("EvaluationController", () => {
       });
     });
 
-    it("devrait rechercher avec un seul terme", async () => {
+    it("should search with a single term", async () => {
       mockReq.query = { term: "John" };
 
       const mockPatients = [
@@ -792,7 +787,7 @@ describe("EvaluationController", () => {
       expect(mockRes.json).toHaveBeenCalledWith(mockPatients);
     });
 
-    it("devrait rechercher avec deux termes (prénom nom)", async () => {
+    it("should search with two terms (first name last name)", async () => {
       mockReq.query = { term: "John Doe" };
 
       const mockPatients = [{ id: 1, firstname: "John", lastname: "Doe" }];
@@ -824,7 +819,7 @@ describe("EvaluationController", () => {
       expect(mockRes.json).toHaveBeenCalledWith(mockPatients);
     });
 
-    it("devrait gérer les erreurs de base de données lors de la recherche", async () => {
+    it("should handle database errors during search", async () => {
       mockReq.query = { term: "John" };
 
       jest
