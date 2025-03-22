@@ -158,7 +158,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
                     disabled={!isEditing}
                   >
                     {[
-                      t("Exercises:beginner"),
+                      t("Exercises:easy"),
                       t("Exercises:intermediate"),
                       t("Exercises:advanced"),
                     ].map((level) => (
