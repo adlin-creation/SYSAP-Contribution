@@ -33,7 +33,7 @@ import { useTranslation } from "react-i18next";
 
 export default function PatientMenu({ role }) {
   const [viewingPatient, setViewingPatient] = useState(null);
-  const { t } = useTranslation();
+  const { t } = useTranslation("Patients");
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isErrorMessage, setIsErrorMessage] = useState(false);
   const [message, setMessage] = useState("");
@@ -54,110 +54,37 @@ export default function PatientMenu({ role }) {
     }
   );
 
-  // Faire un endpoint pour lister les patients avec aide(s) soignant(s)....
-  const fetchProgram = async (ProgramEnrollement) => {
-    try {
-      const { data } = await axios.get(`${Constants.SERVER_URL}/programs`, {
-        headers: { Authorization: "Bearer " + token },
-      });
-      console.log(data);
-      return data.find((prog) => prog.id === ProgramEnrollement.ProgramId);
-    } catch (err) {
-      throw new Error(
-        err.response?.data?.message || t("Patients:fetch_error_programs")
-      );
-    }
-  };
-
-  // Fonction pour récupérer les enregistrements de programme liés à un patient
-  const fetchProgramEnrollements = async (patientId) => {
-    try {
-      const { data } = await axios.get(
-        `${Constants.SERVER_URL}/program-enrollements`,
-        {
-          headers: { Authorization: "Bearer " + token },
-        }
-      );
-      return data.filter((prog) => prog.PatientId === patientId);
-    } catch (err) {
-      throw new Error(
-        err.response?.data?.message ||
-          t("Patients:fetch_error_programs_subscribe")
-      );
-    }
-  };
-
-  // Fonction pour récupérer les soignants liés aux enregistrements de programme
-  const fetchPatientCaregivers = async (programEnrollements) => {
-    try {
-      const { data } = await axios.get(
-        `${Constants.SERVER_URL}/patient-caregivers`,
-        {
-          headers: { Authorization: "Bearer " + token },
-        }
-      );
-      return data.filter((patientCaregiver) =>
-        programEnrollements.some(
-          (enrollment) =>
-            enrollment.id === patientCaregiver.ProgramEnrollementId
-        )
-      );
-    } catch (err) {
-      throw new Error(
-        err.response?.data?.message || t("Patients:fetch_error_caregiver.")
-      );
-    }
-  };
-
-  // Fonction pour récupérer les détails des soignants
-  const fetchCaregiversDetails = async (caregivers) => {
-    try {
-      const caregiversDetails = await Promise.all(
-        caregivers.map((caregiver) =>
-          axios
-            .get(`${Constants.SERVER_URL}/caregiver/${caregiver.CaregiverId}`, {
-              headers: { Authorization: "Bearer " + token },
-            })
-            .then((res) => res.data)
-        )
-      );
-      return caregiversDetails;
-    } catch (err) {
-      throw new Error(
-        err.response?.data?.message ||
-          t("Patients:fetch_error_detail_caregiver.")
-      );
-    }
-  };
-
   // Fonction principale pour gérer la recuperation en cascade jusqu'aux aides soignants
   const handleGetCaregivers = async (patient) => {
     console.log(patient);
     try {
-      const programEnrollements = await fetchProgramEnrollements(patient.id);
-      console.log(t("Patients:add_caregiver"), programEnrollements);
-
-      const patient_caregivers = await fetchPatientCaregivers(
+      const response = await axios.get(
+        `${Constants.SERVER_URL}/patientDetails/${patient.id}`,
+        {
+          headers: { Authorization: "Bearer " + token },
+        }
+      );
+      const { caregivers, patientCaregivers, programEnrollements } =
+        response.data;
+      openCaregiversModal(
+        patient,
+        caregivers,
+        patientCaregivers,
         programEnrollements
       );
-      console.log(t("Patients:caregiver_link"), patient_caregivers);
-
-      const caregivers = await fetchCaregiversDetails(patient_caregivers);
-      console.log(t("Patients:caregiver_details"), caregivers);
-
-      openCaregiversModal(caregivers, patient_caregivers, programEnrollements);
     } catch (err) {
-      console.error(t("Patients:error"), err.message);
+      console.error("Erreur :", err.message);
       openModal(err.message, true);
     }
   };
 
   const openCaregiversModal = (
+    patient,
     caregivers,
     patient_caregivers,
     programEnrollements
   ) => {
-    AntModal.info({
+    const modal = AntModal.info({
       title: (
         <div style={{ fontSize: "18px", fontWeight: "bold" }}>
           Liste des soignants
@@ -183,7 +110,15 @@ export default function PatientMenu({ role }) {
                         )
                       }
                     >
-                      {t("Patients:show_details")}
+                      {t("voir les details")}
+                    </Button>,
+                    <Button
+                      type="link"
+                      danger
+                      icon={<DeleteOutlined />}
+                      onClick={() => deleteCaregiver(c.id, patient, modal)}
+                    >
+                      {t("Supprimer")}
                     </Button>,
                   ]}
                 >
@@ -198,11 +133,50 @@ export default function PatientMenu({ role }) {
             ))}
         </Row>
       ) : (
-        <p>{t("Patients:caregiver_available")}</p>
+        <p>{t("Aucune aide soignante disponible")}</p>
       ),
       onOk() {},
       width: "80%",
     });
+  };
+
+  const deleteCaregiver = (id, patient, modal) => {
+    AntModal.confirm({
+      title: "Confirmer la suppression",
+      content: "Êtes-vous sûr de vouloir supprimer ce soignant ?",
+      okText: "Oui",
+      cancelText: "Annuler",
+      onOk: async () => {
+        try {
+          const { data } = await axios.delete(
+            `${Constants.SERVER_URL}/delete-caregiver/${id}`,
+            {
+              headers: { Authorization: "Bearer " + token },
+            }
+          );
+          console.log(data);
+          modal.destroy();
+          refetchPatients();
+          handleGetCaregivers(patient);
+        } catch (err) {
+          console.log("Erreur lors de la suppression de l'aide soignant ");
+        }
+      },
+    });
+  };
+
+  const fetchProgram = async (ProgramEnrollement) => {
+    try {
+      const { data } = await axios.get(`${Constants.SERVER_URL}/programs`, {
+        headers: { Authorization: "Bearer " + token },
+      });
+      return data.find((prog) => prog.id === ProgramEnrollement.ProgramId);
+    } catch (err) {
+      throw new Error(
+        err.response?.data?.message ||
+          "Erreur lors de la récupération des programmes."
+      );
+    }
   };
 
   const viewCaregiverDetails = async (
@@ -237,14 +211,14 @@ export default function PatientMenu({ role }) {
       .filter((key) => caregiver[key] !== undefined)
       .map((key) => ({
         key,
-        label: t(`Patients:${key}`),
+        label: t(`${key}`),
         children: caregiver[key],
       }));
 
     if (program) {
       items.push({
         key: "program",
-        label: t("Patients:program"),
+        label: t("program"),
         children: program.name,
       });
     }
@@ -289,47 +263,47 @@ export default function PatientMenu({ role }) {
 
   const columns = [
     {
-      title: t("Patients:name"),
+      title: t("name"),
       key: "name",
       render: (_, record) =>
         `${record.firstname || ""} ${record.lastname || ""}`,
     },
     {
-      title: t("Patients:email"),
+      title: t("email"),
       dataIndex: "email",
       key: "email",
     },
     {
-      title: t("Patients:phone"),
+      title: t("phone"),
       dataIndex: "phoneNumber",
       key: "phoneNumber",
     },
     {
-      title: t("Patients:status"),
+      title: t("status"),
       key: "status",
       dataIndex: "status",
       render: (status) => (
         <Tag color={getStatusColor(status) || "grey"}>
-          {status ? status.toUpperCase() : "UNKNOWN"}
+          {status ? t(status.toLowerCase()) : "UNKNOWN"}
         </Tag>
       ),
     },
     {
-      title: t("Patients:programs"),
+      title: t("programs"),
       dataIndex: "numberOfPrograms",
       key: "numberOfPrograms",
     },
     {
-      title: t("Patients:caregivers"),
+      title: t("caregiver"),
       key: "caregivers",
       render: (record) => (
         <Button type="link" onClick={() => handleGetCaregivers(record)}>
-          Caregivers
+          {t("caregiver")}
         </Button>
       ),
     },
     {
-      title: t("Patients:actions"),
+      title: t("actions"),
       key: "actions",
       render: (_, record) => (
         <Space size="middle">
@@ -338,14 +312,14 @@ export default function PatientMenu({ role }) {
             onClick={() => handleView(record)}
             style={{ display: role === "admin" ? "none" : "inline-block" }}
           >
-            <EyeOutlined /> {t("Patients:view_statistic_button")}
+            <EyeOutlined /> {t("view_statistic_button")}
           </Button>
           <Button
             type="link"
             onClick={() => handleEdit(record)}
             style={{ display: role === "admin" ? "none" : "inline-block" }}
           >
-            <EditOutlined /> {t("Patients:edit_button")}
+            <EditOutlined /> {t("edit_button")}
           </Button>
           <Button
             type="link"
@@ -353,7 +327,7 @@ export default function PatientMenu({ role }) {
             onClick={() => handleDelete(record)}
             style={{ display: role === "admin" ? "none" : "inline-block" }}
           >
-            <DeleteOutlined /> {t("Patients:delete_button")}
+            <DeleteOutlined /> {t("delete_button")}
           </Button>
         </Space>
       ),
@@ -369,20 +343,20 @@ export default function PatientMenu({ role }) {
 
   const showCaregiverWarning = () => {
     AntModal.warning({
-      title: t("Patients:delete_impossible"),
-      content: t("Patients:delete_caregiver_message"),
-      okText: t("Patients:ok_button"),
+      title: t("delete_impossible"),
+      content: t("delete_caregiver_message"),
+      okText: t("ok_button"),
     });
   };
 
   const handleDelete = (patient) => {
     AntModal.confirm({
-      title: t("Patients:delete_patient_alert"),
+      title: t("delete_patient_alert"),
       icon: <ExclamationCircleOutlined />,
       content: `${patient.firstname} ${patient.lastname}`,
-      okText: t("Patients:yes_button"),
-      okType: t("Patients:danger_message"),
-      cancelText: t("Patients:no_button"),
+      okText: t("yes_button"),
+      okType: t("danger_message"),
+      cancelText: t("no_button"),
       onOk: () => {
         console.log(patient);
         if (patient.numberOfCaregivers === 0) {
@@ -433,16 +407,16 @@ export default function PatientMenu({ role }) {
               type="primary"
               icon={<ArrowLeftOutlined />}
             >
-              {t("Patients:back_button")}
+              {t("back_button")}
             </Button>
           </Col>
           <Col flex="auto" style={{ textAlign: "center" }}>
             <h2 style={{ marginBottom: 0 }}>
               {isCreatePatient
-                ? t("Patients:register_new_patient")
+                ? t("register_new_patient")
                 : selectedPatient
-                ? t("Patients:edit_patient_details")
-                : t("Patients:view_patient_details")}
+                ? t("edit_patient_details")
+                : t("view_patient_details")}
             </h2>
           </Col>
           <Col span={4} />
@@ -458,7 +432,7 @@ export default function PatientMenu({ role }) {
               onClick={() => setIsCreatePatient(true)}
               style={{ display: role === "admin" ? "none" : "inline-block" }}
             >
-              {t("Patients:register_patient")}
+              {t("register_patient")}
             </Button>
           </div>
 
@@ -494,7 +468,7 @@ export default function PatientMenu({ role }) {
           onCancel={closeModal}
           footer={[
             <Button key="close" onClick={closeModal}>
-              {t("Patients:close_button")}
+              {t("close_button")}
             </Button>,
           ]}
           style={{ color: isErrorMessage ? "#ff4d4f" : "#52c41a" }}

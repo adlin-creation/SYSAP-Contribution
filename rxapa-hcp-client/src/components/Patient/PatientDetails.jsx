@@ -198,19 +198,19 @@ function PatientDetails({ patient, onClose, refetchPatients }) {
                   render={({ field }) => (
                     <Select {...field}>
                       <Select.Option value="active">
-                        {t("Patients:status_active")}
+                        {t("Patients:active")}
                       </Select.Option>
                       <Select.Option value="paused">
-                        {t("Patients:status_paused")}
+                        {t("Patients:paused")}
                       </Select.Option>
                       <Select.Option value="waiting">
-                        {t("Patients:status_waiting")}
+                        {t("Patients:waiting")}
                       </Select.Option>
                       <Select.Option value="completed">
-                        {t("Patients:status_completed")}
+                        {t("Patients:completed")}
                       </Select.Option>
                       <Select.Option value="abort">
-                        {t("Patients:status_abort")}
+                        {t("Patients:abort")}
                       </Select.Option>
                     </Select>
                   )}
