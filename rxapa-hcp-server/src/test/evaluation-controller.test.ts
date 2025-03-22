@@ -1,0 +1,883 @@
+import { Request, Response } from "express";
+import { Evaluation } from "../model/Evaluation";
+import { Evaluation_PACE } from "../model/Evaluation_PACE";
+import { Evaluation_PATH } from "../model/Evaluation_PATH";
+import { Evaluation_MATCH } from "../model/Evaluation_MATCH";
+import { Program } from "../model/Program";
+import { Patient } from "../model/Patient";
+import { sequelize } from "../util/database";
+import { Op } from "sequelize";
+
+// Importer les méthodes du contrôleur
+const {
+  createPaceEvaluation,
+  getPaceEvaluation,
+  getPaceEvaluations,
+  updatePaceEvaluation,
+  deletePaceEvaluation,
+  createMatchEvaluation,
+  getMatchEvaluation,
+  getMatchEvaluations,
+  updateMatchEvaluation,
+  deleteMatchEvaluation,
+  createPathEvaluation,
+  getPathEvaluation,
+  getPathEvaluations,
+  updatePathEvaluation,
+  deletePathEvaluation,
+  searchPatients,
+} = require("../controller/EvaluationController");
+
+describe("EvaluationController", () => {
+  let mockReq: Partial<Request>;
+  let mockRes: Partial<Response>;
+  let mockNext: jest.Mock;
+  let mockTransaction: any;
+
+  // Configuration commune pour tous les tests
+  beforeEach(() => {
+    mockReq = {};
+    mockRes = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+    mockNext = jest.fn();
+    mockTransaction = {
+      commit: jest.fn(),
+      rollback: jest.fn(),
+    };
+
+    jest.spyOn(sequelize, "transaction").mockResolvedValue(mockTransaction);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  // ======== TESTS DE CRÉATION D'ÉVALUATION ========
+  describe("Tests de création d'évaluations", () => {
+    // Configuration commune pour la création d'évaluations
+    const setupCreateTest = (evaluationType: string) => {
+      // Définir les types de l'objet baseBody et scores
+      interface TestScores {
+        program: string;
+        cardioMusculaire: number;
+        equilibre: number;
+        total: number;
+        mobilite?: number; // Propriété optionnelle pour PACE
+      }
+
+      interface TestBody {
+        idPatient: number;
+        chairTestSupport: string;
+        chairTestCount: string;
+        balanceFeetTogether: string;
+        balanceSemiTandem: string;
+        balanceTandem: string;
+        walkingTime: string;
+        scores: TestScores;
+        balanceOneFooted?: string; // Propriété optionnelle pour PACE
+        frtSitting?: string | boolean; // Propriété optionnelle pour PACE
+        frtDistance?: string; // Propriété optionnelle pour PACE
+      }
+
+      // Base commune pour tous les types d'évaluation
+      const baseBody: TestBody = {
+        idPatient: 1,
+        chairTestSupport: "with",
+        chairTestCount: "5",
+        balanceFeetTogether: "30",
+        balanceSemiTandem: "25",
+        balanceTandem: "20",
+        walkingTime: "10",
+        scores: {
+          program: "MARRON IV",
+          cardioMusculaire: 5,
+          equilibre: 5,
+          total: 15,
+        },
+      };
+
+      // Ajouter des champs spécifiques pour PACE
+      if (evaluationType === "PACE") {
+        baseBody.balanceOneFooted = "10";
+        baseBody.frtSitting = "sitting";
+        baseBody.frtDistance = "15";
+        baseBody.scores.mobilite = 5;
+      }
+
+      mockReq.body = baseBody;
+    };
+
+    // Définir les types d'évaluation à tester
+    const evaluationTypes = [
+      {
+        method: createPaceEvaluation,
+        name: "PACE",
+        evaluationModel: Evaluation_PACE,
+        idField: "idPACE",
+        errorMsg: "Error creating evaluation",
+      },
+      {
+        method: createMatchEvaluation,
+        name: "MATCH",
+        evaluationModel: Evaluation_MATCH,
+        idField: "idPATH",
+        errorMsg: "Error creating MATCH evaluation",
+      },
+      {
+        method: createPathEvaluation,
+        name: "PATH",
+        evaluationModel: Evaluation_PATH,
+        idField: "idPATH",
+        errorMsg: "Error creating PATH evaluation",
+      },
+    ];
+
+    for (const {
+      method,
+      name,
+      evaluationModel,
+      idField,
+      errorMsg,
+    } of evaluationTypes) {
+      it(`devrait créer une nouvelle évaluation ${name} avec succès`, async () => {
+        // Configuration
+        setupCreateTest(name);
+
+        // Mock du programme
+        const mockProgram = { id: 1, name: "MARRON IV" };
+        jest.spyOn(Program, "findOne").mockResolvedValue(mockProgram as any);
+
+        // Mock de l'évaluation principale
+        const mockEvaluation = { id: 1, idPatient: 1, idResultProgram: 1 };
+        jest
+          .spyOn(Evaluation, "create")
+          .mockResolvedValue(mockEvaluation as any);
+
+        // Mock de l'évaluation spécifique (PACE, MATCH ou PATH)
+        const mockSpecificEvaluation = { id: 1, [idField]: 1 };
+        jest
+          .spyOn(evaluationModel, "create")
+          .mockResolvedValue(mockSpecificEvaluation as any);
+
+        // Exécuter la méthode
+        await method(mockReq as Request, mockRes as Response, mockNext);
+
+        // Vérifications
+        expect(mockTransaction.commit).toHaveBeenCalled();
+        expect(mockRes.status).toHaveBeenCalledWith(201);
+        expect(mockRes.json).toHaveBeenCalledWith(
+          expect.objectContaining({
+            evaluation: expect.objectContaining({ id: 1 }),
+            scores: expect.any(Object),
+            objectifMarche: expect.any(Number),
+          })
+        );
+      });
+
+      it(`devrait gérer le cas où le programme n'est pas trouvé pour ${name}`, async () => {
+        // Configuration minimale avec juste le programme
+        mockReq.body = {
+          scores: {
+            program: "PROGRAMME INEXISTANT",
+          },
+        };
+
+        // Programme non trouvé
+        jest.spyOn(Program, "findOne").mockResolvedValue(null);
+
+        await method(mockReq as Request, mockRes as Response, mockNext);
+
+        expect(mockTransaction.rollback).toHaveBeenCalled();
+        expect(mockRes.status).toHaveBeenCalledWith(404);
+        expect(mockRes.json).toHaveBeenCalledWith(
+          expect.objectContaining({
+            message: expect.stringContaining("Programme"),
+            error: expect.any(String),
+          })
+        );
+      });
+
+      it(`devrait gérer les erreurs de base de données lors de la création ${name}`, async () => {
+        // Configuration
+        setupCreateTest(name);
+
+        // Mock du programme
+        const mockProgram = { id: 1, name: "MARRON IV" };
+        jest.spyOn(Program, "findOne").mockResolvedValue(mockProgram as any);
+
+        // Simuler une erreur lors de la création
+        const dbError = new Error("Database error");
+        jest.spyOn(Evaluation, "create").mockRejectedValue(dbError);
+
+        await method(mockReq as Request, mockRes as Response, mockNext);
+
+        expect(mockTransaction.rollback).toHaveBeenCalled();
+        expect(mockRes.status).toHaveBeenCalledWith(500);
+        expect(mockRes.json).toHaveBeenCalledWith(
+          expect.objectContaining({
+            message: errorMsg,
+            errorDetails: expect.any(String),
+            stack: expect.any(String),
+          })
+        );
+      });
+    }
+
+    // Test spécifique pour le calcul de la vitesse et l'objectif de marche (PACE seulement)
+    it("devrait calculer correctement l'objectif de marche en fonction de la vitesse", async () => {
+      // Tester différentes vitesses et les objectifs attendus
+      const testCases = [
+        { walkingTime: "10", expectedSpeed: 0.4, expectedObjectif: 2 }, // vitesse = 4/10 = 0.4, objectif = 15 min
+        { walkingTime: "5", expectedSpeed: 0.8, expectedObjectif: 4 }, // vitesse = 4/5 = 0.8, objectif = 30 min
+        { walkingTime: "6", expectedSpeed: 4 / 6, expectedObjectif: 3 }, // vitesse = 4/6 = 0.67, objectif = 20 min
+        { walkingTime: "20", expectedSpeed: 0.2, expectedObjectif: 1 }, // vitesse = 4/20 = 0.2, objectif = 10 min
+      ];
+
+      for (const testCase of testCases) {
+        jest.clearAllMocks();
+
+        // Configuration pour PACE avec walkingTime variable
+        setupCreateTest("PACE");
+        mockReq.body.walkingTime = testCase.walkingTime;
+
+        // Mock du programme et de l'évaluation
+        const mockProgram = { id: 1, name: "MARRON IV" };
+        jest.spyOn(Program, "findOne").mockResolvedValue(mockProgram as any);
+
+        const mockEvaluation = { id: 1, idPatient: 1, idResultProgram: 1 };
+        jest
+          .spyOn(Evaluation, "create")
+          .mockResolvedValue(mockEvaluation as any);
+
+        const mockPaceEvaluation = {
+          id: 1,
+          idPACE: 1,
+          vitesseDeMarche: 0,
+          objectifMarche: 0,
+        };
+
+        const createSpy = jest
+          .spyOn(Evaluation_PACE, "create")
+          .mockResolvedValue(mockPaceEvaluation as any);
+
+        await createPaceEvaluation(
+          mockReq as Request,
+          mockRes as Response,
+          mockNext
+        );
+
+        // Vérifier que la vitesse et l'objectif sont correctement calculés
+        expect(createSpy).toHaveBeenCalledWith(
+          expect.objectContaining({
+            vitesseDeMarche: testCase.expectedSpeed,
+            objectifMarche: testCase.expectedObjectif,
+          }),
+          expect.any(Object)
+        );
+      }
+    });
+  });
+
+  // ======== TESTS DE RÉCUPÉRATION D'ÉVALUATION ========
+  describe("Tests de récupération d'évaluations", () => {
+    // Configuration pour les méthodes de récupération individuelle
+    const setupGetTest = (id = "1") => {
+      mockReq.params = { id };
+    };
+
+    // Méthodes de récupération individuelle
+    const singleGetMethods = [
+      {
+        method: getPaceEvaluation,
+        name: "PACE",
+        model: Evaluation_PACE,
+        modelKey: "Evaluation_PACE",
+        idKey: "idPACE",
+      },
+      {
+        method: getMatchEvaluation,
+        name: "MATCH",
+        model: Evaluation_MATCH,
+        modelKey: "Evaluation_MATCH",
+        idKey: "idPATH",
+      },
+      {
+        method: getPathEvaluation,
+        name: "PATH",
+        model: Evaluation_PATH,
+        modelKey: "Evaluation_PATH",
+        idKey: "idPATH",
+      },
+    ];
+
+    // Tests groupés pour les méthodes de récupération individuelle
+    for (const { method, name, modelKey, idKey } of singleGetMethods) {
+      it(`devrait récupérer une évaluation ${name} spécifique`, async () => {
+        setupGetTest();
+
+        const mockEvaluation = {
+          id: 1,
+          [modelKey]: {
+            [idKey]: 1,
+          },
+        };
+
+        jest
+          .spyOn(Evaluation, "findOne")
+          .mockResolvedValue(mockEvaluation as any);
+
+        await method(mockReq as Request, mockRes as Response, mockNext);
+
+        expect(mockRes.status).toHaveBeenCalledWith(200);
+        expect(mockRes.json).toHaveBeenCalledWith(mockEvaluation);
+      });
+
+      it(`devrait gérer le cas où l'évaluation ${name} n'est pas trouvée`, async () => {
+        setupGetTest("999");
+
+        jest.spyOn(Evaluation, "findOne").mockResolvedValue(null);
+
+        await method(mockReq as Request, mockRes as Response, mockNext);
+
+        expect(mockRes.status).toHaveBeenCalledWith(404);
+        expect(mockRes.json).toHaveBeenCalledWith({
+          message: "Evaluation not found",
+        });
+      });
+
+      it(`devrait gérer les erreurs de base de données pour la récupération de ${name}`, async () => {
+        setupGetTest();
+
+        const dbError = new Error(`Database error for ${name}`);
+        jest.spyOn(Evaluation, "findOne").mockRejectedValue(dbError);
+
+        await method(mockReq as Request, mockRes as Response, mockNext);
+
+        expect(mockRes.status).toHaveBeenCalledWith(500);
+        expect(mockRes.json).toHaveBeenCalledWith({
+          message: "Error loading evaluation from the database",
+        });
+      });
+    }
+
+    // Méthodes de récupération de toutes les évaluations
+    const allGetMethods = [
+      { method: getPaceEvaluations, name: "PACE", model: Evaluation_PACE },
+      { method: getMatchEvaluations, name: "MATCH", model: Evaluation_MATCH },
+      { method: getPathEvaluations, name: "PATH", model: Evaluation_PATH },
+    ];
+
+    // Tests groupés pour les méthodes de récupération de toutes les évaluations
+    for (const { method, name } of allGetMethods) {
+      it(`devrait récupérer toutes les évaluations ${name}`, async () => {
+        const mockEvaluations = [{ id: 1 }, { id: 2 }];
+
+        jest
+          .spyOn(Evaluation, "findAll")
+          .mockResolvedValue(mockEvaluations as any);
+
+        await method(mockReq as Request, mockRes as Response, mockNext);
+
+        expect(mockRes.status).toHaveBeenCalledWith(200);
+        expect(mockRes.json).toHaveBeenCalledWith(mockEvaluations);
+      });
+
+      it(`devrait gérer les erreurs de base de données pour la récupération de toutes les évaluations ${name}`, async () => {
+        const dbError = new Error(`Database error for ${name}`);
+        jest.spyOn(Evaluation, "findAll").mockRejectedValue(dbError);
+
+        await method(mockReq as Request, mockRes as Response, mockNext);
+
+        expect(mockRes.status).toHaveBeenCalledWith(500);
+        expect(mockRes.json).toHaveBeenCalledWith({
+          message: "Error loading evaluations from the database",
+        });
+      });
+    }
+  });
+  // ======== TESTS DE MISE À JOUR D'ÉVALUATION ========
+  describe("Tests de mise à jour d'évaluations", () => {
+    // Configuration commune pour les tests de mise à jour
+    // Configuration commune pour les tests de mise à jour avec définition explicite des types
+    const setupUpdateTest = () => {
+      mockReq.params = { id: "1" };
+
+      interface UpdateScores {
+        program: string;
+        cardioMusculaire: number;
+        equilibre: number;
+        total: number;
+        mobilite?: number; // Propriété optionnelle pour PACE
+      }
+
+      interface UpdateBody {
+        chairTestSupport: string;
+        chairTestCount: string;
+        balanceFeetTogether: string;
+        balanceSemiTandem: string;
+        balanceTandem: string;
+        walkingTime: string;
+        scores: UpdateScores;
+        balanceOneFooted?: string; // Propriété optionnelle pour PACE
+        frtSitting?: boolean; // Propriété optionnelle pour PACE (true/false plutôt que string)
+        frtDistance?: string; // Propriété optionnelle pour PACE
+      }
+
+      const updateBody: UpdateBody = {
+        chairTestSupport: "with",
+        chairTestCount: "6",
+        balanceFeetTogether: "30",
+        balanceSemiTandem: "25",
+        balanceTandem: "20",
+        walkingTime: "8",
+        scores: {
+          program: "MARRON IV",
+          cardioMusculaire: 6,
+          equilibre: 6,
+          total: 12,
+        },
+      };
+
+      // Ajouter des champs spécifiques pour PACE
+      updateBody.balanceOneFooted = "15";
+      updateBody.frtSitting = true;
+      updateBody.frtDistance = "20";
+      updateBody.scores.mobilite = 6;
+
+      mockReq.body = updateBody;
+    };
+
+    // Définir les types d'évaluation à mettre à jour
+    const updateMethods = [
+      {
+        method: updatePaceEvaluation,
+        name: "PACE",
+        findMethod: jest.spyOn(Evaluation_PACE, "findByPk"),
+        notFoundMsg: "PACE evaluation not found",
+        successMsg: "PACE evaluation updated successfully",
+        errorMsg: "Error updating evaluation",
+        responseKey: "paceEvaluation",
+      },
+      {
+        method: updateMatchEvaluation,
+        name: "MATCH",
+        findMethod: jest.spyOn(Evaluation_MATCH, "findOne"),
+        notFoundMsg: "MATCH evaluation not found",
+        successMsg: "MATCH evaluation updated successfully",
+        errorMsg: "Error updating MATCH evaluation",
+        responseKey: "pathEvaluation",
+      },
+      {
+        method: updatePathEvaluation,
+        name: "PATH",
+        findMethod: jest.spyOn(Evaluation_PATH, "findOne"),
+        notFoundMsg: "PATH evaluation not found",
+        successMsg: "PATH evaluation updated successfully",
+        errorMsg: "Error updating PATH evaluation",
+        responseKey: "pathEvaluation",
+      },
+    ];
+
+    for (const {
+      method,
+      name,
+      findMethod,
+      notFoundMsg,
+      successMsg,
+      errorMsg,
+      responseKey,
+    } of updateMethods) {
+      it(`devrait mettre à jour une évaluation ${name} existante`, async () => {
+        setupUpdateTest();
+
+        const mockEvaluation = {
+          id: 1,
+          update: jest.fn(),
+        };
+
+        const mockSpecificEvaluation = {
+          id: 1,
+          update: jest.fn(),
+        };
+
+        jest
+          .spyOn(Evaluation, "findByPk")
+          .mockResolvedValue(mockEvaluation as any);
+        findMethod.mockResolvedValue(mockSpecificEvaluation as any);
+
+        // Si test pour MATCH ou PATH, mock du programme
+        if (
+          name !== "PACE" &&
+          mockReq.body &&
+          mockReq.body.scores &&
+          mockReq.body.scores.program
+        ) {
+          jest.spyOn(Program, "findOne").mockResolvedValue({
+            id: 2,
+            name: mockReq.body.scores.program,
+          } as any);
+        }
+
+        await method(mockReq as Request, mockRes as Response, mockNext);
+
+        expect(mockTransaction.commit).toHaveBeenCalled();
+        expect(mockRes.status).toHaveBeenCalledWith(200);
+        expect(mockRes.json).toHaveBeenCalledWith(
+          expect.objectContaining({
+            evaluation: expect.any(Object),
+            [responseKey]: expect.any(Object),
+            scores: expect.any(Object),
+            message: successMsg,
+          })
+        );
+      });
+
+      it(`devrait gérer le cas où l'évaluation ${name} n'est pas trouvée pour mise à jour`, async () => {
+        setupUpdateTest();
+
+        jest.spyOn(Evaluation, "findByPk").mockResolvedValue(null);
+
+        await method(mockReq as Request, mockRes as Response, mockNext);
+
+        expect(mockTransaction.rollback).toHaveBeenCalled();
+        expect(mockRes.status).toHaveBeenCalledWith(404);
+        expect(mockRes.json).toHaveBeenCalledWith({
+          message: "Evaluation not found",
+        });
+      });
+
+      it(`devrait gérer le cas où l'évaluation ${name} spécifique n'est pas trouvée`, async () => {
+        setupUpdateTest();
+
+        const mockEvaluation = {
+          id: 1,
+        };
+
+        jest
+          .spyOn(Evaluation, "findByPk")
+          .mockResolvedValue(mockEvaluation as any);
+        findMethod.mockResolvedValue(null);
+
+        await method(mockReq as Request, mockRes as Response, mockNext);
+
+        expect(mockTransaction.rollback).toHaveBeenCalled();
+        expect(mockRes.status).toHaveBeenCalledWith(404);
+        expect(mockRes.json).toHaveBeenCalledWith({
+          message: notFoundMsg,
+        });
+      });
+
+      it(`devrait gérer les erreurs de base de données lors de la mise à jour ${name}`, async () => {
+        setupUpdateTest();
+
+        const mockEvaluation = {
+          id: 1,
+        };
+
+        const mockSpecificEvaluation = {
+          id: 1,
+          update: jest
+            .fn()
+            .mockRejectedValue(new Error(`Update error for ${name}`)),
+        };
+
+        jest
+          .spyOn(Evaluation, "findByPk")
+          .mockResolvedValue(mockEvaluation as any);
+        findMethod.mockResolvedValue(mockSpecificEvaluation as any);
+
+        if (
+          name !== "PACE" &&
+          mockReq.body &&
+          mockReq.body.scores &&
+          mockReq.body.scores.program
+        ) {
+          jest.spyOn(Program, "findOne").mockResolvedValue({
+            id: 2,
+            name: mockReq.body.scores.program,
+          } as any);
+        }
+
+        await method(mockReq as Request, mockRes as Response, mockNext);
+
+        expect(mockTransaction.rollback).toHaveBeenCalled();
+        expect(mockRes.status).toHaveBeenCalledWith(500);
+        expect(mockRes.json).toHaveBeenCalledWith(
+          expect.objectContaining({
+            message: errorMsg,
+            errorDetails: expect.any(String),
+            stack: expect.any(String),
+          })
+        );
+      });
+    }
+
+    // Tests spécifiques pour les méthodes MATCH et PATH avec programme non trouvé
+    const programUpdateMethods = [
+      { method: updateMatchEvaluation, name: "MATCH" },
+      { method: updatePathEvaluation, name: "PATH" },
+    ];
+
+    for (const { method, name } of programUpdateMethods) {
+      it(`devrait gérer le cas où le programme à mettre à jour n'est pas trouvé pour ${name}`, async () => {
+        setupUpdateTest();
+
+        if (mockReq.body && mockReq.body.scores) {
+          mockReq.body.scores.program = "PROGRAMME INEXISTANT";
+        }
+
+        const mockEvaluation = {
+          id: 1,
+        };
+
+        jest
+          .spyOn(Evaluation, "findByPk")
+          .mockResolvedValue(mockEvaluation as any);
+
+        if (name === "MATCH") {
+          jest
+            .spyOn(Evaluation_MATCH, "findOne")
+            .mockResolvedValue({ id: 1 } as any);
+        } else {
+          jest
+            .spyOn(Evaluation_PATH, "findOne")
+            .mockResolvedValue({ id: 1 } as any);
+        }
+
+        jest.spyOn(Program, "findOne").mockResolvedValue(null);
+
+        await method(mockReq as Request, mockRes as Response, mockNext);
+
+        expect(mockTransaction.rollback).toHaveBeenCalled();
+        expect(mockRes.status).toHaveBeenCalledWith(404);
+        expect(mockRes.json).toHaveBeenCalledWith({
+          message: expect.stringContaining("Programme"),
+        });
+      });
+    }
+  });
+
+  // ======== TESTS DE SUPPRESSION D'ÉVALUATIONS ========
+  describe("Tests de suppression d'évaluations", () => {
+    // Configuration pour les tests de suppression
+    const setupDeleteTest = (id = "1") => {
+      mockReq.params = { id };
+    };
+
+    // Définir les types d'évaluation à supprimer
+    const deleteMethods = [
+      {
+        method: deletePaceEvaluation,
+        name: "PACE",
+        model: Evaluation_PACE,
+      },
+      {
+        method: deleteMatchEvaluation,
+        name: "MATCH",
+        model: Evaluation_MATCH,
+      },
+      {
+        method: deletePathEvaluation,
+        name: "PATH",
+        model: Evaluation_PATH,
+      },
+    ];
+
+    for (const { method, name, model } of deleteMethods) {
+      it(`devrait supprimer une évaluation ${name} existante`, async () => {
+        setupDeleteTest();
+
+        const mockEvaluation = {
+          id: 1,
+          destroy: jest.fn(),
+        };
+
+        jest
+          .spyOn(Evaluation, "findByPk")
+          .mockResolvedValue(mockEvaluation as any);
+        jest.spyOn(model, "destroy").mockResolvedValue(1 as any);
+
+        await method(mockReq as Request, mockRes as Response, mockNext);
+
+        expect(mockTransaction.commit).toHaveBeenCalled();
+        expect(mockRes.status).toHaveBeenCalledWith(200);
+        expect(mockRes.json).toHaveBeenCalledWith({
+          message: "Evaluation deleted",
+        });
+      });
+
+      it(`devrait gérer le cas où l'évaluation ${name} n'est pas trouvée pour suppression`, async () => {
+        setupDeleteTest("999");
+
+        jest.spyOn(Evaluation, "findByPk").mockResolvedValue(null);
+
+        await method(mockReq as Request, mockRes as Response, mockNext);
+
+        expect(mockRes.status).toHaveBeenCalledWith(404);
+        expect(mockRes.json).toHaveBeenCalledWith({
+          message: "Evaluation not found",
+        });
+      });
+
+      it(`devrait gérer les erreurs lors de la suppression de l'évaluation ${name} principale`, async () => {
+        setupDeleteTest();
+
+        const mockEvaluation = {
+          id: 1,
+          destroy: jest.fn().mockRejectedValue(new Error("Delete error")),
+        };
+
+        jest
+          .spyOn(Evaluation, "findByPk")
+          .mockResolvedValue(mockEvaluation as any);
+        jest.spyOn(model, "destroy").mockResolvedValue(1 as any);
+
+        await method(mockReq as Request, mockRes as Response, mockNext);
+
+        expect(mockTransaction.rollback).toHaveBeenCalled();
+        expect(mockRes.status).toHaveBeenCalledWith(500);
+        expect(mockRes.json).toHaveBeenCalledWith({
+          message: "Error deleting evaluation",
+        });
+      });
+    }
+
+    // Test spécifique pour la gestion des erreurs lors de la suppression de l'évaluation PACE spécifique
+    it("devrait gérer les erreurs lors de la suppression de l'évaluation PACE spécifique", async () => {
+      setupDeleteTest();
+
+      const mockEvaluation = {
+        id: 1,
+        destroy: jest.fn(),
+      };
+
+      jest
+        .spyOn(Evaluation, "findByPk")
+        .mockResolvedValue(mockEvaluation as any);
+      jest
+        .spyOn(Evaluation_PACE, "destroy")
+        .mockRejectedValue(new Error("Delete error"));
+
+      await deletePaceEvaluation(
+        mockReq as Request,
+        mockRes as Response,
+        mockNext
+      );
+
+      expect(mockTransaction.rollback).toHaveBeenCalled();
+      expect(mockRes.status).toHaveBeenCalledWith(500);
+      expect(mockRes.json).toHaveBeenCalledWith({
+        message: "Error deleting evaluation",
+      });
+    });
+  });
+
+  // ======== TESTS DE RECHERCHE DE PATIENTS ========
+  describe("searchPatients", () => {
+    it("devrait retourner des patients en fonction du terme de recherche", async () => {
+      mockReq.query = { term: "John Doe" };
+
+      const mockPatients = [
+        { id: 1, firstname: "John", lastname: "Doe" },
+        { id: 2, firstname: "Jane", lastname: "Doe" },
+      ];
+
+      jest.spyOn(Patient, "findAll").mockResolvedValue(mockPatients as any);
+
+      await searchPatients(mockReq as Request, mockRes as Response);
+
+      expect(mockRes.status).toHaveBeenCalledWith(200);
+      expect(mockRes.json).toHaveBeenCalledWith(mockPatients);
+    });
+
+    it("devrait gérer le cas où aucun terme de recherche n'est fourni", async () => {
+      mockReq.query = {};
+
+      await searchPatients(mockReq as Request, mockRes as Response);
+
+      expect(mockRes.status).toHaveBeenCalledWith(400);
+      expect(mockRes.json).toHaveBeenCalledWith({
+        message: "Terme de recherche requis",
+      });
+    });
+
+    it("devrait rechercher avec un seul terme", async () => {
+      mockReq.query = { term: "John" };
+
+      const mockPatients = [
+        { id: 1, firstname: "John", lastname: "Doe" },
+        { id: 2, firstname: "Johnny", lastname: "Smith" },
+      ];
+
+      jest.spyOn(Patient, "findAll").mockResolvedValue(mockPatients as any);
+
+      await searchPatients(mockReq as Request, mockRes as Response);
+
+      // Vérifier que la recherche utilise le bon critère
+      expect(Patient.findAll).toHaveBeenCalledWith({
+        where: {
+          [Op.or]: [
+            { firstname: { [Op.iLike]: "%John%" } },
+            { lastname: { [Op.iLike]: "%John%" } },
+          ],
+        },
+      });
+
+      expect(mockRes.status).toHaveBeenCalledWith(200);
+      expect(mockRes.json).toHaveBeenCalledWith(mockPatients);
+    });
+
+    it("devrait rechercher avec deux termes (prénom nom)", async () => {
+      mockReq.query = { term: "John Doe" };
+
+      const mockPatients = [{ id: 1, firstname: "John", lastname: "Doe" }];
+
+      jest.spyOn(Patient, "findAll").mockResolvedValue(mockPatients as any);
+
+      await searchPatients(mockReq as Request, mockRes as Response);
+
+      // Vérifier que la recherche est faite avec les bons critères combinés
+      expect(Patient.findAll).toHaveBeenCalledWith({
+        where: {
+          [Op.or]: [
+            // Format "Prénom Nom"
+            {
+              [Op.and]: [
+                { firstname: { [Op.iLike]: "%John%" } },
+                { lastname: { [Op.iLike]: "%Doe%" } },
+              ],
+            },
+            // Format "Nom Prénom"
+            {
+              [Op.and]: [
+                { firstname: { [Op.iLike]: "%Doe%" } },
+                { lastname: { [Op.iLike]: "%John%" } },
+              ],
+            },
+          ],
+        },
+      });
+
+      expect(mockRes.status).toHaveBeenCalledWith(200);
+      expect(mockRes.json).toHaveBeenCalledWith(mockPatients);
+    });
+
+    it("devrait gérer les erreurs de base de données lors de la recherche", async () => {
+      mockReq.query = { term: "John" };
+
+      // Simuler une erreur de base de données
+      jest
+        .spyOn(Patient, "findAll")
+        .mockRejectedValue(new Error("Database error"));
+
+      await searchPatients(mockReq as Request, mockRes as Response);
+
+      expect(mockRes.status).toHaveBeenCalledWith(500);
+      expect(mockRes.json).toHaveBeenCalledWith({
+        message: "Échec de la recherche",
+      });
+    });
+  });
+});
