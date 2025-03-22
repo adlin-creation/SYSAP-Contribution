@@ -15,7 +15,7 @@ export default function Signup({ setIsSignup }) {
       role: "superadmin", // Valeur par défaut pour le champ role
     },
   });
-  const { t } = useTranslation();
+  const { t } = useTranslation("Authentication");
   const onSubmit = (data) => {
     console.log(data); // Ajout d'un console.log pour vérifier les données envoyées
     axios
@@ -50,11 +50,11 @@ export default function Signup({ setIsSignup }) {
             type="primary"
             icon={<ArrowLeftOutlined />}
           >
-            {t("Authentication:back_button")}
+            {t("back_button")}
           </Button>
           <Form onFinish={handleSubmit(onSubmit)}>
-          <div className="input-element">
-              <h5> Entrez votre prenom</h5>
+            <div className="input-element">
+              <h5> {t("firstname_title")}</h5>
               <Controller
                 name={"firstname"}
                 control={control}
@@ -62,7 +62,7 @@ export default function Signup({ setIsSignup }) {
                   <Input
                     onChange={onChange}
                     value={value}
-                    placeholder={"Votre prenom"}
+                    placeholder={t("firstname_placeholder")}
                     required
                   />
                 )}
@@ -70,7 +70,7 @@ export default function Signup({ setIsSignup }) {
             </div>
 
             <div className="input-element">
-              <h5> {t("Authentication:name_title")}</h5>
+              <h5> {t("name_title")}</h5>
               <Controller
                 name={"lastname"}
                 control={control}
@@ -78,7 +78,7 @@ export default function Signup({ setIsSignup }) {
                   <Input
                     onChange={onChange}
                     value={value}
-                    placeholder={t("Authentication:name_placeholder")}
+                    placeholder={t("name_placeholder")}
                     required
                   />
                 )}
@@ -86,7 +86,7 @@ export default function Signup({ setIsSignup }) {
             </div>
 
             <div className="input-element">
-              <h5> {t("Authentication:email_title")}</h5>
+              <h5> {t("email_title")}</h5>
               <Controller
                 name={"email"}
                 control={control}
@@ -94,7 +94,7 @@ export default function Signup({ setIsSignup }) {
                   <Input
                     onChange={onChange}
                     value={value}
-                    placeholder={t("Authentication:email_placeholder")}
+                    placeholder={t("email_placeholder")}
                     type="email"
                     required
                   />
@@ -103,7 +103,7 @@ export default function Signup({ setIsSignup }) {
             </div>
 
             <div className="input-element">
-              <h5> {t("Authentication:password_title")}</h5>
+              <h5> {t("password_title")}</h5>
               <Controller
                 name={"password"}
                 control={control}
@@ -111,7 +111,7 @@ export default function Signup({ setIsSignup }) {
                   <Input.Password
                     onChange={onChange}
                     value={value}
-                    placeholder={t("Authentication:password_placeholder")}
+                    placeholder={t("password_placeholder")}
                     required
                   />
                 )}
@@ -119,7 +119,7 @@ export default function Signup({ setIsSignup }) {
             </div>
 
             <div className="input-element">
-              <h5> {t("Authentication:confirm_password_title")}</h5>
+              <h5> {t("confirm_password_title")}</h5>
               <Controller
                 name={"confirmPassword"}
                 control={control}
@@ -127,9 +127,7 @@ export default function Signup({ setIsSignup }) {
                   <Input.Password
                     onChange={onChange}
                     value={value}
-                    placeholder={t(
-                      "Authentication:confirm_password_placeholder"
-                    )}
+                    placeholder={t("confirm_password_placeholder")}
                     required
                   />
                 )}
@@ -137,7 +135,7 @@ export default function Signup({ setIsSignup }) {
             </div>
 
             <div className="input-element">
-              <h5> Phone Number</h5>
+              <h5>{t("phone_number")}</h5>
               <Controller
                 name={"phoneNumber"}
                 control={control}
@@ -145,7 +143,7 @@ export default function Signup({ setIsSignup }) {
                   <Input
                     onChange={onChange}
                     value={value}
-                    placeholder={"Phone Number"}
+                    placeholder={t("phone_number_placeholder")}
                     type="tel"
                     required
                   />
@@ -154,16 +152,16 @@ export default function Signup({ setIsSignup }) {
             </div>
 
             <div className="input-element">
-              <h5> Role</h5>
+              <h5> {t("role_title")}</h5>
               <Controller
                 name={"role"}
                 control={control}
                 render={({ field: { onChange, value } }) => (
                   <select onChange={onChange} value={value} required>
-                    <option value="superadmin">Super Admin</option>
-                    <option value="admin">Admin</option>
-                    <option value="kinesiologist">Kinesiologue</option>
-                    <option value="doctor">Doctor</option>
+                    <option value="superadmin">{t("super_admin")}</option>
+                    <option value="admin">{t("admin")}</option>
+                    <option value="kinesiologist">{t("kinesiologist")}</option>
+                    <option value="doctor">{t("physician")}</option>
                   </select>
                 )}
               />
@@ -171,7 +169,7 @@ export default function Signup({ setIsSignup }) {
 
             <div className="input-element">
               <Button type="primary" htmlType="submit" icon={<CheckOutlined />}>
-                {t("Authentication:signup_button")}
+                {t("signup_button")}
               </Button>
             </div>
           </Form>
