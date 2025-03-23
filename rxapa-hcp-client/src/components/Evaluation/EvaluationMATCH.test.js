@@ -55,7 +55,7 @@ describe("EvaluationMATCH Component", () => {
     jest.clearAllMocks();
   });
 
-  it("renders the component and shows all expected sections", () => {
+  it("affiche le composant et montre toutes les sections attendues", () => {
     render(<EvaluationMATCH />);
 
     [
@@ -98,7 +98,7 @@ describe("EvaluationMATCH Component", () => {
     ).toBeInTheDocument();
   });
 
-  it("enables/disables balance tests based on previous test results", async () => {
+  it("active ou désactive les tests d’équilibre en fonction des résultats des tests précédents", async () => {
     render(<EvaluationMATCH />);
 
     const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
@@ -119,7 +119,7 @@ describe("EvaluationMATCH Component", () => {
     expect(balanceInputs[2]).not.toBeDisabled();
   });
 
-  it("shows/hides walking time input based on patient ability to walk", async () => {
+  it("affiche ou masque le champ du temps de marche selon la capacité du patient à marcher", async () => {
     render(<EvaluationMATCH />);
 
     const canWalkRadio = screen.getByText("Le patient peut marcher");
@@ -137,7 +137,7 @@ describe("EvaluationMATCH Component", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("calculates walking speed and objective correctly", async () => {
+  it("calcule correctement la vitesse de marche et l’objectif de marche", async () => {
     render(<EvaluationMATCH />);
 
     const canWalkRadio = screen.getByText("Le patient peut marcher");
@@ -174,7 +174,7 @@ describe("EvaluationMATCH Component", () => {
     }
   });
 
-  it("calculates chair test score correctly with and without support", async () => {
+  it("calcule correctement le score du test de la chaise avec et sans appui", async () => {
     render(<EvaluationMATCH />);
 
     const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
@@ -258,7 +258,7 @@ describe("EvaluationMATCH Component", () => {
     }
   });
 
-  it("calculates program color correctly based on total score", async () => {
+  it("calcule correctement le score d’équilibre pour tous les scénarios", async () => {
     render(<EvaluationMATCH />);
 
     const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
@@ -322,7 +322,7 @@ describe("EvaluationMATCH Component", () => {
     }
   });
 
-  it("validates inputs correctly", async () => {
+  it("valide correctement les champs de saisie", async () => {
     render(<EvaluationMATCH />);
 
     const submitButton = screen.getByText("Soumettre");
@@ -363,7 +363,7 @@ describe("EvaluationMATCH Component", () => {
     });
   });
 
-  it("tests buildModalContent with and without walking ability", async () => {
+  it("teste buildModalContent avec et sans la capacité à marcher", async () => {
     render(<EvaluationMATCH />);
 
     const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
@@ -397,7 +397,7 @@ describe("EvaluationMATCH Component", () => {
     });
   });
 
-  it("tests the cancel button functionality", async () => {
+  it("teste le fonctionnement du bouton Annuler", async () => {
     render(<EvaluationMATCH />);
 
     const cancelButton = screen.getByText("Annuler");
@@ -408,7 +408,7 @@ describe("EvaluationMATCH Component", () => {
     });
   });
 
-  it("correctly submits form with payload for walking patient", async () => {
+  it("soumet correctement le formulaire avec les données d’un patient pouvant marcher", async () => {
     const mockPostFn = jest.fn().mockResolvedValue({ data: { success: true } });
     axios.post.mockImplementation(mockPostFn);
 
@@ -453,7 +453,7 @@ describe("EvaluationMATCH Component", () => {
     expect(mockPostFn).toHaveBeenCalled();
   });
 
-  it("correctly submits form with payload for non-walking patient", async () => {
+  it("soumet correctement le formulaire avec les données d’un patient ne pouvant pas marcher", async () => {
     const mockPostFn = jest.fn().mockResolvedValue({ data: { success: true } });
     axios.post.mockImplementation(mockPostFn);
 
@@ -491,7 +491,7 @@ describe("EvaluationMATCH Component", () => {
     expect(mockPostFn).toHaveBeenCalled();
   });
 
-  it("tests edge cases in chair test score calculation", async () => {
+  it("teste les cas limites dans le calcul du score du test de la chaise", async () => {
     render(<EvaluationMATCH />);
 
     const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
@@ -562,7 +562,7 @@ describe("EvaluationMATCH Component", () => {
       return null;
     };
 
-    it("tests chair test score calculation with all edge cases", () => {
+    it("teste le calcul du score du test de la chaise avec tous les cas limites", () => {
       expect(mockCalculateChairTestScore(NaN, true)).toBe(0); 
       expect(mockCalculateChairTestScore(0, true)).toBe(0); 
       expect(mockCalculateChairTestScore(4, true)).toBe(1); 
@@ -577,7 +577,7 @@ describe("EvaluationMATCH Component", () => {
       expect(mockCalculateChairTestScore(10, false)).toBe(5); 
     });
 
-    it("tests balance score calculation with all edge cases", () => {
+    it("teste le calcul du score d’équilibre avec tous les cas limites", () => {
       expect(mockCalculateBalanceScore(9, 0, 0)).toBe(0); 
       expect(mockCalculateBalanceScore(10, 0, 0)).toBe(1); 
       expect(mockCalculateBalanceScore(10, 5, 0)).toBe(2); 
@@ -585,7 +585,7 @@ describe("EvaluationMATCH Component", () => {
       expect(mockCalculateBalanceScore(10, 10, 3)).toBe(4); 
     });
 
-    it("tests program color determination with all edge cases", () => {
+    it("teste la détermination de la couleur du programme avec tous les cas limites", () => {
       expect(mockGetProgramColor(0)).toBe("ROUGE"); 
       expect(mockGetProgramColor(1)).toBe("ROUGE"); 
       expect(mockGetProgramColor(2)).toBe("JAUNE"); 
@@ -598,7 +598,7 @@ describe("EvaluationMATCH Component", () => {
       expect(mockGetProgramColor(9)).toBe("BLEU"); 
     });
 
-    it("tests walking objective calculation with all edge cases", () => {
+    it("teste le calcul de l’objectif de marche avec tous les cas limites", () => {
       expect(mockCalculateWalkingObjective()).toBe(null); 
       expect(mockCalculateWalkingObjective(0)).toBe(null); 
       expect(mockCalculateWalkingObjective(-1)).toBe(null); 
@@ -609,7 +609,7 @@ describe("EvaluationMATCH Component", () => {
     });
   });
 
-  it("tests default return 0 in chair test score calculation", async () => {
+  it("teste le retour par défaut à 0 dans le calcul du score du test de la chaise", async () => {
     render(<EvaluationMATCH />);
 
     const originalParseInt = global.parseInt;
@@ -634,7 +634,7 @@ describe("EvaluationMATCH Component", () => {
     });
   });
 
-  it("tests semi-tandem between 0 and 10 in balance score calculation", async () => {
+  it("teste la valeur du semi-tandem entre 0 et 10 dans le calcul du score d’équilibre", async () => {
     render(<EvaluationMATCH />);
 
     const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
@@ -652,7 +652,7 @@ describe("EvaluationMATCH Component", () => {
     });
   });
 
-  it("tests program color determination for very low scores", async () => {
+  it("teste la détermination de la couleur du programme pour des scores très faibles", async () => {
     render(<EvaluationMATCH />);
 
     const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
@@ -669,7 +669,7 @@ describe("EvaluationMATCH Component", () => {
     });
   });
 
-  it("tests modal content with walking data", async () => {
+  it("teste le contenu de la fenêtre modale avec les données de marche", async () => {
     render(<EvaluationMATCH />);
 
     const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
@@ -694,7 +694,7 @@ describe("EvaluationMATCH Component", () => {
     });
   });
 
-  it("tests special case for non-walking patient", async () => {
+  it("teste le cas particulier d’un patient ne pouvant pas marcher", async () => {
     render(<EvaluationMATCH />);
 
     const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
