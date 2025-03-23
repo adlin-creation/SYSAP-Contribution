@@ -62,6 +62,7 @@
   "delete_patient_alert": "¿Está seguro de que desea eliminar este paciente?",
   "patient_update_success": "¡Paciente actualizado con éxito!",
   "patient_update_failed": "Error al actualizar el paciente",
+  "no_response_from_server": "No hay respuesta del servidor",
   "programs_quantity": "Número de programas",
   "programs_required_quantity": "El número de programas es obligatorio",
   "programs_quantity_invalid": "El número de programas debe ser mayor o igual a 0",
@@ -126,5 +127,7 @@
   "no_exercice_patient": "No hay sesión disponible para este paciente",
   "session_data": "Datos de la sesión",
   "average_since_inception": "Promedio desde el inicio",
-  "no_session_available_average": "No hay sesión disponible para calcular promedios"
+  "no_session_available_average": "No hay sesión disponible para calcular promedios",
+  "caregiver_list": "Lista de cuidadores cercanos",
+  "no_caregiver_available": "No hay cuidador disponible"
 }

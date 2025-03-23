@@ -37,9 +37,7 @@ exports.createPatient = async (req: any, res: any, next: any) => {
   try {
     const existingUser = await Patient.findOne({ where: { email } });
     if (existingUser) {
-      return res
-        .status(409)
-        .json({ message: "existing patient with this email." });
+      return res.status(409).json({ message: "existing_patient_email" });
     }
 
     const newPatient = await Patient.create({
@@ -56,13 +54,13 @@ exports.createPatient = async (req: any, res: any, next: any) => {
       weightUnit,
       unikPassHashed,
     });
-    await sendEmail(email, "Votre code d'accès RXAPA", code); // Envoie le code d'accès par e-mail
+    await sendEmail(email, "email_subject_access_code", code); // Envoie le code d'accès par e-mail
     res.status(201).json(newPatient);
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({ message: "Error creating patient" });
+    res.status(error.statusCode).json({ message: "error_creating_patient" });
   }
   return res;
 };
@@ -85,7 +83,7 @@ exports.updatePatient = async (req: any, res: any, next: any) => {
   try {
     const patient = await Patient.findByPk(patientId);
     if (!patient) {
-      return res.status(404).json({ message: "Patient not found" });
+      return res.status(404).json({ message: "patient_not_found" });
     }
     patient.firstname = firstname;
     patient.lastname = lastname;
@@ -101,7 +99,7 @@ exports.updatePatient = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({ message: "Error updating patient" });
+    res.status(error.statusCode).json({ message: "error_updating_patient" });
   }
   return res;
 };
@@ -114,15 +112,15 @@ exports.deletePatient = async (req: any, res: any, next: any) => {
   try {
     const patient = await Patient.findByPk(patientId);
     if (!patient) {
-      return res.status(404).json({ message: "Patient not found" });
+      return res.status(404).json({ message: "patient_not_found" });
     }
     await patient.destroy();
-    res.status(200).json({ message: "Patient deleted" });
+    res.status(200).json({ message: "patient_deleted" });
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({ message: "Error deleting patient" });
+    res.status(error.statusCode).json({ message: "error_deleting_patient" });
   }
   return res;
 };
@@ -135,16 +133,14 @@ exports.getPatient = async (req: any, res: any, next: any) => {
   try {
     const patient = await Patient.findByPk(patientId);
     if (!patient) {
-      return res.status(404).json({ message: "Patient not found" });
+      return res.status(404).json({ message: "patient_not_found" });
     }
     res.status(200).json(patient);
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res
-      .status(error.statusCode)
-      .json({ message: "Error loading patient from the database" });
+    res.status(error.statusCode).json({ message: "error_loading_patient" });
   }
   return res;
 };
@@ -160,9 +156,7 @@ exports.getPatients = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res
-      .status(error.statusCode)
-      .json({ message: "Error loading patients from the database" });
+    res.status(error.statusCode).json({ message: "error_loading_patients" });
   }
   return res;
 };
@@ -177,7 +171,9 @@ exports.getPatientSessions = async (req: any, res: any, next: any) => {
     });
 
     // Récupérer les IDs des programmes du patient
-    const programIds = patientPrograms.map((pp: typeof ProgramEnrollement) => pp.id);
+    const programIds = patientPrograms.map(
+      (pp: typeof ProgramEnrollement) => pp.id
+    );
 
     // Récupérer les sessions associées à ces programmes
     const sessions = await SessionRecord.findAll({
@@ -187,69 +183,66 @@ exports.getPatientSessions = async (req: any, res: any, next: any) => {
     // Renvoyer les sessions au client
     res.status(200).json(sessions);
   } catch (error) {
-    console.error('Error fetching patient sessions:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error("Error fetching patient sessions:", error);
+    res.status(500).json({ message: "internal_server_error" });
   }
 };
-
-
 
 exports.getPatientDetails = async (req: any, res: any, next: any) => {
   try {
     const patientId = req.params.id;
 
     if (!patientId) {
-      return res.status(400).json({ message: "Patient ID is required" });
+      return res.status(400).json({ message: "patient_id_required" });
     }
 
     const programEnrollements = await ProgramEnrollement.findAll({
-      where: { PatientId: patientId }
+      where: { PatientId: patientId },
     });
-
 
     if (!programEnrollements.length) {
       return res.status(200).json({
         caregivers: [],
         patientCaregivers: [],
-        programEnrollements: []
+        programEnrollements: [],
       });
     }
 
     const allPatientCaregivers = await Patient_Caregiver.findAll();
 
-    const PatientCaregivers = allPatientCaregivers.filter((patientCaregiver: { ProgramEnrollementId: any; }) =>
-      programEnrollements.some(
-        (enrollment: { id: any; }) => enrollment.id === patientCaregiver.ProgramEnrollementId
-      )
+    const PatientCaregivers = allPatientCaregivers.filter(
+      (patientCaregiver: { ProgramEnrollementId: any }) =>
+        programEnrollements.some(
+          (enrollment: { id: any }) =>
+            enrollment.id === patientCaregiver.ProgramEnrollementId
+        )
     );
 
     if (!PatientCaregivers.length) {
-      return res.status(404).json({ message: "No caregivers found for this patient" });
+      return res.status(404).json({ message: "no_caregivers_found" });
     }
 
     // Extraction des IDs des soignants
-    const caregiverIds = PatientCaregivers.map((pc: { CaregiverId: any; }) => pc.CaregiverId);
+    const caregiverIds = PatientCaregivers.map(
+      (pc: { CaregiverId: any }) => pc.CaregiverId
+    );
 
     const caregivers = await Caregiver.findAll({
-      where: { id: caregiverIds } // Filtrage avec les IDs extraits
+      where: { id: caregiverIds }, // Filtrage avec les IDs extraits
     });
 
     if (!caregivers.length) {
-      return res.status(404).json({ message: "No caregivers details found" });
+      return res.status(404).json({ message: "no_caregiver_details_found" });
     }
 
     // Retourner les données sous forme de JSON
     res.status(200).json({
       caregivers,
       patientCaregivers: PatientCaregivers,
-      programEnrollements
+      programEnrollements,
     });
-
   } catch (error) {
     console.error("Error fetching patient details:", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "internal_server_error" });
   }
 };
-
-
-

@@ -74,7 +74,7 @@ export default function PatientMenu({ role }) {
       );
     } catch (err) {
       console.error("Erreur :", err.message);
-      openModal(err.message, true);
+      openModal(t(`Backend:${err.message}`), true);
     }
   };
 
@@ -87,7 +87,7 @@ export default function PatientMenu({ role }) {
     const modal = AntModal.info({
       title: (
         <div style={{ fontSize: "18px", fontWeight: "bold" }}>
-          Liste des soignants
+          {t("caregiver_list")}
         </div>
       ),
       content: caregivers.length ? (
@@ -133,7 +133,7 @@ export default function PatientMenu({ role }) {
             ))}
         </Row>
       ) : (
-        <p>{t("Aucune aide soignante disponible")}</p>
+        <p>{t("no_caregiver_available")}</p>
       ),
       onOk() {},
       width: "80%",
@@ -173,7 +173,7 @@ export default function PatientMenu({ role }) {
       return data.find((prog) => prog.id === ProgramEnrollement.ProgramId);
     } catch (err) {
       throw new Error(
-        err.response?.data?.message ||
+        t(`Backend:${err.response?.data?.message}`) ||
           "Erreur lors de la récupération des programmes."
       );
     }
@@ -366,9 +366,11 @@ export default function PatientMenu({ role }) {
             })
             .then((res) => {
               refetchPatients();
-              openModal(res.data.message, false);
+              openModal(t(`Backend:${res.data.message}`), false);
             })
-            .catch((err) => openModal(err.response.data.message, true));
+            .catch((err) =>
+              openModal(t(`Backend:${err.response.data.message}`), true)
+            );
         } else {
           showCaregiverWarning();
         }

@@ -56,5 +56,27 @@
   "unknown_error_adding_exercise_version": "حدث خطأ غير معروف أثناء إضافة الإصدار إلى التمرين.",
   "exercise_deleted_successfully": "تم حذف التمرين بنجاح.",
   "error_deleting_exercise": "حدث خطأ أثناء حذف التمرين.",
-  "unknown_error_deleting_exercise": "حدث خطأ غير معروف أثناء حذف التمرين."
+  "unknown_error_deleting_exercise": "حدث خطأ غير معروف أثناء حذف التمرين.",
+
+  "program_enrollment_max_caregivers": "يمكن أن تحتوي تسجيلات البرنامج على ما يصل إلى 2 من مقدمي الرعاية",
+  "error_creating_patient_caregiver_association": "خطأ في إنشاء ارتباط المريض بمقدم الرعاية",
+  "patient_caregiver_association_not_found": "لم يتم العثور على ارتباط المريض بمقدم الرعاية",
+  "error_updating_patient_caregiver_association": "خطأ في تحديث ارتباط المريض بمقدم الرعاية",
+  "patient_caregiver_association_deleted": "تم حذف ارتباط المريض بمقدم الرعاية",
+  "error_deleting_patient_caregiver_association": "خطأ في حذف ارتباط المريض بمقدم الرعاية",
+  "error_loading_patient_caregiver_association": "خطأ في تحميل ارتباط المريض بمقدم الرعاية من قاعدة البيانات",
+
+  "existing_patient_email": "يوجد مريض مسجل بهذا البريد الإلكتروني.",
+  "email_subject_access_code": "رمز الوصول إلى RXAPA الخاص بك",
+  "error_creating_patient": "خطأ في إنشاء المريض",
+  "patient_not_found": "لم يتم العثور على المريض",
+  "error_updating_patient": "خطأ في تحديث المريض",
+  "patient_deleted": "تم حذف المريض",
+  "error_deleting_patient": "خطأ في حذف المريض",
+  "error_loading_patient": "خطأ في تحميل بيانات المريض من قاعدة البيانات",
+  "error_loading_patients": "خطأ في تحميل بيانات المرضى من قاعدة البيانات",
+  "internal_server_error": "خطأ داخلي في الخادم",
+  "patient_id_required": "معرف المريض مطلوب",
+  "no_caregivers_found": "لم يتم العثور على مقدمي رعاية لهذا المريض",
+  "no_caregiver_details_found": "لم يتم العثور على تفاصيل مقدمي الرعاية"
 }

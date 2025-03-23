@@ -61,6 +61,7 @@
   "delete_patient_alert": "هل أنت متأكد أنك تريد حذف هذا المريض؟",
   "patient_update_success": "تم تحديث المريض بنجاح!",
   "patient_update_failed": "خطأ في تحديث المريض",
+  "no_response_from_server": "لا يوجد استجابة من الخادم",
   "programs_quantity": "عدد البرامج",
   "programs_required_quantity": "عدد البرامج مطلوب",
   "programs_quantity_invalid": "يجب أن يكون عدد البرامج أكبر من أو يساوي 0",
@@ -127,5 +128,7 @@
   "no_exercice_patient": "لا توجد جلسة متاحة لهذا المريض",
   "session_data": "بيانات الجلسة",
   "average_since_inception": "المتوسط منذ البداية",
-  "no_session_available_average": "لا توجد جلسة متاحة لحساب المتوسطات"
+  "no_session_available_average": "لا توجد جلسة متاحة لحساب المتوسطات",
+  "caregiver_list": "قائمة مقدمي الرعاية",
+  "no_caregiver_available": "لا يوجد مقدم رعاية متاح"
 }

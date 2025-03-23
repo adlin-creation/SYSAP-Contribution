@@ -56,5 +56,27 @@
   "unknown_error_adding_exercise_version": "Unknown error occurred while adding version to exercise.",
   "exercise_deleted_successfully": "Exercise deleted successfully.",
   "error_deleting_exercise": "Error deleting exercise.",
-  "unknown_error_deleting_exercise": "Unknown error occurred while deleting the exercise."
+  "unknown_error_deleting_exercise": "Unknown error occurred while deleting the exercise.",
+
+  "program_enrollment_max_caregivers": "A program enrollment can have a maximum of 2 caregivers",
+  "error_creating_patient_caregiver_association": "Error creating patient-caregiver association",
+  "patient_caregiver_association_not_found": "Patient-caregiver association not found",
+  "error_updating_patient_caregiver_association": "Error updating patient-caregiver association",
+  "patient_caregiver_association_deleted": "Patient-caregiver association deleted",
+  "error_deleting_patient_caregiver_association": "Error deleting patient-caregiver association",
+  "error_loading_patient_caregiver_association": "Error loading patient-caregiver association from the database",
+
+  "existing_patient_email": "Existing patient with this email.",
+  "email_subject_access_code": "Your RXAPA access code",
+  "error_creating_patient": "Error creating patient",
+  "patient_not_found": "Patient not found",
+  "error_updating_patient": "Error updating patient haha",
+  "patient_deleted": "Patient deleted",
+  "error_deleting_patient": "Error deleting patient",
+  "error_loading_patient": "Error loading patient from the database",
+  "error_loading_patients": "Error loading patients from the database",
+  "internal_server_error": "Internal server error",
+  "patient_id_required": "Patient ID is required",
+  "no_caregivers_found": "No caregivers found for this patient",
+  "no_caregiver_details_found": "No caregivers details found"
 }

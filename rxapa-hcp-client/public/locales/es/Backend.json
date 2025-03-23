@@ -56,5 +56,27 @@
   "unknown_error_adding_exercise_version": "Error desconocido al añadir la versión al ejercicio.",
   "exercise_deleted_successfully": "Ejercicio eliminado con éxito.",
   "error_deleting_exercise": "Error al eliminar el ejercicio.",
-  "unknown_error_deleting_exercise": "Error desconocido al eliminar el ejercicio."
+  "unknown_error_deleting_exercise": "Error desconocido al eliminar el ejercicio.",
+
+  "program_enrollment_max_caregivers": "Una inscripción en el programa puede tener un máximo de 2 cuidadores",
+  "error_creating_patient_caregiver_association": "Error al crear la asociación paciente-cuidador",
+  "patient_caregiver_association_not_found": "No se encontró la asociación paciente-cuidador",
+  "error_updating_patient_caregiver_association": "Error al actualizar la asociación paciente-cuidador",
+  "patient_caregiver_association_deleted": "Asociación paciente-cuidador eliminada",
+  "error_deleting_patient_caregiver_association": "Error al eliminar la asociación paciente-cuidador",
+  "error_loading_patient_caregiver_association": "Error al cargar la asociación paciente-cuidador desde la base de datos",
+
+  "existing_patient_email": "Ya existe un paciente con este correo electrónico.",
+  "email_subject_access_code": "Tu código de acceso a RXAPA",
+  "error_creating_patient": "Error al crear el paciente",
+  "patient_not_found": "Paciente no encontrado",
+  "error_updating_patient": "Error al actualizar el paciente",
+  "patient_deleted": "Paciente eliminado",
+  "error_deleting_patient": "Error al eliminar el paciente",
+  "error_loading_patient": "Error al cargar el paciente desde la base de datos",
+  "error_loading_patients": "Error al cargar los pacientes desde la base de datos",
+  "internal_server_error": "Error interno del servidor",
+  "patient_id_required": "Se requiere el ID del paciente",
+  "no_caregivers_found": "No se encontraron cuidadores para este paciente",
+  "no_caregiver_details_found": "No se encontraron detalles de los cuidadores"
 }

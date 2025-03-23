@@ -56,5 +56,27 @@
   "unknown_error_adding_exercise_version": "Erreur inconnue lors de l'ajout de la version à l'exercice.",
   "exercise_deleted_successfully": "Exercice supprimé avec succès.",
   "error_deleting_exercise": "Erreur lors de la suppression de l'exercice.",
-  "unknown_error_deleting_exercise": "Erreur inconnue lors de la suppression de l'exercice."
+  "unknown_error_deleting_exercise": "Erreur inconnue lors de la suppression de l'exercice.",
+
+  "program_enrollment_max_caregivers": "Une inscription à un programme peut avoir un maximum de 2 aidants",
+  "error_creating_patient_caregiver_association": "Erreur lors de la création de l'association patient-aidant",
+  "patient_caregiver_association_not_found": "Association patient-aidant non trouvée",
+  "error_updating_patient_caregiver_association": "Erreur lors de la mise à jour de l'association patient-aidant",
+  "patient_caregiver_association_deleted": "Association patient-aidant supprimée",
+  "error_deleting_patient_caregiver_association": "Erreur lors de la suppression de l'association patient-aidant",
+  "error_loading_patient_caregiver_association": "Erreur lors du chargement de l'association patient-aidant depuis la base de données",
+
+  "existing_patient_email": "Patient existant avec cet e-mail.",
+  "email_subject_access_code": "Votre code d'accès RXAPA",
+  "error_creating_patient": "Erreur lors de la création du patient",
+  "patient_not_found": "Patient non trouvé",
+  "error_updating_patient": "Erreur lors de la mise à jour du patient",
+  "patient_deleted": "Patient supprimé",
+  "error_deleting_patient": "Erreur lors de la suppression du patient",
+  "error_loading_patient": "Erreur lors du chargement du patient depuis la base de données",
+  "error_loading_patients": "Erreur lors du chargement des patients depuis la base de données",
+  "internal_server_error": "Erreur interne du serveur",
+  "patient_id_required": "L'ID du patient est requis",
+  "no_caregivers_found": "Aucun aidant trouvé pour ce patient",
+  "no_caregiver_details_found": "Aucun détail sur les aidants trouvé"
 }

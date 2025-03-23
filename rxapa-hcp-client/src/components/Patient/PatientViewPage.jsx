@@ -14,9 +14,7 @@ export default function PatientData({ patient, onClose }) {
   const { token } = useToken();
 
   // Récupérer les sessions avec useQuery
-  const {
-    data: sessionsData
-  } = useQuery(["SessionRecord", patient.id], () => {
+  const { data: sessionsData } = useQuery(["SessionRecord", patient.id], () => {
     return axios
       .get(patientSessionsUrl, {
         headers: { Authorization: "Bearer " + token },
@@ -42,41 +40,68 @@ export default function PatientData({ patient, onClose }) {
   const sessionDataForChart = [sessionData];
 
   // Calcul des moyennes (seulement s'il y a des sessions)
-  const averages = hasSessions ? (() => {
-    const averageData = sessions.reduce(
-      (acc, s) => {
-        acc.difficultyLevel += s.difficultyLevel || 0;
-        acc.painLevel += s.painLevel || 0;
-        acc.accomplishedExercice += s.accomplishedExercice || 0;
-        return acc;
-      },
-      { difficultyLevel: 0, painLevel: 0, accomplishedExercice: 0 }
-    );
+  const averages = hasSessions
+    ? (() => {
+        const averageData = sessions.reduce(
+          (acc, s) => {
+            acc.difficultyLevel += s.difficultyLevel || 0;
+            acc.painLevel += s.painLevel || 0;
+            acc.accomplishedExercice += s.accomplishedExercice || 0;
+            return acc;
+          },
+          { difficultyLevel: 0, painLevel: 0, accomplishedExercice: 0 }
+        );
 
-    const totalSessions = sessions.length;
-    return {
-      difficulty: (averageData.difficultyLevel / totalSessions).toFixed(1),
-      pain: (averageData.painLevel / totalSessions).toFixed(1),
-      exercises: (averageData.accomplishedExercice / totalSessions).toFixed(1),
-    };
-  })() : null;
+        const totalSessions = sessions.length;
+        return {
+          difficulty: (averageData.difficultyLevel / totalSessions).toFixed(1),
+          pain: (averageData.painLevel / totalSessions).toFixed(1),
+          exercises: (averageData.accomplishedExercice / totalSessions).toFixed(
+            1
+          ),
+        };
+      })()
+    : null;
 
   // Transformation des moyennes en tableau d'objets avec des couleurs personnalisées
-  const averagesArray = hasSessions ? [
-    { name: t("Patients:difficulty"), value: parseFloat(averages.difficulty), fill: "#8884d8" },
-    { name: t("Patients:pain"), value: parseFloat(averages.pain), fill: "#82ca9d" },
-    { name: t("Patients:exercises"), value: parseFloat(averages.exercises), fill: "#ff7300" },
-  ] : [];
+  const averagesArray = hasSessions
+    ? [
+        {
+          name: t("Patients:difficulty"),
+          value: parseFloat(averages.difficulty),
+          fill: "#8884d8",
+        },
+        {
+          name: t("Patients:pain"),
+          value: parseFloat(averages.pain),
+          fill: "#82ca9d",
+        },
+        {
+          name: t("Patients:exercises"),
+          value: parseFloat(averages.exercises),
+          fill: "#ff7300",
+        },
+      ]
+    : [];
 
   return (
     <div className="patient-data-container">
       <h1>{t("Patients:patient_data")}</h1>
       <Card>
         <h2>{`${patient.firstname} ${patient.lastname}`}</h2>
-        <p><strong>{t("Patients:email")}:</strong> {patient.email}</p>
-        <p><strong>{t("Patients:phone")}:</strong> {patient.phoneNumber}</p>
-        <p><strong>{t("Patients:status")}:</strong> {patient.status}</p>
-        <p><strong>{t("Patients:programs")}:</strong> {patient.numberOfPrograms}</p>
+        <p>
+          <strong>{t("Patients:email")}:</strong> {patient.email}
+        </p>
+        <p>
+          <strong>{t("Patients:phone")}:</strong> {patient.phoneNumber}
+        </p>
+        <p>
+          <strong>{t("Patients:status")}:</strong>{" "}
+          {t(`Patients:${patient.status}`)}
+        </p>
+        <p>
+          <strong>{t("Patients:programs")}:</strong> {patient.numberOfPrograms}
+        </p>
       </Card>
 
       <h2>{t("Patients:session_data")}</h2>
@@ -86,20 +111,43 @@ export default function PatientData({ patient, onClose }) {
             {/* Informations de la session */}
             <div className="session-info">
               <div className="session-buttons">
-                <Button onClick={() => setCurrentSession((prev) => Math.max(prev - 1, 0))}>
+                <Button
+                  onClick={() =>
+                    setCurrentSession((prev) => Math.max(prev - 1, 0))
+                  }
+                >
                   {t("Patients:button_previous")}
                 </Button>
-                <Button onClick={() => setCurrentSession((prev) => Math.min(prev + 1, sessions.length - 1))}>
+                <Button
+                  onClick={() =>
+                    setCurrentSession((prev) =>
+                      Math.min(prev + 1, sessions.length - 1)
+                    )
+                  }
+                >
                   {t("Patients:button_next")}
                 </Button>
               </div>
 
               {/* Données de la session */}
-              <p><strong>{t("Patients:session")}</strong> {currentSession + 1}</p>
-              <p><strong>{t("Patients:date")}</strong> {sessionData.date}</p>
-              <p><strong>{t("Patients:difficulty_level")}</strong> {sessionData.difficultyLevel}</p>
-              <p><strong>{t("Patients:pain_level")}</strong> {sessionData.painLevel}</p>
-              <p><strong>{t("Patients:accomplished_exercise")}</strong> {sessionData.accomplishedExercice}</p>
+              <p>
+                <strong>{t("Patients:session")}</strong> {currentSession + 1}
+              </p>
+              <p>
+                <strong>{t("Patients:date")}</strong> {sessionData.date}
+              </p>
+              <p>
+                <strong>{t("Patients:difficulty_level")}</strong>{" "}
+                {sessionData.difficultyLevel}
+              </p>
+              <p>
+                <strong>{t("Patients:pain_level")}</strong>{" "}
+                {sessionData.painLevel}
+              </p>
+              <p>
+                <strong>{t("Patients:accomplished_exercise")}</strong>{" "}
+                {sessionData.accomplishedExercice}
+              </p>
             </div>
 
             {/* Graphique Session Data */}
@@ -109,9 +157,17 @@ export default function PatientData({ patient, onClose }) {
                 <XAxis dataKey="session" />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="difficultyLevel" fill="#8884d8" name="Difficulty" />
+                <Bar
+                  dataKey="difficultyLevel"
+                  fill="#8884d8"
+                  name="Difficulty"
+                />
                 <Bar dataKey="painLevel" fill="#82ca9d" name="Pain" />
-                <Bar dataKey="accomplishedExercice" fill="#ff7300" name="Exercises" />
+                <Bar
+                  dataKey="accomplishedExercice"
+                  fill="#ff7300"
+                  name="Exercises"
+                />
               </BarChart>
             </div>
           </div>
@@ -129,9 +185,17 @@ export default function PatientData({ patient, onClose }) {
           <div className="average-data-container">
             {/* Informations des moyennes */}
             <div className="average-info">
-              <p><strong>{t("Patients:difficulty_level")}</strong> {averages.difficulty}</p>
-              <p><strong>{t("Patients:pain_level")}</strong> {averages.pain}</p>
-              <p><strong>{t("Patients:accomplished_exercise")}</strong> {averages.exercises}</p>
+              <p>
+                <strong>{t("Patients:difficulty_level")}</strong>{" "}
+                {averages.difficulty}
+              </p>
+              <p>
+                <strong>{t("Patients:pain_level")}</strong> {averages.pain}
+              </p>
+              <p>
+                <strong>{t("Patients:accomplished_exercise")}</strong>{" "}
+                {averages.exercises}
+              </p>
             </div>
 
             {/* Graphique Average Since Inception */}
@@ -147,7 +211,9 @@ export default function PatientData({ patient, onClose }) {
           </div>
         ) : (
           <Empty
-            description={<span>{t("Patients:no_session_available_average")}</span>}
+            description={
+              <span>{t("Patients:no_session_available_average")}</span>
+            }
             image={Empty.PRESENTED_IMAGE_SIMPLE}
           />
         )}
