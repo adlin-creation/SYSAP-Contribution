@@ -121,7 +121,7 @@ export default function ExerciseMenu() {
         openModal(err.response.data.message, true);
       });
   };
-
+//ajoute d'une condition pour appliquer la recherche
   const filteredExercises = exerciseList?.filter((exercise) => {
     if (
       attributes.fitnessLevel !== "ALL" &&
