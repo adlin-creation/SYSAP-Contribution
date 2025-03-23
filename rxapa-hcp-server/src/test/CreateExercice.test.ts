@@ -86,7 +86,7 @@ describe("createExercise", () => {
 
         expect(res.status).toHaveBeenCalledWith(201);
         expect(res.json).toHaveBeenCalledWith({
-            message: "Exercice créé avec succès.",
+            message: "exercise_created_successfully",
         });
     });
 
@@ -105,7 +105,7 @@ describe("createExercise", () => {
 
         expect(res.status).toHaveBeenCalledWith(409);
         expect(res.json).toHaveBeenCalledWith({
-            message: "Un exercice avec ce nom existe déjà !",
+            message: "exercise_already_exists",
         });
     });
 
@@ -116,7 +116,7 @@ describe("createExercise", () => {
 
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith({
-            message: "Tous les champs obligatoires doivent être remplis !",
+            message: "all_fields_required",
         });
     });
 
@@ -127,7 +127,7 @@ describe("createExercise", () => {
 
         expect(res.status).toHaveBeenCalledWith(500);
         expect(res.json).toHaveBeenCalledWith({
-            message: "Erreur lors de la création de l'exercice.",
+            message: "error_creating_exercise",
             error: "Exercise creation failed",
         });
     });

@@ -6,462 +6,217 @@ import { ProgramPhase } from "../model/ProgramPhase";
 import { Variant } from "../model/Variant";
 import { ProgramPhase_Program } from "../model/ProgramPhase_Program";
 import { validateProgram } from "../middleware/validateProgram";
-import { ProgramSession } from '../model/ProgramSession';
+import { ProgramSession } from "../model/ProgramSession";
 import fs from "fs";
 import { Op } from "sequelize";
 
-/**
- * This function creates an instance of @type {Program}
- * @param {Object} req - The request, which contains the name, description, and
- * duration of the new program.
- * @param {Object} res - The request response.
- * @param {Object} next - The next function, which calls the next middleware.
- * However, The next function is not used here because the request is returned
- * after executing this function.
- *
- * @returns {Object} res - The response, which contains details to alert the user
- * whether the create action was successfull or not.
- *
- * @author Hyacinth Ali
- */
-exports.createProgram = [ 
-    validateProgram, 
-    async (req: any, res: any, next: any) => {
-    // Extract the required attribute values to create an Exercise
-    const name = req.body.name;
-    const description = req.body.description;
-    const duration = req.body.duration;
-    const duration_unit = req.body.duration_unit;
-    const imageUrl = req.body.imageUrl;
-    const sessions = req.body;
+exports.createProgram = [
+  validateProgram,
+  async (req: any, res: any, next: any) => {
+    const { name, description, duration, duration_unit, imageUrl } = req.body;
+    const rawSessions = req.body.sessions;
+    const sessions = Array.isArray(rawSessions) ? rawSessions : [];
 
-    console.log("Parsed sessions:", sessions);
+    if (!sessions.length) {
+      return res.status(400).json({ message: "Backend:error_no_valid_session" });
+    }
+
+    let imagePath = "";
+
+    if (req.file) {
+      imagePath = `/images/${req.file.filename}`;
+    } else if (imageUrl) {
+      imagePath = imageUrl;
+    } else {
+      return res.status(400).json({ message: "Backend:error_no_image_provided" });
+    }
 
     try {
-      console.log("Body received:", req.body);
-      console.log("File received:", req.file);
-      console.log("Sessions received:", req.body.sessions);
-
-      const rawSessions = req.body.sessions;
-      console.log("Sessions received (raw):", rawSessions);
-
-      // Vérification que les sessions sont bien dans un format tableau
-      const sessions = Array.isArray(rawSessions) ? rawSessions : [];
-      console.log("Sessions après parsing :", sessions);
-
-      if (!sessions.length) {
-        return res.status(400).json({ message: "No valide session given" });
-      }
-
-      let imagePath = "";
-
-      if (req.file) {
-        imagePath = `/images/${req.file.filename}`; //Stockage local
-      } else if (imageUrl) {
-        console.log("Received Image URL:", imageUrl);
-        imagePath = imageUrl; // Si l'utilisateur a fourni un lien
-      } else {
-        return res
-        .status(400)
-        .json({ message: "No given image" });
-      }
-
       const program = await Program.create({
-        name: name,
-        description: description,
-        duration: duration,
-        duration_unit : duration_unit,
+        name,
+        description,
+        duration,
+        duration_unit,
         image: imagePath,
       });
 
-      // // Associer les sessions au programme
-      if (sessions.length > 0) {
-        const sessionIds = req.body.sessions;
-        for (const sessionId of sessionIds) {
-          await ProgramSession.create({
-            programId: program.id,
-            sessionId,
-          });
-        }
+      for (const sessionId of sessions) {
+        await ProgramSession.create({
+          programId: program.id,
+          sessionId,
+        });
       }
 
-      res.status(201).json({ message: "Exercise program created" });
+      res.status(201).json({ message: "Backend:success_program_created" });
     } catch (error: any) {
-      if (!error.statusCode) {
-        error.statusCode = 500;
-      }
-      return res
-        .status(error.statusCode)
-        .json({ message: "Failed to create an exercise program" });
+      if (!error.statusCode) error.statusCode = 500;
+      res.status(error.statusCode).json({ message: "Backend:error_program_creation_failed" });
     }
     return res;
   },
 ];
 
-/**
- * Retrieves all programs
- */
 exports.getPrograms = async (req: any, res: any, next: any) => {
   try {
     const programs = await Program.findAll();
     res.status(200).json(programs);
   } catch (error: any) {
-    if (!error.statusCode) {
-      error.statusCode = 500;
-    }
-    res
-      .status(error.statusCode)
-      .json({ message: "Error loading programs from the database" });
+    if (!error.statusCode) error.statusCode = 500;
+    res.status(error.statusCode).json({ message: "Backend:error_loading_programs" });
   }
   return res;
 };
 
-/**
- * Return program phases based on a given program
- */
 exports.getProgramPhases = async (req: any, res: any, next: any) => {
   const programKey = req.params.programKey;
-  let program;
-  try {
-    program = await Program.findOne({
-      where: { key: programKey },
-    });
-  } catch (error: any) {
-    if (!error.statusCode) {
-      error.statusCode = 500;
-    }
-    res
-      .status(error.statusCode)
-      .json({ message: "Error, can't the find program in the database" });
-
-    return res;
-  }
 
   try {
+    const program = await Program.findOne({ where: { key: programKey } });
+
     const programPhases = await program.getProgramPhase_Programs({
-      // sorts the program phases in ascending order based on its order attribute.
       order: [["rank", "ASC"]],
       include: { model: ProgramPhase },
     });
 
-    /**
-     * @todo: this initialization maybe needed in future, it will require to be updated
-     * to align with the current database schema.
-     */
-    // initializePhaseState(programPhases);
-
     res.status(200).json(programPhases);
   } catch (error: any) {
-    if (!error.statusCode) {
-      error.statusCode = 500;
-    }
-    res
-      .status(error.statusCode)
-      .json({ message: "Failed to load program phases" });
+    if (!error.statusCode) error.statusCode = 500;
+    res.status(error.statusCode).json({ message: "Backend:error_loading_program_phases" });
   }
   return res;
 };
 
-/**
- * Retrieves a program with a given key
- */
 exports.getProgram = async (req: any, res: any, next: any) => {
-  const programKey: String = req.params.programKey;
+  const programKey: string = req.params.programKey;
   try {
     const program = await Program.findOne({
       where: { key: programKey },
       include: [
         {
           model: ProgramPhase_Program,
-          include: [
-            {
-              model: ProgramPhase,
-            },
-          ],
+          include: [{ model: ProgramPhase }],
         },
       ],
     });
     res.status(200).json(program);
   } catch (error: any) {
-    if (!error.statusCode) {
-      error.statusCode = 500;
-    }
-    res.status(error.statusCode);
-    res.json({ message: "Error loading a program from the database" });
-    return res;
+    if (!error.statusCode) error.statusCode = 500;
+    res.status(error.statusCode).json({ message: "Backend:error_loading_program" });
   }
+  return res;
 };
 
-/**
- * This function adds a program phase to an existing program, i.e., instantiating
- * the @type {ProgramPhase}. See the model associations for further details.
- *
- * @param {Object} req - The request, which contains the exisitng program name,
- * start condition type, start condition value,
- * end condition type, end condition value, and frequency required to create the
- * new program phase.
- * @param {Object} res - The request response, which informs user whether the operation
- * was successful or not.
- * @param {Object} next - The next function, which calls the next middleware.
- * However, Th next function is not used here because the request is returned
- * after executing this function.
- *
- * @returns {Object} res - The response, which contains details to alert the user
- * whether the create action was successfull or not.
- *
- * @author Hyacinth Ali
- */
 exports.addProgramPhase = async (req: any, res: any, next: any) => {
   const programKey = req.params.programKey;
   const phaseName = req.body.phaseName;
 
-  // Get the program that will contain the new program phase
-  let program;
   try {
-    program = await Program.findOne({ where: { key: programKey } });
-  } catch (error: any) {
-    if (!error.statusCode) {
-      error.statusCode = 500;
+    const program = await Program.findOne({ where: { key: programKey } });
+
+    if (!program) {
+      return res.status(404).json({ message: "Backend:error_program_not_found" });
     }
 
-    res
-      .status(error.statusCode)
-      .json({ message: "Can't find the program in the database." });
+    const phase = await ProgramPhase.findOne({ where: { name: phaseName } });
 
-    return res;
-  }
-
-  // Get the program phase
-  let phase;
-  try {
-    phase = await ProgramPhase.findOne({
-      where: { name: phaseName },
-    });
-  } catch (error: any) {
-    if (!error.statusCode) {
-      error.statusCode = 500;
+    if (!phase) {
+      return res.status(404).json({ message: "Backend:error_phase_not_found" });
     }
-    res
-      .status(error.statusCode)
-      .json({ message: "Can't find the selected phase" });
 
-    return res;
-  }
+    const rank = (await program.countProgramPhase_Programs()) + 1;
 
-  const rank = (await program.countProgramPhase_Programs()) + 1;
-
-  let programPhase_Program;
-  // create an instance of the ProgramPhase_Program, a join table that
-  // connects program with a program phase.
-  try {
-    programPhase_Program = await ProgramPhase_Program.create({
+    await ProgramPhase_Program.create({
       ProgramId: program.id,
       ProgramPhaseId: phase.id,
-      rank: rank,
+      rank,
     });
 
-    res.status(201).json({ message: "Added a program phase to the program" });
+    res.status(201).json({ message: "Backend:success_phase_added" });
   } catch (error: any) {
-    if (!error.statusCode) {
-      error.statusCode = 500;
-    }
-
-    res
-      .status(error.statusCode)
-      .json({ message: "Failed to add a program phase to a program" });
+    if (!error.statusCode) error.statusCode = 500;
+    res.status(error.statusCode).json({ message: "Backend:error_adding_phase" });
   }
 
   return res;
 };
 
-/**
- * Deletes a program phase.
- * @param {Object} req -  the request which contains the key of the program phase to be deleteed.
- */
 exports.deleteProgram = async (req: any, res: any) => {
   const programKey = req.params.programKey;
 
-  // retreive the program to be deleted
-  let program;
   try {
-    program = await Program.findOne({
-      where: { key: programKey },
-    });
-    // Check that the programe exists
-    if (program == null) {
-      res.status(500).json({ message: "The program does not exist." });
-      return res;
+    const program = await Program.findOne({ where: { key: programKey } });
+
+    if (!program) {
+      return res.status(404).json({ message: "Backend:error_program_not_found" });
     }
+
+    await program.destroy();
+    res.status(200).json({ message: "Backend:success_program_deleted" });
   } catch (error: any) {
-    if (!error.statusCode) {
-      error.statusCode = 500;
-    }
-    return res
-      .status(error.statusCode)
-      .json({ message: "Failed to retrieve program to be deleted" });
+    if (!error.statusCode) error.statusCode = 500;
+    res.status(error.statusCode).json({ message: "Backend:error_deleting_program" });
   }
 
-  // Delete the program.
-  try {
-    await program.destroy();
-    res.status(200).json({ message: "Program Deleted Successfully" });
-  } catch (error: any) {
-    if (!error.statusCode) {
-      error.statusCode = 500;
-    }
-    return res
-      .status(error.statusCode)
-      .json({ message: "Unable to delete the program." });
-  }
+  return res;
 };
 
-/**
- * Sets each of the program phases as active.
- * @param programPhases - the list of the program phases for a program.
- */
-function initializePhaseState(programPhases: any) {
-  // set all program phase inactive
-  programPhases.map((phase: any) => (phase.isActive = false));
-
-  let currentPhase;
-  let counter = 0;
-  while (counter < programPhases.length) {
-    currentPhase = programPhases[counter];
-    if (counter == 0) {
-      // The first program phase should always be active
-      currentPhase.isActive = true;
-    } else {
-      const previousPhase = programPhases[counter - 1];
-      if (currentPhase.startConditionValue <= previousPhase.endConditionValue) {
-        // Sets the current phase active because its start value is less or
-        // equal to the end value of the previous phase
-        currentPhase.isActive = true;
-      } else {
-        // stops the iteration when the current phase is not supposed to be active.
-        break;
-      }
-    }
-    counter++;
-  }
-  programPhases.map((phase: any) => phase.save());
-}
-
-/**
- * Updates an exisitng program.
- */
 exports.updateProgram = async (req: any, res: any, next: any) => {
   const programKey = req.params.programKey;
-  const name = req.body.name;
-  const description = req.body.description;
-  const duration = req.body.duration;
-
-  let program;
+  const { name, description, duration } = req.body;
 
   try {
-    program = await Program.findOne({
-      where: { key: programKey },
-    });
-  } catch (error: any) {
-    if (!error.statusCode) {
-      error.statusCode = 500;
-    }
-    res
-      .status(error.statusCode)
-      .json({ message: `Error: Can't find the weekly cycle` });
-    return res;
-  }
+    const program = await Program.findOne({ where: { key: programKey } });
 
-  // Use sequelize (Database Framework) to update the exercise day session
-  try {
-    await program.update({
-      name: name,
-      description: description,
-      duration: duration,
-    });
-
-    res.status(200).json({ message: `The program has been updated` });
-    // Otherwise, the action was not successful. Hence, let the user know that
-    // his request was unsuccessful.
-  } catch (error: any) {
-    if (!error.statusCode) {
-      error.statusCode = 500;
+    if (!program) {
+      return res.status(404).json({ message: "Backend:error_program_not_found" });
     }
 
-    return res
-      .status(error.statusCode)
-      .json({ message: `Failed to update the program` });
+    await program.update({ name, description, duration });
+
+    res.status(200).json({ message: "Backend:success_program_updated" });
+  } catch (error: any) {
+    if (!error.statusCode) error.statusCode = 500;
+    res.status(error.statusCode).json({ message: "Backend:error_updating_program" });
   }
+
+  return res;
 };
 
-/**
- * Search program by key words
- */
-interface ProgramFilters {
-  id?: number;
-  name?: string;
-  duration?: number;
-  duration_unit?: "days" | "weeks";
-  description_keywords?: string;
-}
-
-// Utiliser ce type dans la fonction
 export const searchPrograms = async (req: any, res: any, next: any) => {
   try {
-    const filters = req.query as ProgramFilters;
+    const filters = req.query as {
+      id?: number;
+      name?: string;
+      duration?: number;
+      duration_unit?: "days" | "weeks";
+      description_keywords?: string;
+    };
 
-    const whereClause: any = {}; // Clause de recherche
+    const whereClause: any = {};
 
-    // Recherche par id
-    if (filters.id) {
-      whereClause.id = filters.id;
-    }
+    if (filters.id) whereClause.id = filters.id;
 
-    // Recherche par nom
     if (filters.name) {
-      whereClause.name = {
-        [Op.iLike]: `%${filters.name}%`,
-      };
+      whereClause.name = { [Op.iLike]: `%${filters.name}%` };
     }
 
-    // Recherche par durée et unité de durée 
-    if (filters.duration && filters.duration_unit) {
-      whereClause.duration = filters.duration;
-      whereClause.duration_unit = filters.duration_unit;
-    }
+    if (filters.duration) whereClause.duration = filters.duration;
+    if (filters.duration_unit) whereClause.duration_unit = filters.duration_unit;
 
-    // Recherche uniquement par durée
-    if (filters.duration && !filters.duration_unit) {
-      whereClause.duration = filters.duration;
-    }
-
-    // Recherche uniquement par unité de durée
-    if (!filters.duration && filters.duration_unit) {
-      whereClause.duration_unit = filters.duration_unit;
-    }
-
-    // Recherche par mots-clés dans la description
     if (filters.description_keywords) {
       whereClause.description = {
         [Op.iLike]: `%${filters.description_keywords}%`,
       };
     }
 
-    // Exécution de la requête de recherche
-    const programs = await Program.findAll({
-      where: whereClause,
-    });
+    const programs = await Program.findAll({ where: whereClause });
 
-    // Si aucun programme n'est trouvé
     if (programs.length === 0) {
-      return res.status(404).json({ message: "Aucun programme trouvé" });
+      return res.status(404).json({ message: "Backend:error_no_program_found" });
     }
 
-    // Retourner les programmes trouvés
     res.json(programs);
   } catch (error) {
-    console.error(error);
-    res
-      .status(500)
-      .json({ message: "Erreur serveur lors de la recherche des programmes" });
+    res.status(500).json({ message: "Backend:error_searching_programs" });
   }
 };

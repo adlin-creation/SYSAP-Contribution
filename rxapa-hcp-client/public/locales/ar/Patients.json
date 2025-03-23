@@ -71,6 +71,7 @@
   "waiting": "في الانتظار",
   "completed": "مكتمل",
   "abort": "متروك",
+  "inactive": "غير نشط",
   "patient_update": "تحديث بيانات المريض",
   "program_enrollment": "تسجيل في برنامج",
   "program_select": "اختر برنامجًا",

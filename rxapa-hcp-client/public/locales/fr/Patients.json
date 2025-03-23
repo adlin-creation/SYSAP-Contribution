@@ -71,6 +71,7 @@
   "waiting": "EN ATTENTE",
   "completed": "COMPLÉTÉ",
   "abort": "ABANDONNÉ",
+  "inactive": "INACTIF",
   "patient_update": "Mettre à jour le patient",
   "program_enrollment": "Inscription au programme",
   "program_select": "Sélectionner un programme",

@@ -55,7 +55,7 @@ describe("getExercises", () => {
     expect(Exercise.findAll).toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({
-      message: "Erreur lors du chargement des exercices.",
+      message: "error_loading_exercises",
       error: errorMessage,
     });
   });

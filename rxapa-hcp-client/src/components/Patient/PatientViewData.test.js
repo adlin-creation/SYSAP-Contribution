@@ -67,7 +67,7 @@ describe("PatientViewPage Component", () => {
         expect(screen.getByText("John Doe")).toBeInTheDocument();
         expect(screen.getByText("john@example.com")).toBeInTheDocument();
         expect(screen.getByText("514-456-7890")).toBeInTheDocument();
-        expect(screen.getByText("active")).toBeInTheDocument();
+        expect(screen.getByText("Patients:active")).toBeInTheDocument();
         //expect(screen.getByText("Programmes: 2")).toBeInTheDocument();
     });
 

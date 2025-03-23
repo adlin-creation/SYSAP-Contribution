@@ -261,7 +261,7 @@ describe("createProfessionalUser", () => {
         // Vérifications
         expect(Professional_User.findOne).toHaveBeenCalledWith({ where: { email: "john.doe@example.com" } });
         expect(res.statusCode).toBe(409);
-        expect(res.json).toHaveBeenCalledWith({ message: "existing professionnel user with this email" });
+        expect(res.json).toHaveBeenCalledWith({ message: "Backend:error_user_exists" });
     });
 
     it("should send email to doctor or kinesiologist with their unique code", async () => {

@@ -71,6 +71,7 @@
   "waiting": "WAITING",
   "completed": "COMPLETED",
   "abort": "ABANDONED",
+  "inactive": "INACTIVE",
   "patient_update": "Update Patient",
   "program_enrollment": "Program Enrollment",
   "program_select": "Select a Program",
