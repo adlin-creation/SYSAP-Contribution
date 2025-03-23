@@ -125,30 +125,25 @@ export default function ExerciseMenu() {
   const filteredExercises = exerciseList?.filter((exercise) => {
     if (
       attributes.fitnessLevel !== "ALL" &&
-      attributes.fitnessLevel !== null &&
       attributes.fitnessLevel !== exercise.fitnessLevel
     ) {
       return false;
     }
-
     if (
       attributes.category !== "ALL" &&
-      attributes.category !== null &&
       attributes.category !== exercise.category
     ) {
       return false;
     }
-
     if (
-      attributes.ageRange !== "ALL" &&
-      attributes.ageRange !== null &&
-      attributes.ageRange !== exercise.targetAgeRange
+      attributes.searchTerm &&
+      !exercise.name.toLowerCase().includes(attributes.searchTerm.toLowerCase())
     ) {
       return false;
     }
-
-    return exercise;
+    return true;
   });
+  
 
   return (
     <div>
