@@ -34,7 +34,7 @@ exports.createSession = async (req: any, res: any, next: any) => {
       constraints: constraints,
     });
 
-    res.status(201).json({ message: "Successfullly created a session" });
+    res.status(201).json({ message: "creation_session_success" });
     // Otherwise, the action was not successful. Hence, let the user know that
     // his request was unsuccessful.
   } catch (error: any) {
@@ -44,14 +44,13 @@ exports.createSession = async (req: any, res: any, next: any) => {
     res.status(error.statusCode);
     if (error.name == "SequelizeUniqueConstraintError") {
       res.json({
-        messageTitle: "A session with the same name already exists.",
-        message: "Please modify the name of the session and then submit again.",
+        messageTitle: "error_same_session_name",
+        message: "msg_alert_session_name_modification",
       });
     } else {
       res.json({
-        messageTitle: "Failed to create an session",
-        message:
-          "Please contact the developer with a brief description of how this error can be reproduced.",
+        messageTitle: "session_creation_failed",
+        message: "contact_developper_for_bug",
       });
     }
   }
@@ -93,7 +92,7 @@ exports.addBloc = async (req: any, res: any, next: any) => {
       error.statusCode = 500;
     }
     res.status(error.statusCode);
-    res.json({ message: `Can't find ${blocName}` });
+    res.json({ message: "cant_find" + ` ${blocName}` });
   }
 
   // Get the session to reference the bloc session
@@ -107,13 +106,13 @@ exports.addBloc = async (req: any, res: any, next: any) => {
       error.statusCode = 500;
     }
     res.status(error.statusCode);
-    res.json({ message: `Can't find the session` });
+    res.json({ message: "cant_find_session" });
     return res;
   }
 
   if (session == null) {
     res.status(500);
-    res.json({ message: `The session doesn't exist` });
+    res.json({ message: "session_non_existent" });
     return res;
   }
 
@@ -131,14 +130,14 @@ exports.addBloc = async (req: any, res: any, next: any) => {
     });
     res.status(201);
     res.json({
-      message: `Successfully added the bloc to the session`,
+      message: "session_add_success",
     });
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
     res.status(error.statusCode);
-    res.json({ message: "Failed to add the bloc" });
+    res.json({ message: "session_add_failed" });
     return res;
   }
 };
@@ -172,7 +171,7 @@ exports.getSession = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.json({ message: "Error loading exercise day sessions" });
+    res.json({ message: "session_exercise_load_failed" });
   }
 };
 
@@ -187,7 +186,7 @@ exports.getSessions = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.json({ message: "Error loading sessions" });
+    res.json({ message: "error_load_session" });
   }
   return res;
 };
@@ -212,7 +211,7 @@ exports.updateSession = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.json({ message: `Error: Can't find ${name} session` });
+    res.json({ message: "cant_find " + `${name}` + "session_word"});
     return res;
   }
 
@@ -223,7 +222,7 @@ exports.updateSession = async (req: any, res: any, next: any) => {
       description: description || session.description,
       constraints: constraints || session.constraints,
     });
-    res.status(200).json({ message: `The session has been updated` });
+    res.status(200).json({ message: "session_updated" });
     // Otherwise, the action was not successful. Hence, let the user know that
     // his request was unsuccessful.
   } catch (error: any) {
@@ -231,7 +230,7 @@ exports.updateSession = async (req: any, res: any, next: any) => {
       error.statusCode = 500;
     }
 
-    res.json({ message: `Failed to update the ${name}` });
+    res.json({ message: "failed_update" + ` ${name}` });
   }
 };
 
@@ -246,7 +245,7 @@ exports.deleteSession = async (req: any, res: any) => {
     });
     // Check that the session exists
     if (session == null) {
-      return res.status(500).json({ message: "The session does not exist." });
+      return res.status(500).json({ message: "session_non_existent" });
     }
   } catch (error: any) {
     if (!error.statusCode) {
@@ -254,19 +253,19 @@ exports.deleteSession = async (req: any, res: any) => {
     }
     return res
       .status(error.statusCode)
-      .json({ message: "Failed to retrieve session to be deleted" });
+      .json({ message: "failed_retrive_session_deletion" });
   }
 
   // Delete the session.
   try {
     await session.destroy();
-    res.status(200).json({ message: "Session Deleted Successfully" });
+    res.status(200).json({ message: "session_delete_success" });
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
     return res
       .status(error.statusCode)
-      .json({ message: "Unable to delete the session." });
+      .json({ message: "session_not_deletable" });
   }
 };

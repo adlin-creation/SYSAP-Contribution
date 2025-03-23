@@ -25,7 +25,7 @@ exports.signup = async (req: any, res: any) => {
 
   // Vérification si le mot de passe et la confirmation sont identiques
   if (!isEqualPassword) {
-    return res.status(500).json({ message: "Please confirm your password" });
+    return res.status(500).json({ message: "confirm_password" });
   }
 
   let user;
@@ -36,7 +36,7 @@ exports.signup = async (req: any, res: any) => {
     if (user) {
       return res
         .status(500)
-        .json({ message: "A user with the email already exist" });
+        .json({ message: "user_email_exist" });
     }
   } catch (error) {
     console.log(error);
@@ -54,14 +54,14 @@ exports.signup = async (req: any, res: any) => {
       password: hashedPassword, // Stockage du mot de passe haché
     });
 
-    return res.status(200).json({ message: "Successfully signed up" }); // Succès de l'inscription
+    return res.status(200).json({ message: "sign_up_success" }); // Succès de l'inscription
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
     return res
       .status(error.statusCode)
-      .json({ message: "Failed to signup the new user" }); // Échec de l'inscription
+      .json({ message: "failed_sign_up" }); // Échec de l'inscription
   }
 };
 
@@ -84,7 +84,7 @@ exports.login = async (req: any, res: any) => {
     
     // Si toujours non trouvé, renvoyer une erreur
     if (!user) {
-      return res.status(401).json({ message: "The user doesn't exist" });
+      return res.status(401).json({ message: "user_non_existant" });
     }
   } catch (error: any) {
     if (!error.statusCode) {
@@ -93,7 +93,7 @@ exports.login = async (req: any, res: any) => {
 
     return res
       .status(error.statusCode)
-      .json({ message: "Failed to authenticate the user" }); // Erreur de connexion
+      .json({ message: "failed_authenticate_user" }); // Erreur de connexion
   }
 
   // Vérification du mot de passe
@@ -103,7 +103,7 @@ exports.login = async (req: any, res: any) => {
   if (!isEqualPassword) {
     return res
       .status(401)
-      .json({ message: "Please enter the correct email and password" }); // Mot de passe incorrect
+      .json({ message: "input_correct_email_password" }); // Mot de passe incorrect
   }
 
   // Génération du token JWT
@@ -121,7 +121,7 @@ exports.login = async (req: any, res: any) => {
     token: token, // Envoi du token au frontend
     userId: user.key, // Envoi de l'ID utilisateur
     role: user.role, // role: user.role, // Envoi du rôle utilisateur
-    message: "Successfully logged in",
+    message: "success_login",
   });
 };
 
@@ -132,7 +132,7 @@ exports.logout = (req: any, res: any) => {
   // Les tokens JWT sont basés sur l'expiration, donc on ne stocke rien côté serveur.
   // La déconnexion se fait en supprimant le token côté client.
   return res.status(200).json({
-    message: "Successfully logged out",
+    message: "sucesss_logout",
   });
 };
 
