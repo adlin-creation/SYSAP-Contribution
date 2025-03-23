@@ -247,8 +247,8 @@ function EvaluationPACE({ onSubmit }) {
 
       // Gérer le succès
       Modal.success({
-        title: "Succès",
-        content: "Évaluation enregistrée avec succès",
+        title: t("success_title"),
+        content: t("success_message"),
       });
 
       // Recharger la page
@@ -264,10 +264,10 @@ function EvaluationPACE({ onSubmit }) {
       Modal.error({
         title: "Erreur",
         content:
-          error.response?.data?.message ||
+          t(`Backend:${error.response?.data?.message}`, error.response?.data) ||
           error.response?.data ||
           error.message ||
-          "Échec de l'enregistrement des données",
+          t("error_message"),
       });
     }
   };
@@ -358,14 +358,14 @@ function EvaluationPACE({ onSubmit }) {
   const determineFrenchColor = (scoreA, scoreB, scoreC) => {
     const min = Math.min(scoreA, scoreB, scoreC);
 
-    if (scoreA === scoreB && scoreB === scoreC) return "MARRON";
-    if (scoreA === scoreB && scoreA === min) return "VERT";
-    if (scoreB === scoreC && scoreB === min) return "ORANGE";
-    if (scoreC === scoreA && scoreC === min) return "VIOLET";
-    if (scoreA === min) return "BLEU";
-    if (scoreB === min) return "JAUNE";
-    if (scoreC === min) return "ROUGE";
-    return "MARRON";
+    if (scoreA === scoreB && scoreB === scoreC) return t("color_brown");
+    if (scoreA === scoreB && scoreA === min) return t("color_green");
+    if (scoreB === scoreC && scoreB === min) return t("color_orange");
+    if (scoreC === scoreA && scoreC === min) return t("color_purple");
+    if (scoreA === min) return t("color_blue");
+    if (scoreB === min) return t("color_yellow");
+    if (scoreC === min) return t("color_red");
+    return t("color_brown");
   };
 
   const calculateWalkingObjective = (walkingTime) => {

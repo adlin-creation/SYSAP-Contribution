@@ -13,5 +13,24 @@
   "bloc_update_fail": "فشل في تحديث كتلة التمارين {{blocName}}",
   "bloc_not_found": "كتلة التمارين غير موجودة في قاعدة البيانات",
   "bloc_deleted_successfully": "تم حذف كتلة التمارين بنجاح",
-  "bloc_deletion_failed": "فشل في حذف كتلة التمارين"
+  "bloc_deletion_failed": "فشل في حذف كتلة التمارين",
+
+  "error_creating_pace_evaluation": "خطأ أثناء إنشاء تقييم PACE",
+  "evaluation_not_found": "التقييم غير موجود",
+  "pace_evaluation_not_found": "تقييم PACE غير موجود",
+  "error_updating_evaluation": "خطأ أثناء تحديث التقييم",
+  "error_creating_match_evaluation": "خطأ أثناء إنشاء تقييم MATCH",
+  "match_evaluation_not_found": "تقييم MATCH غير موجود",
+  "program_not_found": "البرنامج {{program}} غير موجود",
+  "match_evaluation_updated_successfully": "تم تحديث تقييم MATCH بنجاح",
+  "error_updating_match_evaluation": "خطأ أثناء تحديث تقييم MATCH",
+  "error_creating_path_evaluation": "خطأ أثناء إنشاء تقييم PATH",
+  "path_evaluation_not_found": "تقييم PATH غير موجود",
+  "path_evaluation_updated_successfully": "تم تحديث تقييم PATH بنجاح",
+  "error_updating_path_evaluation": "خطأ أثناء تحديث تقييم PATH",
+  "error_loading_evaluation": "خطأ أثناء تحميل التقييم من قاعدة البيانات",
+  "evaluation_deleted": "تم حذف التقييم",
+  "error_deleting_evaluation": "خطأ أثناء حذف التقييم",
+  "search_term_required": "مطلوب إدخال مصطلح بحث",
+  "search_failed": "فشل البحث"
 }

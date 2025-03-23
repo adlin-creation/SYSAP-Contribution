@@ -210,8 +210,8 @@ function EvaluationMATCH({ onSubmit }) {
 
       // Gérer le succès
       Modal.success({
-        title: "Succès",
-        content: "Évaluation enregistrée avec succès",
+        title: t("success_title"),
+        content: t("success_message"),
       });
 
       // Recharger la page
@@ -227,10 +227,10 @@ function EvaluationMATCH({ onSubmit }) {
       Modal.error({
         title: "Erreur",
         content:
-          error.response?.data?.message ||
+          t(`Backend:${error.response?.data?.message}`, error.response?.data) ||
           error.response?.data ||
           error.message ||
-          "Échec de l'enregistrement des données",
+          t("error_message"),
       });
     }
   };
@@ -294,7 +294,7 @@ function EvaluationMATCH({ onSubmit }) {
     if (totalScore <= 3) return t("color_yellow");
     if (totalScore <= 5) return t("color_orange");
     if (totalScore <= 7) return t("color_green");
-    return "BLEU";
+    return t("color_blue");
   };
 
   const onClose = () => {

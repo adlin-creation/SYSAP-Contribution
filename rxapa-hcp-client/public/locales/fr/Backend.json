@@ -13,5 +13,24 @@
   "bloc_update_fail": "Échec de la mise à jour du bloc {{blocName}}",
   "bloc_not_found": "Le bloc n'existe pas dans la base de données",
   "bloc_deleted_successfully": "Bloc supprimé avec succès",
-  "bloc_deletion_failed": "Échec de la suppression du bloc"
+  "bloc_deletion_failed": "Échec de la suppression du bloc",
+
+  "error_creating_pace_evaluation": "Erreur lors de la création de l'évaluation PACE",
+  "evaluation_not_found": "Évaluation non trouvée",
+  "pace_evaluation_not_found": "Évaluation PACE non trouvée",
+  "error_updating_evaluation": "Erreur lors de la mise à jour de l'évaluation",
+  "error_creating_match_evaluation": "Erreur lors de la création de l'évaluation MATCH",
+  "match_evaluation_not_found": "Évaluation MATCH non trouvée",
+  "program_not_found": "Programme {{program}} non trouvé",
+  "match_evaluation_updated_successfully": "Évaluation MATCH mise à jour avec succès",
+  "error_updating_match_evaluation": "Erreur lors de la mise à jour de l'évaluation MATCH",
+  "error_creating_path_evaluation": "Erreur lors de la création de l'évaluation PATH",
+  "path_evaluation_not_found": "Évaluation PATH non trouvée",
+  "path_evaluation_updated_successfully": "Évaluation PATH mise à jour avec succès",
+  "error_updating_path_evaluation": "Erreur lors de la mise à jour de l'évaluation PATH",
+  "error_loading_evaluation": "Erreur lors du chargement de l'évaluation depuis la base de données",
+  "evaluation_deleted": "Évaluation supprimée",
+  "error_deleting_evaluation": "Erreur lors de la suppression de l'évaluation",
+  "search_term_required": "Un terme de recherche est requis",
+  "search_failed": "La recherche a échoué"
 }

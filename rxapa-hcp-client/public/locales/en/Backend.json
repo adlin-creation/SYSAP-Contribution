@@ -13,5 +13,24 @@
   "bloc_update_fail": "Failed to update the {{blocName}}",
   "bloc_not_found": "The bloc doesn't exist in the database",
   "bloc_deleted_successfully": "Successfully deleted the bloc",
-  "bloc_deletion_failed": "Failed to delete the bloc"
+  "bloc_deletion_failed": "Failed to delete the bloc",
+
+  "error_creating_pace_evaluation": "Error creating PACE evaluation",
+  "evaluation_not_found": "Evaluation not found",
+  "pace_evaluation_not_found": "PACE evaluation not found",
+  "error_updating_evaluation": "Error updating evaluation",
+  "error_creating_match_evaluation": "Error creating MATCH evaluation",
+  "match_evaluation_not_found": "MATCH evaluation not found",
+  "program_not_found": "Program {{program}} not found",
+  "match_evaluation_updated_successfully": "MATCH evaluation updated successfully",
+  "error_updating_match_evaluation": "Error updating MATCH evaluation",
+  "error_creating_path_evaluation": "Error creating PATH evaluation",
+  "path_evaluation_not_found": "PATH evaluation not found",
+  "path_evaluation_updated_successfully": "PATH evaluation updated successfully",
+  "error_updating_path_evaluation": "Error updating PATH evaluation",
+  "error_loading_evaluation": "Error loading evaluation from the database",
+  "evaluation_deleted": "Evaluation deleted",
+  "error_deleting_evaluation": "Error deleting evaluation",
+  "search_term_required": "Search term is required",
+  "search_failed": "Search failed"
 }

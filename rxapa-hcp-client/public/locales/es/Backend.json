@@ -13,5 +13,24 @@
   "bloc_update_fail": "Error al actualizar el bloque {{blocName}}",
   "bloc_not_found": "El bloque no existe en la base de datos",
   "bloc_deleted_successfully": "Bloque eliminado con éxito",
-  "bloc_deletion_failed": "Error al eliminar el bloque"
+  "bloc_deletion_failed": "Error al eliminar el bloque",
+
+  "error_creating_pace_evaluation": "Error al crear la evaluación PACE",
+  "evaluation_not_found": "Evaluación no encontrada",
+  "pace_evaluation_not_found": "Evaluación PACE no encontrada",
+  "error_updating_evaluation": "Error al actualizar la evaluación",
+  "error_creating_match_evaluation": "Error al crear la evaluación MATCH",
+  "match_evaluation_not_found": "Evaluación MATCH no encontrada",
+  "program_not_found": "Programa {{program}} no encontrado",
+  "match_evaluation_updated_successfully": "Evaluación MATCH actualizada con éxito",
+  "error_updating_match_evaluation": "Error al actualizar la evaluación MATCH",
+  "error_creating_path_evaluation": "Error al crear la evaluación PATH",
+  "path_evaluation_not_found": "Evaluación PATH no encontrada",
+  "path_evaluation_updated_successfully": "Evaluación PATH actualizada con éxito",
+  "error_updating_path_evaluation": "Error al actualizar la evaluación PATH",
+  "error_loading_evaluation": "Error al cargar la evaluación desde la base de datos",
+  "evaluation_deleted": "Evaluación eliminada",
+  "error_deleting_evaluation": "Error al eliminar la evaluación",
+  "search_term_required": "Se requiere un término de búsqueda",
+  "search_failed": "La búsqueda ha fallado"
 }

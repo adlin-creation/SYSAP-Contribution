@@ -189,8 +189,8 @@ function EvaluationPATH({ onSubmit }) {
 
       // Gérer le succès
       Modal.success({
-        title: "Succès",
-        content: "Évaluation enregistrée avec succès",
+        title: t("success_title"),
+        content: t("success_message"),
       });
 
       // Recharger la page
@@ -206,10 +206,10 @@ function EvaluationPATH({ onSubmit }) {
       Modal.error({
         title: "Erreur",
         content:
-          error.response?.data?.message ||
+          t(`Backend:${error.response?.data?.message}`, error.response?.data) ||
           error.response?.data ||
           error.message ||
-          "Échec de l'enregistrement des données",
+          t("error_message"),
       });
     }
   };
