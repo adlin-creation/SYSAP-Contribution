@@ -70,7 +70,7 @@ export default function PhaseDetail({ programPhase, refetchPhases }) {
         openModal(res.data.message, false);
       })
       .catch((err) => {
-        openModal(err.response.data.message, true);
+        openModal(err.response?.data?.message, true);
       });
   };
 

@@ -49,7 +49,7 @@ export default function ExerciseMenu() {
         return res.data;
       })
       .catch((err) => {
-        openModal(err.response.data.message, true);
+        openModal(err.response?.data?.message, true);
       });
   });
 
@@ -118,7 +118,7 @@ export default function ExerciseMenu() {
         openModal(res.data.message, false);
       })
       .catch((err) => {
-        openModal(err.response.data.message, true);
+        openModal(err.response?.data?.message, true);
       });
   };
 

@@ -115,7 +115,7 @@ export default function CreateProgram(props) {
         openModal(res.data.message, false);
         reset();
       })
-      .catch((err) => openModal(err.response.data.message, true));
+      .catch((err) => openModal(err.response?.data?.message, true));
   };
   /**
    * Opens modal to provide feedback to the user.

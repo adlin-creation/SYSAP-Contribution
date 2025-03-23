@@ -22,6 +22,10 @@ export const Exercise = sequelize.define("Exercise", {
   description: {
     type: dataTypes.STRING,
   },
+  active: {
+    type: dataTypes.BOOLEAN,
+    defaultValue: true
+  },
   imageUrl: {
     type: dataTypes.STRING,
   },

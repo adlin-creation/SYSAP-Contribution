@@ -81,7 +81,7 @@ export default function AddSessions({
         refetchSessions();
         openModal(res.data.message, false);
       })
-      .catch((err) => openModal(err.response.data.message, true));
+      .catch((err) => openModal(err.response?.data?.message, true));
   };
 
   function cancelAddSession() {

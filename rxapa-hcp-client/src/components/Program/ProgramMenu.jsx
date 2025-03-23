@@ -122,7 +122,7 @@ export default function ProgramMenu() {
         refetchPrograms();
         openModal(res.data.message, false);
       })
-      .catch((err) => openModal(err.response.data.message, true));
+      .catch((err) => openModal(err.response?.data?.message, true));
   };
 
   // Fonction pour gérer le terme de recherche

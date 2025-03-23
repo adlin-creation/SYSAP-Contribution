@@ -96,7 +96,7 @@ export default function CycleDetails({ cycle, refetchCycles }) {
         refetchCycles();
         openModal(res.data.message, false);
       })
-      .catch((err) => openModal(err.response.data.message, true));
+      .catch((err) => openModal(err.response?.data?.message, true));
   };
 
   /**

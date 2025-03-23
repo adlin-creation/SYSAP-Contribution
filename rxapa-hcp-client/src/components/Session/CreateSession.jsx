@@ -32,7 +32,7 @@ export default function CreateSession(props) {
         props.refetchSessions();
         openModal(res.data.message, false);
       })
-      .catch((err) => openModal(err.response.data.message, true));
+      .catch((err) => openModal(err.response?.data?.message, true));
   };
 
   /**

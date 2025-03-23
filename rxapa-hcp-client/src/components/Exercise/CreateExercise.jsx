@@ -90,7 +90,7 @@ export default function CreateExercise(props) {
       })
       .catch((err) => {
         const errorMessage = err.response
-          ? err.response.data.message
+          ? err.response?.data?.message
           : "An error occurred";
         openModal(errorMessage, true);
       });

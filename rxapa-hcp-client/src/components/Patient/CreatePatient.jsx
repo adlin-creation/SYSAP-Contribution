@@ -116,7 +116,7 @@ function CreatePatient({ refetchPatients, onClose }) {
         openModal(t("create_patient_success"), false);
       })
       .catch((err) =>
-        openModal(err.response.data.message || t("create_patient_failed"), true)
+        openModal(err.response?.data?.message || t("create_patient_failed"), true)
       );
   };
 

@@ -34,7 +34,7 @@ export default function Login({ setToken }) {
         navigate("/", { state: { role: res.data.role } });
       })
       .catch((err) => {
-        openModal(err.response.data.message, true);
+        openModal(err.response?.data?.message, true); //T ODO
       });
   };
 

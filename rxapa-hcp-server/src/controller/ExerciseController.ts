@@ -88,7 +88,7 @@ export const createExercise = async (req: Request, res: Response) => {
  */
 export const updateExercise = async (req: Request, res: Response) => {
   const exerciseKey = req.params.exerciseKey;
-  const { name, description, category, fitnessLevel } = req.body;
+  const { name, description, category, fitnessLevel, active } = req.body;
 
   try {
     const exercise = await Exercise.findOne({ where: { key: exerciseKey } });
@@ -101,6 +101,7 @@ export const updateExercise = async (req: Request, res: Response) => {
       description: description || exercise.description,
       category: category || exercise.category,
       fitnessLevel: fitnessLevel || exercise.fitnessLevel,
+      active: active || exercise.active,
     });
 
     res.status(200).json({ message: "Exercice mis à jour avec succès." });

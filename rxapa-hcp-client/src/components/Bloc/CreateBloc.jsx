@@ -51,8 +51,8 @@ export default function CreateBloc(props) {
         props.refetchBlocs();
       })
       .catch((err) => {
-        //const errorMessage = err.response ? err.response.data.message : "An error occurred";
-        openModal(err.response.data.message, true);
+        //const errorMessage = err.response ? err.response?.data?.message : "An error occurred";
+        openModal(err.response?.data?.message, true);
       });
   };
 

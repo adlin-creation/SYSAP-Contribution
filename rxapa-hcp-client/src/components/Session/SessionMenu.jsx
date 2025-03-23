@@ -123,7 +123,7 @@ export default function SessionList(props) {
         refetchSessions();
         openModal(res.data.message, false);
       })
-      .catch((err) => openModal(err.response.data.message, true));
+      .catch((err) => openModal(err.response?.data?.message, true));
   };
 
   return (

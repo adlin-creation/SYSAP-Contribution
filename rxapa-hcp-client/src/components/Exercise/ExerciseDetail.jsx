@@ -53,7 +53,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
           setIsSubmitting(false); 
         })
         .catch((err) => {
-          openModal(err.response.data.message, true); 
+          openModal(err.response?.data?.message, true); 
           setIsSubmitting(false); 
         });
     }
@@ -66,6 +66,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
     setValue("description", exercise.description);
     setValue("category", exercise.category);
     setValue("fitnessLevel", exercise.fitnessLevel);
+    setValue("is active", exercise.active);
   };
 
   return (
@@ -135,6 +136,32 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
                       {level}
                     </Select.Option>
                   ))}
+                </Select>
+              )}
+            />
+          </Form.Item>
+
+          {/* Field for active/inactive status */}
+          <Form.Item label={t("Exercises:active_status")}>
+            <Controller
+              name="active"
+              control={control}
+              defaultValue={exercise.active}
+              render={({ field: { onChange, value } }) => (
+                <Select
+                  onChange={onChange}
+                  value={value}
+                  placeholder={t("Exercises:active_status")}
+                  style={{ width: "100%" }}
+                  allowClear
+                  disabled={!isEditing}
+                >
+                  <Select.Option key="true" value={true}>
+                    {t("Exercises:active")}
+                  </Select.Option>
+                  <Select.Option key="false" value={false}>
+                    {t("Exercises:inactive")}
+                  </Select.Option>
                 </Select>
               )}
             />
@@ -210,6 +237,7 @@ ExerciseDetail.propTypes = {
     description: PropTypes.string.isRequired,
     category: PropTypes.string.isRequired,
     fitnessLevel: PropTypes.string.isRequired,
+    active: PropTypes.bool.isRequired,
   }).isRequired,
   refetchExercises: PropTypes.func.isRequired,
 };
