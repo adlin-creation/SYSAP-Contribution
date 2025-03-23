@@ -18,7 +18,6 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
   } = useForm();
   const { token } = useToken();
 
-  // Pré-remplir le formulaire avec les données de l'administrateur
   useEffect(() => {
     if (admin) {
       setValue("firstname", admin.firstname);
@@ -71,7 +70,6 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
       <Col span={16}>
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
           <Row gutter={16}>
-            {/* First Name and Last Name fields */}
             <Col span={12}>
               <Form.Item
                 label={t("Professionals:Admins:first_name_label")}
@@ -83,10 +81,10 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
                   name="firstname"
                   control={control}
                   rules={{
-                    required: "required_first_name_error",
+                    required: t("Professionals:Admins:required_first_name_error"),
                     minLength: {
                       value: 2,
-                      message: "first_name_min_length_error",
+                      message: t("Professionals:Admins:first_name_min_length_error"),
                     },
                   }}
                   render={({ field }) => <Input {...field} />}
@@ -104,10 +102,10 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
                   name="lastname"
                   control={control}
                   rules={{
-                    required: "required_last_name_error",
+                    required: t("Professionals:Admins:required_last_name_error"),
                     minLength: {
                       value: 2,
-                      message: "last_name_min_length_error",
+                      message: t("Professionals:Admins:last_name_min_length_error"),
                     },
                   }}
                   render={({ field }) => <Input {...field} />}
@@ -117,7 +115,6 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
           </Row>
 
           <Row gutter={16}>
-            {/* Email and Phone Number fields */}
             <Col span={12}>
               <Form.Item
                 label={t("Professionals:Admins:email")}
@@ -129,10 +126,10 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
                   name="email"
                   control={control}
                   rules={{
-                    required: "L'email est obligatoire",
+                    required: t("Professionals:Admins:email_required"),
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: "Format d'email invalide",
+                      message: t("Professionals:Admins:email_invalid"),
                     },
                   }}
                   render={({ field }) => <Input type="email" {...field} />}
@@ -150,10 +147,10 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
                   name="phoneNumber"
                   control={control}
                   rules={{
-                    required: "Le numéro de téléphone est obligatoire",
+                    required: t("Professionals:Admins:phone_required"),
                     pattern: {
                       value: /^[0-9+\s-]{8,}$/,
-                      message: "Format de numéro de téléphone invalide",
+                      message: t("Professionals:Admins:phone_invalid"),
                     },
                   }}
                   render={({ field }) => <Input {...field} />}
@@ -163,7 +160,6 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
           </Row>
 
           <Row gutter={16}>
-            {/* Status field */}
             <Col span={12}>
               <Form.Item label={t("Professionals:Admins:status")}>
                 <Controller
@@ -174,9 +170,7 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
                       checked={value}
                       onChange={onChange}
                       checkedChildren={t("Professionals:Admins:active_status")}
-                      unCheckedChildren={t(
-                        "Professionals:Admins:inactive_status"
-                      )}
+                      unCheckedChildren={t("Professionals:Admins:inactive_status")}
                     />
                   )}
                 />

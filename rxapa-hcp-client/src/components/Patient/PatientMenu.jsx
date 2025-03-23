@@ -55,7 +55,7 @@ export default function PatientMenu({ role }) {
       console.log(data);
       return data.find((prog) => prog.id === ProgramEnrollement.ProgramId);
     } catch (err) {
-      throw new Error(err.response?.data?.message || t("Patients:fetch_error_programs"));
+      throw new Error(err.response?.data?.message || t("Patients:errors.fetch_programs_failed"));
     }
   };
 
@@ -67,7 +67,7 @@ export default function PatientMenu({ role }) {
       });
       return data.filter((prog) => prog.PatientId === patientId);
     } catch (err) {
-      throw new Error(err.response?.data?.message || t("Patients:fetch_error_programs_subscribe"));
+      throw new Error(err.response?.data?.message || t("Patients:errors.fetch_program_enrollments_failed") );
     }
   };
 
@@ -83,7 +83,7 @@ export default function PatientMenu({ role }) {
         )
       );
     } catch (err) {
-      throw new Error(err.response?.data?.message || t("Patients:fetch_error_caregiver."));
+      throw new Error(err.response?.data?.message || t("Patients:errors.fetch_patient_caregivers_failed"));
     }
   };
 
@@ -101,7 +101,7 @@ export default function PatientMenu({ role }) {
       );
       return caregiversDetails;
     } catch (err) {
-      throw new Error(err.response?.data?.message || t("Patients:fetch_error_detail_caregiver."));
+      throw new Error(err.response?.data?.message || t("Patients:errors.fetch_caregiver_details_failed") );
     }
   };
 
@@ -110,17 +110,17 @@ export default function PatientMenu({ role }) {
     console.log(patient);
     try {
       const programEnrollements = await fetchProgramEnrollements(patient.id);
-      console.log(t("Patients:add_caregiver"), programEnrollements);
+      console.log("Enregistrements du patient :", programEnrollements);
 
       const patient_caregivers = await fetchPatientCaregivers(programEnrollements);
-      console.log(t("Patients:caregiver_link"), patient_caregivers);
+      console.log("Soignants associés :", patient_caregivers);
 
       const caregivers = await fetchCaregiversDetails(patient_caregivers);
-      console.log(t("Patients:caregiver_details"), caregivers);
+      console.log("Détails des soignants :", caregivers);
 
       openCaregiversModal(caregivers, patient_caregivers, programEnrollements);
     } catch (err) {
-      console.error(t("Patients:error"), err.message);
+      console.error("Erreur :", err.message);
       openModal(err.message, true);
     }
   };
@@ -143,7 +143,7 @@ export default function PatientMenu({ role }) {
                     icon={<LinkOutlined />}
                     onClick={() => viewCaregiverDetails(c, patient_caregivers, programEnrollements)}
                   >
-                    {t("Patients:show_details")}
+                    {t("voir les details")}
                   </Button>
                 ]}
               >
@@ -153,7 +153,7 @@ export default function PatientMenu({ role }) {
             </Col>
           ))}
         </Row>
-      ) : <p>{t("Patients:caregiver_available")}</p>,
+      ) : <p>{t("Patients:errors.no_caregivers_available")}</p>,
       onOk() { },
       width: "80%",
     });
@@ -196,7 +196,7 @@ export default function PatientMenu({ role }) {
     AntModal.info({
       title: (
         <div style={{ fontSize: "18px", fontWeight: "bold" }}>
-          {caregiver.firstname} {caregiver.lastname} - Détails de l'aide soignant
+          {caregiver.firstname} {caregiver.lastname} - {t("Patients:caregiver_detail_label")}
         </div>
       ), content: (
         <Descriptions bordered column={1}>
@@ -261,7 +261,7 @@ export default function PatientMenu({ role }) {
       key: "numberOfPrograms",
     },
     {
-      title: t("Patients:caregivers"),
+      title: "Caregivers",
       key: "caregivers",
       render: (record) => (
         <Button type="link" onClick={() => handleGetCaregivers(record)}>
@@ -302,9 +302,9 @@ export default function PatientMenu({ role }) {
 
   const showCaregiverWarning = () => {
     AntModal.warning({
-      title: t("Patients:delete_impossible"),
-      content: t("Patients:delete_caregiver_message"),
-      okText: t("Patients:ok_button"),
+      title: t("Patients:errors.deletion_not_allowed"),
+      content: t("Patients:errors.delete_caregivers_first"),
+      okText: t("Patients:close_button"),
     });
   };
 
@@ -313,9 +313,9 @@ export default function PatientMenu({ role }) {
       title: t("Patients:delete_patient_alert"),
       icon: <ExclamationCircleOutlined />,
       content: `${patient.firstname} ${patient.lastname}`,
-      okText: t("Patients:yes_button"),
-      okType: t("Patients:danger_message"),
-      cancelText: t("Patients:no_button"),
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
       onOk: () => {
         console.log(patient);
         if (patient.numberOfCaregivers === 0) {

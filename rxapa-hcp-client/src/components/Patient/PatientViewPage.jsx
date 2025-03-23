@@ -13,7 +13,6 @@ export default function PatientData({ patient, onClose }) {
   const patientSessionsUrl = `${Constants.SERVER_URL}/patient/${patient.id}/sessions`;
   const { token } = useToken();
 
-  // Récupérer les sessions avec useQuery
   const {
     data: sessionsData
   } = useQuery(["SessionRecord", patient.id], () => {
@@ -27,21 +26,18 @@ export default function PatientData({ patient, onClose }) {
   const sessions = sessionsData || [];
   const hasSessions = sessions.length > 0;
 
-  // Définir currentSession et le mettre à jour lorsque sessions change
-  const [currentSession, setCurrentSession] = useState(0); // Initialiser à 0 par défaut
+  const [currentSession, setCurrentSession] = useState(0);
 
   useEffect(() => {
     if (sessions.length > 0) {
-      // Mettre à jour currentSession pour afficher la session la plus récente
       setCurrentSession(sessions.length - 1);
     }
-  }, [sessions]); // Déclencher cet effet lorsque sessions change
+  }, [sessions]);
 
   const sessionData = hasSessions ? sessions[currentSession] || {} : {};
 
   const sessionDataForChart = [sessionData];
 
-  // Calcul des moyennes (seulement s'il y a des sessions)
   const averages = hasSessions ? (() => {
     const averageData = sessions.reduce(
       (acc, s) => {
@@ -61,7 +57,6 @@ export default function PatientData({ patient, onClose }) {
     };
   })() : null;
 
-  // Transformation des moyennes en tableau d'objets avec des couleurs personnalisées
   const averagesArray = hasSessions ? [
     { name: t("Patients:difficulty"), value: parseFloat(averages.difficulty), fill: "#8884d8" },
     { name: t("Patients:pain"), value: parseFloat(averages.pain), fill: "#82ca9d" },
@@ -70,7 +65,7 @@ export default function PatientData({ patient, onClose }) {
 
   return (
     <div className="patient-data-container">
-      <h1>{t("Patients:patient_data")}</h1>
+      <h1>{t("Patients:patient_data_title")}</h1>
       <Card>
         <h2>{`${patient.firstname} ${patient.lastname}`}</h2>
         <p><strong>{t("Patients:email")}:</strong> {patient.email}</p>
@@ -79,62 +74,56 @@ export default function PatientData({ patient, onClose }) {
         <p><strong>{t("Patients:programs")}:</strong> {patient.numberOfPrograms}</p>
       </Card>
 
-      <h2>{t("Patients:session_data")}</h2>
+      <h2>{t("Patients:session_data_title")}</h2>
       <Card>
         {hasSessions ? (
           <div className="session-data-container">
-            {/* Informations de la session */}
             <div className="session-info">
               <div className="session-buttons">
                 <Button onClick={() => setCurrentSession((prev) => Math.max(prev - 1, 0))}>
-                  {t("Patients:button_previous")}
+                  {t("Patients:previous_button")}
                 </Button>
                 <Button onClick={() => setCurrentSession((prev) => Math.min(prev + 1, sessions.length - 1))}>
-                  {t("Patients:button_next")}
+                  {t("Patients:next_button")}
                 </Button>
               </div>
-
-              {/* Données de la session */}
               <p><strong>{t("Patients:session")}</strong> {currentSession + 1}</p>
               <p><strong>{t("Patients:date")}</strong> {sessionData.date}</p>
               <p><strong>{t("Patients:difficulty_level")}</strong> {sessionData.difficultyLevel}</p>
               <p><strong>{t("Patients:pain_level")}</strong> {sessionData.painLevel}</p>
-              <p><strong>{t("Patients:accomplished_exercise")}</strong> {sessionData.accomplishedExercice}</p>
+              <p><strong>{t("Patients:accomplished_exercice")}</strong> {sessionData.accomplishedExercice}</p>
             </div>
 
-            {/* Graphique Session Data */}
             <div className="session-chart">
               <BarChart width={400} height={300} data={sessionDataForChart}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="session" />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="difficultyLevel" fill="#8884d8" name="Difficulty" />
-                <Bar dataKey="painLevel" fill="#82ca9d" name="Pain" />
-                <Bar dataKey="accomplishedExercice" fill="#ff7300" name="Exercises" />
+                <Bar dataKey="difficultyLevel" fill="#8884d8" name={t("Patients:difficulty")} />
+                <Bar dataKey="painLevel" fill="#82ca9d" name={t("Patients:pain")} />
+                <Bar dataKey="accomplishedExercice" fill="#ff7300" name={t("Patients:exercises")} />
               </BarChart>
             </div>
           </div>
         ) : (
           <Empty
-            description={<span>{t("Patients:no_exercice_patient")}</span>}
+            description={<span>{t("Patients:no_session_description")}</span>}
             image={Empty.PRESENTED_IMAGE_SIMPLE}
           />
         )}
       </Card>
 
-      <h2>{t("Patients:no_exercice_patient")}</h2>
+      <h2>{t("Patients:average_since_inception")}</h2>
       <Card>
         {hasSessions ? (
           <div className="average-data-container">
-            {/* Informations des moyennes */}
             <div className="average-info">
               <p><strong>{t("Patients:difficulty_level")}</strong> {averages.difficulty}</p>
               <p><strong>{t("Patients:pain_level")}</strong> {averages.pain}</p>
-              <p><strong>{t("Patients:accomplished_exercise")}</strong> {averages.exercises}</p>
+              <p><strong>{t("Patients:accomplished_exercice")}</strong> {averages.exercises}</p>
             </div>
 
-            {/* Graphique Average Since Inception */}
             <div className="average-chart">
               <BarChart width={400} height={300} data={averagesArray}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -147,7 +136,7 @@ export default function PatientData({ patient, onClose }) {
           </div>
         ) : (
           <Empty
-            description={<span>{t("Patients:no_session_available_average")}</span>}
+            description={<span>{t("Patients:no_session_disponible")}</span>}
             image={Empty.PRESENTED_IMAGE_SIMPLE}
           />
         )}

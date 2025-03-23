@@ -95,11 +95,11 @@ export default function AdminMenu() {
 
   const handleDelete = (admin) => {
     AntModal.confirm({
-      title: t("Professionals:Admins:delete_confirm"),
-      content: t("Professionals:Admins:delete_info") + ` ${admin.firstname} ${admin.lastname}`,
-      okText: t("Professionals:Admins:yes") ,
+      title: t("Professionals:Admins:delete_confirm_title"),
+      content: t("Professionals:Admins:delete_confirm_content", { name: `${admin.firstname} ${admin.lastname}` }),
+      okText: t("Professionals:Admins:yes_button"),
       okType: "danger",
-      cancelText: t("Professionals:Admins:no"),
+      cancelText: t("Professionals:Admins:no_button"),
       onOk() {
         axios
           .delete(
@@ -125,7 +125,7 @@ export default function AdminMenu() {
   const openModal = (message, isError) => {
     AntModal[isError ? "error" : "success"]({
       content: message,
-      okText: "Close",
+      okText: t("Professionals:Admins:close_button"),
       centered: true,
     });
   };
@@ -152,8 +152,8 @@ export default function AdminMenu() {
     if (error) {
       return (
         <div style={{ textAlign: "center", marginTop: "20px" }}>
-          <h3>Error loading admins</h3>
-          <Button onClick={() => refetchAdmins()}>Retry</Button>
+          <h3>{t("Professionals:Admins:error_loading")}</h3>
+          <Button onClick={() => refetchAdmins()}>{t("Professionals:Admins:retry_button")}</Button>
         </div>
       );
     }
@@ -187,14 +187,12 @@ export default function AdminMenu() {
           rowKey="id"
           loading={isLoading}
           locale={{
-            emptyText: <Empty description={t("Professionals:Admins:no_admin_found")} />,
+            emptyText: <Empty description={t("Professionals:Admins:no_admins_found")} />,
           }}
           pagination={{
             pageSize: 10,
             showTotal: (total, range) =>
-              `${range[0]}-${range[1]} ${t(
-                "Professionals:Admins:of"
-              )} ${total} ${t("Professionals:Admins:admins")}`,
+              `${range[0]}-${range[1]} ${t("Professionals:Admins:of")} ${total} ${t("Professionals:Admins:admins")}`,
           }}
         />
       </>
@@ -203,7 +201,6 @@ export default function AdminMenu() {
 
   return (
     <div>
-      {/* Edit/Create admin form header */}
       {(isCreateAdmin || isEditMode) && (
         <Row
           align="middle"
@@ -233,8 +230,6 @@ export default function AdminMenu() {
           <Col span={4} />
         </Row>
       )}
-
-      {/* Main content */}
       {renderContent()}
     </div>
   );

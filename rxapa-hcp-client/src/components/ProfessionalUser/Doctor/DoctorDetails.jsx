@@ -18,7 +18,6 @@ function DoctorDetails({ doctor, onClose, refetchDoctors, openModal }) {
   } = useForm();
   const { token } = useToken();
 
-  // Pré-remplir le formulaire avec les données du médecin
   useEffect(() => {
     if (doctor) {
       setValue("firstname", doctor.firstname);
@@ -36,13 +35,9 @@ function DoctorDetails({ doctor, onClose, refetchDoctors, openModal }) {
     };
 
     axios
-      .put(
-        `${Constants.SERVER_URL}/update-professional-user/${doctor.id}`,
-        doctorData,
-        {
-          headers: { Authorization: "Bearer " + token },
-        }
-      )
+      .put(`${Constants.SERVER_URL}/update-professional-user/${doctor.id}`, doctorData, {
+        headers: { Authorization: "Bearer " + token },
+      })
       .then(() => {
         refetchDoctors();
         AntModal.success({
@@ -56,7 +51,7 @@ function DoctorDetails({ doctor, onClose, refetchDoctors, openModal }) {
       })
       .catch((err) => {
         const errorMessage =
-          err.response?.data?.message || "Error updating physician";
+          err.response?.data?.message || t("Professionals:Physicians:updating_error_msg");
         AntModal.error({
           content: errorMessage,
           okText: t("Professionals:Physicians:close_button"),
@@ -70,7 +65,6 @@ function DoctorDetails({ doctor, onClose, refetchDoctors, openModal }) {
       <Col span={16}>
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
           <Row gutter={16}>
-            {/* First Name and Last Name fields */}
             <Col span={12}>
               <Form.Item
                 label={t("Professionals:Physicians:first_name_label")}
@@ -82,10 +76,10 @@ function DoctorDetails({ doctor, onClose, refetchDoctors, openModal }) {
                   name="firstname"
                   control={control}
                   rules={{
-                    required: "Le prénom est obligatoire",
+                    required: t("Professionals:Physicians:required_first_name_error"),
                     minLength: {
                       value: 2,
-                      message: "Le prénom doit contenir au moins 2 caractères",
+                      message: t("Professionals:Physicians:first_name_min_length_error"),
                     },
                   }}
                   render={({ field }) => <Input {...field} />}
@@ -103,10 +97,10 @@ function DoctorDetails({ doctor, onClose, refetchDoctors, openModal }) {
                   name="lastname"
                   control={control}
                   rules={{
-                    required: "Le nom est obligatoire",
+                    required: t("Professionals:Physicians:required_last_name_error"),
                     minLength: {
                       value: 2,
-                      message: "Le nom doit contenir au moins 2 caractères",
+                      message: t("Professionals:Physicians:last_name_min_length_error"),
                     },
                   }}
                   render={({ field }) => <Input {...field} />}
@@ -116,7 +110,6 @@ function DoctorDetails({ doctor, onClose, refetchDoctors, openModal }) {
           </Row>
 
           <Row gutter={16}>
-            {/* Email and Phone Number fields */}
             <Col span={12}>
               <Form.Item
                 label={t("Professionals:Physicians:email")}
@@ -128,10 +121,10 @@ function DoctorDetails({ doctor, onClose, refetchDoctors, openModal }) {
                   name="email"
                   control={control}
                   rules={{
-                    required: "L'email est obligatoire",
+                    required: t("Professionals:Physicians:required_email_error"),
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: "Format d'email invalide",
+                      message: t("Professionals:Physicians:invalid_email_format_error"),
                     },
                   }}
                   render={({ field }) => <Input type="email" {...field} />}
@@ -149,10 +142,10 @@ function DoctorDetails({ doctor, onClose, refetchDoctors, openModal }) {
                   name="phoneNumber"
                   control={control}
                   rules={{
-                    required: "Le numéro de téléphone est obligatoire",
+                    required: t("Professionals:Physicians:required_phone_number_error"),
                     pattern: {
                       value: /^[0-9+\s-]{8,}$/,
-                      message: "Format de numéro de téléphone invalide",
+                      message: t("Professionals:Physicians:invalid_phone_number_error"),
                     },
                   }}
                   render={({ field }) => <Input {...field} />}
@@ -162,7 +155,6 @@ function DoctorDetails({ doctor, onClose, refetchDoctors, openModal }) {
           </Row>
 
           <Row gutter={16}>
-            {/* Status field */}
             <Col span={12}>
               <Form.Item label={t("Professionals:Physicians:status")}>
                 <Controller
@@ -172,12 +164,8 @@ function DoctorDetails({ doctor, onClose, refetchDoctors, openModal }) {
                     <Switch
                       checked={value}
                       onChange={onChange}
-                      checkedChildren={t(
-                        "Professionals:Physicians:active_status"
-                      )}
-                      unCheckedChildren={t(
-                        "Professionals:Physicians:inactive_status"
-                      )}
+                      checkedChildren={t("Professionals:Physicians:active_status")}
+                      unCheckedChildren={t("Professionals:Physicians:inactive_status")}
                     />
                   )}
                 />

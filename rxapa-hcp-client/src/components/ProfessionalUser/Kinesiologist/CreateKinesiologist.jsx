@@ -20,32 +20,6 @@ import { useTranslation } from "react-i18next";
 function CreateKinesiologist({ refetchKinesiologists }) {
   const { Option } = Select;
 
-  const milieuxTravail = [
-    {
-      value: "Hôpital: SPA soins post-aigus",
-      label: "Hôpital: SPA soins post-aigus",
-    },
-    {
-      value: "Hôpital: UCDG unité courte durée gériatrique",
-      label: "Hôpital: UCDG unité courte durée gériatrique",
-    },
-    {
-      value: "Hôpital: UTRF unité transitoire de réadaptation fonctionnelle",
-      label: "Hôpital: UTRF unité transitoire de réadaptation fonctionnelle",
-    },
-    { value: "Hôpital: autre unité", label: "Hôpital: autre unité" },
-    { value: "CHSLD", label: "CHSLD" },
-    {
-      value: "RPA Résidence Privée pour aînés",
-      label: "RPA Résidence Privée pour aînés",
-    },
-    {
-      value: "Clinique de médecine familiale-GMF",
-      label: "Clinique de médecine familiale-GMF",
-    },
-    { value: "Clinique: autre", label: "Clinique: autre" },
-  ];
-
   const { t } = useTranslation();
   const {
     handleSubmit,
@@ -54,6 +28,17 @@ function CreateKinesiologist({ refetchKinesiologists }) {
     formState: { errors },
   } = useForm();
   const { token } = useToken();
+
+  const milieuxTravail = [
+    { value: "Hôpital: SPA soins post-aigus", label: "Hôpital: SPA soins post-aigus" },
+    { value: "Hôpital: UCDG unité courte durée gériatrique", label: "Hôpital: UCDG unité courte durée gériatrique" },
+    { value: "Hôpital: UTRF unité transitoire de réadaptation fonctionnelle", label: "Hôpital: UTRF unité transitoire de réadaptation fonctionnelle" },
+    { value: "Hôpital: autre unité", label: "Hôpital: autre unité" },
+    { value: "CHSLD", label: "CHSLD" },
+    { value: "RPA Résidence Privée pour aînés", label: "RPA Résidence Privée pour aînés" },
+    { value: "Clinique de médecine familiale-GMF", label: "Clinique de médecine familiale-GMF" },
+    { value: "Clinique: autre", label: "Clinique: autre" }
+  ];
 
   const onSubmit = (data) => {
     const kinesiologistData = {
@@ -70,7 +55,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
           headers: { Authorization: "Bearer " + token },
         }
       )
-      .then((res) => {
+      .then(() => {
         refetchKinesiologists();
         openModal(t("Professionals:Kinesiologist:creating_success_msg"), false);
       })
@@ -86,11 +71,11 @@ function CreateKinesiologist({ refetchKinesiologists }) {
   const openModal = (message, isError) => {
     AntModal[isError ? "error" : "success"]({
       content: <p>{message}</p>,
-      okText: "Close",
+      okText: t("Professionals:Kinesiologist:close_button"),
       centered: true,
       onOk: () => {
         if (!isError) {
-          reset(); // Réinitialiser le formulaire en cas de succès
+          reset();
         }
       },
     });
@@ -105,7 +90,6 @@ function CreateKinesiologist({ refetchKinesiologists }) {
         }
       );
       const generatedPassword = response.data.password;
-      // Met à jour le champ password avec le mot de passe généré
       reset({ ...control._formValues, password: generatedPassword });
     } catch (err) {
       openModal(
@@ -131,27 +115,22 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                   name="firstname"
                   control={control}
                   rules={{
-                    required: t(
-                      "Professionals:Kinesiologist:required_first_name_error"
-                    ),
+                    required: t("Professionals:Kinesiologist:required_first_name_error"),
                     minLength: {
                       value: 2,
-                      message: t(
-                        "Professionals:Kinesiologist:first_name_min_length_error"
-                      ),
+                      message: t("Professionals:Kinesiologist:first_name_min_length_error"),
                     },
                   }}
                   render={({ field }) => (
                     <Input
                       {...field}
-                      placeholder={t(
-                        "Professionals:Kinesiologist:enter_first_name_placeholder"
-                      )}
+                      placeholder={t("Professionals:Kinesiologist:enter_first_name_placeholder")}
                     />
                   )}
                 />
               </Form.Item>
             </Col>
+
             <Col span={12}>
               <Form.Item
                 label={t("Professionals:Kinesiologist:last_name_label")}
@@ -163,22 +142,16 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                   name="lastname"
                   control={control}
                   rules={{
-                    required: t(
-                      "Professionals:Kinesiologist:required_last_name_error"
-                    ),
+                    required: t("Professionals:Kinesiologist:required_last_name_error"),
                     minLength: {
                       value: 2,
-                      message: t(
-                        "Professionals:Kinesiologist:last_name_min_length_error"
-                      ),
+                      message: t("Professionals:Kinesiologist:last_name_min_length_error"),
                     },
                   }}
                   render={({ field }) => (
                     <Input
                       {...field}
-                      placeholder={t(
-                        "Professionals:Kinesiologist:enter_last_name"
-                      )}
+                      placeholder={t("Professionals:Kinesiologist:enter_last_name")}
                     />
                   )}
                 />
@@ -198,27 +171,22 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                   name="email"
                   control={control}
                   rules={{
-                    required: t(
-                      "Professionals:Kinesiologist:required_email_error"
-                    ),
+                    required: t("Professionals:Kinesiologist:required_email_error"),
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: t(
-                        "Professionals:Kinesiologist:invalid_email_format_error"
-                      ),
+                      message: t("Professionals:Kinesiologist:invalid_email_format_error"),
                     },
                   }}
                   render={({ field }) => (
                     <Input
                       {...field}
-                      placeholder={t(
-                        "Professionals:Kinesiologist:enter_email_placeholder"
-                      )}
+                      placeholder={t("Professionals:Kinesiologist:enter_email_placeholder")}
                     />
                   )}
                 />
               </Form.Item>
             </Col>
+
             <Col span={12}>
               <Form.Item
                 label={t("Professionals:Kinesiologist:confirm_email_label")}
@@ -230,9 +198,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                   name="confirmEmail"
                   control={control}
                   rules={{
-                    required: t(
-                      "Professionals:Kinesiologist:required_email_confirmation_error"
-                    ),
+                    required: t("Professionals:Kinesiologist:required_email_confirmation_error"),
                     validate: (value) =>
                       value === control._formValues.email ||
                       t("Professionals:Kinesiologist:email_mismatch_error"),
@@ -240,9 +206,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                   render={({ field }) => (
                     <Input
                       {...field}
-                      placeholder={t(
-                        "Professionals:Kinesiologist:confirm_email_placeholder"
-                      )}
+                      placeholder={t("Professionals:Kinesiologist:confirm_email_placeholder")}
                     />
                   )}
                 />
@@ -262,27 +226,22 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                   name="phoneNumber"
                   control={control}
                   rules={{
-                    required: t(
-                      "Professionals:Kinesiologist:required_phone_number_error"
-                    ),
+                    required: t("Professionals:Kinesiologist:required_phone_number_error"),
                     pattern: {
                       value: /^[0-9+\s-]{8,}$/,
-                      message: t(
-                        "Professionals:Kinesiologist:invalid_phone_number_error"
-                      ),
+                      message: t("Professionals:Kinesiologist:invalid_phone_number_error"),
                     },
                   }}
                   render={({ field }) => (
                     <Input
                       {...field}
-                      placeholder={t(
-                        "Professionals:Kinesiologist:phone_number_placeholder"
-                      )}
+                      placeholder={t("Professionals:Kinesiologist:phone_number_placeholder")}
                     />
                   )}
                 />
               </Form.Item>
             </Col>
+
             <Col span={12}>
               <Form.Item
                 label={t("Professionals:Kinesiologist:work_environment_label")}
@@ -294,23 +253,14 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                   name="workEnvironment"
                   control={control}
                   rules={{
-                    required: t(
-                      "Professionals:Kinesiologist:work_environment_required"
-                    ),
+                    required: t("Professionals:Kinesiologist:work_environment_required_error"),
                     minLength: {
                       value: 2,
-                      message: t(
-                        "Professionals:Kinesiologist:work_environment_min_length"
-                      ),
+                      message: t("Professionals:Kinesiologist:work_environment_min_length_error"),
                     },
                   }}
                   render={({ field }) => (
-                    <Select
-                      {...field}
-                      placeholder={t(
-                        "Professionals:Kinesiologist:work_environment_placeholder"
-                      )}
-                    >
+                    <Select {...field} placeholder={t("Professionals:Kinesiologist:select_work_environment_placeholder")}>
                       {milieuxTravail.map((milieu) => (
                         <Option key={milieu.value} value={milieu.value}>
                           {milieu.label}
@@ -336,36 +286,25 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                     name="password"
                     control={control}
                     rules={{
-                      required: t(
-                        "Professionals:Kinesiologist:required_password_error"
-                      ),
+                      required: t("Professionals:Kinesiologist:required_password_error"),
                       minLength: {
                         value: 8,
-                        message: t(
-                          "Professionals:Kinesiologist:password_min_length_error"
-                        ),
+                        message: t("Professionals:Kinesiologist:password_min_length_error"),
                       },
                       pattern: {
                         value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-                        message: t(
-                          "Professionals:Kinesiologist:password_requirements_error"
-                        ),
+                        message: t("Professionals:Kinesiologist:password_requirements_error"),
                       },
                     }}
                     render={({ field }) => (
                       <>
                         <Input.Password
                           {...field}
-                          placeholder={t(
-                            "Professionals:Kinesiologist:password_placeholder"
-                          )}
+                          placeholder={t("Professionals:Kinesiologist:password_placeholder")}
                           style={{ width: "calc(100% - 40px)" }}
                         />
-                        <Tooltip title="Générer un mot de passe">
-                          <Button
-                            icon={<KeyOutlined />}
-                            onClick={generatePassword}
-                          />
+                        <Tooltip title={t("Professionals:Kinesiologist:generate_password_tooltip")}>
+                          <Button icon={<KeyOutlined />} onClick={generatePassword} />
                         </Tooltip>
                       </>
                     )}

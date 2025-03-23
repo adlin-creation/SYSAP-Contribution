@@ -23,7 +23,6 @@ function KinesiologistDetails({
   const { token } = useToken();
   const { t } = useTranslation();
 
-  // Pré-remplir le formulaire avec les données du kinésiologue
   useEffect(() => {
     if (kinesiologist) {
       setValue("firstname", kinesiologist.firstname);
@@ -61,10 +60,10 @@ function KinesiologistDetails({
       })
       .catch((err) => {
         const errorMessage =
-          err.response?.data?.message || t("Professionals:Kinesiologist:error_update_kinesiologist");
+          err.response?.data?.message || t("Professionals:Kinesiologist:updating_error_msg");
         AntModal.error({
           content: errorMessage,
-          okText: t("Professionals:Doctors:close_button"),
+          okText: t("Professionals:Kinesiologist:close_button"),
           centered: true,
         });
       });
@@ -75,7 +74,6 @@ function KinesiologistDetails({
       <Col span={16}>
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
           <Row gutter={16}>
-            {/* First Name and Last Name fields */}
             <Col span={12}>
               <Form.Item
                 label={t("Professionals:Kinesiologist:first_name_label")}
@@ -87,16 +85,17 @@ function KinesiologistDetails({
                   name="firstname"
                   control={control}
                   rules={{
-                    required: "Le prénom est obligatoire",
+                    required: t("Professionals:Kinesiologist:required_first_name_error"),
                     minLength: {
                       value: 2,
-                      message: "Le prénom doit contenir au moins 2 caractères",
+                      message: t("Professionals:Kinesiologist:first_name_min_length_error"),
                     },
                   }}
                   render={({ field }) => <Input {...field} />}
                 />
               </Form.Item>
             </Col>
+
             <Col span={12}>
               <Form.Item
                 label={t("Professionals:Kinesiologist:last_name_label")}
@@ -108,10 +107,10 @@ function KinesiologistDetails({
                   name="lastname"
                   control={control}
                   rules={{
-                    required: "Le nom est obligatoire",
+                    required: t("Professionals:Kinesiologist:required_last_name_error"),
                     minLength: {
                       value: 2,
-                      message: "Le nom doit contenir au moins 2 caractères",
+                      message: t("Professionals:Kinesiologist:last_name_min_length_error"),
                     },
                   }}
                   render={({ field }) => <Input {...field} />}
@@ -121,7 +120,6 @@ function KinesiologistDetails({
           </Row>
 
           <Row gutter={16}>
-            {/* Email and Phone Number fields */}
             <Col span={12}>
               <Form.Item
                 label={t("Professionals:Kinesiologist:email")}
@@ -133,16 +131,17 @@ function KinesiologistDetails({
                   name="email"
                   control={control}
                   rules={{
-                    required: "L'email est obligatoire",
+                    required: t("Professionals:Kinesiologist:required_email_error"),
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: "Format d'email invalide",
+                      message: t("Professionals:Kinesiologist:invalid_email_format_error"),
                     },
                   }}
                   render={({ field }) => <Input type="email" {...field} />}
                 />
               </Form.Item>
             </Col>
+
             <Col span={12}>
               <Form.Item
                 label={t("Professionals:Kinesiologist:phone_number")}
@@ -154,10 +153,10 @@ function KinesiologistDetails({
                   name="phoneNumber"
                   control={control}
                   rules={{
-                    required: "Le numéro de téléphone est obligatoire",
+                    required: t("Professionals:Kinesiologist:required_phone_number_error"),
                     pattern: {
                       value: /^[0-9+\s-]{8,}$/,
-                      message: "Format de numéro de téléphone invalide",
+                      message: t("Professionals:Kinesiologist:invalid_phone_number_error"),
                     },
                   }}
                   render={({ field }) => <Input {...field} />}
@@ -167,7 +166,6 @@ function KinesiologistDetails({
           </Row>
 
           <Row gutter={16}>
-            {/* Status field */}
             <Col span={12}>
               <Form.Item label={t("Professionals:Kinesiologist:status")}>
                 <Controller
@@ -177,12 +175,8 @@ function KinesiologistDetails({
                     <Switch
                       checked={value}
                       onChange={onChange}
-                      checkedChildren={t(
-                        "Professionals:Kinesiologist:active_status"
-                      )}
-                      unCheckedChildren={t(
-                        "Professionals:Kinesiologist:inactive_status"
-                      )}
+                      checkedChildren={t("Professionals:Kinesiologist:active_status")}
+                      unCheckedChildren={t("Professionals:Kinesiologist:inactive_status")}
                     />
                   )}
                 />

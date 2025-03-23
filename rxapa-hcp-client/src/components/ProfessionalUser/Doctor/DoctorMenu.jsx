@@ -102,11 +102,13 @@ export default function DoctorMenu() {
 
   const handleDelete = (doctor) => {
     AntModal.confirm({
-      title: t("Professionals:Physicians:confirm_deletion_physician"),
-      content: t("Professionals:Admins:delete_info") + ` ${doctor.firstname} ${doctor.lastname}`,
-      okText: "Yes",
+      title: t("Professionals:Physicians:confirm_delete_title"),
+      content: t("Professionals:Physicians:confirm_delete_content", {
+        name: `${doctor.firstname} ${doctor.lastname}`,
+      }),
+      okText: t("Professionals:Physicians:confirm_yes_button"),
       okType: "danger",
-      cancelText: "No",
+      cancelText: t("Professionals:Physicians:confirm_no_button"),
       onOk() {
         axios
           .delete(
@@ -117,11 +119,15 @@ export default function DoctorMenu() {
           )
           .then(() => {
             refetchDoctors();
-            openModal(t("Professionals:Physicians:deletion_physician_success"), false);
+            openModal(
+              t("Professionals:Physicians:delete_success_msg"),
+              false
+            );
           })
           .catch((err) =>
             openModal(
-              err.response?.data?.message || (t("Professionals:Physicians:error_deletion_physician"),
+              err.response?.data?.message ||
+                t("Professionals:Physicians:delete_error_msg"),
               true
             )
           );
@@ -132,7 +138,7 @@ export default function DoctorMenu() {
   const openModal = (message, isError) => {
     AntModal[isError ? "error" : "success"]({
       content: message,
-      okText: "Close",
+      okText: t("Professionals:Physicians:close_button"),
       centered: true,
     });
   };
@@ -159,8 +165,10 @@ export default function DoctorMenu() {
     if (error) {
       return (
         <div style={{ textAlign: "center", marginTop: "20px" }}>
-          <h3>Error loading physicians</h3>
-          <Button onClick={() => refetchDoctors()}>Retry</Button>
+          <h3>{t("Professionals:Physicians:loading_error_msg")}</h3>
+          <Button onClick={() => refetchDoctors()}>
+            {t("Professionals:Physicians:retry_button")}
+          </Button>
         </div>
       );
     }
@@ -195,7 +203,9 @@ export default function DoctorMenu() {
           rowKey="id"
           loading={isLoading}
           locale={{
-            emptyText: <Empty description={t("Professionals:Physicians:no_physicians_found")} />,
+            emptyText: (
+              <Empty description={t("Professionals:Physicians:no_physician")} />
+            ),
           }}
           pagination={{
             pageSize: 10,
@@ -211,7 +221,6 @@ export default function DoctorMenu() {
 
   return (
     <div>
-      {/* Edit/Create doctor form header */}
       {(isCreateDoctor || isEditMode) && (
         <Row
           align="middle"
@@ -242,7 +251,6 @@ export default function DoctorMenu() {
         </Row>
       )}
 
-      {/* Main content */}
       {renderContent()}
     </div>
   );
