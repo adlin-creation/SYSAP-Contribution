@@ -33,6 +33,7 @@
   "delete_button": "Eliminar",
   "learn_more_button": "Saber más",
   "update_button": "Actualizar",
-  "modify": "",
-  "save": ""
+  "modify": "Modificar",
+  "save": "Guardar",
+  "error_message": "Ocurrió un error"
 }

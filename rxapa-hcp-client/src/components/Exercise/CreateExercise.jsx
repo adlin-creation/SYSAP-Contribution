@@ -16,29 +16,30 @@ export default function CreateExercise(props) {
   const [message, setMessage] = useState("");
   const { t } = useTranslation();
 
-  const [selectedExerciseCategory, setSelectedExerciseCategory] = useState(null);
+  const [selectedExerciseCategory, setSelectedExerciseCategory] =
+    useState(null);
   const [selectedFitnessLevel, setSelectedFitnessLevel] = useState(null); // Assurez-vous que la valeur initiale est null
   const [exerciseImage, setExerciseImage] = useState(null);
 
   // Correspondance des catégories en anglais vers le français
   const categoryTranslation = {
-    "Aerobic": "Aérobic",
-    "Strength": "Force",
-    "Endurance": "Endurance",
-    "Flexibility": "Flexibilité",
-    "Balance": "Équilibre",
+    Aerobic: "Aérobic",
+    Strength: "Force",
+    Endurance: "Endurance",
+    Flexibility: "Flexibilité",
+    Balance: "Équilibre",
   };
 
   // Correspondance des niveaux de forme en anglais vers le français
   const fitnessLevelTranslation = {
-    "Easy": "Facile",
-    "Intermediate": "Intermédiaire",
-    "Advanced": "Avancé",
+    Easy: "Facile",
+    Intermediate: "Intermédiaire",
+    Advanced: "Avancé",
   };
 
   // destructure custom use hook
   const { token } = useToken();
-  
+
   function openModal(message, isError) {
     setMessage(message);
     setIsErrorMessage(isError);
@@ -55,20 +56,22 @@ export default function CreateExercise(props) {
     const { name, description } = data;
 
     // Traduire la catégorie sélectionnée en français
-    const categoryInFrench = categoryTranslation[selectedExerciseCategory] || selectedExerciseCategory;
-    const fitnessLevelInFrench = fitnessLevelTranslation[selectedFitnessLevel] || selectedFitnessLevel;
+    const categoryInFrench =
+      categoryTranslation[selectedExerciseCategory] || selectedExerciseCategory;
+    const fitnessLevelInFrench =
+      fitnessLevelTranslation[selectedFitnessLevel] || selectedFitnessLevel;
 
     let formData = new FormData();
     const combinedData = {
       name: name,
       description: description,
-      category: categoryInFrench,  // Utilisation de la catégorie traduite en français
-      fitnessLevel: fitnessLevelInFrench,  // Utilisation du niveau de forme traduit
+      category: categoryInFrench, // Utilisation de la catégorie traduite en français
+      fitnessLevel: fitnessLevelInFrench, // Utilisation du niveau de forme traduit
       exerciseImage: exerciseImage,
     };
 
     console.log("Submitting Data:", combinedData);
-  
+
     if (exerciseImage) {
       formData.append("image", exerciseImage);
     }
@@ -85,13 +88,13 @@ export default function CreateExercise(props) {
         },
       })
       .then((res) => {
-        openModal(res.data.message, false);
+        openModal(t(`Backend:${res.data.message}`), false);
         props.refetchExercises();
       })
       .catch((err) => {
         const errorMessage = err.response
-          ? err.response.data.message
-          : "An error occurred";
+          ? t(`Backend:${err.response?.data?.message}`)
+          : t("Exercises:error_message");
         openModal(errorMessage, true);
       });
   };
@@ -107,11 +110,14 @@ export default function CreateExercise(props) {
       <div className="title-container">
         <h2 className="form-title">{t("Exercises:create_exercise")}</h2>
       </div>
-  
+
       <div className="form-box-exercice">
         <Col span={12}>
           <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
-            <Form.Item label={t("Exercises:enter_exercise_name")} className="input-element">
+            <Form.Item
+              label={t("Exercises:enter_exercise_name")}
+              className="input-element"
+            >
               <Controller
                 name="name"
                 control={control}
@@ -125,8 +131,11 @@ export default function CreateExercise(props) {
                 )}
               />
             </Form.Item>
-  
-            <Form.Item label={t("Exercises:exercise_category")} className="input-element">
+
+            <Form.Item
+              label={t("Exercises:exercise_category")}
+              className="input-element"
+            >
               <Select
                 value={selectedExerciseCategory}
                 onChange={(value) => setSelectedExerciseCategory(value)}
@@ -134,15 +143,24 @@ export default function CreateExercise(props) {
                 style={{ width: "100%" }}
                 allowClear
               >
-                {[t("Exercises:aerobic"), t("Exercises:strength"), t("Exercises:endurance"), t("Exercises:flexibility"), t("Exercises:balance")].map((category) => (
+                {[
+                  t("Exercises:aerobic"),
+                  t("Exercises:strength"),
+                  t("Exercises:endurance"),
+                  t("Exercises:flexibility"),
+                  t("Exercises:balance"),
+                ].map((category) => (
                   <Select.Option key={category} value={category}>
                     {category}
                   </Select.Option>
                 ))}
               </Select>
             </Form.Item>
-  
-            <Form.Item label={t("Exercises:select_expected_fitness_level")} className="input-element">
+
+            <Form.Item
+              label={t("Exercises:select_expected_fitness_level")}
+              className="input-element"
+            >
               <Select
                 value={selectedFitnessLevel}
                 onChange={(value) => setSelectedFitnessLevel(value)}
@@ -150,15 +168,22 @@ export default function CreateExercise(props) {
                 style={{ width: "100%" }}
                 allowClear
               >
-                {[t("Exercises:easy"), t("Exercises:intermediate"), t("Exercises:advanced")].map((level) => (
+                {[
+                  t("Exercises:easy"),
+                  t("Exercises:intermediate"),
+                  t("Exercises:advanced"),
+                ].map((level) => (
                   <Select.Option key={level} value={level}>
                     {level}
                   </Select.Option>
                 ))}
               </Select>
             </Form.Item>
-  
-            <Form.Item label={t("Exercises:enter_exercise_description")} className="input-element">
+
+            <Form.Item
+              label={t("Exercises:enter_exercise_description")}
+              className="input-element"
+            >
               <Controller
                 name="description"
                 control={control}
@@ -172,18 +197,21 @@ export default function CreateExercise(props) {
                 )}
               />
             </Form.Item>
-  
-            <Form.Item label={t("Exercises:enter_exercise_image")} className="input-element">
+
+            <Form.Item
+              label={t("Exercises:enter_exercise_image")}
+              className="input-element"
+            >
               <input type="file" accept="image/*" onChange={onChangeImage} />
             </Form.Item>
-  
+
             <Form.Item className="input-element">
               <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
                 {t("Exercises:submit_button")}
               </Button>
             </Form.Item>
           </Form>
-  
+
           {isOpenModal && (
             <Modal
               open={isOpenModal}
@@ -194,13 +222,15 @@ export default function CreateExercise(props) {
                 </Button>,
               ]}
             >
-              <p style={{ color: isErrorMessage ? "red" : "black" }}>{message}</p>
+              <p style={{ color: isErrorMessage ? "red" : "black" }}>
+                {message}
+              </p>
             </Modal>
           )}
         </Col>
       </div>
     </div>
-  );  
+  );
 }
 
 CreateExercise.propTypes = {

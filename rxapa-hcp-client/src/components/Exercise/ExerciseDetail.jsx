@@ -14,12 +14,12 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
   const { handleSubmit, control, setValue } = useForm();
   const { token } = useToken();
 
-  const [isEditing, setIsEditing] = React.useState(false); 
-  const [isOpenModal, setIsOpenModal] = React.useState(false); 
-  const [isErrorMessage, setIsErrorMessage] = React.useState(false); 
-  const [message, setMessage] = React.useState(""); 
-  const [isSubmitting, setIsSubmitting] = React.useState(false); 
-  const [isSaveClicked, setIsSaveClicked] = React.useState(false); 
+  const [isEditing, setIsEditing] = React.useState(false);
+  const [isOpenModal, setIsOpenModal] = React.useState(false);
+  const [isErrorMessage, setIsErrorMessage] = React.useState(false);
+  const [message, setMessage] = React.useState("");
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [isSaveClicked, setIsSaveClicked] = React.useState(false);
 
   // Function to open the modal with a message
   function openModal(message, isError) {
@@ -33,13 +33,13 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
     setIsOpenModal(false);
     setMessage("");
     setIsErrorMessage(false);
-    setIsSaveClicked(false); 
+    setIsSaveClicked(false);
   }
 
   // Submit handler
   const onSubmit = (data) => {
     if (isSaveClicked) {
-      setIsSubmitting(true); 
+      setIsSubmitting(true);
 
       axios
         .put(`${Constants.SERVER_URL}/update-exercise/${exercise.key}`, data, {
@@ -48,21 +48,25 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
           },
         })
         .then((res) => {
-          refetchExercises(); 
-          openModal(res.data.message, false); 
-          setIsSubmitting(false); 
+          refetchExercises();
+          openModal(t(`Backend:${res.data.message}`), false);
+          setIsSubmitting(false);
         })
         .catch((err) => {
-          openModal(err.response.data.message, true); 
-          setIsSubmitting(false); 
+          openModal(
+            t(`Backend:${err.response?.data?.message}`) ||
+              t("unexpected_error"),
+            true
+          );
+          setIsSubmitting(false);
         });
     }
   };
 
   // Function to enable editing mode and pre-fill fields
   const startEditing = () => {
-    setIsEditing(true); 
-    setValue("name", exercise.name); 
+    setIsEditing(true);
+    setValue("name", exercise.name);
     setValue("description", exercise.description);
     setValue("category", exercise.category);
     setValue("fitnessLevel", exercise.fitnessLevel);
@@ -84,7 +88,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
                   value={value}
                   placeholder={t("Exercises:exercise_name")}
                   required
-                  disabled={!isEditing} 
+                  disabled={!isEditing}
                 />
               )}
             />
@@ -103,9 +107,15 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
                   placeholder={t("Exercises:category_placeholder")}
                   style={{ width: "100%" }}
                   allowClear
-                  disabled={!isEditing} 
+                  disabled={!isEditing}
                 >
-                  {[t("Exercises:aerobic"), t("Exercises:strength"), t("Exercises:endurance"), t("Exercises:flexibility"), t("Exercises:balance")].map((category) => (
+                  {[
+                    t("Exercises:aerobic"),
+                    t("Exercises:strength"),
+                    t("Exercises:endurance"),
+                    t("Exercises:flexibility"),
+                    t("Exercises:balance"),
+                  ].map((category) => (
                     <Select.Option key={category} value={category}>
                       {category}
                     </Select.Option>
@@ -128,9 +138,13 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
                   placeholder={t("Exercises:fitness_level_placeholder")}
                   style={{ width: "100%" }}
                   allowClear
-                  disabled={!isEditing} 
+                  disabled={!isEditing}
                 >
-                  {[t("Exercises:easy"), t("Exercises:intermediate"), t("Exercises:advanced")].map((level) => (
+                  {[
+                    t("Exercises:easy"),
+                    t("Exercises:intermediate"),
+                    t("Exercises:advanced"),
+                  ].map((level) => (
                     <Select.Option key={level} value={level}>
                       {level}
                     </Select.Option>
@@ -162,10 +176,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
           {/* Button for editing or saving */}
           <Form.Item>
             {!isEditing ? (
-              <Button
-                type="primary"
-                onClick={startEditing} 
-              >
+              <Button type="primary" onClick={startEditing}>
                 {t("Exercises:modify")}
               </Button>
             ) : (
@@ -174,7 +185,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
                 htmlType="submit"
                 icon={<CheckOutlined />}
                 loading={isSubmitting}
-                onClick={() => setIsSaveClicked(true)} 
+                onClick={() => setIsSaveClicked(true)}
               >
                 {t("Exercises:save")}
               </Button>

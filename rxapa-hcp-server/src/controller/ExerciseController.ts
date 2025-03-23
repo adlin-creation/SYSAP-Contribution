@@ -11,12 +11,12 @@ const handleError = (res: Response, error: unknown, message: string) => {
   if (error instanceof Error) {
     const statusCode = (error as any).statusCode || 500;
     res.status(statusCode).json({
-      message: message || "Une erreur est survenue",
+      message: message || "unexpected_error",
       error: error.message || error,
     });
   } else {
     res.status(500).json({
-      message: message || "Une erreur est survenue",
+      message: message || "unexpected_error",
       error: "Erreur inconnue",
     });
   }
@@ -33,7 +33,7 @@ export const getImage = (req: Request, res: Response) => {
     const readImageStream = fs.createReadStream(imagePath);
     readImageStream.pipe(res);
   } else {
-    res.status(404).json({ message: "Image non trouvée" });
+    res.status(404).json({ message: "image_not_found" });
   }
 };
 
@@ -45,7 +45,7 @@ export const createExercise = async (req: Request, res: Response) => {
   const exerciseImageFile = req.file;
 
   if (!name || !description || !category || !fitnessLevel) {
-    return res.status(400).json({ message: "Tous les champs obligatoires doivent être remplis !" });
+    return res.status(400).json({ message: "all_fields_required" });
   }
 
   const imageUrl = exerciseImageFile?.path ?? "";
@@ -59,7 +59,7 @@ export const createExercise = async (req: Request, res: Response) => {
       imageUrl,
     });
 
-    res.status(201).json({ message: "Exercice créé avec succès." });
+    res.status(201).json({ message: "exercise_created_successfully" });
   } catch (error: unknown) {
     // Supprimer le fichier uniquement s'il existe
     if (imageUrl && fs.existsSync(imageUrl)) {
@@ -73,12 +73,17 @@ export const createExercise = async (req: Request, res: Response) => {
     // Gestion des erreurs
     if (error instanceof Error) {
       if (error.name === "SequelizeUniqueConstraintError") {
-        res.status(409).json({ message: "Un exercice avec ce nom existe déjà !" });
+        res.status(409).json({ message: "exercise_already_exists" });
       } else {
-        res.status(500).json({ message: "Erreur lors de la création de l'exercice.", error: error.message });
+        res.status(500).json({
+          message: "error_creating_exercise",
+          error: error.message,
+        });
       }
     } else {
-      res.status(500).json({ message: "Erreur inconnue lors de la création de l'exercice." });
+      res.status(500).json({
+        message: "unknown_error_creating_exercise",
+      });
     }
   }
 };
@@ -93,7 +98,7 @@ export const updateExercise = async (req: Request, res: Response) => {
   try {
     const exercise = await Exercise.findOne({ where: { key: exerciseKey } });
     if (!exercise) {
-      return res.status(404).json({ message: "Exercice non trouvé !" });
+      return res.status(404).json({ message: "exercise_not_found" });
     }
 
     await exercise.update({
@@ -103,17 +108,21 @@ export const updateExercise = async (req: Request, res: Response) => {
       fitnessLevel: fitnessLevel || exercise.fitnessLevel,
     });
 
-    res.status(200).json({ message: "Exercice mis à jour avec succès." });
+    res.status(200).json({ message: "exercise_updated_successfully" });
   } catch (error: unknown) {
-
     if (error instanceof Error) {
       if (error.name === "SequelizeUniqueConstraintError") {
-        res.status(409).json({ message: "Un exercice avec ce nom existe déjà !" });
+        res.status(409).json({ message: "exercise_already_exists" });
       } else {
-        res.status(500).json({ message: "Erreur lors de la mise à jour de l'exercice.", error: error.message });
+        res.status(500).json({
+          message: "error_updating_exercise",
+          error: error.message,
+        });
       }
     } else {
-      res.status(500).json({ message: "Erreur inconnue lors de la mise à jour de l'exercice." });
+      res.status(500).json({
+        message: "unknown_error_updating_exercise.",
+      });
     }
   }
 };
@@ -127,9 +136,9 @@ export const getExercises = async (req: Request, res: Response) => {
     res.status(200).json(exercises);
   } catch (error: unknown) {
     if (error instanceof Error) {
-      handleError(res, error, "Erreur lors du chargement des exercices.");
+      handleError(res, error, "error_loading_exercises");
     } else {
-      handleError(res, error, "Erreur inconnue lors du chargement des exercices.");
+      handleError(res, error, "unknown_error_loading_exercises");
     }
   }
 };
@@ -140,16 +149,19 @@ export const getExercises = async (req: Request, res: Response) => {
 export const getExercise = async (req: Request, res: Response) => {
   const exerciseKey = req.params.exerciseKey;
   try {
-    const exercise = await Exercise.findOne({ where: { key: exerciseKey }, include: ExerciseVersion });
+    const exercise = await Exercise.findOne({
+      where: { key: exerciseKey },
+      include: ExerciseVersion,
+    });
     if (!exercise) {
-      return res.status(404).json({ message: "Exercice non trouvé !" });
+      return res.status(404).json({ message: "exercise_not_found" });
     }
     res.status(200).json(exercise);
   } catch (error: unknown) {
     if (error instanceof Error) {
-      handleError(res, error, "Erreur lors du chargement de l'exercice.");
+      handleError(res, error, "error_loading_exercises");
     } else {
-      handleError(res, error, "Erreur inconnue lors du chargement de l'exercice.");
+      handleError(res, error, "unknown_error_loading_exercises");
     }
   }
 };
@@ -161,17 +173,21 @@ export const createExerciseVersion = async (req: Request, res: Response) => {
   const { name, numberOfRepitions, instructionalVideo } = req.body;
 
   if (!name || !numberOfRepitions) {
-    return res.status(400).json({ message: "Tous les champs obligatoires doivent être remplis !" });
+    return res.status(400).json({ message: "all_fields_required" });
   }
 
   try {
-    await ExerciseVersion.create({ name, numberOfRepitions, instructionalVideo });
-    res.status(201).json({ message: "Version d'exercice créée avec succès." });
+    await ExerciseVersion.create({
+      name,
+      numberOfRepitions,
+      instructionalVideo,
+    });
+    res.status(201).json({ message: "exercise_version_created_successfully" });
   } catch (error: unknown) {
     if (error instanceof Error) {
-      handleError(res, error, "Erreur lors de la création de la version d'exercice.");
+      handleError(res, error, "error_creating_exercise_version");
     } else {
-      handleError(res, error, "Erreur inconnue lors de la création de la version d'exercice.");
+      handleError(res, error, "unknown_error_creating_exercise_version");
     }
   }
 };
@@ -185,21 +201,27 @@ export const addExerciseVersion = async (req: Request, res: Response) => {
   try {
     const exercise = await Exercise.findOne({ where: { name: exerciseName } });
     if (!exercise) {
-      return res.status(404).json({ message: "Exercice non trouvé !" });
+      return res.status(404).json({ message: "exercise_not_found" });
     }
 
-    const exerciseVersion = await ExerciseVersion.findOne({ where: { name: versionName } });
+    const exerciseVersion = await ExerciseVersion.findOne({
+      where: { name: versionName },
+    });
     if (!exerciseVersion) {
-      return res.status(404).json({ message: "Version d'exercice non trouvée !" });
+      return res.status(404).json({ message: "exercise_version_not_found" });
     }
 
-    await Variant.create({ ExerciseVersionId: exerciseVersion.id, ExerciseId: exercise.id, level });
-    res.status(201).json({ message: "Version d'exercice ajoutée avec succès." });
+    await Variant.create({
+      ExerciseVersionId: exerciseVersion.id,
+      ExerciseId: exercise.id,
+      level,
+    });
+    res.status(201).json({ message: "exercise_version_added_success" });
   } catch (error: unknown) {
     if (error instanceof Error) {
-      handleError(res, error, "Erreur lors de l'ajout de la version à l'exercice.");
+      handleError(res, error, "error_adding_exercise_version");
     } else {
-      handleError(res, error, "Erreur inconnue lors de l'ajout de la version à l'exercice.");
+      handleError(res, error, "unknown_error_adding_exercise_version");
     }
   }
 };
@@ -212,7 +234,7 @@ export const deleteExercise = async (req: Request, res: Response) => {
   try {
     const exercise = await Exercise.findOne({ where: { key: exerciseKey } });
     if (!exercise) {
-      return res.status(404).json({ message: "Exercice non trouvé !" });
+      return res.status(404).json({ message: "exercise_not_found" });
     }
 
     await exercise.destroy();
@@ -222,12 +244,12 @@ export const deleteExercise = async (req: Request, res: Response) => {
       deleteFile(exercise.imageUrl); // Nettoyer uniquement les fichiers locaux
     }
 
-    res.status(200).json({ message: "Exercice supprimé avec succès." });
+    res.status(200).json({ message: "exercise_deleted_successfully" });
   } catch (error: unknown) {
     if (error instanceof Error) {
-      handleError(res, error, "Erreur lors de la suppression de l'exercice.");
+      handleError(res, error, "error_deleting_exercise");
     } else {
-      handleError(res, error, "Erreur inconnue lors de la suppression de l'exercice.");
+      handleError(res, error, "unknown_error_deleting_exercise");
     }
   }
 };
