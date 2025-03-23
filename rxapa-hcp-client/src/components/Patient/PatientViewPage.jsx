@@ -87,11 +87,12 @@ export default function PatientData({ patient, onClose }) {
                   {t("Patients:next_button")}
                 </Button>
               </div>
-              <p><strong>{t("Patients:session")}</strong> {currentSession + 1}</p>
-              <p><strong>{t("Patients:date")}</strong> {sessionData.date}</p>
-              <p><strong>{t("Patients:difficulty_level")}</strong> {sessionData.difficultyLevel}</p>
-              <p><strong>{t("Patients:pain_level")}</strong> {sessionData.painLevel}</p>
-              <p><strong>{t("Patients:accomplished_exercice")}</strong> {sessionData.accomplishedExercice}</p>
+              <p><strong>Session:</strong> {currentSession + 1}</p>
+              <p><strong>Date:</strong> {sessionData.date}</p>
+              <p><strong>Difficulty Level:</strong> {sessionData.difficultyLevel}</p>
+              <p><strong>Pain Level:</strong> {sessionData.painLevel}</p>
+              <p><strong>Accomplished Exercice:</strong> {sessionData.accomplishedExercice}</p>
+
             </div>
 
             <div className="session-chart">
@@ -119,9 +120,10 @@ export default function PatientData({ patient, onClose }) {
         {hasSessions ? (
           <div className="average-data-container">
             <div className="average-info">
-              <p><strong>{t("Patients:difficulty_level")}</strong> {averages.difficulty}</p>
-              <p><strong>{t("Patients:pain_level")}</strong> {averages.pain}</p>
-              <p><strong>{t("Patients:accomplished_exercice")}</strong> {averages.exercises}</p>
+              <p><strong>Difficulty Level:</strong> {averages.difficulty}</p>
+              <p><strong>Pain Level:</strong> {averages.pain}</p>
+              <p><strong>Accomplished Exercice:</strong> {averages.exercises}</p>
+
             </div>
 
             <div className="average-chart">

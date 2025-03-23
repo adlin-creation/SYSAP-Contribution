@@ -29,8 +29,10 @@ export default function DoctorPatients() {
   if (error) {
     return (
       <div style={{ textAlign: "center", marginTop: "20px" }}>
-        <h3>Error loading patients</h3>
-        <Button onClick={() => navigate("/doctors")}>Return to Doctors</Button>
+        <h3>{t("Professionals:Physicians:loading_patients_error")}</h3>
+        <Button onClick={() => navigate("/doctors")}>
+          {t("Professionals:Physicians:return_to_doctors_button")}
+        </Button>
       </div>
     );
   }
@@ -77,7 +79,7 @@ export default function DoctorPatients() {
           </Button>
         </Col>
         <Col span={16} style={{ textAlign: "center" }}>
-          <h2> {t("Professionals:Physicians:physician_patients_title")}</h2>
+          <h2>{t("Professionals:Physicians:physician_patients_title")}</h2>
         </Col>
         <Col span={4} />
       </Row>
@@ -90,7 +92,7 @@ export default function DoctorPatients() {
         pagination={{
           pageSize: 10,
           showTotal: (total, range) =>
-            `${range[0]}-${range[1]} of ${total} patients`,
+            `${range[0]}-${range[1]} ${t("Professionals:Physicians:of")} ${total} ${t("Professionals:Physicians:patients")}`,
         }}
       />
     </div>
