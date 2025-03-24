@@ -56,7 +56,7 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
       })
       .catch((err) => {
         const errorMessage =
-          err.response?.data?.message ||
+          t(`Backend:${err.response?.data?.message}`) ||
           t("Professionals:Admins:updating_admin_error_msg");
         AntModal.error({
           content: errorMessage,
@@ -83,10 +83,14 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
                   name="firstname"
                   control={control}
                   rules={{
-                    required: "required_first_name_error",
+                    required: t(
+                      "Professionals:Admins:required_first_name_error"
+                    ),
                     minLength: {
                       value: 2,
-                      message: "first_name_min_length_error",
+                      message: t(
+                        "Professionals:Admins:first_name_min_length_error"
+                      ),
                     },
                   }}
                   render={({ field }) => <Input {...field} />}
@@ -104,10 +108,14 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
                   name="lastname"
                   control={control}
                   rules={{
-                    required: "required_last_name_error",
+                    required: t(
+                      "Professionals:Admins:required_last_name_error"
+                    ),
                     minLength: {
                       value: 2,
-                      message: "last_name_min_length_error",
+                      message: t(
+                        "Professionals:Admins:last_name_min_length_error"
+                      ),
                     },
                   }}
                   render={({ field }) => <Input {...field} />}
@@ -129,10 +137,12 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
                   name="email"
                   control={control}
                   rules={{
-                    required: "L'email est obligatoire",
+                    required: t("Professionals:Admins:required_email_error"),
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: "Format d'email invalide",
+                      message: t(
+                        "Professionals:Admins:invalid_email_format_error"
+                      ),
                     },
                   }}
                   render={({ field }) => <Input type="email" {...field} />}
@@ -150,10 +160,14 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
                   name="phoneNumber"
                   control={control}
                   rules={{
-                    required: "Le numéro de téléphone est obligatoire",
+                    required: t(
+                      "Professionals:Admins:required_phone_number_error"
+                    ),
                     pattern: {
                       value: /^[0-9+\s-]{8,}$/,
-                      message: "Format de numéro de téléphone invalide",
+                      message: t(
+                        "Professionals:Admins:invalid_phone_number_error"
+                      ),
                     },
                   }}
                   render={({ field }) => <Input {...field} />}

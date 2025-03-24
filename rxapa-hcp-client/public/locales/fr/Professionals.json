@@ -156,6 +156,10 @@
     "close_button": "Fermer",
     "of": "de",
     "admins": "Administrateurs",
-    "update_admin_button": "Mettre à jour l'administrateurs"
+    "update_admin_button": "Mettre à jour l'administrateurs",
+    "title_delete_admin_confirmation": "Êtes-vous sûr de vouloir supprimer cet administrateur ?",
+    "warning_permanent_delete": "Cela supprimera définitivement {{firstname}} {{lastname}}",
+    "error_loading_admins": "Erreur lors du chargement des administrateurs",
+    "button_retry": "Réessayer"
   }
 }

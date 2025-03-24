@@ -94,9 +94,11 @@ export default function CycleDetails({ cycle, refetchCycles }) {
       })
       .then((res) => {
         refetchCycles();
-        openModal(res.data.message, false);
+        openModal(t(`Backend:${res.data.message}`), false);
       })
-      .catch((err) => openModal(err.response.data.message, true));
+      .catch((err) =>
+        openModal(t(`Backend:${err.response.data.message}`), true)
+      );
   };
 
   /**

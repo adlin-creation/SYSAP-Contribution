@@ -95,8 +95,11 @@ export default function AdminMenu() {
 
   const handleDelete = (admin) => {
     AntModal.confirm({
-      title: "Are you sure you want to delete this admin?",
-      content: `This will permanently delete ${admin.firstname} ${admin.lastname}`,
+      title: t("Professionals:Admins:title_delete_admin_confirmation"),
+      content: t("Professionals:Admins:warning_permanent_delete", {
+        firstname: admin.firstname,
+        lastname: admin.lastname,
+      }),
       okText: "Yes",
       okType: "danger",
       cancelText: "No",
@@ -114,7 +117,8 @@ export default function AdminMenu() {
           })
           .catch((err) =>
             openModal(
-              err.response?.data?.message || "Error deleting admin",
+              t(`Backend:${err.response?.data?.message}`) ||
+                "Error deleting admin",
               true
             )
           );
@@ -152,8 +156,10 @@ export default function AdminMenu() {
     if (error) {
       return (
         <div style={{ textAlign: "center", marginTop: "20px" }}>
-          <h3>Error loading admins</h3>
-          <Button onClick={() => refetchAdmins()}>Retry</Button>
+          <h3>{t("Professionals:Admins:error_loading_admins")}</h3>
+          <Button onClick={() => refetchAdmins()}>
+            {t("Professionals:Admins:button_retry")}
+          </Button>
         </div>
       );
     }

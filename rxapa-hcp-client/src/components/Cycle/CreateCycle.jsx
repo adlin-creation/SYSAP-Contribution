@@ -29,9 +29,11 @@ export default function CreateCycle(props) {
       .then((res) => {
         // Reload the list of cycles to include the new cycle
         props.refetchCycles();
-        openModal(res.data.message, false);
+        openModal(t(`Backend:${res.data.message}`), false);
       })
-      .catch((err) => openModal(err.response.data.message, true));
+      .catch((err) =>
+        openModal(t(`Backend:${err.response.data.message}`), true)
+      );
   };
 
   /**

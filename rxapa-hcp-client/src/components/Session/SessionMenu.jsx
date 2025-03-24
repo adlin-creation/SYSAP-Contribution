@@ -121,9 +121,11 @@ export default function SessionList(props) {
       })
       .then((res) => {
         refetchSessions();
-        openModal(res.data.message, false);
+        openModal(t(`Backend:${res.data.message}`), false);
       })
-      .catch((err) => openModal(err.response.data.message, true));
+      .catch((err) =>
+        openModal(t(`Backend:${err.response.data.message}`), true)
+      );
   };
 
   return (

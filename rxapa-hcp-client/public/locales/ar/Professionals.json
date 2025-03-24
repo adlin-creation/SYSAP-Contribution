@@ -156,6 +156,10 @@
     "close_button": "إغلاق",
     "of": "من",
     "admins": "مسؤولو النظام",
-    "update_admin_button": "تحديث مسؤول النظام"
+    "update_admin_button": "تحديث مسؤول النظام",
+    "title_delete_admin_confirmation": "هل أنت متأكد أنك تريد حذف هذا المسؤول؟",
+    "warning_permanent_delete": "سيتم حذف {{firstname}} {{lastname}} نهائيًا",
+    "error_loading_admins": "خطأ في تحميل المسؤولين",
+    "button_retry": "إعادة المحاولة"
   }
 }

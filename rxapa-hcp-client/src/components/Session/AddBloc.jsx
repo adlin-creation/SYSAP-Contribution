@@ -12,6 +12,7 @@ import ClearSharpIcon from "@mui/icons-material/ClearSharp";
 import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
 import Modal from "../Modal/Modal";
+import { useTranslation } from "react-i18next";
 
 let blocNames = [];
 
@@ -45,7 +46,7 @@ export default function AddBloc({
   blocNames = blocList?.map((bloc) => bloc.name);
 
   const { handleSubmit } = useForm();
-
+  const { t } = useTranslation();
   /**
    * API function call when the submit to add a bloc is clicked.
    * @param {*} data  - contains start parameter values to add a bloc
@@ -65,9 +66,11 @@ export default function AddBloc({
       })
       .then((res) => {
         refetchSession();
-        openModal(res.data.message, false);
+        openModal(t(`Backend:${res.data.message}`), false);
       })
-      .catch((err) => openModal(err.response.data.message, true));
+      .catch((err) =>
+        openModal(t(`Backend:${err.response.data.message}`), true)
+      );
   };
 
   /**

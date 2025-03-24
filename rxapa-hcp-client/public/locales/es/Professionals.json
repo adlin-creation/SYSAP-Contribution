@@ -157,6 +157,10 @@
     "close_button": "Cerrar",
     "of": "de",
     "admins": "Administradores",
-    "update_admin_button": "Actualizar administrador"
+    "update_admin_button": "Actualizar administrador",
+    "title_delete_admin_confirmation": "¿Está seguro de que desea eliminar este administrador?",
+    "warning_permanent_delete": "Esto se eliminará permanentemente {{firstname}} {{lastname}}",
+    "error_loading_admins": "Error al cargar los administradores",
+    "button_retry": "Reintentar"
   }
 }

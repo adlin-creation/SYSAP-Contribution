@@ -5,60 +5,65 @@ import { Kinesiologist } from "../model/Kinesiologist";
 import { Follow_Patient } from "../model/Follow_Patient";
 import { Patient } from "../model/Patient";
 import { ProgramEnrollement } from "../model/ProgramEnrollement";
-import crypto from 'crypto';
-import { hash } from './UserController';
-import {
-  generateCode,
-  sendEmail,
-} from "../util/unikpass";
+import crypto from "crypto";
+import { hash } from "./UserController";
+import { generateCode, sendEmail } from "../util/unikpass";
 
 /**
  * Creates a new professional user.
  */
 export const createProfessionalUser = async (req: any, res: any, next: any) => {
-  const { firstname, lastname, email, phoneNumber, password, role, workEnvironment } = req.body;
+  const {
+    firstname,
+    lastname,
+    email,
+    phoneNumber,
+    password,
+    role,
+    workEnvironment,
+  } = req.body;
 
   try {
     // Vérifier si l'utilisateur existe déjà
     const existingUser = await Professional_User.findOne({ where: { email } });
     if (existingUser) {
-      return res.status(409).json({ message: "Backend:error_user_exists" });
+      return res.status(409).json({ message: "error_user_exists" });
     }
 
     // Hacher le mot de passe
     const hashedPassword = await hash(password);
 
-    // Créer l'utilisateur professionnel 
-    const newProfessionalUser = await Professional_User.create(
-      {
-        firstname,
-        lastname,
-        email,
-        phoneNumber,
-        password: hashedPassword,
-        role,
-      },
-    );
+    // Créer l'utilisateur professionnel
+    const newProfessionalUser = await Professional_User.create({
+      firstname,
+      lastname,
+      email,
+      phoneNumber,
+      password: hashedPassword,
+      role,
+    });
 
     // Générer un code unique et le hacher
     const code = generateCode(6); // Générer un code à 6 caractères
     const unikPassHashed = await hash(code); // Hacher le code
 
-    if (role === 'admin') {
+    if (role === "admin") {
       await Admin.create({ idAdmin: newProfessionalUser.id });
-
-    } else if (role === 'doctor') {
-      await Doctor.create(
-        { idDoctor: newProfessionalUser.id, workEnvironment, unikPassHashed },
-      );
-
-    } else if (role === 'kinesiologist') {
-      await Kinesiologist.create(
-        { idKinesiologist: newProfessionalUser.id, workEnvironment, unikPassHashed },
-      );
+    } else if (role === "doctor") {
+      await Doctor.create({
+        idDoctor: newProfessionalUser.id,
+        workEnvironment,
+        unikPassHashed,
+      });
+    } else if (role === "kinesiologist") {
+      await Kinesiologist.create({
+        idKinesiologist: newProfessionalUser.id,
+        workEnvironment,
+        unikPassHashed,
+      });
     }
 
-    if (role === 'doctor' || role === 'kinesiologist') {
+    if (role === "doctor" || role === "kinesiologist") {
       await sendEmail(email, "Votre code d'accès RXAPA", code);
     }
 
@@ -68,7 +73,9 @@ export const createProfessionalUser = async (req: any, res: any, next: any) => {
       error.statusCode = 500;
     }
     next(error); // Pour une meilleure gestion des erreurs
-    res.status(error.statusCode).json({ message: error.message || "Backend:error_creating_user" });
+    res
+      .status(error.statusCode)
+      .json({ message: error.message || "Backend:error_creating_user" });
   }
   return res;
 };
@@ -96,7 +103,9 @@ exports.updateProfessionalUser = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({ message: "Backend:error_updating_user" });
+    res
+      .status(error.statusCode)
+      .json({ message: "Backend:error_updating_user" });
   }
   return res;
 };
@@ -117,7 +126,9 @@ exports.deleteProfessionalUser = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({ message: "Backend:error_deleting_user" });
+    res
+      .status(error.statusCode)
+      .json({ message: "Backend:error_deleting_user" });
   }
   return res;
 };
@@ -137,7 +148,9 @@ exports.getProfessionalUser = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({ message: "Backend:error_loading_user" });
+    res
+      .status(error.statusCode)
+      .json({ message: "Backend:error_loading_user" });
   }
   return res;
 };
@@ -153,7 +166,9 @@ exports.getProfessionalUsers = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({ message: "Backend:error_loading_users" });
+    res
+      .status(error.statusCode)
+      .json({ message: "Backend:error_loading_users" });
   }
   return res;
 };
@@ -164,20 +179,28 @@ exports.getProfessionalUsers = async (req: any, res: any, next: any) => {
 exports.getKinesiologistPatients = async (req: any, res: any, next: any) => {
   const kinesiologistId = req.params.id;
   try {
-    const followPatients: InstanceType<typeof Follow_Patient>[] = await Follow_Patient.findAll({
-      where: { KinesiologistId: kinesiologistId },
-      include: [{
-        model: ProgramEnrollement,
-        include: [Patient]
-      }]
-    });
-    const patients = followPatients.map((fp: InstanceType<typeof Follow_Patient>) => fp.Program_Enrollement.Patient);
+    const followPatients: InstanceType<typeof Follow_Patient>[] =
+      await Follow_Patient.findAll({
+        where: { KinesiologistId: kinesiologistId },
+        include: [
+          {
+            model: ProgramEnrollement,
+            include: [Patient],
+          },
+        ],
+      });
+    const patients = followPatients.map(
+      (fp: InstanceType<typeof Follow_Patient>) =>
+        fp.Program_Enrollement.Patient
+    );
     res.status(200).json(patients);
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({ message: "Backend:error_loading_kinesiologist_patients" });
+    res
+      .status(error.statusCode)
+      .json({ message: "Backend:error_loading_kinesiologist_patients" });
   }
   return res;
 };
@@ -188,20 +211,28 @@ exports.getKinesiologistPatients = async (req: any, res: any, next: any) => {
 exports.getDoctorPatients = async (req: any, res: any, next: any) => {
   const doctorId = req.params.id;
   try {
-    const followPatients: InstanceType<typeof Follow_Patient>[] = await Follow_Patient.findAll({
-      where: { DoctorId: doctorId },
-      include: [{
-        model: ProgramEnrollement,
-        include: [Patient]
-      }]
-    });
-    const patients = followPatients.map((fp: InstanceType<typeof Follow_Patient>) => fp.Program_Enrollement.Patient);
+    const followPatients: InstanceType<typeof Follow_Patient>[] =
+      await Follow_Patient.findAll({
+        where: { DoctorId: doctorId },
+        include: [
+          {
+            model: ProgramEnrollement,
+            include: [Patient],
+          },
+        ],
+      });
+    const patients = followPatients.map(
+      (fp: InstanceType<typeof Follow_Patient>) =>
+        fp.Program_Enrollement.Patient
+    );
     res.status(200).json(patients);
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({ message: "Backend:error_loading_doctor_patients" });
+    res
+      .status(error.statusCode)
+      .json({ message: "Backend:error_loading_doctor_patients" });
   }
   return res;
 };
@@ -214,8 +245,9 @@ exports.generatePassword = async (req: any, res: any, next: any) => {
     // Génère une chaîne aléatoire de 12 caractères
     const generateSecurePassword = () => {
       const length = 12;
-      const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-      let password = '';
+      const charset =
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      let password = "";
 
       // Assure au moins un chiffre et une lettre
       password += charset.slice(52)[Math.floor(Math.random() * 10)]; // un chiffre
@@ -229,7 +261,10 @@ exports.generatePassword = async (req: any, res: any, next: any) => {
       }
 
       // Mélange le mot de passe final
-      return password.split('').sort(() => 0.5 - Math.random()).join('');
+      return password
+        .split("")
+        .sort(() => 0.5 - Math.random())
+        .join("");
     };
 
     const password = generateSecurePassword();
@@ -238,7 +273,8 @@ exports.generatePassword = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({ message: "Backend:error_generating_password" });
+    res
+      .status(error.statusCode)
+      .json({ message: "Backend:error_generating_password" });
   }
 };
-

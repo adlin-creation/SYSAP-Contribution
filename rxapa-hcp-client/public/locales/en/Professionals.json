@@ -156,6 +156,10 @@
     "close_button": "Close",
     "of": "of",
     "admins": "Admins",
-    "update_admin_button": "Update admin"
+    "update_admin_button": "Update admin",
+    "title_delete_admin_confirmation": "Are you sure you want to delete this admin?",
+    "warning_permanent_delete": "This will permanently delete {{firstname}} {{lastname}}",
+    "error_loading_admins": "Error loading admins",
+    "button_retry": "Retry"
   }
 }

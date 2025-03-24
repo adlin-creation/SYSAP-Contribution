@@ -42,7 +42,7 @@ function CreateAdmin({ refetchAdmins }) {
       })
       .catch((err) =>
         openModal(
-          err.response?.data?.message ||
+          t(`Backend:${err.response?.data?.message}`) ||
             t("Professionals:Admins:creating_error_msg"),
           true
         )
