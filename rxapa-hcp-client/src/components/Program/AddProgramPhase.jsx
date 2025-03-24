@@ -9,6 +9,8 @@ import ClearSharpIcon from "@mui/icons-material/ClearSharp";
 import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
 import Modal from "../Modal/Modal";
+import PropTypes from "prop-types";
+
 
 let phaseNames = [];
 
@@ -127,3 +129,15 @@ export default function AddProgramPhase(props) {
     </div>
   );
 }
+AddProgramPhase.propTypes = {
+  allProgramPhases: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  program: PropTypes.shape({
+    key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  }).isRequired,
+  refetchProgramPhases: PropTypes.func.isRequired,
+  setIsAddProgramPhase: PropTypes.func.isRequired,
+};

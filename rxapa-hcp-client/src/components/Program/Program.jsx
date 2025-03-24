@@ -5,6 +5,7 @@ import Constants from "../Utils/Constants";
 
 import "./ProgramStyles.css";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
 export default function Program({ onClick, onSelect, program, deleteProgram }) {
   const { t } = useTranslation();
@@ -60,3 +61,16 @@ export default function Program({ onClick, onSelect, program, deleteProgram }) {
     </div>
   );
 }
+Program.propTypes = {
+  onClick: PropTypes.func.isRequired,
+  onSelect: PropTypes.func.isRequired,
+  deleteProgram: PropTypes.func.isRequired,
+  program: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    duration: PropTypes.number.isRequired,
+    duration_unit: PropTypes.string.isRequired,
+    image: PropTypes.string.isRequired,
+  }).isRequired,
+};
+
