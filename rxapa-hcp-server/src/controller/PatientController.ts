@@ -8,6 +8,8 @@ import {
 } from "../util/unikpass"; // Assure-toi que le chemin est correct pour ton utilitaire
 import jwt from "jsonwebtoken";
 import * as bcrypt from "bcrypt";
+import { Patient_Caregiver } from "../model/Patient_Caregiver";
+import { Caregiver } from "../model/Caregiver";
 
 /**
  * Creates a new patient.
@@ -189,3 +191,65 @@ exports.getPatientSessions = async (req: any, res: any, next: any) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+
+
+exports.getPatientDetails = async (req: any, res: any, next: any) => {
+  try {
+    const patientId = req.params.id;
+
+    if (!patientId) {
+      return res.status(400).json({ message: "Patient ID is required" });
+    }
+
+    const programEnrollements = await ProgramEnrollement.findAll({
+      where: { PatientId: patientId }
+    });
+
+
+    if (!programEnrollements.length) {
+      return res.status(200).json({
+        caregivers: [],
+        patientCaregivers: [],
+        programEnrollements: []
+      });
+    }
+
+    const allPatientCaregivers = await Patient_Caregiver.findAll();
+
+    const PatientCaregivers = allPatientCaregivers.filter((patientCaregiver: { ProgramEnrollementId: any; }) =>
+      programEnrollements.some(
+        (enrollment: { id: any; }) => enrollment.id === patientCaregiver.ProgramEnrollementId
+      )
+    );
+
+    if (!PatientCaregivers.length) {
+      return res.status(404).json({ message: "No caregivers found for this patient" });
+    }
+
+    // Extraction des IDs des soignants
+    const caregiverIds = PatientCaregivers.map((pc: { CaregiverId: any; }) => pc.CaregiverId);
+
+    const caregivers = await Caregiver.findAll({
+      where: { id: caregiverIds } // Filtrage avec les IDs extraits
+    });
+
+    if (!caregivers.length) {
+      return res.status(404).json({ message: "No caregivers details found" });
+    }
+
+    // Retourner les données sous forme de JSON
+    res.status(200).json({
+      caregivers,
+      patientCaregivers: PatientCaregivers,
+      programEnrollements
+    });
+
+  } catch (error) {
+    console.error("Error fetching patient details:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+

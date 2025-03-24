@@ -1,15 +1,18 @@
 import express from "express";
 import isAuth from "../util/isAuth";
+import upload from "../util/multerConfig";
 
 const router = express.Router();
 
 const programController = require("../controller/ProgramController");
 
-router.post("/create-program", isAuth, programController.createProgram);
+router.post("/create-program", isAuth,upload.single("image"), programController.createProgram);
 
 router.get("/program/:programKey", isAuth, programController.getProgram);
 
 router.get("/programs", isAuth, programController.getPrograms);
+
+router.get("/search", isAuth, programController.searchPrograms);
 
 router.post(
   "/:programKey/add-phase",
@@ -22,6 +25,7 @@ router.get("/:programKey/phases", isAuth, programController.getProgramPhases);
 router.put(
   "/update-program/:programKey",
   isAuth,
+  upload.single("image"),
   programController.updateProgram
 );
 

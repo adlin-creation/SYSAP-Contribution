@@ -27,6 +27,10 @@ import { Kinesiologist } from "./Kinesiologist";
 
 import { Follow_Patient } from "./Follow_Patient";
 import { Diagnostic } from "./Diagnostic";
+import { ProgramSession } from './ProgramSession'; 
+
+import { Evaluation } from "./Evaluation";
+import { Evaluation_PACE } from "./Evaluation_PACE";
 
 export function createAssociations() {
   /**
@@ -50,6 +54,49 @@ export function createAssociations() {
   //   //   allowNull: false,
   //   // },
   // });
+
+  // Evaluations
+  // Evaluation <> Patient (One-to-Many)
+  Evaluation.belongsTo(Patient, {
+    foreignKey: "idPatient",
+    onDelete: "RESTRICT",
+  });
+  Patient.hasMany(Evaluation, {
+    foreignKey: "idPatient",
+    onDelete: "RESTRICT",
+  });
+
+  // Evaluation <> Kinesiologist (One-to-Many)
+  Evaluation.belongsTo(Kinesiologist, {
+    foreignKey: "idKinesiologist",
+    onDelete: "RESTRICT",
+  });
+  Kinesiologist.hasMany(Evaluation, {
+    foreignKey: "idKinesiologist",
+    onDelete: "RESTRICT",
+  });
+
+  // Evaluation <> Program (One-to-Many)
+  Evaluation.belongsTo(Program, {
+    foreignKey: "idResultProgram",
+    onDelete: "RESTRICT",
+  });
+  Program.hasMany(Evaluation, {
+    foreignKey: "idResultProgram",
+    onDelete: "RESTRICT",
+  });
+
+  // Evaluation PACE
+  // Evaluation <> Evaluation_PACE (One-to-One)
+  Evaluation_PACE.belongsTo(Evaluation, {
+    foreignKey: "idPACE",
+    onDelete: "CASCADE",
+  });
+  Evaluation.hasOne(Evaluation_PACE, {
+    foreignKey: "idPACE",
+    onDelete: "CASCADE",
+  });
+
 
   Bloc.hasMany(Exercise_Bloc, {
     onDelete: "RESTRICT",
@@ -374,5 +421,22 @@ export function createAssociations() {
     },
   });
   Alert.belongsTo(SessionRecord);
+
+  /**
+   * Creates many-to-many association between Program and Session
+  */
+
+  Program.belongsToMany(Session, {
+    through: ProgramSession,
+    foreignKey: "programId",
+    otherKey: "sessionId",
+    onDelete: "CASCADE",
+  });
+  Session.belongsToMany(Program, {
+    through: ProgramSession,
+    foreignKey: "sessionId",
+    otherKey: "programId",
+    onDelete: "CASCADE",
+  });
 
 }
