@@ -14,6 +14,13 @@ function EvaluationSearch() {
   const [errorMessage, setErrorMessage] = useState(""); // Message d'erreur
 
   /**
+   * Fonction pour naviguer vers la page d'affichage des évaluations
+   */
+  const navigateToEvaluations = (patientId) => {
+    window.location.href = `/afficher-evaluations/${patientId}`;
+  };
+
+  /**
    * Fonction pour effectue une recherche de patient par ID ou par nom
    */
   const handleSearch = async () => {
@@ -96,38 +103,54 @@ function EvaluationSearch() {
       title: "Actions",
       key: "actions",
       render: (_, patient) => (
-        <div style={{ display: "flex", gap: "12px" }}>
-          {/* Bouton pour accéder à l'évaluation du patient */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            width: "100%",
+            alignItems: "center",
+          }}
+        >
+          <div style={{ display: "flex", gap: "16px" }}>
+            <Button
+              type="primary"
+              onClick={() =>
+                (window.location.href = `/evaluation-pace/${patient.id}`)
+              }
+              disabled={!patient.id}
+            >
+              Évaluation PACE
+            </Button>
+            <Button
+              type="primary"
+              onClick={() =>
+                (window.location.href = `/evaluation-path/${patient.id}`)
+              }
+              disabled={!patient.id}
+            >
+              Évaluation PATH
+            </Button>
+            <Button
+              type="primary"
+              onClick={() =>
+                (window.location.href = `/evaluation-match/${patient.id}`)
+              }
+              disabled={!patient.id}
+            >
+              Évaluation MATCH
+            </Button>
+          </div>
+
           <Button
             type="primary"
-            onClick={() =>
-              (window.location.href = `/evaluation-pace/${patient.id}`)
-            }
-            disabled={!patient.id}
+            icon={<FileSearchOutlined />}
+            onClick={() => navigateToEvaluations(patient.id)}
           >
-            Évaluation PACE
-          </Button>
-          <Button
-            type="primary"
-            onClick={() =>
-              (window.location.href = `/evaluation-path/${patient.id}`)
-            }
-            disabled={!patient.id}
-          >
-            Évaluation PATH
-          </Button>
-          <Button
-            type="primary"
-            onClick={() =>
-              (window.location.href = `/evaluation-match/${patient.id}`)
-            }
-            disabled={!patient.id}
-          >
-            Évaluation MATCH
+            Afficher évaluations
           </Button>
         </div>
       ),
-      width: "50%", // Assurer que la colonne est suffisamment large
+      width: "60%", // Assurer que la colonne est suffisamment large
     },
   ];
 
