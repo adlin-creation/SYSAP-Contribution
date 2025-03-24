@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Input, Button, Table, Card, message } from "antd";
+import { Input, Button, Table, Card, message, Row, Col, Space } from "antd";
 import { SearchOutlined, CloseOutlined } from "@ant-design/icons";
 import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
@@ -96,38 +96,52 @@ function EvaluationSearch() {
       title: "Actions",
       key: "actions",
       render: (_, patient) => (
-        <div className="space-x-2">
-          {/* Bouton pour accéder à l'évaluation du patient */}
-          <Button
-            type="primary"
-            onClick={() =>
-              (window.location.href = `/evaluation-pace/${patient.id}`)
-            }
-            disabled={!patient.id}
-          >
-            Évaluation PACE
-          </Button>
-          {/* Boutons désactivés pour PATH */}
-          <Button
-            type="primary"
-            onClick={() =>
-              (window.location.href = `/evaluation-path/${patient.id}`)
-            }
-            disabled={!patient.id}
-          > 
-          Évaluation PATH
-          </Button>
-          <Button
-            type="primary"
-            onClick={() =>
-              (window.location.href = `/evaluation-match/${patient.id}`)
-            }
-            disabled={!patient.id}
-          >
-            Évaluation MATCH
-          </Button>
-        </div>
+        <Row justify="space-between" align="middle" style={{ width: "100%" }}>
+          <Col>
+            <Space size={16}>
+              <Button
+                type="primary"
+                onClick={() =>
+                  (window.location.href = `/evaluation-pace/${patient.id}`)
+                }
+                disabled={!patient.id}
+              >
+                Évaluation PACE
+              </Button>
+              <Button
+                type="primary"
+                onClick={() =>
+                  (window.location.href = `/evaluation-path/${patient.id}`)
+                }
+                disabled={!patient.id}
+              >
+                Évaluation PATH
+              </Button>
+              <Button
+                type="primary"
+                onClick={() =>
+                  (window.location.href = `/evaluation-match/${patient.id}`)
+                }
+                disabled={!patient.id}
+              >
+                Évaluation MATCH
+              </Button>
+            </Space>
+          </Col>
+
+          <Col>
+            <Button
+              type="primary"
+              onClick={() =>
+                (window.location.href = `/afficher-evaluations/${patient.id}`)
+              }
+            >
+              Afficher évaluations
+            </Button>
+          </Col>
+        </Row>
       ),
+      width: "50%", // Assurer que la colonne est suffisamment large
     },
   ];
 
