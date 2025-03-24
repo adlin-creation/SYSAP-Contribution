@@ -170,6 +170,10 @@ function App() {
               };
             }
 
+            if (location.state.role !== "kinesiologist" && location.state.role !== "admin" && item.key === "/evaluations") {
+              return null;
+            }
+
             // CAS ADMIN: l'admin ne voit PAS l'onglet "admins"
             if (location.state.role === "admin" && item.key === "/admins") {
               return null;

@@ -44,4 +44,7 @@ router.delete(
 // Route de recherche de patients
 router.get("/patients/search", evaluationController.searchPatients);
 
+// Route d'affichage
+router.get("/afficher-evaluation", evaluationController.)
+
 export default router;

@@ -11,7 +11,7 @@
   "button_path": "Évaluation PATH",
   "button_match": "Évaluation MATCH",
   
-  "sectionA_title": "A. CARDIO-MUSCULAIRE",
+  "sectionA_title": "CARDIO-MUSCULAIRE",
   "chair_test_label": "Test de la chaise en 30 secondes",
   "with_support": "Avec appui",
   "without_support": "Sans appui",
@@ -19,7 +19,7 @@
   "error_stand_required": "Le nombre de levers est requis",
   "error_stand_invalid": "Veuillez entrer un nombre valide",
   
-  "sectionB_title": "B. ÉQUILIBRE",
+  "sectionB_title": "ÉQUILIBRE",
   "balance_instructions": "Réalisez les équilibres dans l'ordre. Le score sera attribué selon l'équilibre le plus grand obtenu",
   "feet_together": "1. Pieds joints",
   "feet_semi_tandem": "2. Pieds semi tandem",
@@ -30,7 +30,7 @@
   "one_foot": "Unipodal",
   "time_placeholder": "Entrez le temps en secondes",
   
-  "sectionC_title": "C. MOBILITÉ & STABILITÉ DU TRONC",
+  "sectionC_title": "MOBILITÉ & STABILITÉ DU TRONC",
   "frt_label": "Functional Reach Test (FRT)",
   "sitting": "Assis",
   "standing": "Debout",
