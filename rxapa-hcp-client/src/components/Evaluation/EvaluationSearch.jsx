@@ -96,7 +96,7 @@ function EvaluationSearch() {
       title: "Actions",
       key: "actions",
       render: (_, patient) => (
-        <div style={{ display: 'flex', gap: '12px' }}>
+        <div style={{ display: "flex", gap: "12px" }}>
           {/* Bouton pour accéder à l'évaluation du patient */}
           <Button
             type="primary"
@@ -113,8 +113,8 @@ function EvaluationSearch() {
               (window.location.href = `/evaluation-path/${patient.id}`)
             }
             disabled={!patient.id}
-          > 
-          Évaluation PATH
+          >
+            Évaluation PATH
           </Button>
           <Button
             type="primary"
@@ -126,50 +126,6 @@ function EvaluationSearch() {
             Évaluation MATCH
           </Button>
         </div>
-        <Row justify="space-between" align="middle" style={{ width: "100%" }}>
-          <Col>
-            <Space size={16}>
-              <Button
-                type="primary"
-                onClick={() =>
-                  (window.location.href = `/evaluation-pace/${patient.id}`)
-                }
-                disabled={!patient.id}
-              >
-                Évaluation PACE
-              </Button>
-              <Button
-                type="primary"
-                onClick={() =>
-                  (window.location.href = `/evaluation-path/${patient.id}`)
-                }
-                disabled={!patient.id}
-              >
-                Évaluation PATH
-              </Button>
-              <Button
-                type="primary"
-                onClick={() =>
-                  (window.location.href = `/evaluation-match/${patient.id}`)
-                }
-                disabled={!patient.id}
-              >
-                Évaluation MATCH
-              </Button>
-            </Space>
-          </Col>
-
-          <Col>
-            <Button
-              type="primary"
-              onClick={() =>
-                (window.location.href = `/afficher-evaluations/${patient.id}`)
-              }
-            >
-              Afficher évaluations
-            </Button>
-          </Col>
-        </Row>
       ),
       width: "50%", // Assurer que la colonne est suffisamment large
     },
@@ -177,55 +133,55 @@ function EvaluationSearch() {
 
   return (
     <div className="p-6">
-  <Card title={t("search_title")} className="shadow-sm">
-    <div className="mb-6" style={{ marginBottom: '16px' }}>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        {/* Champs de recherche */}
-        <div style={{ flex: 1, marginRight: '8px' }}>
-          <Input
-            placeholder={t("search_placeholder")}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            onPressEnter={handleSearch}
-            prefix={<SearchOutlined />}
-            suffix={
-              searchTerm && (
-                <Button
-                  onClick={clearSearch}
-                  size="small"
-                  icon={<CloseOutlined />}
-                />
-              )
-            }
-          />
+      <Card title={t("search_title")} className="shadow-sm">
+        <div className="mb-6" style={{ marginBottom: "16px" }}>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            {/* Champs de recherche */}
+            <div style={{ flex: 1, marginRight: "8px" }}>
+              <Input
+                placeholder={t("search_placeholder")}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onPressEnter={handleSearch}
+                prefix={<SearchOutlined />}
+                suffix={
+                  searchTerm && (
+                    <Button
+                      onClick={clearSearch}
+                      size="small"
+                      icon={<CloseOutlined />}
+                    />
+                  )
+                }
+              />
+            </div>
+            {/* Bouton de recherche */}
+            <Button type="primary" onClick={handleSearch} loading={loading}>
+              Rechercher
+            </Button>
+          </div>
         </div>
-        {/* Bouton de recherche */}
-        <Button type="primary" onClick={handleSearch} loading={loading}>
-          Rechercher
-        </Button>
-      </div>
-    </div>
 
-    {/* Affichage messages d'erreur */}
-    {errorMessage ? (
-      <div className="text-center py-8 text-red-500">
-        {errorMessage === "Aucun patient trouvé."
-          ? t("error_no_patients")
-          : t("error_search")}
-      </div>
-    ) : (
-      // Tableau d'affichage des patients
-      <Table
-        columns={columns}
-        dataSource={patients}
-        rowKey="id"
-        loading={loading}
-        pagination={{ pageSize: 5 }}
-        bordered
-      />
-    )}
-  </Card>
-</div>
+        {/* Affichage messages d'erreur */}
+        {errorMessage ? (
+          <div className="text-center py-8 text-red-500">
+            {errorMessage === "Aucun patient trouvé."
+              ? t("error_no_patients")
+              : t("error_search")}
+          </div>
+        ) : (
+          // Tableau d'affichage des patients
+          <Table
+            columns={columns}
+            dataSource={patients}
+            rowKey="id"
+            loading={loading}
+            pagination={{ pageSize: 5 }}
+            bordered
+          />
+        )}
+      </Card>
+    </div>
   );
 }
 
