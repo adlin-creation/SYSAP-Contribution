@@ -30,9 +30,11 @@ export default function CreateSession(props) {
       .then((res) => {
         // Reload the day session to include the new day session
         props.refetchSessions();
-        openModal(res.data.message, false);
+        openModal(t(`Backend:${res.data.message}`), false);
       })
-      .catch((err) => openModal(err.response.data.message, true));
+      .catch((err) =>
+        openModal(t(`Backend:${err.response.data.message}`), true)
+      );
   };
 
   /**
