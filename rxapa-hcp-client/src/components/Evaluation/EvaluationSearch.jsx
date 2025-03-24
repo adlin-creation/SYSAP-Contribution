@@ -143,7 +143,6 @@ function EvaluationSearch() {
 
           <Button
             type="primary"
-            icon={<FileSearchOutlined />}
             onClick={() => navigateToEvaluations(patient.id)}
           >
             Afficher évaluations
