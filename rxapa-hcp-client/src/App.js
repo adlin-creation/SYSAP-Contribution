@@ -50,6 +50,7 @@ import {
 } from "@ant-design/icons";
 import "antd/dist/reset.css";
 import "./App.css";
+import EvaluationDisplay from "./components/Evaluation/EvaluationDisplay";
 
 const { Header, Sider, Content } = Layout;
 
@@ -338,6 +339,14 @@ function App() {
                   <EvaluationPATH />
                 </Suspense>
               }
+            ></Route>
+            <Route
+            path="afficher-evaluations/:patientId"
+            element={
+              <Suspense fallback={<div>Loading evaluations...</div>}>
+                <EvaluationDisplay />
+              </Suspense>
+            }
             ></Route>
             <Route
               path="*"

@@ -860,3 +860,50 @@ exports.searchPatients = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Échec de la recherche" });
   }
 };
+
+exports.getPatientEvaluations = async (req: any, res: any, next: any) => {
+  const patientId = req.params.patientId;
+
+  try {
+    const evaluations = await Evaluation.findAll({
+      where: { idPatient: patientId },
+      include: [
+        {
+          model: Evaluation_PACE,
+          required: false,
+        },
+        {
+          model: Evaluation_PATH,
+          required: false,
+        },
+        {
+          model: Evaluation_MATCH,
+          required: false,
+        },
+        {
+          model: Program,
+          required: false,
+        },
+      ],
+      order: [["createdAt", "DESC"]],
+    });
+
+    if (Evaluation.length === 0) {
+      return res.status(200).json([]);
+    }
+    res.status(200).json(evaluations);
+  } catch (error: any) {
+    console.error(
+      "Erreur lors du chargement des évaluations du patient:",
+      error
+    );
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    res.status(error.statusCode).json({
+      message:
+        "Erreur lors du chargement des évaluations depuis la base de données",
+    });
+  }
+  return res;
+};

@@ -16,6 +16,8 @@ import { useTranslation } from "react-i18next";
 import useToken from "../Authentication/useToken";
 import Constants from "../Utils/Constants";
 
+const { Title, Text } = Typography;
+
 function EvaluationDisplay() {
   const { t } = useTranslation("Evaluations");
   const { token, user } = useToken(); // Récupération du token d'authentification
@@ -30,12 +32,8 @@ function EvaluationDisplay() {
     user && (user.role === "kinesiologue" || user.role === "admin");
 
   useEffect(() => {
-    if (hasAccess) {
-      fetchData();
-    } else {
-      setLoading(false);
-    }
-  }, [patientId, hasAccess]);
+    fetchData();
+  }, [patientId]);
 
   const fetchData = async () => {
     setLoading(true);
@@ -43,23 +41,20 @@ function EvaluationDisplay() {
 
     try {
       if (patientId) {
-        const response = await fetch(
-          `${Constants.SERVER_URL}/patient/${patientId}`,
-          {
-            headers: { Authorization: "Bearer " + token },
-          }
-        );
-      }
+        const response = await fetch(`${Constants.SERVER_URL}/${patientId}`, {
+          headers: { Authorization: "Bearer " + token },
+        });
 
-      if (!response.ok) {
-        throw new Error("Erreur lors de la récupération du patient");
-      }
+        if (!response.ok) {
+          throw new Error("Erreur lors de la récupération du patient");
+        }
 
-      const patientData = await response.json();
-      setPatients(patientData);
+        const patientData = await response.json();
+        setPatient(patientData);
+      }
 
       const endpoint = patientId
-        ? `/evaluation/patient/${patientId}`
+        ? `/afficher-evaluations/${patientId}`
         : "/evaluations";
 
       const evaluationsResponse = await fetch(
@@ -202,26 +197,6 @@ function EvaluationDisplay() {
       </Card>
     );
   };
-
-  // Si l'utilisateur n'a pas les droits d'accès, afficher un message d'erreur
-  if (!hasAccess) {
-    return (
-      <div className="p-6">
-        <Card className="shadow-sm">
-          <Result
-            status="403"
-            title="Accès refusé"
-            subTitle="Désolé, vous n'avez pas les droits d'accès nécessaires pour voir cette page. Seuls les kinésiologues et les administrateurs peuvent consulter les évaluations."
-            extra={
-              <Button type="primary" onClick={handleReturn}>
-                Retourner
-              </Button>
-            }
-          />
-        </Card>
-      </div>
-    );
-  }
 
   // Rendu principal du composant
   return (
