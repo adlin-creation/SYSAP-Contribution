@@ -8,6 +8,7 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
 export default function ProgramPhaseTable({ programPhases }) {
   const [page, setPage] = React.useState(0);
@@ -126,3 +127,17 @@ export default function ProgramPhaseTable({ programPhases }) {
     </Paper>
   );
 }
+ProgramPhaseTable.propTypes = {
+  programPhases: PropTypes.arrayOf(
+    PropTypes.shape({
+      ProgramPhase: PropTypes.shape({
+        name: PropTypes.string,
+        startConditionType: PropTypes.string,
+        startConditionValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        endConditionType: PropTypes.string,
+        endConditionValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        frequency: PropTypes.number,
+      }),
+    })
+  ).isRequired,
+};

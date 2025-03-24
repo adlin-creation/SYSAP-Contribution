@@ -8,6 +8,7 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
 export default function BlocTable({ blocs }) {
   const [page, setPage] = React.useState(0);
@@ -102,3 +103,15 @@ export default function BlocTable({ blocs }) {
     </Paper>
   );
 }
+BlocTable.propTypes = {
+  blocs: PropTypes.arrayOf(
+    PropTypes.shape({
+      Bloc: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        description: PropTypes.string.isRequired,
+      }),
+      required: PropTypes.bool,
+      dayTime: PropTypes.string,
+    })
+  ).isRequired,
+};

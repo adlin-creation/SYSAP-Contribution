@@ -14,6 +14,8 @@ import useToken from "../Authentication/useToken";
 import FilterExercise from "../Exercise/FilterExercise";
 import Modal from "../Modal/Modal";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
+
 
 let exerciseNames = [];
 
@@ -289,5 +291,13 @@ export default function AddExercise({
         />
       )}
     </div>
+    
   );
+  
 }
+AddExercise.propTypes = {
+  setIsAddExercise: PropTypes.func.isRequired,
+  refetchBloc: PropTypes.func.isRequired,
+  bloc: PropTypes.object.isRequired,
+  allExercises: PropTypes.array.isRequired,
+};

@@ -1,11 +1,15 @@
 import express from "express";
+import multer from "multer"; // ✅ ajout
+
 import isAuth from "../util/isAuth";
 
 const router = express.Router();
+const upload = multer({ dest: "images/" }); // ✅ config upload
+
 
 const exerciseController = require("../controller/ExerciseController");
 
-router.post("/create-exercise", isAuth, exerciseController.createExercise);
+router.post("/create-exercise", isAuth, upload.single("file"), exerciseController.createExercise); // ✅ modifié
 
 router.post("/add/version", isAuth, exerciseController.addExerciseVersion);
 
