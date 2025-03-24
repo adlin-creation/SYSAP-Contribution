@@ -1,4 +1,3 @@
-
 import express from "express";
 import isAuth from "../util/isAuth";
 
@@ -11,6 +10,15 @@ router.delete("/delete-patient/:id", isAuth, patientController.deletePatient);
 router.get("/patient/:id", isAuth, patientController.getPatient);
 router.get("/patientDetails/:id", isAuth, patientController.getPatientDetails);
 router.get("/patients", isAuth, patientController.getPatients);
-router.get("/patient/:id/sessions", isAuth, patientController.getPatientSessions);
+router.get(
+  "/patient/:id/sessions",
+  isAuth,
+  patientController.getPatientSessions
+);
+router.put(
+  "/update-patient-with-caregivers/:id",
+  isAuth,
+  patientController.updatePatientWithCaregivers
+);
 
 export default router;

@@ -1,12 +1,7 @@
 import { Patient } from "../model/Patient";
 import { ProgramEnrollement } from "../model/ProgramEnrollement";
 import { SessionRecord } from "../model/SessionRecord";
-import {
-  extractEmailFromToken,
-  generateCode,
-  sendEmail,
-} from "../util/unikpass"; // Assure-toi que le chemin est correct pour ton utilitaire
-import jwt from "jsonwebtoken";
+import { generateCode, sendEmail } from "../util/unikpass"; // Assure-toi que le chemin est correct pour ton utilitaire
 import * as bcrypt from "bcrypt";
 import { Patient_Caregiver } from "../model/Patient_Caregiver";
 import { Caregiver } from "../model/Caregiver";
@@ -107,6 +102,60 @@ exports.updatePatient = async (req: any, res: any, next: any) => {
 };
 
 /**
+ * Update an existing patient who has one or more caregivers.
+ */
+exports.updatePatientWithCaregivers = async (req: any, res: any, next: any) => {
+  const patientId = req.params.id;
+  const {
+    firstname,
+    lastname,
+    phoneNumber,
+    email,
+    status,
+    numberOfPrograms,
+    numberOfCaregivers,
+    role,
+    caregivers,
+  } = req.body;
+  try {
+    const patient = await Patient.findByPk(patientId);
+    if (!patient) {
+      return res.status(404).json({ message: "Patient not found" });
+    }
+    patient.firstname = firstname;
+    patient.lastname = lastname;
+    patient.phoneNumber = phoneNumber;
+    patient.email = email;
+    patient.status = status;
+    patient.numberOfPrograms = numberOfPrograms;
+    patient.role = role;
+    patient.numberOfCaregivers = numberOfCaregivers;
+    await patient.save();
+
+    if (caregivers) {
+      for (const caregiver of caregivers) {
+        const caregiverInstance = await Caregiver.findByPk(caregiver.id);
+        if (caregiverInstance) {
+          caregiverInstance.firstname = caregiver.firstname;
+          caregiverInstance.lastname = caregiver.lastname;
+          caregiverInstance.phoneNumber = caregiver.phoneNumber;
+          caregiverInstance.email = caregiver.email;
+          caregiverInstance.relationship = caregiver.relationship;
+          await caregiverInstance.save();
+        }
+      }
+    }
+    res.status(200).json(patient);
+  } catch (error: any) {
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    res.status(error.statusCode).json({ message: "Error updating patient" });
+  }
+  return res;
+};
+
+/**
  * Deletes a patient.
  */
 exports.deletePatient = async (req: any, res: any, next: any) => {
@@ -177,7 +226,9 @@ exports.getPatientSessions = async (req: any, res: any, next: any) => {
     });
 
     // Récupérer les IDs des programmes du patient
-    const programIds = patientPrograms.map((pp: typeof ProgramEnrollement) => pp.id);
+    const programIds = patientPrograms.map(
+      (pp: typeof ProgramEnrollement) => pp.id
+    );
 
     // Récupérer les sessions associées à ces programmes
     const sessions = await SessionRecord.findAll({
@@ -187,12 +238,10 @@ exports.getPatientSessions = async (req: any, res: any, next: any) => {
     // Renvoyer les sessions au client
     res.status(200).json(sessions);
   } catch (error) {
-    console.error('Error fetching patient sessions:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error("Error fetching patient sessions:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
-
-
 
 exports.getPatientDetails = async (req: any, res: any, next: any) => {
   try {
@@ -203,35 +252,40 @@ exports.getPatientDetails = async (req: any, res: any, next: any) => {
     }
 
     const programEnrollements = await ProgramEnrollement.findAll({
-      where: { PatientId: patientId }
+      where: { PatientId: patientId },
     });
-
 
     if (!programEnrollements.length) {
       return res.status(200).json({
         caregivers: [],
         patientCaregivers: [],
-        programEnrollements: []
+        programEnrollements: [],
       });
     }
 
     const allPatientCaregivers = await Patient_Caregiver.findAll();
 
-    const PatientCaregivers = allPatientCaregivers.filter((patientCaregiver: { ProgramEnrollementId: any; }) =>
-      programEnrollements.some(
-        (enrollment: { id: any; }) => enrollment.id === patientCaregiver.ProgramEnrollementId
-      )
+    const PatientCaregivers = allPatientCaregivers.filter(
+      (patientCaregiver: { ProgramEnrollementId: any }) =>
+        programEnrollements.some(
+          (enrollment: { id: any }) =>
+            enrollment.id === patientCaregiver.ProgramEnrollementId
+        )
     );
 
     if (!PatientCaregivers.length) {
-      return res.status(404).json({ message: "No caregivers found for this patient" });
+      return res
+        .status(404)
+        .json({ message: "No caregivers found for this patient" });
     }
 
     // Extraction des IDs des soignants
-    const caregiverIds = PatientCaregivers.map((pc: { CaregiverId: any; }) => pc.CaregiverId);
+    const caregiverIds = PatientCaregivers.map(
+      (pc: { CaregiverId: any }) => pc.CaregiverId
+    );
 
     const caregivers = await Caregiver.findAll({
-      where: { id: caregiverIds } // Filtrage avec les IDs extraits
+      where: { id: caregiverIds }, // Filtrage avec les IDs extraits
     });
 
     if (!caregivers.length) {
@@ -242,14 +296,10 @@ exports.getPatientDetails = async (req: any, res: any, next: any) => {
     res.status(200).json({
       caregivers,
       patientCaregivers: PatientCaregivers,
-      programEnrollements
+      programEnrollements,
     });
-
   } catch (error) {
     console.error("Error fetching patient details:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
-
-

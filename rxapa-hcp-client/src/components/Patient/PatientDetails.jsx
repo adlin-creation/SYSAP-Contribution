@@ -1,23 +1,21 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Row, Col, Input, Button, Form, Modal as AntModal, Select } from "antd";
 import { SaveOutlined } from "@ant-design/icons";
+import PropTypes from "prop-types";
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
 import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 
 function PatientDetails({ patient, onClose, refetchPatients }) {
+  const idPatient = patient.id;
   const { t } = useTranslation();
-  const {
-    handleSubmit,
-    control,
-    setValue,
-    formState: { errors },
-  } = useForm();
+  const { handleSubmit, control, setValue, getValues } = useForm();
   const { token } = useToken();
+  const [caregivers, setCaregivers] = useState([]);
 
+  // Charger les informations du patient dans le formulaire
   useEffect(() => {
     if (patient) {
       setValue("firstname", patient.firstname);
@@ -26,22 +24,59 @@ function PatientDetails({ patient, onClose, refetchPatients }) {
       setValue("phoneNumber", patient.phoneNumber);
       setValue("status", patient.status);
       setValue("numberOfPrograms", patient.numberOfPrograms);
+      setValue("numberOfCaregivers", patient.numberOfCaregivers);
     }
   }, [patient, setValue]);
 
+  // Charger les caregivers du patient
+  useEffect(() => {
+    const getPatientCaregivers = async () => {
+      try {
+        const response = await axios.get(
+          `${Constants.SERVER_URL}/patient-caregivers/${idPatient}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        setCaregivers(response.data);
+        response.data.forEach((caregiver, index) => {
+          setValue(`caregivers[${index}].id`, caregiver.id);
+          setValue(`caregivers[${index}].firstname`, caregiver.firstname);
+          setValue(`caregivers[${index}].lastname`, caregiver.lastname);
+          setValue(`caregivers[${index}].email`, caregiver.email);
+          setValue(`caregivers[${index}].phoneNumber`, caregiver.phoneNumber);
+          setValue(`caregivers[${index}].relationship`, caregiver.relationship);
+        });
+      } catch (err) {
+        AntModal.error({
+          content:
+            err.response?.data?.message ||
+            t("Patients:patient_caregivers_failed"),
+          okText: t("Patients:close_button"),
+          centered: true,
+        });
+      }
+    };
+
+    if (patient.numberOfCaregivers > 0) {
+      getPatientCaregivers();
+    }
+  }, [idPatient, token, setValue]);
+
   const onSubmit = (data) => {
+    const updatedCaregivers = getValues("caregivers");
+
     const patientData = {
       ...data,
       role: "patient",
+      caregivers: updatedCaregivers,
     };
 
     axios
       .put(
-        `${Constants.SERVER_URL}/update-patient/${patient.id}`,
+        `${Constants.SERVER_URL}/update-patient-with-caregivers/${patient.id}`,
         patientData,
-        {
-          headers: { Authorization: "Bearer " + token },
-        }
+        { headers: { Authorization: "Bearer " + token } }
       )
       .then(() => {
         refetchPatients();
@@ -55,10 +90,9 @@ function PatientDetails({ patient, onClose, refetchPatients }) {
         });
       })
       .catch((err) => {
-        const errorMessage =
-          err.response?.data?.message || t("Patients:patient_update_failed");
         AntModal.error({
-          content: errorMessage,
+          content:
+            err.response?.data?.message || t("Patients:patient_update_failed"),
           okText: t("Patients:close_button"),
           centered: true,
         });
@@ -71,43 +105,19 @@ function PatientDetails({ patient, onClose, refetchPatients }) {
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item
-                label={t("Patients:first_name")}
-                required
-                validateStatus={errors.firstname ? "error" : ""}
-                help={errors.firstname?.message}
-              >
+              <Form.Item label={t("Patients:first_name")} required>
                 <Controller
                   name="firstname"
                   control={control}
-                  rules={{
-                    required: t("Patients:first_name_required"),
-                    minLength: {
-                      value: 2,
-                      message: t("Patients:first_name_required_info"),
-                    },
-                  }}
                   render={({ field }) => <Input {...field} />}
                 />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item
-                label={t("Patients:last_name")}
-                required
-                validateStatus={errors.lastname ? "error" : ""}
-                help={errors.lastname?.message}
-              >
+              <Form.Item label={t("Patients:last_name")} required>
                 <Controller
                   name="lastname"
                   control={control}
-                  rules={{
-                    required: t("Patients:last_name_required"),
-                    minLength: {
-                      value: 2,
-                      message: t("Patients:last_name_required_info"),
-                    },
-                  }}
                   render={({ field }) => <Input {...field} />}
                 />
               </Form.Item>
@@ -116,108 +126,101 @@ function PatientDetails({ patient, onClose, refetchPatients }) {
 
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item
-                label={t("Patients:email")}
-                required
-                validateStatus={errors.email ? "error" : ""}
-                help={errors.email?.message}
-              >
+              <Form.Item label={t("Patients:email")} required>
                 <Controller
                   name="email"
                   control={control}
-                  rules={{
-                    required: t("Patients:email_needed"),
-                    pattern: {
-                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: t("Patients:email_invalid"),
-                    },
-                  }}
                   render={({ field }) => <Input type="email" {...field} />}
                 />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item
-                label={t("Patients:phone_number")}
-                required
-                validateStatus={errors.phoneNumber ? "error" : ""}
-                help={errors.phoneNumber?.message}
-              >
+              <Form.Item label={t("Patients:phone_number")} required>
                 <Controller
                   name="phoneNumber"
                   control={control}
-                  rules={{
-                    required: t("Patients:phone_number_required"),
-                    pattern: {
-                      value: /^[0-9+\s-]{8,}$/,
-                      message: t("Patients:phone_number_invalid"),
-                    },
-                  }}
                   render={({ field }) => <Input {...field} />}
                 />
               </Form.Item>
             </Col>
           </Row>
 
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                label={t("Patients:programs_quantity")}
-                required
-                validateStatus={errors.numberOfPrograms ? "error" : ""}
-                help={errors.numberOfPrograms?.message}
-              >
-                <Controller
-                  name="numberOfPrograms"
-                  control={control}
-                  rules={{
-                    required: t("Patients:programs_required_quantity"),
-                    min: {
-                      value: 0,
-                      message: t("Patients:programs_quantity_invalid"),
-                    },
-                  }}
-                  render={({ field }) => <Input type="number" {...field} />}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                label={t("Patients:status")}
-                required
-                validateStatus={errors.status ? "error" : ""}
-                help={errors.status?.message}
-              >
-                <Controller
-                  name="status"
-                  control={control}
-                  rules={{ required: t("Patients:status_required") }}
-                  render={({ field }) => (
-                    <Select {...field}>
-                      <Select.Option value="active">
-                        {t("Patients:status_active")}
-                      </Select.Option>
-                      <Select.Option value="paused">
-                        {t("Patients:status_paused")}
-                      </Select.Option>
-                      <Select.Option value="waiting">
-                        {t("Patients:status_waiting")}
-                      </Select.Option>
-                      <Select.Option value="completed">
-                        {t("Patients:status_completed")}
-                      </Select.Option>
-                      <Select.Option value="abort">
-                        {t("Patients:status_abort")}
-                      </Select.Option>
-                    </Select>
-                  )}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
+          {caregivers.length > 0 && (
+            <>
+              <h3>{t("Patients:caregivers_list")}</h3>
+              {caregivers.map((_, index) => (
+                <Row gutter={16} key={caregivers[index].id}>
+                  <Col span={24}>
+                    <h4>
+                      {t("Patients:caregiver")} {index + 1}
+                    </h4>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item label={t("Patients:first_name")} required>
+                      <Controller
+                        name={`caregivers[${index}].firstname`}
+                        control={control}
+                        render={({ field }) => <Input {...field} />}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item label={t("Patients:last_name")} required>
+                      <Controller
+                        name={`caregivers[${index}].lastname`}
+                        control={control}
+                        render={({ field }) => <Input {...field} />}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item label={t("Patients:email")} required>
+                      <Controller
+                        name={`caregivers[${index}].email`}
+                        control={control}
+                        render={({ field }) => (
+                          <Input type="email" {...field} />
+                        )}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item label={t("Patients:phone_number")} required>
+                      <Controller
+                        name={`caregivers[${index}].phoneNumber`}
+                        control={control}
+                        render={({ field }) => <Input {...field} />}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item label={t("Patients:relationship")} required>
+                      <Controller
+                        name={`caregivers[${index}].relationship`}
+                        control={control}
+                        render={({ field }) => (
+                          <Select {...field}>
+                            <Select.Option value="parent">
+                              {t("Patients:relation_parent")}
+                            </Select.Option>
+                            <Select.Option value="sibling">
+                              {t("Patients:relation_sibling")}
+                            </Select.Option>
+                            <Select.Option value="friend">
+                              {t("Patients:relation_friend")}
+                            </Select.Option>
+                            <Select.Option value="other">
+                              {t("Patients:relation_other")}
+                            </Select.Option>
+                          </Select>
+                        )}
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+              ))}
+            </>
+          )}
 
           <Form.Item>
             <Button type="primary" htmlType="submit" icon={<SaveOutlined />}>
@@ -229,12 +232,19 @@ function PatientDetails({ patient, onClose, refetchPatients }) {
     </Row>
   );
 }
-
 PatientDetails.propTypes = {
-  patient: PropTypes.object.isRequired,
+  patient: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    firstname: PropTypes.string,
+    lastname: PropTypes.string,
+    email: PropTypes.string,
+    phoneNumber: PropTypes.string,
+    status: PropTypes.string,
+    numberOfPrograms: PropTypes.number,
+    numberOfCaregivers: PropTypes.number,
+  }).isRequired,
   onClose: PropTypes.func.isRequired,
   refetchPatients: PropTypes.func.isRequired,
-  openModal: PropTypes.func.isRequired,
 };
 
 export default PatientDetails;
