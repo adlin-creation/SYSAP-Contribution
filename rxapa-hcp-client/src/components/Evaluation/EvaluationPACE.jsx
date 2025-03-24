@@ -22,7 +22,8 @@ function EvaluationPACE() {
     frtPosition: true,
     frtDistance: "",
 
-    // Section D - Vitesse de marche
+    // Section D - Vitesse de marche 
+    canWalk: undefined, // Ajouté pour le choix "peut marcher" ou "ne peut pas marcher"
     walkingTime: "",
   });
 
@@ -43,7 +44,7 @@ function EvaluationPACE() {
       level,
       color,
       frenchColor,
-      program: frenchColor + " " + level
+      program: frenchColor + " " + level,
     };
   };
 
@@ -91,9 +92,8 @@ function EvaluationPACE() {
       if (distance >= 15) return 4;
       if (distance > 0) return 3;
       return 0;
-    }
-    // Position assise
-    else {
+    } else {
+      // Position assise
       if (distance > 35) return 4;
       if (distance >= 27) return 3;
       if (distance >= 15) return 2;
@@ -132,7 +132,6 @@ function EvaluationPACE() {
   // Pour que le programme envoyé à la BD soit en français
   const determineFrenchColor = (scoreA, scoreB, scoreC) => {
     const min = Math.min(scoreA, scoreB, scoreC);
-    
     if (scoreA === scoreB && scoreB === scoreC) return "MARRON";
     if (scoreA === scoreB && scoreA === min) return "VERT";
     if (scoreB === scoreC && scoreB === min) return "ORANGE";
@@ -162,24 +161,38 @@ function EvaluationPACE() {
       chairTestSupport: formData.chairTestSupport ? "with" : "without",
       chairTestCount: parseInt(formData.chairTestCount, 10),
       balanceFeetTogether: parseInt(formData.balanceFeetTogether, 10),
-      balanceSemiTandem: isBalanceTestEnabled('balanceSemiTandem') ? 
-                         parseInt(formData.balanceSemiTandem || 0, 10) : 0,
-      balanceTandem: isBalanceTestEnabled('balanceTandem') ? 
-                    parseInt(formData.balanceTandem || 0, 10) : 0,
-      balanceOneFooted: isBalanceTestEnabled('balanceOneFooted') ? 
-                       parseInt(formData.balanceOneFooted || 0, 10) : 0,
-      frtSitting: formData.frtPosition === true ? "sitting" : 
-                  formData.frtPosition === false ? "standing" : 
-                  "not_working",
-      frtDistance: formData.frtPosition === "armNotWorking" ? 0 : parseInt(formData.frtDistance, 10),
-      walkingTime: parseFloat(formData.walkingTime),
+      balanceSemiTandem: isBalanceTestEnabled("balanceSemiTandem")
+        ? parseInt(formData.balanceSemiTandem || 0, 10)
+        : 0,
+      balanceTandem: isBalanceTestEnabled("balanceTandem")
+        ? parseInt(formData.balanceTandem || 0, 10)
+        : 0,
+      balanceOneFooted: isBalanceTestEnabled("balanceOneFooted")
+        ? parseInt(formData.balanceOneFooted || 0, 10)
+        : 0,
+      frtSitting:
+        formData.frtPosition === true
+          ? "sitting"
+          : formData.frtPosition === false
+          ? "standing"
+          : "not_working",
+      frtDistance:
+        formData.frtPosition === "armNotWorking"
+          ? 0
+          : parseInt(formData.frtDistance, 10),
+
+      // walkingTime = 0 si canWalk === false 
+      walkingTime: formData.canWalk
+        ? parseFloat(formData.walkingTime || 0)
+        : 0,
+
       scores: {
         cardioMusculaire: scores.cardioMusculaire,
         equilibre: scores.equilibre,
         mobilite: scores.mobilite,
         total: scores.total,
-        program: scores.program
-      }
+        program: scores.program,
+      },
     };
   };
 
@@ -198,13 +211,21 @@ function EvaluationPACE() {
 
         <div style={{ marginBottom: "15px" }}>
           <strong>{t("individual_scores")}</strong>
-          <p>{t("cardio_score")} : {scores.cardioMusculaire}/6</p>
-          <p>{t("balance_score")} : {scores.equilibre}/6</p>
-          <p>{t("mobility_score")}: {scores.mobilite}/6</p>
+          <p>
+            {t("cardio_score")} : {scores.cardioMusculaire}/6
+          </p>
+          <p>
+            {t("balance_score")} : {scores.equilibre}/6
+          </p>
+          <p>
+            {t("mobility_score")}: {scores.mobilite}/6
+          </p>
         </div>
 
         <div style={{ marginBottom: "15px" }}>
-          <strong>{t("total_score")} : {scores.total}/18</strong>
+          <strong>
+            {t("total_score")} : {scores.total}/18
+          </strong>
         </div>
 
         <div
@@ -216,7 +237,9 @@ function EvaluationPACE() {
           }}
         >
           <p>
-            <strong>{t("level")} : {scores.level}</strong>
+            <strong>
+              {t("level")} : {scores.level}
+            </strong>
           </p>
           <p>
             <strong>
@@ -225,7 +248,8 @@ function EvaluationPACE() {
           </p>
         </div>
 
-        {formData.walkingTime && (
+        {/* si canWalk === true ET walkingTime, on affiche la vitesse */}
+        {formData.canWalk && formData.walkingTime && (
           <div
             style={{
               marginTop: "20px",
@@ -234,13 +258,31 @@ function EvaluationPACE() {
             }}
           >
             <p>
-              {t("speed_calculation")} :{" "}
+              Vitesse de marche :{" "}
               {(4 / parseFloat(formData.walkingTime)).toFixed(2)} m/s
             </p>
             <p>
               <strong>
-                {t("walk_objective")} :{" "}
+                Objectif de marche / jour :{" "}
                 {calculateWalkingObjective(formData.walkingTime)} minutes
+              </strong>
+            </p>
+          </div>
+        )}
+
+        {/* Sinon, s'il ne peut pas marcher */}
+        {!formData.canWalk && (
+          <div
+            style={{
+              marginTop: "20px",
+              borderTop: "1px solid #eee",
+              paddingTop: "15px",
+            }}
+          >
+            <p>
+              <strong>
+                Capacité de marche à travailler (Objectif à réévaluer
+                au cours du séjour)
               </strong>
             </p>
           </div>
@@ -252,6 +294,7 @@ function EvaluationPACE() {
   const renderFormFields = (formData, handleChange, errors, isBalanceTestEnabled) => {
     return (
       <>
+        {/* Section A: CARDIO-MUSCULAIRE (inchangée) */}
         <h2>{t("sectionA_title")}</h2>
         <Form.Item label={t("chair_test_label")}>
           <Radio.Group
@@ -259,7 +302,7 @@ function EvaluationPACE() {
             value={formData.chairTestSupport}
             onChange={(e) =>
               handleChange({
-                target: { name: "chairTestSupport", value: e.target.value }
+                target: { name: "chairTestSupport", value: e.target.value },
               })
             }
           >
@@ -281,6 +324,7 @@ function EvaluationPACE() {
           />
         </Form.Item>
 
+        {/* Section B: ÉQUILIBRE (inchangée) */}
         <h2>{t("sectionB_title")}</h2>
         <div style={{ marginBottom: 16 }}>
           {t("balance_instructions")}
@@ -289,10 +333,10 @@ function EvaluationPACE() {
           <Col span={12}>
             <Form.Item
               label={
-                <span style={{ display: 'flex', alignItems: 'center' }}>
+                <span style={{ display: "flex", alignItems: "center" }}>
                   {t("feet_together")}
-                  <img 
-                    src={require('./images/pace_balance_joint.png')}
+                  <img
+                    src={require("./images/pace_balance_joint.png")}
                     alt="Joint Feet"
                     style={{ marginLeft: 8, height: 24 }}
                   />
@@ -312,10 +356,10 @@ function EvaluationPACE() {
           <Col span={12}>
             <Form.Item
               label={
-                <span style={{ display: 'flex', alignItems: 'center' }}>
+                <span style={{ display: "flex", alignItems: "center" }}>
                   {t("feet_semi_tandem")}
-                  <img 
-                    src={require('./images/pace_balance_semi_tandem.png')}
+                  <img
+                    src={require("./images/pace_balance_semi_tandem.png")}
                     alt="Semi tandem Feet"
                     style={{ marginLeft: 8, height: 24 }}
                   />
@@ -329,7 +373,7 @@ function EvaluationPACE() {
                 value={formData.balanceSemiTandem}
                 onChange={handleChange}
                 placeholder={t("time_placeholder")}
-                disabled={!isBalanceTestEnabled('balanceSemiTandem')}
+                disabled={!isBalanceTestEnabled("balanceSemiTandem")}
               />
             </Form.Item>
           </Col>
@@ -338,10 +382,10 @@ function EvaluationPACE() {
           <Col span={12}>
             <Form.Item
               label={
-                <span style={{ display: 'flex', alignItems: 'center' }}>
-                {t("feet_tandem")}
-                  <img 
-                    src={require('./images/pace_balance_tandem.png')}
+                <span style={{ display: "flex", alignItems: "center" }}>
+                  {t("feet_tandem")}
+                  <img
+                    src={require("./images/pace_balance_tandem.png")}
                     alt="Tandem Feet"
                     style={{ marginLeft: 8, height: 24 }}
                   />
@@ -355,17 +399,17 @@ function EvaluationPACE() {
                 value={formData.balanceTandem}
                 onChange={handleChange}
                 placeholder={t("time_placeholder")}
-                disabled={!isBalanceTestEnabled('balanceTandem')}
+                disabled={!isBalanceTestEnabled("balanceTandem")}
               />
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item
               label={
-                <span style={{ display: 'flex', alignItems: 'center' }}>
-                {t("feet_unipodal")}
-                  <img 
-                    src={require('./images/pace_balance_unipodal.png')}
+                <span style={{ display: "flex", alignItems: "center" }}>
+                  {t("feet_unipodal")}
+                  <img
+                    src={require("./images/pace_balance_unipodal.png")}
                     alt="Unipodal Foot"
                     style={{ marginLeft: 8, height: 24 }}
                   />
@@ -379,13 +423,13 @@ function EvaluationPACE() {
                 value={formData.balanceOneFooted}
                 onChange={handleChange}
                 placeholder={t("time_placeholder")}
-                disabled={!isBalanceTestEnabled('balanceOneFooted')}
+                disabled={!isBalanceTestEnabled("balanceOneFooted")}
               />
             </Form.Item>
           </Col>
         </Row>
 
-        {/* Section C: MOBILITÉ & STABILITÉ DU TRONC */}
+        {/* Section C: MOBILITÉ & STABILITÉ DU TRONC (inchangée) */}
         <h2>{t("sectionC_title")}</h2>
         <Form.Item label={t("frt_label")}>
           <Radio.Group
@@ -393,7 +437,7 @@ function EvaluationPACE() {
             value={formData.frtPosition}
             onChange={(e) =>
               handleChange({
-                target: { name: "frtPosition", value: e.target.value }
+                target: { name: "frtPosition", value: e.target.value },
               })
             }
           >
@@ -417,29 +461,53 @@ function EvaluationPACE() {
           />
         </Form.Item>
 
-        {/* Section D: VITESSE DE MARCHE */}
-        <h2>{t("sectionD_title")}</h2>
-        <Form.Item
-          label={t("walk_test_label")}
-          validateStatus={errors.walkingTime ? "error" : ""}
-          help={errors.walkingTime}
-        >
-          <Input
-            name="walkingTime"
-            value={formData.walkingTime}
-            onChange={(e) => {
-              const value = e.target.value;
-              if (value === "" || /^\d*\.?\d*$/.test(value)) {
-                handleChange(e);
-              }
-            }}
-            placeholder={t("walktime_placeholder")}
-          />
-          {formData.walkingTime && !errors.walkingTime && (
-            <div style={{ marginTop: 8, color: "#666" }}>
-              {t("walk_speed")} :{" "}
-              {(4 / parseFloat(formData.walkingTime)).toFixed(2)} m/s
-            </div>
+        {/* SECTION D : OBJECTIF DE MARCHE  */}
+        <h2>OBJECTIF DE MARCHE</h2>
+        <Form.Item label="Test 4 mètres – vitesse de marche confortable">
+          <Radio.Group
+            value={formData.canWalk}
+            onChange={(e) =>
+              handleChange({
+                target: { name: "canWalk", value: e.target.value },
+              })
+            }
+            style={{ marginBottom: "16px" }}
+          >
+            <Radio value={true}>Le patient peut marcher</Radio>
+            <Radio value={false}>Le petient ne peut pas marcher</Radio>
+          </Radio.Group>
+
+          {formData.canWalk && (
+            <Form.Item
+              label="Temps nécessaire pour marcher 4 mètres (secondes)"
+              validateStatus={errors.walkingTime ? "error" : ""}
+              help={errors.walkingTime}
+            >
+              <Input
+                name="walkingTime"
+                value={formData.walkingTime}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (value === "" || /^\d*\.?\d*$/.test(value)) {
+                    handleChange(e);
+                  }
+                }}
+                placeholder="Entrez le temps en secondes"
+              />
+              {formData.walkingTime && !errors.walkingTime && (
+                <div style={{ marginTop: 8, color: "#666" }}>
+                  Vitesse de marche :{" "}
+                  {(4 / parseFloat(formData.walkingTime)).toFixed(2)} m/s
+                  <div style={{ marginTop: 4 }}>
+                    <strong>
+                      Objectif de marche :{" "}
+                      {calculateWalkingObjective(formData.walkingTime)} minutes
+                      par jour
+                    </strong>
+                  </div>
+                </div>
+              )}
+            </Form.Item>
           )}
         </Form.Item>
       </>
