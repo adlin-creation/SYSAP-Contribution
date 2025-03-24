@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import PropTypes from "prop-types"; 
 import { Row, Col, Select, Input } from "antd";
 import { useTranslation } from "react-i18next";
+import { SearchOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
 
@@ -36,6 +37,7 @@ export default function FilterExercise({ updateSelectedValues }) {
               value={searchTerm}
               onChange={handleSearchChange}
               allowClear
+              prefix={<SearchOutlined />}
             />
           </div>
         </Col>
