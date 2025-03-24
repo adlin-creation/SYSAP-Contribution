@@ -9,6 +9,7 @@ import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
 import Modal from "../Modal/Modal";
 import { useTranslation } from "react-i18next";
+import PropTypes from 'prop-types';
 
 let cycleNames = [];
 
@@ -257,3 +258,11 @@ export default function CreatePhase(props) {
     </div>
   );
 }
+CreatePhase.propTypes = {
+  cycleList: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+    })
+  ),
+  refetchPhases: PropTypes.func.isRequired,
+};

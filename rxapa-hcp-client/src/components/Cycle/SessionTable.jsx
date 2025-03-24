@@ -7,6 +7,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
+import PropTypes from "prop-types";
 
 const columns = [
   { id: "weekDay", label: "Week Day", minWidth: 170 },
@@ -89,3 +90,6 @@ export default function SessionTable({ sessions }) {
     </Paper>
   );
 }
+SessionTable.propTypes = {
+  sessions: PropTypes.array.isRequired,
+};
