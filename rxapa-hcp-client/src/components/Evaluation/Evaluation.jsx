@@ -10,7 +10,15 @@ import { InfoCircleOutlined } from "@ant-design/icons";
  * Classe abstraite pour les composants d'évaluation
  * Cette classe contient les fonctionnalités communes aux évaluations MATCH, PACE et PATH
  */
-function Evaluation({ evaluationType, getInitialFormData, calculateScores, renderFormFields, buildPayload, buildModalContent }) {
+function Evaluation({ 
+  evaluationType, 
+  getInitialFormData, 
+  calculateScores, 
+  renderFormFields, 
+  buildPayload, 
+  buildModalContent,
+  exportPdf  // Nouvelle prop pour la fonction d'exportation PDF
+}) {
   const { patientId } = useParams();
   const navigate = useNavigate();
   const [formData, setFormData] = useState(getInitialFormData());
@@ -18,6 +26,7 @@ function Evaluation({ evaluationType, getInitialFormData, calculateScores, rende
   const [errors, setErrors] = useState({});
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState(null);
+  const [scores, setScores] = useState(null);
 
   // Fonction pour déterminer si un test d'équilibre doit être activé
   const isBalanceTestEnabled = (testName) => {
@@ -171,20 +180,21 @@ function Evaluation({ evaluationType, getInitialFormData, calculateScores, rende
     }
 
     // Calculer les scores en utilisant la fonction fournie par la classe fille
-    const scores = calculateScores(formData, isBalanceTestEnabled);
+    const calculatedScores = calculateScores(formData, isBalanceTestEnabled);
+    setScores(calculatedScores);
     
     // Construire le contenu de la modale en utilisant la fonction fournie par la classe fille
-    setModalMessage(buildModalContent(scores, formData));
+    setModalMessage(buildModalContent(calculatedScores, formData));
     
     setIsModalVisible(true);
   };
 
   const handleConfirm = async () => {
-    // Calculer les scores à nouveau
-    const scores = calculateScores(formData, isBalanceTestEnabled);
+    // Calculer les scores à nouveau si nécessaire, ou utiliser ceux déjà calculés
+    const currentScores = scores || calculateScores(formData, isBalanceTestEnabled);
     
     // Construire le payload en utilisant la fonction fournie par la classe fille
-    const payload = buildPayload(formData, scores, patientId, isBalanceTestEnabled);
+    const payload = buildPayload(formData, currentScores, patientId, isBalanceTestEnabled);
 
     if (!payload) {
       console.error("Aucune donnée à envoyer");
@@ -238,6 +248,27 @@ function Evaluation({ evaluationType, getInitialFormData, calculateScores, rende
     }
   };
 
+  // Fonction pour gérer l'export PDF
+  const handleExportPdf = async () => {
+    if (!exportPdf || !scores) return;
+    
+    try {
+      const date = new Date().toISOString().split("T")[0];
+      const payload = {
+        date: date,
+        ...buildPayload(formData, scores, patientId, isBalanceTestEnabled)
+      };
+      
+      await exportPdf(payload, token);
+    } catch (error) {
+      console.error("Erreur lors de l'exportation PDF:", error);
+      Modal.error({
+        title: "Erreur",
+        content: "Échec de l'exportation du PDF"
+      });
+    }
+  };
+
   const calculateWalkingObjective = (walkingTime) => {
     if (!walkingTime || walkingTime <= 0) return null;
 
@@ -281,6 +312,11 @@ function Evaluation({ evaluationType, getInitialFormData, calculateScores, rende
         open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         footer={[
+          exportPdf && (
+            <Button key="export" onClick={handleExportPdf}>
+              Télécharger PDF
+            </Button>
+          ),
           <Button key="close" onClick={() => setIsModalVisible(false)}>
             Fermer
           </Button>,

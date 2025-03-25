@@ -602,7 +602,7 @@ export const exportPathPdf = async(evaluationData, token) => {
     
     // TELECHARGEMENT VERS UTILISATEUR
     const pdfBytes = await pdfDoc.save();
-    downloadPdf(pdfBytes, `${evaluationData.date}_${patient.data.lastname}_${patient.data.firstname}_MATCH.pdf`);
+    downloadPdf(pdfBytes, `${evaluationData.date}_${patient.data.lastname}_${patient.data.firstname}_PATH.pdf`);
   } catch (error) {
     handleError(error);
   }
@@ -623,7 +623,7 @@ export const exportPacePdf = async(evaluationData, token) => {
     // DONNEES DE PATIENT
     const patient = await axios.get(
       `${Constants.SERVER_URL}/patient/${parseInt(evaluationData.idPatient)}`,
-      //  { headers: { Authorization: "Bearer " + token } }
+      { headers: { Authorization: "Bearer " + token } }
     );
 
     const patientLines = [
@@ -1036,7 +1036,7 @@ export const exportPacePdf = async(evaluationData, token) => {
     
     // TELECHARGEMENT VERS UTILISATEUR
     const pdfBytes = await pdfDoc.save();
-    downloadPdf(pdfBytes, `${evaluationData.date}_${patient.data.lastname}_${patient.data.firstname}_MATCH.pdf`);
+    downloadPdf(pdfBytes, `${evaluationData.date}_${patient.data.lastname}_${patient.data.firstname}_PACE.pdf`);
   } catch (error) {
     handleError(error);
   }
