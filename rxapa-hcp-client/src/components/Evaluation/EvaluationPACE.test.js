@@ -27,6 +27,7 @@ jest.mock(
 jest.mock("./images/pace_balance_tandem.png", () => "balance-tandem-mock");
 jest.mock("./images/pace_balance_unipodal.png", () => "balance-unipodal-mock");
 
+// Adapter le mock de traduction pour qu'il utilise les textes français originaux
 jest.mock("react-i18next", () => ({
   useTranslation: () => ({
     t: (key) => {
@@ -39,6 +40,8 @@ jest.mock("react-i18next", () => ({
         walking_objective: "Objectif de marche",
         minutes_per_day: "minutes par jour",
         sectionD_title: "OBJECTIF DE MARCHE",
+        // Ajouter d'autres traductions si nécessaire
+        // Sinon, retourner la clé comme avant
       };
       return translations[key] || key;
     },
@@ -111,6 +114,7 @@ describe("EvaluationPACE Component", () => {
       render(<EvaluationPACE />);
     });
 
+    // Utilise les titres réels présents dans le composant
     [
       "sectionA_title",
       "sectionB_title",
