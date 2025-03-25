@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types"; 
-import { Row, Col, Select } from "antd";
+import { Row, Col, Select, Input } from "antd";
 import { useTranslation } from "react-i18next";
+import { SearchOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
 
@@ -9,21 +10,38 @@ export default function FilterExercise({ updateSelectedValues }) {
   const { t } = useTranslation();
   const [selectedFitnessLevel, setSelectedFitnessLevel] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleCategoryChange = (newValue) => {
     setSelectedCategory(newValue);
-    updateSelectedValues(newValue || "Tout", "category");
+    updateSelectedValues(newValue || "ALL", "category");
   };
 
   const handleFitnessLevelChange = (newValue) => {
     setSelectedFitnessLevel(newValue);
-    updateSelectedValues(newValue || "Tout", "fitnessLevel");
+    updateSelectedValues(newValue || "ALL", "fitnessLevel");
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+    updateSelectedValues(e.target.value, "searchTerm"); // Envoie le mot-clé au parent
   };
 
   return (
     <div className="filter-container">
-      <Row gutter={16}>
-        <Col span={12}>
+      <Row gutter={[16, 16]}>
+        <Col span={8}>
+          <div className="filter-item">
+            <Input
+              placeholder={t("Exercises:search_placeholder")}
+              value={searchTerm}
+              onChange={handleSearchChange}
+              allowClear
+              prefix={<SearchOutlined />}
+            />
+          </div>
+        </Col>
+        <Col span={8}>
           <div className="filter-item">
             <Select
               value={selectedCategory}
@@ -41,7 +59,7 @@ export default function FilterExercise({ updateSelectedValues }) {
             </Select>
           </div>
         </Col>
-        <Col span={12}>
+        <Col span={8}>
           <div className="filter-item">
             <Select
               value={selectedFitnessLevel}
