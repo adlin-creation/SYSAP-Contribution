@@ -1,6 +1,8 @@
 import { Exercise_Bloc } from "../model/Exercise_Bloc";
 import { Exercise } from "../model/Exercise";
 import { Bloc } from "../model/Bloc";
+import { Bloc_Session } from "../model/Bloc_Session";
+import { Session } from "../model/Session";
 
 /**
  * This function creates an @type {Bloc}
@@ -235,7 +237,26 @@ exports.deleteBloc = async (req: any, res: any, next: any) => {
       .status(error.statusCode)
       .json({ message: "The bloc doesn't exist in the database" });
   }
+
   try {
+    // Vérifier si le bloc est lié à des sessions
+    const linkedSessions = await Bloc_Session.findAll({
+      where: { blocId: bloc.id },
+      include: [{ model: Session, attributes: ['name'] }], // Include the Session model and fetch only the 'name' attribute
+    });
+    
+    if (linkedSessions.length > 0) {
+      const sessionNames = linkedSessions
+        .map((linkedSession: { Session?: { name?: string } }) => linkedSession.Session?.name) // Safely access the Session name
+        .filter((name: string | undefined): name is string => !!name) // Filter out undefined names
+        .join(', ');
+
+
+      return res.status(400).json({
+        message: `Cannot delete bloc because it is linked to the following sessions: ${sessionNames}`,
+      });
+    }
+
     await bloc.destroy();
     return res.status(200).json({ message: "Successfully deleted the bloc" });
   } catch (error: any) {
@@ -246,49 +267,5 @@ exports.deleteBloc = async (req: any, res: any, next: any) => {
       .status(error.statusCode)
       .json({ message: "Failed to delete the bloc" });
   }
-};
-
-exports.deleteBloc = async (req: any, res: any, next: any) => {
-  const blocKey = req.params.blocKey;
-  let bloc;
-  try {
-    bloc = await Bloc.findOne({
-      where: {
-        key: blocKey,
-      },
-    });
-  } catch (error: any) {
-    if (!error.statusCode) {
-      error.statusCode = 500;
-    }
-    return res
-      .status(error.statusCode)
-      .json({ message: "The bloc doesn't exist in the database" });
-  }
-
-//   try {
-//     // Vérifier si le bloc est lié à des sessions
-//     const linkedSessions = await Bloc_Session.findAll({
-//       where: { blocId: bloc.id },
-//       include: [{ model: Session, attributes: ['id', 'name'] }],
-//     });
-    
-//     if (linkedSessions.length > 0) {
-//       const sessionNames = linkedSessions.map(session => session.Session.name).join(', ');
-//       return res.status(400).json({
-//         message: `Cannot delete bloc because it is linked to the following sessions: ${sessionNames}`
-//       });
-//     }
-
-//     await bloc.destroy();
-//     return res.status(200).json({ message: "Successfully deleted the bloc" });
-//   } catch (error: any) {
-//     if (!error.statusCode) {
-//       error.statusCode = 500;
-//     }
-//     return res
-//       .status(error.statusCode)
-//       .json({ message: "Failed to delete the bloc" });
-//   }
-// }
+}
 
