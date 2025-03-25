@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Input, Button, Table, Card, message, Row, Col, Space } from "antd";
+import { Input, Button, Table, Card, message } from "antd";
 import { SearchOutlined, CloseOutlined } from "@ant-design/icons";
 import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
@@ -17,7 +17,7 @@ function EvaluationSearch() {
    * Fonction pour naviguer vers la page d'affichage des évaluations
    */
   const navigateToEvaluations = (patientId) => {
-    window.location.href = `/afficher-evaluations/${patientId}`;
+    window.location.href = `/evaluations/patient/${patientId}`;
   };
 
   /**

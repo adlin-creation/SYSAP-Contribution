@@ -41,9 +41,12 @@ function EvaluationDisplay() {
 
     try {
       if (patientId) {
-        const response = await fetch(`${Constants.SERVER_URL}/${patientId}`, {
-          headers: { Authorization: "Bearer " + token },
-        });
+        const response = await fetch(
+          `${Constants.SERVER_URL}/patient/${patientId}`,
+          {
+            headers: { Authorization: "Bearer " + token },
+          }
+        );
 
         if (!response.ok) {
           throw new Error("Erreur lors de la récupération du patient");
@@ -54,7 +57,7 @@ function EvaluationDisplay() {
       }
 
       const endpoint = patientId
-        ? `/afficher-evaluations/${patientId}`
+        ? `/evaluations/patient/${patientId}`
         : "/evaluations";
 
       const evaluationsResponse = await fetch(
@@ -69,12 +72,13 @@ function EvaluationDisplay() {
       }
 
       const evaluationsData = await evaluationsResponse.json();
+      console.log("Données reçues:", evaluationsData);
 
       const sortedEvaluations = evaluationsData.sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
       );
 
-      sortedEvaluations(sortedEvaluations);
+      setEvaluations(sortedEvaluations);
     } catch (error) {
       console.error("Erreur lors de la récupération des données:", error);
       setErrorMessage(

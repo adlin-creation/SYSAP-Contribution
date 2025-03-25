@@ -27,6 +27,7 @@ import EvaluationPACE from "./components/Evaluation/EvaluationPACE";
 import EvaluationMATCH from "./components/Evaluation/EvaluationMATCH";
 import EvaluationPATH from "./components/Evaluation/EvaluationPATH";
 import EvaluationSearch from "./components/Evaluation/EvaluationSearch";
+import EvaluationDisplay from "./components/Evaluation/EvaluationDisplay";
 import useToken from "./components/Authentication/useToken"; // Import du hook personnalisé
 import Constants from "./components/Utils/Constants";
 import LanguageSwitcher from "./components/LanguageSwitcher/LanguageSwitcher";
@@ -50,7 +51,6 @@ import {
 } from "@ant-design/icons";
 import "antd/dist/reset.css";
 import "./App.css";
-import EvaluationDisplay from "./components/Evaluation/EvaluationDisplay";
 
 const { Header, Sider, Content } = Layout;
 
@@ -341,7 +341,7 @@ function App() {
               }
             ></Route>
             <Route
-            path="afficher-evaluations/:patientId"
+            path="evaluations/patient/:patientId"
             element={
               <Suspense fallback={<div>Loading evaluations...</div>}>
                 <EvaluationDisplay />

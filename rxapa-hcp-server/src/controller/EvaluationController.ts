@@ -863,6 +863,7 @@ exports.searchPatients = async (req: Request, res: Response) => {
 
 exports.getPatientEvaluations = async (req: any, res: any, next: any) => {
   const patientId = req.params.patientId;
+  console.log("getPatientEvaluations appelé avec patientId:", patientId);
 
   try {
     const evaluations = await Evaluation.findAll({
@@ -888,7 +889,7 @@ exports.getPatientEvaluations = async (req: any, res: any, next: any) => {
       order: [["createdAt", "DESC"]],
     });
 
-    if (Evaluation.length === 0) {
+    if (evaluations.length === 0) {
       return res.status(200).json([]);
     }
     res.status(200).json(evaluations);

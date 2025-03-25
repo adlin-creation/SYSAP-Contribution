@@ -46,7 +46,7 @@ router.get("/patients/search", evaluationController.searchPatients);
 
 // Route d'affichage
 router.get(
-  "/afficher-evaluations/:id",
+  "/evaluations/patient/:id",
   evaluationController.getPatientEvaluations
 );
 
