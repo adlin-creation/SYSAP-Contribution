@@ -41,7 +41,7 @@ exports.createProgramPhase = async (req: any, res: any, next: any) => {
       frequency: frequency,
     });
     try {
-      addCycle(cycleName, name, frequency);
+      await addCycle(cycleName, name, frequency);
     } catch (error: any) {
       res.status(500).json({
         messageTitle: "Failed to add the cycle to the new program phase",

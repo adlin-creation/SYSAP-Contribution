@@ -8,6 +8,7 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
 export default function ExerciseTable({ exercises }) {
   const [page, setPage] = React.useState(0);
@@ -138,3 +139,6 @@ export default function ExerciseTable({ exercises }) {
     </Paper>
   );
 }
+ExerciseTable.propTypes = {
+  exercises: PropTypes.arrayOf(PropTypes.object).isRequired,
+};

@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Menu, MenuItem, IconButton } from "@mui/material";
 import LanguageIcon from "@mui/icons-material/Language";
 import Flag from "react-world-flags";
-
+import PropTypes from "prop-types"; 
 const LanguageSwitcher = ({ iconStyle, iconClassName, ...props }) => {
   const { i18n } = useTranslation();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -75,5 +75,8 @@ const LanguageSwitcher = ({ iconStyle, iconClassName, ...props }) => {
     </>
   );
 };
-
+LanguageSwitcher.propTypes = {
+  iconStyle: PropTypes.object,      // ou PropTypes.shape({...}) 
+  iconClassName: PropTypes.string,
+};
 export default LanguageSwitcher;

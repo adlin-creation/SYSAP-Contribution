@@ -7,6 +7,7 @@ import "./Styles.css";
 import { useState } from "react";
 import Modal from "../Modal/Modal";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
 export default function Session({ onClick, onSelect, session, deleteSession }) {
   const { t } = useTranslation();
@@ -66,3 +67,13 @@ export default function Session({ onClick, onSelect, session, deleteSession }) {
     </div>
   );
 }
+Session.propTypes = {
+  onClick: PropTypes.func.isRequired,
+  onSelect: PropTypes.func.isRequired,
+  session: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    description: PropTypes.string,
+    constraints: PropTypes.string,
+  }).isRequired,
+  deleteSession: PropTypes.func.isRequired,
+};
