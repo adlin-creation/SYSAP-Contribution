@@ -1,15 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Card,
-  Row,
-  Col,
-  Button,
-  Empty,
-  Spin,
-  Typography,
-  Space,
-  Result,
-} from "antd";
+import { Card, Row, Col, Button, Empty, Spin, Typography, Result } from "antd";
 import { LeftOutlined, LockOutlined } from "@ant-design/icons";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -20,16 +10,13 @@ const { Title, Text } = Typography;
 
 function EvaluationDisplay() {
   const { t } = useTranslation("Evaluations");
-  const { token, user } = useToken(); // Récupération du token d'authentification
+  const { token } = useToken(); // Récupération du token d'authentification
   const [loading, setLoading] = useState(false); // Indicateur de chargement
   const [errorMessage, setErrorMessage] = useState(""); // Message d'erreur
   const [evaluations, setEvaluations] = useState([]); // Liste des évaluations récupérées
   const [patient, setPatient] = useState(null); // Informations du patient
   const navigate = useNavigate();
   const { patientId } = useParams(); // Récupère l'ID du patient depuis l'URL
-
-  const hasAccess =
-    user && (user.role === "kinesiologue" || user.role === "admin");
 
   useEffect(() => {
     fetchData();
@@ -43,14 +30,23 @@ function EvaluationDisplay() {
       // Récupération des informations du patient si un ID est fourni
       if (patientId) {
         try {
-          console.log(`Récupération du patient: ${Constants.SERVER_URL}/patients/${patientId}`);
-          const response = await fetch(`${Constants.SERVER_URL}/patients/${patientId}`, {
-            headers: { Authorization: "Bearer " + token },
-          });
+          console.log(
+            `Récupération du patient: ${Constants.SERVER_URL}/patients/${patientId}`
+          );
+          const response = await fetch(
+            `${Constants.SERVER_URL}/patients/${patientId}`,
+            {
+              headers: { Authorization: "Bearer " + token },
+            }
+          );
 
           if (!response.ok) {
-            console.error(`Erreur patient: ${response.status} ${response.statusText}`);
-            throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+            console.error(
+              `Erreur patient: ${response.status} ${response.statusText}`
+            );
+            throw new Error(
+              `Erreur ${response.status}: ${response.statusText}`
+            );
           }
 
           const patientData = await response.json();
@@ -68,8 +64,10 @@ function EvaluationDisplay() {
         ? `evaluations/patient/${patientId}`
         : "evaluations";
 
-      console.log(`Récupération des évaluations: ${Constants.SERVER_URL}/${endpoint}`);
-      
+      console.log(
+        `Récupération des évaluations: ${Constants.SERVER_URL}/${endpoint}`
+      );
+
       const evaluationsResponse = await fetch(
         `${Constants.SERVER_URL}/${endpoint}`,
         {
@@ -78,19 +76,23 @@ function EvaluationDisplay() {
       );
 
       if (!evaluationsResponse.ok) {
-        console.error(`Erreur évaluations: ${evaluationsResponse.status} ${evaluationsResponse.statusText}`);
-        throw new Error(`Erreur ${evaluationsResponse.status}: ${evaluationsResponse.statusText}`);
+        console.error(
+          `Erreur évaluations: ${evaluationsResponse.status} ${evaluationsResponse.statusText}`
+        );
+        throw new Error(
+          `Erreur ${evaluationsResponse.status}: ${evaluationsResponse.statusText}`
+        );
       }
 
       // Récupérer le texte brut pour le déboguer avant de le parser
       const responseText = await evaluationsResponse.text();
       console.log("Réponse brute:", responseText);
-      
+
       // Vérifier si la réponse est vide ou non JSON
       if (!responseText || responseText.trim() === "") {
         throw new Error("La réponse du serveur est vide");
       }
-      
+
       let evaluationsData;
       try {
         evaluationsData = JSON.parse(responseText);
@@ -99,7 +101,7 @@ function EvaluationDisplay() {
         console.error("Contenu reçu:", responseText);
         throw new Error(`Erreur de format JSON: ${jsonError.message}`);
       }
-      
+
       console.log("Évaluations récupérées:", evaluationsData);
 
       if (Array.isArray(evaluationsData)) {
@@ -108,13 +110,19 @@ function EvaluationDisplay() {
         );
         setEvaluations(sortedEvaluations);
       } else {
-        console.error("Les données d'évaluations ne sont pas un tableau:", evaluationsData);
+        console.error(
+          "Les données d'évaluations ne sont pas un tableau:",
+          evaluationsData
+        );
         setErrorMessage("Format de données incorrect pour les évaluations");
       }
     } catch (error) {
       console.error("Erreur détaillée:", error);
       setErrorMessage(
-        `Erreur: ${error.message || "Une erreur est survenue lors du chargement des données."}`
+        `Erreur: ${
+          error.message ||
+          "Une erreur est survenue lors du chargement des données."
+        }`
       );
     } finally {
       setLoading(false);
