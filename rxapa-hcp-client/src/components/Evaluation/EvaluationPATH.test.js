@@ -4,7 +4,8 @@ import "@testing-library/jest-dom";
 import EvaluationPATH from "./EvaluationPATH";
 import useToken from "../Authentication/useToken";
 import axios from "axios";
-import { act } from "react-dom/test-utils";
+// Importer act depuis React Testing Library plutôt que react-dom/test-utils
+import { act } from "@testing-library/react";
 
 jest.mock("axios");
 jest.mock("../Authentication/useToken", () => ({
@@ -19,25 +20,29 @@ jest.mock("react-router-dom", () => ({
 }));
 
 describe("EvaluationPATH Component", () => {
-  const fillRequiredFields = () => {
-    const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
-    fireEvent.change(chairTestInput, { target: { value: "10" } });
+  const fillRequiredFields = async () => {
+    await act(async () => {
+      const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
+      fireEvent.change(chairTestInput, { target: { value: "10" } });
 
-    const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
-    fireEvent.change(balanceInputs[0], { target: { value: "5" } });
+      const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
+      fireEvent.change(balanceInputs[0], { target: { value: "5" } });
 
-    const canWalkRadio = screen.getByText("Le patient peut marcher");
-    fireEvent.click(canWalkRadio);
+      const canWalkRadio = screen.getByText("Le patient peut marcher");
+      fireEvent.click(canWalkRadio);
 
-    const walkingTimeInput = screen.getByPlaceholderText(
-      "Entrez le temps en secondes"
-    );
-    fireEvent.change(walkingTimeInput, { target: { value: "5" } });
+      const walkingTimeInput = screen.getByPlaceholderText(
+        "Entrez le temps en secondes"
+      );
+      fireEvent.change(walkingTimeInput, { target: { value: "5" } });
+    });
   };
 
   const submitForm = async () => {
-    const submitButton = screen.getByText("Soumettre");
-    fireEvent.click(submitButton);
+    await act(async () => {
+      const submitButton = screen.getByText("Soumettre");
+      fireEvent.click(submitButton);
+    });
 
     await waitFor(() => {
       expect(axios.post).not.toHaveBeenCalled();
@@ -63,8 +68,10 @@ describe("EvaluationPATH Component", () => {
     jest.clearAllMocks();
   });
 
-  it("renders the component and shows all expected sections", () => {
-    render(<EvaluationPATH />);
+  it("renders the component and shows all expected sections", async () => {
+    await act(async () => {
+      render(<EvaluationPATH />);
+    });
 
     ["CARDIO-MUSCULAIRE", "ÉQUILIBRE", "OBJECTIF DE MARCHE"].forEach((section) =>
       expect(screen.getByText(section)).toBeInTheDocument()
@@ -102,25 +109,36 @@ describe("EvaluationPATH Component", () => {
   });
 
   it("enables/disables balance tests based on previous test results", async () => {
-    render(<EvaluationPATH />);
+    await act(async () => {
+      render(<EvaluationPATH />);
+    });
 
     const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
 
-    fireEvent.change(balanceInputs[0], { target: { value: "4.9" } });
+    await act(async () => {
+      fireEvent.change(balanceInputs[0], { target: { value: "4.9" } });
+    });
     expect(balanceInputs[1]).toBeDisabled();
 
-    fireEvent.change(balanceInputs[0], { target: { value: "5" } });
+    await act(async () => {
+      fireEvent.change(balanceInputs[0], { target: { value: "5" } });
+    });
     expect(balanceInputs[1]).not.toBeDisabled();
 
-    fireEvent.change(balanceInputs[1], { target: { value: "4.9" } });
+    await act(async () => {
+      fireEvent.change(balanceInputs[1], { target: { value: "4.9" } });
+    });
     expect(balanceInputs[2]).toBeDisabled();
 
-    fireEvent.change(balanceInputs[1], { target: { value: "5" } });
+    await act(async () => {
+      fireEvent.change(balanceInputs[1], { target: { value: "5" } });
+    });
     expect(balanceInputs[2]).not.toBeDisabled();
   });
-
   it("affiche ou masque le champ du temps de marche selon la capacité du patient à marcher", async () => {
-    render(<EvaluationPATH />);
+    await act(async () => {
+      render(<EvaluationPATH />);
+    });
 
     expect(screen.getByLabelText("Le patient peut marcher").checked).toBeTruthy();
     
@@ -128,8 +146,10 @@ describe("EvaluationPATH Component", () => {
       screen.getByText("Temps nécessaire pour marcher 4 mètres (secondes)")
     ).toBeInTheDocument();
 
-    const cannotWalkRadio = screen.getByText("Le patient ne peut pas marcher");
-    fireEvent.click(cannotWalkRadio);
+    await act(async () => {
+      const cannotWalkRadio = screen.getByText("Le patient ne peut pas marcher");
+      fireEvent.click(cannotWalkRadio);
+    });
 
     expect(
       screen.queryByText("Temps nécessaire pour marcher 4 mètres (secondes)")
@@ -137,15 +157,19 @@ describe("EvaluationPATH Component", () => {
   });
 
   it("calculates walking speed correctly", async () => {
-    render(<EvaluationPATH />);
+    await act(async () => {
+      render(<EvaluationPATH />);
+    });
 
-    const canWalkRadio = screen.getByText("Le patient peut marcher");
-    fireEvent.click(canWalkRadio);
+    await act(async () => {
+      const canWalkRadio = screen.getByText("Le patient peut marcher");
+      fireEvent.click(canWalkRadio);
 
-    const walkingTimeInput = screen.getByPlaceholderText(
-      "Entrez le temps en secondes"
-    );
-    fireEvent.change(walkingTimeInput, { target: { value: "5" } });
+      const walkingTimeInput = screen.getByPlaceholderText(
+        "Entrez le temps en secondes"
+      );
+      fireEvent.change(walkingTimeInput, { target: { value: "5" } });
+    });
 
     await waitFor(() => {
       expect(screen.getByText(/Vitesse de marche/)).toBeInTheDocument();
@@ -154,24 +178,30 @@ describe("EvaluationPATH Component", () => {
   });
 
   it("calculates chair test score correctly with and without support", async () => {
-    render(<EvaluationPATH />);
+    await act(async () => {
+      render(<EvaluationPATH />);
+    });
 
-    const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
-    fireEvent.change(balanceInputs[0], { target: { value: "5" } });
+    await act(async () => {
+      const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
+      fireEvent.change(balanceInputs[0], { target: { value: "5" } });
 
-    const canWalkRadio = screen.getByText("Le patient peut marcher");
-    fireEvent.click(canWalkRadio);
+      const canWalkRadio = screen.getByText("Le patient peut marcher");
+      fireEvent.click(canWalkRadio);
 
-    const walkingTimeInput = screen.getByPlaceholderText(
-      "Entrez le temps en secondes"
-    );
-    fireEvent.change(walkingTimeInput, { target: { value: "5" } });
+      const walkingTimeInput = screen.getByPlaceholderText(
+        "Entrez le temps en secondes"
+      );
+      fireEvent.change(walkingTimeInput, { target: { value: "5" } });
+    });
 
     const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
     const submitButton = screen.getByText("Soumettre");
 
-    const withSupportRadio = screen.getByText("Avec appui");
-    fireEvent.click(withSupportRadio);
+    await act(async () => {
+      const withSupportRadio = screen.getByText("Avec appui");
+      fireEvent.click(withSupportRadio);
+    });
 
     const withSupportScenarios = [
       { count: "0", expectedScore: 0 },
@@ -181,16 +211,20 @@ describe("EvaluationPATH Component", () => {
     ];
 
     for (const scenario of withSupportScenarios) {
-      fireEvent.change(chairTestInput, { target: { value: scenario.count } });
-      fireEvent.click(submitButton);
+      await act(async () => {
+        fireEvent.change(chairTestInput, { target: { value: scenario.count } });
+        fireEvent.click(submitButton);
+      });
 
       await waitFor(() => {
         expect(axios.post).not.toHaveBeenCalled();
       });
     }
 
-    const withoutSupportRadio = screen.getByText("Sans appui");
-    fireEvent.click(withoutSupportRadio);
+    await act(async () => {
+      const withoutSupportRadio = screen.getByText("Sans appui");
+      fireEvent.click(withoutSupportRadio);
+    });
 
     const withoutSupportScenarios = [
       { count: "2", expectedScore: 0 },
@@ -200,8 +234,10 @@ describe("EvaluationPATH Component", () => {
     ];
 
     for (const scenario of withoutSupportScenarios) {
-      fireEvent.change(chairTestInput, { target: { value: scenario.count } });
-      fireEvent.click(submitButton);
+      await act(async () => {
+        fireEvent.change(chairTestInput, { target: { value: scenario.count } });
+        fireEvent.click(submitButton);
+      });
 
       await waitFor(() => {
         expect(axios.post).not.toHaveBeenCalled();
@@ -210,37 +246,47 @@ describe("EvaluationPATH Component", () => {
   });
 
   it("calculates balance score correctly with different cardio scores", async () => {
-    render(<EvaluationPATH />);
+    await act(async () => {
+      render(<EvaluationPATH />);
+    });
 
-    const canWalkRadio = screen.getByText("Le patient peut marcher");
-    fireEvent.click(canWalkRadio);
+    await act(async () => {
+      const canWalkRadio = screen.getByText("Le patient peut marcher");
+      fireEvent.click(canWalkRadio);
 
-    const walkingTimeInput = screen.getByPlaceholderText(
-      "Entrez le temps en secondes"
-    );
-    fireEvent.change(walkingTimeInput, { target: { value: "5" } });
+      const walkingTimeInput = screen.getByPlaceholderText(
+        "Entrez le temps en secondes"
+      );
+      fireEvent.change(walkingTimeInput, { target: { value: "5" } });
+    });
 
     const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
     const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
     const submitButton = screen.getByText("Soumettre");
 
-    fireEvent.change(chairTestInput, { target: { value: "0" } });
+    await act(async () => {
+      fireEvent.change(chairTestInput, { target: { value: "0" } });
 
-    fireEvent.change(balanceInputs[0], { target: { value: "4.9" } });
-    fireEvent.click(submitButton);
+      fireEvent.change(balanceInputs[0], { target: { value: "4.9" } });
+      fireEvent.click(submitButton);
+    });
 
     await waitFor(() => {
       expect(axios.post).not.toHaveBeenCalled();
     });
 
-    fireEvent.change(balanceInputs[0], { target: { value: "5" } });
-    fireEvent.click(submitButton);
+    await act(async () => {
+      fireEvent.change(balanceInputs[0], { target: { value: "5" } });
+      fireEvent.click(submitButton);
+    });
 
     await waitFor(() => {
       expect(axios.post).not.toHaveBeenCalled();
     });
 
-    fireEvent.change(chairTestInput, { target: { value: "5" } });
+    await act(async () => {
+      fireEvent.change(chairTestInput, { target: { value: "5" } });
+    });
 
     const balanceScenarios = [
       { ft: "4.9", st: "", t: "", expectedScore: 0 },
@@ -251,35 +297,40 @@ describe("EvaluationPATH Component", () => {
     ];
 
     for (const scenario of balanceScenarios) {
-      fireEvent.change(balanceInputs[0], { target: { value: scenario.ft } });
+      await act(async () => {
+        fireEvent.change(balanceInputs[0], { target: { value: scenario.ft } });
 
-      if (scenario.st && !balanceInputs[1].disabled) {
-        fireEvent.change(balanceInputs[1], { target: { value: scenario.st } });
-      }
+        if (scenario.st && !balanceInputs[1].disabled) {
+          fireEvent.change(balanceInputs[1], { target: { value: scenario.st } });
+        }
 
-      if (scenario.t && !balanceInputs[2].disabled) {
-        fireEvent.change(balanceInputs[2], { target: { value: scenario.t } });
-      }
+        if (scenario.t && !balanceInputs[2].disabled) {
+          fireEvent.change(balanceInputs[2], { target: { value: scenario.t } });
+        }
 
-      fireEvent.click(submitButton);
+        fireEvent.click(submitButton);
+      });
 
       await waitFor(() => {
         expect(axios.post).not.toHaveBeenCalled();
       });
     }
   });
-  
   it("calculates walking objective correctly for different speeds", async () => {
-    render(<EvaluationPATH />);
+    await act(async () => {
+      render(<EvaluationPATH />);
+    });
 
-    const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
-    fireEvent.change(chairTestInput, { target: { value: "5" } });
+    await act(async () => {
+      const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
+      fireEvent.change(chairTestInput, { target: { value: "5" } });
 
-    const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
-    fireEvent.change(balanceInputs[0], { target: { value: "5" } });
+      const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
+      fireEvent.change(balanceInputs[0], { target: { value: "5" } });
 
-    const canWalkRadio = screen.getByText("Le patient peut marcher");
-    fireEvent.click(canWalkRadio);
+      const canWalkRadio = screen.getByText("Le patient peut marcher");
+      fireEvent.click(canWalkRadio);
+    });
 
     const walkingTimeInput = screen.getByPlaceholderText(
       "Entrez le temps en secondes"
@@ -297,8 +348,10 @@ describe("EvaluationPATH Component", () => {
     ];
 
     for (const scenario of speedScenarios) {
-      fireEvent.change(walkingTimeInput, { target: { value: scenario.time } });
-      fireEvent.click(submitButton);
+      await act(async () => {
+        fireEvent.change(walkingTimeInput, { target: { value: scenario.time } });
+        fireEvent.click(submitButton);
+      });
 
       await waitFor(() => {
         expect(axios.post).not.toHaveBeenCalled();
@@ -307,70 +360,90 @@ describe("EvaluationPATH Component", () => {
   });
 
   it("validates inputs correctly", async () => {
-    render(<EvaluationPATH />);
+    await act(async () => {
+      render(<EvaluationPATH />);
+    });
 
-    const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
-    fireEvent.change(chairTestInput, { target: { value: "" } });
+    await act(async () => {
+      const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
+      fireEvent.change(chairTestInput, { target: { value: "" } });
 
-    const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
-    fireEvent.change(balanceInputs[0], { target: { value: "" } });
+      const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
+      fireEvent.change(balanceInputs[0], { target: { value: "" } });
 
-    const submitButton = screen.getByText("Soumettre");
-    fireEvent.click(submitButton);
+      const submitButton = screen.getByText("Soumettre");
+      fireEvent.click(submitButton);
+    });
 
     await waitFor(() => {
       expect(axios.post).not.toHaveBeenCalled();
       expect(screen.getAllByText(/requis/)).not.toHaveLength(0);
     });
 
-    const canWalkRadio = screen.getByText("Le patient peut marcher");
-    fireEvent.click(canWalkRadio);
+    await act(async () => {
+      const canWalkRadio = screen.getByText("Le patient peut marcher");
+      fireEvent.click(canWalkRadio);
+    });
 
     const walkingTimeInput = screen.getByPlaceholderText(
       "Entrez le temps en secondes"
     );
 
-    fireEvent.change(walkingTimeInput, { target: { value: "5.5" } });
-    expect(walkingTimeInput.value).toBe("5.5");
-
-    fireEvent.change(walkingTimeInput, { target: { value: "5.5a" } });
-    expect(walkingTimeInput.value).toBe("5.5");
-
-    ["4", "4.5", ".5", "0.5"].forEach((value) => {
-      fireEvent.change(walkingTimeInput, { target: { value } });
-      expect(walkingTimeInput.value).toBe(value);
+    await act(async () => {
+      fireEvent.change(walkingTimeInput, { target: { value: "5.5" } });
     });
+    expect(walkingTimeInput.value).toBe("5.5");
+
+    await act(async () => {
+      fireEvent.change(walkingTimeInput, { target: { value: "5.5a" } });
+    });
+    expect(walkingTimeInput.value).toBe("5.5");
+
+    for (const value of ["4", "4.5", ".5", "0.5"]) {
+      await act(async () => {
+        fireEvent.change(walkingTimeInput, { target: { value } });
+      });
+      expect(walkingTimeInput.value).toBe(value);
+    }
   });
 
   it("submits form with correct payload", async () => {
     const mockPostFn = jest.fn().mockResolvedValue({ data: { success: true } });
     axios.post.mockImplementation(mockPostFn);
 
-    render(<EvaluationPATH />);
+    await act(async () => {
+      render(<EvaluationPATH />);
+    });
 
-    const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
-    fireEvent.change(chairTestInput, { target: { value: "10" } });
+    await act(async () => {
+      const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
+      fireEvent.change(chairTestInput, { target: { value: "10" } });
 
-    const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
-    fireEvent.change(balanceInputs[0], { target: { value: "5" } });
-    fireEvent.change(balanceInputs[1], { target: { value: "5" } });
-    fireEvent.change(balanceInputs[2], { target: { value: "3" } });
+      const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
+      fireEvent.change(balanceInputs[0], { target: { value: "5" } });
+      fireEvent.change(balanceInputs[1], { target: { value: "5" } });
+      fireEvent.change(balanceInputs[2], { target: { value: "3" } });
 
-    const canWalkRadio = screen.getByText("Le patient peut marcher");
-    fireEvent.click(canWalkRadio);
+      const canWalkRadio = screen.getByText("Le patient peut marcher");
+      fireEvent.click(canWalkRadio);
 
-    const walkingTimeInput = screen.getByPlaceholderText(
-      "Entrez le temps en secondes"
-    );
-    fireEvent.change(walkingTimeInput, { target: { value: "5" } });
+      const walkingTimeInput = screen.getByPlaceholderText(
+        "Entrez le temps en secondes"
+      );
+      fireEvent.change(walkingTimeInput, { target: { value: "5" } });
+    });
 
-    const submitButton = screen.getByText("Soumettre");
-    fireEvent.click(submitButton);
+    await act(async () => {
+      const submitButton = screen.getByText("Soumettre");
+      fireEvent.click(submitButton);
+    });
 
     await waitFor(() => {
       try {
         const confirmButton = screen.getByText("Confirmer");
-        fireEvent.click(confirmButton);
+        act(() => {
+          fireEvent.click(confirmButton);
+        });
       } catch (error) {
         mockPostFn("/api/evaluations/path", {
           chairTestSupport: "with",
@@ -394,35 +467,44 @@ describe("EvaluationPATH Component", () => {
   });
 
   it("tests the cancel button functionality", async () => {
-    render(<EvaluationPATH />);
+    await act(async () => {
+      render(<EvaluationPATH />);
+    });
 
-    const cancelButton = screen.getByText("Annuler");
-    fireEvent.click(cancelButton);
+    await act(async () => {
+      const cancelButton = screen.getByText("Annuler");
+      fireEvent.click(cancelButton);
+    });
 
     await waitFor(() => {
       expect(axios.post).not.toHaveBeenCalled();
     });
   });
-
   it("tests modal content with capability to walk", async () => {
-    render(<EvaluationPATH />);
+    await act(async () => {
+      render(<EvaluationPATH />);
+    });
 
-    const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
-    fireEvent.change(chairTestInput, { target: { value: "10" } });
+    await act(async () => {
+      const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
+      fireEvent.change(chairTestInput, { target: { value: "10" } });
 
-    const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
-    fireEvent.change(balanceInputs[0], { target: { value: "5" } });
+      const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
+      fireEvent.change(balanceInputs[0], { target: { value: "5" } });
 
-    const canWalkRadio = screen.getByText("Le patient peut marcher");
-    fireEvent.click(canWalkRadio);
+      const canWalkRadio = screen.getByText("Le patient peut marcher");
+      fireEvent.click(canWalkRadio);
 
-    const walkingTimeInput = screen.getByPlaceholderText(
-      "Entrez le temps en secondes"
-    );
-    fireEvent.change(walkingTimeInput, { target: { value: "5" } });
+      const walkingTimeInput = screen.getByPlaceholderText(
+        "Entrez le temps en secondes"
+      );
+      fireEvent.change(walkingTimeInput, { target: { value: "5" } });
+    });
 
-    const submitButton = screen.getByText("Soumettre");
-    fireEvent.click(submitButton);
+    await act(async () => {
+      const submitButton = screen.getByText("Soumettre");
+      fireEvent.click(submitButton);
+    });
 
     await waitFor(() => {
       expect(axios.post).not.toHaveBeenCalled();
@@ -430,19 +512,25 @@ describe("EvaluationPATH Component", () => {
   });
 
   it("tests modal content with incapability to walk", async () => {
-    render(<EvaluationPATH />);
+    await act(async () => {
+      render(<EvaluationPATH />);
+    });
 
-    const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
-    fireEvent.change(chairTestInput, { target: { value: "10" } });
+    await act(async () => {
+      const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
+      fireEvent.change(chairTestInput, { target: { value: "10" } });
 
-    const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
-    fireEvent.change(balanceInputs[0], { target: { value: "5" } });
+      const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
+      fireEvent.change(balanceInputs[0], { target: { value: "5" } });
 
-    const cannotWalkRadio = screen.getByText("Le patient ne peut pas marcher");
-    fireEvent.click(cannotWalkRadio);
+      const cannotWalkRadio = screen.getByText("Le patient ne peut pas marcher");
+      fireEvent.click(cannotWalkRadio);
+    });
 
-    const submitButton = screen.getByText("Soumettre");
-    fireEvent.click(submitButton);
+    await act(async () => {
+      const submitButton = screen.getByText("Soumettre");
+      fireEvent.click(submitButton);
+    });
 
     await waitFor(() => {
       expect(axios.post).not.toHaveBeenCalled();
@@ -450,24 +538,30 @@ describe("EvaluationPATH Component", () => {
   });
 
   it("tests edge case in chair test score calculation (line 45)", async () => {
-    render(<EvaluationPATH />);
+    await act(async () => {
+      render(<EvaluationPATH />);
+    });
 
-    const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
-    fireEvent.change(chairTestInput, { target: { value: "xyz" } });
+    await act(async () => {
+      const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
+      fireEvent.change(chairTestInput, { target: { value: "xyz" } });
 
-    const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
-    fireEvent.change(balanceInputs[0], { target: { value: "5" } });
+      const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
+      fireEvent.change(balanceInputs[0], { target: { value: "5" } });
 
-    const canWalkRadio = screen.getByText("Le patient peut marcher");
-    fireEvent.click(canWalkRadio);
+      const canWalkRadio = screen.getByText("Le patient peut marcher");
+      fireEvent.click(canWalkRadio);
 
-    const walkingTimeInput = screen.getByPlaceholderText(
-      "Entrez le temps en secondes"
-    );
-    fireEvent.change(walkingTimeInput, { target: { value: "5" } });
+      const walkingTimeInput = screen.getByPlaceholderText(
+        "Entrez le temps en secondes"
+      );
+      fireEvent.change(walkingTimeInput, { target: { value: "5" } });
+    });
 
-    const submitButton = screen.getByText("Soumettre");
-    fireEvent.click(submitButton);
+    await act(async () => {
+      const submitButton = screen.getByText("Soumettre");
+      fireEvent.click(submitButton);
+    });
 
     await waitFor(() => {
       expect(axios.post).not.toHaveBeenCalled();
@@ -475,26 +569,32 @@ describe("EvaluationPATH Component", () => {
   });
 
   it("tests semi-tandem between 0 and 5 seconds (line 70)", async () => {
-    render(<EvaluationPATH />);
+    await act(async () => {
+      render(<EvaluationPATH />);
+    });
 
-    const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
-    fireEvent.change(chairTestInput, { target: { value: "5" } });
+    await act(async () => {
+      const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
+      fireEvent.change(chairTestInput, { target: { value: "5" } });
 
-    const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
-    fireEvent.change(balanceInputs[0], { target: { value: "5" } });
-    fireEvent.change(balanceInputs[1], { target: { value: "3" } });
-    fireEvent.change(balanceInputs[2], { target: { value: "0" } });
+      const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
+      fireEvent.change(balanceInputs[0], { target: { value: "5" } });
+      fireEvent.change(balanceInputs[1], { target: { value: "3" } });
+      fireEvent.change(balanceInputs[2], { target: { value: "0" } });
 
-    const canWalkRadio = screen.getByText("Le patient peut marcher");
-    fireEvent.click(canWalkRadio);
+      const canWalkRadio = screen.getByText("Le patient peut marcher");
+      fireEvent.click(canWalkRadio);
 
-    const walkingTimeInput = screen.getByPlaceholderText(
-      "Entrez le temps en secondes"
-    );
-    fireEvent.change(walkingTimeInput, { target: { value: "5" } });
+      const walkingTimeInput = screen.getByPlaceholderText(
+        "Entrez le temps en secondes"
+      );
+      fireEvent.change(walkingTimeInput, { target: { value: "5" } });
+    });
 
-    const submitButton = screen.getByText("Soumettre");
-    fireEvent.click(submitButton);
+    await act(async () => {
+      const submitButton = screen.getByText("Soumettre");
+      fireEvent.click(submitButton);
+    });
 
     await waitFor(() => {
       expect(axios.post).not.toHaveBeenCalled();
@@ -502,31 +602,36 @@ describe("EvaluationPATH Component", () => {
   });
 
   it("tests only feet together valid (line 74)", async () => {
-    render(<EvaluationPATH />);
+    await act(async () => {
+      render(<EvaluationPATH />);
+    });
 
-    const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
-    fireEvent.change(chairTestInput, { target: { value: "5" } });
+    await act(async () => {
+      const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
+      fireEvent.change(chairTestInput, { target: { value: "5" } });
 
-    const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
-    fireEvent.change(balanceInputs[0], { target: { value: "5" } });
-    fireEvent.change(balanceInputs[1], { target: { value: "0" } });
+      const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
+      fireEvent.change(balanceInputs[0], { target: { value: "5" } });
+      fireEvent.change(balanceInputs[1], { target: { value: "0" } });
 
-    const canWalkRadio = screen.getByText("Le patient peut marcher");
-    fireEvent.click(canWalkRadio);
+      const canWalkRadio = screen.getByText("Le patient peut marcher");
+      fireEvent.click(canWalkRadio);
 
-    const walkingTimeInput = screen.getByPlaceholderText(
-      "Entrez le temps en secondes"
-    );
-    fireEvent.change(walkingTimeInput, { target: { value: "5" } });
+      const walkingTimeInput = screen.getByPlaceholderText(
+        "Entrez le temps en secondes"
+      );
+      fireEvent.change(walkingTimeInput, { target: { value: "5" } });
+    });
 
-    const submitButton = screen.getByText("Soumettre");
-    fireEvent.click(submitButton);
+    await act(async () => {
+      const submitButton = screen.getByText("Soumettre");
+      fireEvent.click(submitButton);
+    });
 
     await waitFor(() => {
       expect(axios.post).not.toHaveBeenCalled();
     });
   });
-
   describe("Score calculation functions", () => {
     const mockCalculateChairTestScore = (count, withSupport) => {
       if (isNaN(count) || count === 0) return 0;
