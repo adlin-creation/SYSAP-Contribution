@@ -1,7 +1,8 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import { act } from "react-dom/test-utils";
+// Importer act depuis React Testing Library plutôt que react-dom/test-utils
+import { act } from "@testing-library/react";
 import EvaluationSearch from "./EvaluationSearch";
 import Constants from "../Utils/Constants";
 
@@ -77,7 +78,9 @@ describe("EvaluationSearch Component", () => {
   });
 
   it("renders the search form correctly", async () => {
-    render(<EvaluationSearch />);
+    await act(async () => {
+      render(<EvaluationSearch />);
+    });
 
     expect(screen.getByText("Recherche de patients")).toBeInTheDocument();
     expect(
@@ -91,7 +94,9 @@ describe("EvaluationSearch Component", () => {
   it("does not trigger search when input is empty", async () => {
     fetch.mockClear();
 
-    render(<EvaluationSearch />);
+    await act(async () => {
+      render(<EvaluationSearch />);
+    });
 
     const searchButton = screen.getByRole("button", { name: /Rechercher/i });
     await act(async () => {
@@ -114,7 +119,9 @@ describe("EvaluationSearch Component", () => {
       json: () => Promise.resolve(testPatient),
     });
 
-    render(<EvaluationSearch />);
+    await act(async () => {
+      render(<EvaluationSearch />);
+    });
 
     const searchInput = screen.getByPlaceholderText("Entrez un nom ou un ID");
     await act(async () => {
@@ -150,7 +157,9 @@ describe("EvaluationSearch Component", () => {
       json: () => Promise.resolve(testPatients),
     });
 
-    render(<EvaluationSearch />);
+    await act(async () => {
+      render(<EvaluationSearch />);
+    });
 
     const searchInput = screen.getByPlaceholderText("Entrez un nom ou un ID");
     await act(async () => {
@@ -178,7 +187,9 @@ describe("EvaluationSearch Component", () => {
       json: () => Promise.resolve([]),
     });
 
-    render(<EvaluationSearch />);
+    await act(async () => {
+      render(<EvaluationSearch />);
+    });
 
     const searchInput = screen.getByPlaceholderText("Entrez un nom ou un ID");
     await act(async () => {
@@ -194,11 +205,12 @@ describe("EvaluationSearch Component", () => {
       expect(screen.getByText("Aucun patient trouvé.")).toBeInTheDocument();
     });
   });
-
   it("shows error message when fetch fails", async () => {
     fetch.mockRejectedValueOnce(new Error("Server error"));
 
-    render(<EvaluationSearch />);
+    await act(async () => {
+      render(<EvaluationSearch />);
+    });
 
     const searchInput = screen.getByPlaceholderText("Entrez un nom ou un ID");
     await act(async () => {
@@ -230,7 +242,9 @@ describe("EvaluationSearch Component", () => {
       json: () => Promise.resolve(testPatient),
     });
 
-    render(<EvaluationSearch />);
+    await act(async () => {
+      render(<EvaluationSearch />);
+    });
 
     const searchInput = screen.getByPlaceholderText("Entrez un nom ou un ID");
     await act(async () => {
@@ -267,7 +281,9 @@ describe("EvaluationSearch Component", () => {
       json: () => Promise.resolve(testPatient),
     });
 
-    render(<EvaluationSearch />);
+    await act(async () => {
+      render(<EvaluationSearch />);
+    });
 
     const searchInput = screen.getByPlaceholderText("Entrez un nom ou un ID");
     await act(async () => {
@@ -302,7 +318,9 @@ describe("EvaluationSearch Component", () => {
       json: () => Promise.resolve({ message: "Server error" }),
     });
 
-    render(<EvaluationSearch />);
+    await act(async () => {
+      render(<EvaluationSearch />);
+    });
 
     const searchInput = screen.getByPlaceholderText("Entrez un nom ou un ID");
     await act(async () => {
@@ -329,7 +347,9 @@ describe("EvaluationSearch Component", () => {
 
     fetch.mockReturnValueOnce(fetchPromise);
 
-    render(<EvaluationSearch />);
+    await act(async () => {
+      render(<EvaluationSearch />);
+    });
 
     const searchInput = screen.getByPlaceholderText("Entrez un nom ou un ID");
     await act(async () => {
@@ -364,7 +384,9 @@ describe("EvaluationSearch Component", () => {
       json: () => Promise.resolve(testPatient),
     });
 
-    render(<EvaluationSearch />);
+    await act(async () => {
+      render(<EvaluationSearch />);
+    });
 
     const searchInput = screen.getByPlaceholderText("Entrez un nom ou un ID");
     await act(async () => {
@@ -403,7 +425,9 @@ describe("EvaluationSearch Component", () => {
       json: () => Promise.resolve(testPatients),
     });
 
-    render(<EvaluationSearch />);
+    await act(async () => {
+      render(<EvaluationSearch />);
+    });
 
     const searchInput = screen.getByPlaceholderText("Entrez un nom ou un ID");
     await act(async () => {
@@ -436,7 +460,9 @@ describe("EvaluationSearch Component", () => {
       json: () => Promise.resolve(testPatient),
     });
 
-    render(<EvaluationSearch />);
+    await act(async () => {
+      render(<EvaluationSearch />);
+    });
 
     const searchInput = screen.getByPlaceholderText("Entrez un nom ou un ID");
     await act(async () => {
@@ -473,7 +499,9 @@ describe("EvaluationSearch Component", () => {
       json: () => Promise.resolve(testPatient),
     });
 
-    render(<EvaluationSearch />);
+    await act(async () => {
+      render(<EvaluationSearch />);
+    });
 
     const searchInput = screen.getByPlaceholderText("Entrez un nom ou un ID");
     await act(async () => {
