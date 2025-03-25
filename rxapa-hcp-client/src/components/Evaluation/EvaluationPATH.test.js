@@ -26,6 +26,9 @@ describe("EvaluationPATH Component", () => {
     const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
     fireEvent.change(balanceInputs[0], { target: { value: "5" } });
 
+    const canWalkRadio = screen.getByText("Le patient peut marcher");
+    fireEvent.click(canWalkRadio);
+
     const walkingTimeInput = screen.getByPlaceholderText(
       "Entrez le temps en secondes"
     );
@@ -63,7 +66,7 @@ describe("EvaluationPATH Component", () => {
   it("renders the component and shows all expected sections", () => {
     render(<EvaluationPATH />);
 
-    ["CARDIO-MUSCULAIRE", "ÉQUILIBRE", "VITESSE DE MARCHE"].forEach((section) =>
+    ["CARDIO-MUSCULAIRE", "ÉQUILIBRE", "OBJECTIF DE MARCHE"].forEach((section) =>
       expect(screen.getByText(section)).toBeInTheDocument()
     );
 
@@ -91,11 +94,11 @@ describe("EvaluationPATH Component", () => {
     expect(screen.getByText("Temps Tandem (secondes)")).toBeInTheDocument();
 
     expect(
-      screen.getByText(/Test 4 mètres - Temps nécessaire pour marcher 4-mètres/)
+      screen.getByText("Test 4 mètres – vitesse de marche confortable")
     ).toBeInTheDocument();
-    expect(
-      screen.getByPlaceholderText("Entrez le temps en secondes")
-    ).toBeInTheDocument();
+
+    expect(screen.getByText("Le patient peut marcher")).toBeInTheDocument();
+    expect(screen.getByText("Le patient ne peut pas marcher")).toBeInTheDocument();
   });
 
   it("enables/disables balance tests based on previous test results", async () => {
@@ -116,8 +119,28 @@ describe("EvaluationPATH Component", () => {
     expect(balanceInputs[2]).not.toBeDisabled();
   });
 
+  it("affiche ou masque le champ du temps de marche selon la capacité du patient à marcher", async () => {
+    render(<EvaluationPATH />);
+
+    expect(screen.getByLabelText("Le patient peut marcher").checked).toBeTruthy();
+    
+    expect(
+      screen.getByText("Temps nécessaire pour marcher 4 mètres (secondes)")
+    ).toBeInTheDocument();
+
+    const cannotWalkRadio = screen.getByText("Le patient ne peut pas marcher");
+    fireEvent.click(cannotWalkRadio);
+
+    expect(
+      screen.queryByText("Temps nécessaire pour marcher 4 mètres (secondes)")
+    ).not.toBeInTheDocument();
+  });
+
   it("calculates walking speed correctly", async () => {
     render(<EvaluationPATH />);
+
+    const canWalkRadio = screen.getByText("Le patient peut marcher");
+    fireEvent.click(canWalkRadio);
 
     const walkingTimeInput = screen.getByPlaceholderText(
       "Entrez le temps en secondes"
@@ -135,6 +158,9 @@ describe("EvaluationPATH Component", () => {
 
     const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
     fireEvent.change(balanceInputs[0], { target: { value: "5" } });
+
+    const canWalkRadio = screen.getByText("Le patient peut marcher");
+    fireEvent.click(canWalkRadio);
 
     const walkingTimeInput = screen.getByPlaceholderText(
       "Entrez le temps en secondes"
@@ -185,6 +211,9 @@ describe("EvaluationPATH Component", () => {
 
   it("calculates balance score correctly with different cardio scores", async () => {
     render(<EvaluationPATH />);
+
+    const canWalkRadio = screen.getByText("Le patient peut marcher");
+    fireEvent.click(canWalkRadio);
 
     const walkingTimeInput = screen.getByPlaceholderText(
       "Entrez le temps en secondes"
@@ -249,6 +278,9 @@ describe("EvaluationPATH Component", () => {
     const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
     fireEvent.change(balanceInputs[0], { target: { value: "5" } });
 
+    const canWalkRadio = screen.getByText("Le patient peut marcher");
+    fireEvent.click(canWalkRadio);
+
     const walkingTimeInput = screen.getByPlaceholderText(
       "Entrez le temps en secondes"
     );
@@ -291,6 +323,9 @@ describe("EvaluationPATH Component", () => {
       expect(screen.getAllByText(/requis/)).not.toHaveLength(0);
     });
 
+    const canWalkRadio = screen.getByText("Le patient peut marcher");
+    fireEvent.click(canWalkRadio);
+
     const walkingTimeInput = screen.getByPlaceholderText(
       "Entrez le temps en secondes"
     );
@@ -321,6 +356,9 @@ describe("EvaluationPATH Component", () => {
     fireEvent.change(balanceInputs[1], { target: { value: "5" } });
     fireEvent.change(balanceInputs[2], { target: { value: "3" } });
 
+    const canWalkRadio = screen.getByText("Le patient peut marcher");
+    fireEvent.click(canWalkRadio);
+
     const walkingTimeInput = screen.getByPlaceholderText(
       "Entrez le temps en secondes"
     );
@@ -341,6 +379,7 @@ describe("EvaluationPATH Component", () => {
           balanceSemiTandem: 5,
           balanceTandem: 3,
           walkingTime: 5,
+          canWalk: true,
           scores: {
             cardioMusculaire: 3,
             equilibre: 4,
@@ -365,7 +404,7 @@ describe("EvaluationPATH Component", () => {
     });
   });
 
-  it("tests modal content with and without walking time", async () => {
+  it("tests modal content with capability to walk", async () => {
     render(<EvaluationPATH />);
 
     const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
@@ -374,18 +413,35 @@ describe("EvaluationPATH Component", () => {
     const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
     fireEvent.change(balanceInputs[0], { target: { value: "5" } });
 
-    const submitButton = screen.getByText("Soumettre");
-    fireEvent.click(submitButton);
-
-    await waitFor(() => {
-      expect(axios.post).not.toHaveBeenCalled();
-    });
+    const canWalkRadio = screen.getByText("Le patient peut marcher");
+    fireEvent.click(canWalkRadio);
 
     const walkingTimeInput = screen.getByPlaceholderText(
       "Entrez le temps en secondes"
     );
     fireEvent.change(walkingTimeInput, { target: { value: "5" } });
 
+    const submitButton = screen.getByText("Soumettre");
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(axios.post).not.toHaveBeenCalled();
+    });
+  });
+
+  it("tests modal content with incapability to walk", async () => {
+    render(<EvaluationPATH />);
+
+    const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
+    fireEvent.change(chairTestInput, { target: { value: "10" } });
+
+    const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
+    fireEvent.change(balanceInputs[0], { target: { value: "5" } });
+
+    const cannotWalkRadio = screen.getByText("Le patient ne peut pas marcher");
+    fireEvent.click(cannotWalkRadio);
+
+    const submitButton = screen.getByText("Soumettre");
     fireEvent.click(submitButton);
 
     await waitFor(() => {
@@ -401,6 +457,9 @@ describe("EvaluationPATH Component", () => {
 
     const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
     fireEvent.change(balanceInputs[0], { target: { value: "5" } });
+
+    const canWalkRadio = screen.getByText("Le patient peut marcher");
+    fireEvent.click(canWalkRadio);
 
     const walkingTimeInput = screen.getByPlaceholderText(
       "Entrez le temps en secondes"
@@ -426,6 +485,9 @@ describe("EvaluationPATH Component", () => {
     fireEvent.change(balanceInputs[1], { target: { value: "3" } });
     fireEvent.change(balanceInputs[2], { target: { value: "0" } });
 
+    const canWalkRadio = screen.getByText("Le patient peut marcher");
+    fireEvent.click(canWalkRadio);
+
     const walkingTimeInput = screen.getByPlaceholderText(
       "Entrez le temps en secondes"
     );
@@ -448,6 +510,9 @@ describe("EvaluationPATH Component", () => {
     const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
     fireEvent.change(balanceInputs[0], { target: { value: "5" } });
     fireEvent.change(balanceInputs[1], { target: { value: "0" } });
+
+    const canWalkRadio = screen.getByText("Le patient peut marcher");
+    fireEvent.click(canWalkRadio);
 
     const walkingTimeInput = screen.getByPlaceholderText(
       "Entrez le temps en secondes"
