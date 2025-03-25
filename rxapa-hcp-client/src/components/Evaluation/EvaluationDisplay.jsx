@@ -40,49 +40,81 @@ function EvaluationDisplay() {
     setErrorMessage("");
 
     try {
+      // Récupération des informations du patient si un ID est fourni
       if (patientId) {
-        const response = await fetch(
-          `${Constants.SERVER_URL}/patient/${patientId}`,
-          {
+        try {
+          console.log(`Récupération du patient: ${Constants.SERVER_URL}/patients/${patientId}`);
+          const response = await fetch(`${Constants.SERVER_URL}/patients/${patientId}`, {
             headers: { Authorization: "Bearer " + token },
+          });
+
+          if (!response.ok) {
+            console.error(`Erreur patient: ${response.status} ${response.statusText}`);
+            throw new Error(`Erreur ${response.status}: ${response.statusText}`);
           }
-        );
 
-        if (!response.ok) {
-          throw new Error("Erreur lors de la récupération du patient");
+          const patientData = await response.json();
+          setPatient(patientData);
+          console.log("Patient récupéré:", patientData);
+        } catch (patientError) {
+          console.error("Erreur détaillée (patient):", patientError);
+          // On continue même si la récupération du patient échoue
         }
-
-        const patientData = await response.json();
-        setPatient(patientData);
       }
 
+      // Récupération des évaluations
+      // Correction de l'URL pour correspondre à la route réelle du backend
       const endpoint = patientId
-        ? `/evaluations/patient/${patientId}`
-        : "/evaluations";
+        ? `evaluations/patient/${patientId}`
+        : "evaluations";
 
+      console.log(`Récupération des évaluations: ${Constants.SERVER_URL}/${endpoint}`);
+      
       const evaluationsResponse = await fetch(
-        `${Constants.SERVER_URL}${endpoint}`,
+        `${Constants.SERVER_URL}/${endpoint}`,
         {
           headers: { Authorization: "Bearer " + token },
         }
       );
 
       if (!evaluationsResponse.ok) {
-        throw new Error("Erreur lors de la récupération des évaluations");
+        console.error(`Erreur évaluations: ${evaluationsResponse.status} ${evaluationsResponse.statusText}`);
+        throw new Error(`Erreur ${evaluationsResponse.status}: ${evaluationsResponse.statusText}`);
       }
 
-      const evaluationsData = await evaluationsResponse.json();
-      console.log("Données reçues:", evaluationsData);
+      // Récupérer le texte brut pour le déboguer avant de le parser
+      const responseText = await evaluationsResponse.text();
+      console.log("Réponse brute:", responseText);
+      
+      // Vérifier si la réponse est vide ou non JSON
+      if (!responseText || responseText.trim() === "") {
+        throw new Error("La réponse du serveur est vide");
+      }
+      
+      let evaluationsData;
+      try {
+        evaluationsData = JSON.parse(responseText);
+      } catch (jsonError) {
+        console.error("Erreur de parsing JSON:", jsonError);
+        console.error("Contenu reçu:", responseText);
+        throw new Error(`Erreur de format JSON: ${jsonError.message}`);
+      }
+      
+      console.log("Évaluations récupérées:", evaluationsData);
 
-      const sortedEvaluations = evaluationsData.sort(
-        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-      );
-
-      setEvaluations(sortedEvaluations);
+      if (Array.isArray(evaluationsData)) {
+        const sortedEvaluations = evaluationsData.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        setEvaluations(sortedEvaluations);
+      } else {
+        console.error("Les données d'évaluations ne sont pas un tableau:", evaluationsData);
+        setErrorMessage("Format de données incorrect pour les évaluations");
+      }
     } catch (error) {
-      console.error("Erreur lors de la récupération des données:", error);
+      console.error("Erreur détaillée:", error);
       setErrorMessage(
-        "Une erreur est survenue lors du chargement des données."
+        `Erreur: ${error.message || "Une erreur est survenue lors du chargement des données."}`
       );
     } finally {
       setLoading(false);
@@ -121,8 +153,8 @@ function EvaluationDisplay() {
       const pace = evaluation.Evaluation_PACE;
       type = "PACE";
       scoreTotal = `${pace.scoreTotal}/18`;
-      programmeRecommande = evaluation.Program?.name;
-      vitesseMarche = pace.vitesseDeMarche?.toFixed(2);
+      programmeRecommande = evaluation.Program?.name || "";
+      vitesseMarche = pace.vitesseDeMarche?.toFixed(2) || "0.00";
 
       cardioData = [
         pace.chairTestSupport ? "Avec appui" : "Sans appui",
@@ -131,7 +163,7 @@ function EvaluationDisplay() {
 
       equilibreData = [
         "Dernier test effectué : Unipodal",
-        `Temps (seconde) : ${pace.BalanceOneFooted}`,
+        `Temps (seconde) : ${pace.balanceOneFooted}`,
       ];
 
       mobiliteData = [
@@ -142,8 +174,8 @@ function EvaluationDisplay() {
       const path = evaluation.Evaluation_PATH;
       type = "PATH";
       scoreTotal = path.scoreTotal;
-      programmeRecommande = evaluation.Program?.name;
-      vitesseMarche = path.vitesseDeMarche?.toFixed(2);
+      programmeRecommande = evaluation.Program?.name || "";
+      vitesseMarche = path.vitesseDeMarche?.toFixed(2) || "0.00";
 
       cardioData = [
         path.chairTestSupport ? "Avec appui" : "Sans appui",
@@ -151,15 +183,15 @@ function EvaluationDisplay() {
       ];
 
       equilibreData = [
-        "Dernier test effectué : Unipodal",
+        "Dernier test effectué : Tandem",
         `Temps (seconde) : ${path.balanceTandem}`,
       ];
     } else if (evaluation.Evaluation_MATCH) {
       const match = evaluation.Evaluation_MATCH;
       type = "MATCH";
       scoreTotal = `${match.scoreTotal}/9`;
-      programmeRecommande = evaluation.Program?.name;
-      vitesseMarche = match.vitesseDeMarche?.toFixed(2);
+      programmeRecommande = evaluation.Program?.name || "";
+      vitesseMarche = match.vitesseDeMarche?.toFixed(2) || "0.00";
 
       cardioData = [
         match.chairTestSupport ? "Avec appui" : "Sans appui",
@@ -167,7 +199,7 @@ function EvaluationDisplay() {
       ];
 
       equilibreData = [
-        "Dernier test effectué : Unipodal",
+        "Dernier test effectué : Tandem",
         `Temps (seconde) : ${match.balanceTandem}`,
       ];
     }
@@ -218,11 +250,6 @@ function EvaluationDisplay() {
           style={{ marginBottom: 20 }}
         >
           <Col>
-            <Title level={3} style={{ margin: 0 }}>
-              Version 1
-            </Title>
-          </Col>
-          <Col>
             {patient && (
               <Title level={3} style={{ margin: 0 }}>
                 {patient.firstname} {patient.lastname}
@@ -238,7 +265,16 @@ function EvaluationDisplay() {
             <Spin size="large" />
           </div>
         ) : errorMessage ? (
-          <div className="text-center py-8 text-red-500">{errorMessage}</div>
+          <Result
+            status="error"
+            title="Erreur de chargement"
+            subTitle={errorMessage}
+            extra={
+              <Button type="primary" onClick={fetchData}>
+                Réessayer
+              </Button>
+            }
+          />
         ) : evaluations.length === 0 ? (
           <Empty description="Aucune évaluation trouvée" />
         ) : (

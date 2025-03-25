@@ -862,7 +862,8 @@ exports.searchPatients = async (req: Request, res: Response) => {
 };
 
 exports.getPatientEvaluations = async (req: any, res: any, next: any) => {
-  const patientId = req.params.patientId;
+  // Changement ici: utiliser id au lieu de patientId pour correspondre au paramètre dans la route
+  const patientId = req.params.id; 
   console.log("getPatientEvaluations appelé avec patientId:", patientId);
 
   try {
@@ -890,9 +891,12 @@ exports.getPatientEvaluations = async (req: any, res: any, next: any) => {
     });
 
     if (evaluations.length === 0) {
+      console.log("Aucune évaluation trouvée pour le patient:", patientId);
       return res.status(200).json([]);
     }
-    res.status(200).json(evaluations);
+    
+    console.log(`${evaluations.length} évaluations trouvées pour le patient:`, patientId);
+    return res.status(200).json(evaluations);
   } catch (error: any) {
     console.error(
       "Erreur lors du chargement des évaluations du patient:",
@@ -901,10 +905,10 @@ exports.getPatientEvaluations = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({
+    return res.status(error.statusCode).json({
       message:
         "Erreur lors du chargement des évaluations depuis la base de données",
+      error: error.message,
     });
   }
-  return res;
 };
