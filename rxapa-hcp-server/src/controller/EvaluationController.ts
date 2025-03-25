@@ -27,20 +27,19 @@ exports.createPaceEvaluation = async (req: any, res: any, next: any) => {
 
   const t = await sequelize.transaction();
 
-  
   try {
     const program = await Program.findOne({
-      where: { 
-        name: scores.program
+      where: {
+        name: scores.program,
       },
-      transaction: t
+      transaction: t,
     });
-  
+
     if (!program) {
       await t.rollback();
       return res.status(404).json({
         message: "Programme " + scores.program + " introuvable",
-        error: `Programme '${scores.program}' introuvable`
+        error: `Programme '${scores.program}' introuvable`,
       });
     }
 
@@ -48,7 +47,7 @@ exports.createPaceEvaluation = async (req: any, res: any, next: any) => {
       {
         idPatient: idPatient,
         //idKinesiologist,
-        idResultProgram: program.id
+        idResultProgram: program.id,
       },
       { transaction: t }
     );
@@ -92,10 +91,10 @@ exports.createPaceEvaluation = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({ 
+    res.status(error.statusCode).json({
       message: "Error creating evaluation",
       errorDetails: error.toString(),
-      stack: error.stack
+      stack: error.stack,
     });
   }
   return res;
@@ -149,8 +148,10 @@ exports.createMatchEvaluation = async (req: any, res: any, next: any) => {
 
     let objectifMarche = 1; // 10 min par défaut
     if (vitesseCalculee >= 0.8) objectifMarche = 4; // 30 min
-    else if (vitesseCalculee >= 0.6 && vitesseCalculee < 0.8) objectifMarche = 3; // 20 min
-    else if (vitesseCalculee >= 0.4 && vitesseCalculee < 0.6) objectifMarche = 2; // 15 min
+    else if (vitesseCalculee >= 0.6 && vitesseCalculee < 0.8)
+      objectifMarche = 3; // 20 min
+    else if (vitesseCalculee >= 0.4 && vitesseCalculee < 0.6)
+      objectifMarche = 2; // 15 min
 
     await Evaluation_MATCH.create(
       {
@@ -271,8 +272,6 @@ exports.createPathEvaluation = async (req: any, res: any, next: any) => {
   return res;
 };
 
-
-
 exports.updatePaceEvaluation = async (req: any, res: any, next: any) => {
   const evaluationId = req.params.id;
   const {
@@ -285,19 +284,21 @@ exports.updatePaceEvaluation = async (req: any, res: any, next: any) => {
     frtSitting,
     frtDistance,
     walkingTime,
-    scores,
-  } = req.body;
+    scores = {},
+  } = req.body || {};
 
   const t = await sequelize.transaction();
 
   try {
     const evaluation = await Evaluation.findByPk(evaluationId);
     if (!evaluation) {
+      await t.rollback();
       return res.status(404).json({ message: "Evaluation not found" });
     }
 
     const paceEvaluation = await Evaluation_PACE.findByPk(evaluationId);
     if (!paceEvaluation) {
+      await t.rollback();
       return res.status(404).json({ message: "PACE evaluation not found" });
     }
 
@@ -307,22 +308,20 @@ exports.updatePaceEvaluation = async (req: any, res: any, next: any) => {
     else if (vitesse > 0.6) objectifMarche = 3;
     else if (vitesse >= 0.4) objectifMarche = 2;
 
-    // Update PACE evaluation
-
     await paceEvaluation.update(
       {
-        chairTestSupport: chairTestSupport,
-        chairTestCount: parseInt(chairTestCount),
-        scoreA: scores.cardioMusculaire,
-        balanceFeetTogether: parseFloat(balanceFeetTogether),
-        balanceSemiTandem: parseFloat(balanceSemiTandem),
-        balanceTandem: parseFloat(balanceTandem),
-        balanceOneFooted: parseFloat(balanceOneFooted),
-        scoreB: scores.equilibre,
+        chairTestSupport: chairTestSupport === "with",
+        chairTestCount: parseInt(chairTestCount || "0"),
+        scoreA: scores.cardioMusculaire || 0,
+        balanceFeetTogether: parseFloat(balanceFeetTogether || "0"),
+        balanceSemiTandem: parseFloat(balanceSemiTandem || "0"),
+        balanceTandem: parseFloat(balanceTandem || "0"),
+        balanceOneFooted: parseFloat(balanceOneFooted || "0"),
+        scoreB: scores.equilibre || 0,
         frtSitting: frtSitting === true,
         frtDistance: parseFloat(frtDistance || "0"),
-        scoreC: scores.mobilite,
-        scoreTotal: scores.total,
+        scoreC: scores.mobilite || 0,
+        scoreTotal: scores.total || 0,
         vitesseDeMarche: vitesse,
         objectifMarche: objectifMarche,
       },
@@ -335,13 +334,21 @@ exports.updatePaceEvaluation = async (req: any, res: any, next: any) => {
       evaluation,
       paceEvaluation,
       scores,
+      message: "PACE evaluation updated successfully",
     });
   } catch (error: any) {
     await t.rollback();
+    console.error("Error updating PACE evaluation:", error);
+
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({ message: "Error updating evaluation" });
+
+    res.status(error.statusCode).json({
+      message: "Error updating evaluation",
+      errorDetails: error.toString(),
+      stack: error.stack,
+    });
   }
   return res;
 };
@@ -799,7 +806,6 @@ exports.deletePathEvaluation = async (req: any, res: any, next: any) => {
   return res;
 };
 
-
 exports.searchPatients = async (req: Request, res: Response) => {
   try {
     const { term } = req.query;
@@ -817,7 +823,7 @@ exports.searchPatients = async (req: Request, res: Response) => {
         [Op.or]: [
           { firstname: { [Op.iLike]: `%${searchTerms[0]}%` } },
           { lastname: { [Op.iLike]: `%${searchTerms[0]}%` } },
-        ]
+        ],
       };
     } else {
       // Combinaisons prénom/nom
@@ -827,27 +833,82 @@ exports.searchPatients = async (req: Request, res: Response) => {
           {
             [Op.and]: [
               { firstname: { [Op.iLike]: `%${searchTerms[0]}%` } },
-              { lastname: { [Op.iLike]: `%${searchTerms.slice(1).join(' ')}%` } },
-            ]
+              {
+                lastname: { [Op.iLike]: `%${searchTerms.slice(1).join(" ")}%` },
+              },
+            ],
           },
           // Format "Nom Prénom" (si deux termes)
-          ...(searchTerms.length === 2 ? [
-            {
-              [Op.and]: [
-                { firstname: { [Op.iLike]: `%${searchTerms[1]}%` } },
-                { lastname: { [Op.iLike]: `%${searchTerms[0]}%` } },
+          ...(searchTerms.length === 2
+            ? [
+                {
+                  [Op.and]: [
+                    { firstname: { [Op.iLike]: `%${searchTerms[1]}%` } },
+                    { lastname: { [Op.iLike]: `%${searchTerms[0]}%` } },
+                  ],
+                },
               ]
-            }
-          ] : [])
-        ]
+            : []),
+        ],
       };
     }
 
     const patients = await Patient.findAll({ where: whereClause });
     res.status(200).json(patients);
-    
   } catch (error) {
     console.error("Erreur recherche:", error);
     res.status(500).json({ message: "Échec de la recherche" });
+  }
+};
+
+exports.getPatientEvaluations = async (req: any, res: any, next: any) => {
+  // Changement ici: utiliser id au lieu de patientId pour correspondre au paramètre dans la route
+  const patientId = req.params.id; 
+  console.log("getPatientEvaluations appelé avec patientId:", patientId);
+
+  try {
+    const evaluations = await Evaluation.findAll({
+      where: { idPatient: patientId },
+      include: [
+        {
+          model: Evaluation_PACE,
+          required: false,
+        },
+        {
+          model: Evaluation_PATH,
+          required: false,
+        },
+        {
+          model: Evaluation_MATCH,
+          required: false,
+        },
+        {
+          model: Program,
+          required: false,
+        },
+      ],
+      order: [["createdAt", "DESC"]],
+    });
+
+    if (evaluations.length === 0) {
+      console.log("Aucune évaluation trouvée pour le patient:", patientId);
+      return res.status(200).json([]);
+    }
+    
+    console.log(`${evaluations.length} évaluations trouvées pour le patient:`, patientId);
+    return res.status(200).json(evaluations);
+  } catch (error: any) {
+    console.error(
+      "Erreur lors du chargement des évaluations du patient:",
+      error
+    );
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    return res.status(error.statusCode).json({
+      message:
+        "Erreur lors du chargement des évaluations depuis la base de données",
+      error: error.message,
+    });
   }
 };

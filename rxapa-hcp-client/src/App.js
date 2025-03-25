@@ -27,6 +27,7 @@ import EvaluationPACE from "./components/Evaluation/EvaluationPACE";
 import EvaluationMATCH from "./components/Evaluation/EvaluationMATCH";
 import EvaluationPATH from "./components/Evaluation/EvaluationPATH";
 import EvaluationSearch from "./components/Evaluation/EvaluationSearch";
+import EvaluationDisplay from "./components/Evaluation/EvaluationDisplay";
 import useToken from "./components/Authentication/useToken"; // Import du hook personnalisé
 import Constants from "./components/Utils/Constants";
 import LanguageSwitcher from "./components/LanguageSwitcher/LanguageSwitcher";
@@ -168,6 +169,10 @@ function App() {
                 // On ré-appelle filterMenuItems pour ses enfants
                 children: filterMenuItems(item.children),
               };
+            }
+
+            if (location.state.role !== "kinesiologist" && location.state.role !== "admin" && item.key === "/evaluations") {
+              return null;
             }
 
             // CAS ADMIN: l'admin ne voit PAS l'onglet "admins"
@@ -334,6 +339,14 @@ function App() {
                   <EvaluationPATH />
                 </Suspense>
               }
+            ></Route>
+            <Route
+            path="evaluations/patient/:patientId"
+            element={
+              <Suspense fallback={<div>Loading evaluations...</div>}>
+                <EvaluationDisplay />
+              </Suspense>
+            }
             ></Route>
             <Route
               path="*"

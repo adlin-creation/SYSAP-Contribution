@@ -14,6 +14,13 @@ function EvaluationSearch() {
   const [errorMessage, setErrorMessage] = useState(""); // Message d'erreur
 
   /**
+   * Fonction pour naviguer vers la page d'affichage des évaluations
+   */
+  const navigateToEvaluations = (patientId) => {
+    window.location.href = `/evaluations/patient/${patientId}`;
+  };
+
+  /**
    * Fonction pour effectue une recherche de patient par ID ou par nom
    */
   const handleSearch = async () => {
@@ -96,64 +103,80 @@ function EvaluationSearch() {
       title: "Actions",
       key: "actions",
       render: (_, patient) => (
-        <div className="space-x-2">
-          {/* Bouton pour accéder à l'évaluation du patient */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            width: "100%",
+            alignItems: "center",
+          }}
+        >
+          <div style={{ display: "flex", gap: "16px" }}>
+            <Button
+              type="primary"
+              onClick={() =>
+                (window.location.href = `/evaluation-pace/${patient.id}`)
+              }
+              disabled={!patient.id}
+            >
+              Évaluation PACE
+            </Button>
+            <Button
+              type="primary"
+              onClick={() =>
+                (window.location.href = `/evaluation-path/${patient.id}`)
+              }
+              disabled={!patient.id}
+            >
+              Évaluation PATH
+            </Button>
+            <Button
+              type="primary"
+              onClick={() =>
+                (window.location.href = `/evaluation-match/${patient.id}`)
+              }
+              disabled={!patient.id}
+            >
+              Évaluation MATCH
+            </Button>
+          </div>
+
           <Button
             type="primary"
-            onClick={() =>
-              (window.location.href = `/evaluation-pace/${patient.id}`)
-            }
-            disabled={!patient.id}
+            onClick={() => navigateToEvaluations(patient.id)}
           >
-            Évaluation PACE
-          </Button>
-          {/* Boutons désactivés pour PATH */}
-          <Button
-            type="primary"
-            onClick={() =>
-              (window.location.href = `/evaluation-path/${patient.id}`)
-            }
-            disabled={!patient.id}
-          > 
-          Évaluation PATH
-          </Button>
-          <Button
-            type="primary"
-            onClick={() =>
-              (window.location.href = `/evaluation-match/${patient.id}`)
-            }
-            disabled={!patient.id}
-          >
-            Évaluation MATCH
+            Afficher évaluations
           </Button>
         </div>
       ),
+      width: "60%", // Assurer que la colonne est suffisamment large
     },
   ];
 
   return (
     <div className="p-6">
       <Card title={t("search_title")} className="shadow-sm">
-        <div className="mb-6">
-          <div className="flex gap-4">
-            {/* Champs de recherche*/}
-            <Input
-              placeholder={t("search_placeholder")}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              onPressEnter={handleSearch}
-              prefix={<SearchOutlined />}
-              suffix={
-                searchTerm && (
-                  <Button
-                    onClick={clearSearch}
-                    size="small"
-                    icon={<CloseOutlined />}
-                  />
-                )
-              }
-              className="flex-grow"
-            />
+        <div className="mb-6" style={{ marginBottom: "16px" }}>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            {/* Champs de recherche */}
+            <div style={{ flex: 1, marginRight: "8px" }}>
+              <Input
+                placeholder={t("search_placeholder")}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onPressEnter={handleSearch}
+                prefix={<SearchOutlined />}
+                suffix={
+                  searchTerm && (
+                    <Button
+                      onClick={clearSearch}
+                      size="small"
+                      icon={<CloseOutlined />}
+                    />
+                  )
+                }
+              />
+            </div>
             {/* Bouton de recherche */}
             <Button type="primary" onClick={handleSearch} loading={loading}>
               Rechercher
@@ -169,7 +192,7 @@ function EvaluationSearch() {
               : t("error_search")}
           </div>
         ) : (
-          // Tableau d'affichage des patientss
+          // Tableau d'affichage des patients
           <Table
             columns={columns}
             dataSource={patients}
