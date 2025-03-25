@@ -15,6 +15,7 @@ function EvaluationPATH() {
     balanceTandem: "",
 
     // Section Objectif de marche
+    canWalk: true, // Définir une valeur par défaut (true) au lieu de undefined
     walkingTime: "",
   });
 
@@ -74,13 +75,17 @@ function EvaluationPATH() {
     return {
       idPatient: patientId,
       chairTestSupport: formData.chairTestSupport ? "with" : "without",
-      chairTestCount: parseInt(formData.chairTestCount, 10),
-      balanceFeetTogether: parseInt(formData.balanceFeetTogether, 10),
+      chairTestCount: parseInt(formData.chairTestCount || 0, 10), // Ajouter || 0 pour éviter NaN
+      balanceFeetTogether: parseInt(formData.balanceFeetTogether || 0, 10),
       balanceSemiTandem: isBalanceTestEnabled('balanceSemiTandem') ? 
                         parseInt(formData.balanceSemiTandem || 0, 10) : 0,
       balanceTandem: isBalanceTestEnabled('balanceTandem') ? 
                     parseInt(formData.balanceTandem || 0, 10) : 0,
-      walkingTime: parseFloat(formData.walkingTime),
+      // Conditionnellement définir walkingTime en fonction de canWalk
+      walkingTime: formData.canWalk
+        ? parseFloat(formData.walkingTime || 0)
+        : 0,
+      canWalk: !!formData.canWalk, // S'assurer que la valeur est un booléen
       scores: {
         cardioMusculaire: scores.cardioMusculaire,
         equilibre: scores.equilibre,
@@ -123,7 +128,8 @@ function EvaluationPATH() {
           </p>
         </div>
 
-        {formData.walkingTime && (
+        {/* Si canWalk === true ET walkingTime, on affiche la vitesse */}
+        {formData.canWalk && formData.walkingTime && (
           <div
             style={{
               marginTop: "20px",
@@ -139,6 +145,24 @@ function EvaluationPATH() {
               <strong>
                 Objectif de marche / jour :{" "}
                 {calculateWalkingObjective(formData.walkingTime)} minutes
+              </strong>
+            </p>
+          </div>
+        )}
+
+        {/* Sinon, s'il ne peut pas marcher */}
+        {formData.canWalk === false && (
+          <div
+            style={{
+              marginTop: "20px",
+              borderTop: "1px solid #eee",
+              paddingTop: "15px",
+            }}
+          >
+            <p>
+              <strong>
+                Capacité de marche à travailler (Objectif à réévaluer
+                au cours du séjour)
               </strong>
             </p>
           </div>
@@ -252,29 +276,54 @@ function EvaluationPATH() {
           </Col>
         </Row>
 
-        {/* Section C: VITESSE DE MARCHE */}
-        <h2>VITESSE DE MARCHE</h2>
-        <Form.Item
-          label="Test 4 mètres - Temps nécessaire pour marcher 4-mètres (secondes)"
-          validateStatus={errors.walkingTime ? "error" : ""}
-          help={errors.walkingTime}
-        >
-          <Input
-            name="walkingTime"
-            value={formData.walkingTime}
-            onChange={(e) => {
-              const value = e.target.value;
-              if (value === "" || /^\d*\.?\d*$/.test(value)) {
-                handleChange(e);
-              }
-            }}
-            placeholder="Entrez le temps en secondes"
-          />
-          {formData.walkingTime && !errors.walkingTime && (
-            <div style={{ marginTop: 8, color: "#666" }}>
-              Vitesse de marche :{" "}
-              {(4 / parseFloat(formData.walkingTime)).toFixed(2)} m/s
-            </div>
+        {/* Section C: OBJECTIF DE MARCHE */}
+        <h2>OBJECTIF DE MARCHE</h2>
+        <Form.Item label="Test 4 mètres – vitesse de marche confortable">
+          <Radio.Group
+            name="canWalk" // Ajouter le nom pour le handleChange
+            value={formData.canWalk}
+            onChange={(e) =>
+              handleChange({
+                target: { name: "canWalk", value: e.target.value },
+              })
+            }
+            style={{ marginBottom: "16px" }}
+          >
+            <Radio value={true}>Le patient peut marcher</Radio>
+            <Radio value={false}>Le patient ne peut pas marcher</Radio>
+          </Radio.Group>
+
+          {formData.canWalk && (
+            <Form.Item
+              label="Temps nécessaire pour marcher 4 mètres (secondes)"
+              validateStatus={errors.walkingTime ? "error" : ""}
+              help={errors.walkingTime}
+            >
+              <Input
+                name="walkingTime"
+                value={formData.walkingTime}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (value === "" || /^\d*\.?\d*$/.test(value)) {
+                    handleChange(e);
+                  }
+                }}
+                placeholder="Entrez le temps en secondes"
+              />
+              {formData.walkingTime && !errors.walkingTime && (
+                <div style={{ marginTop: 8, color: "#666" }}>
+                  Vitesse de marche :{" "}
+                  {(4 / parseFloat(formData.walkingTime)).toFixed(2)} m/s
+                  <div style={{ marginTop: 4 }}>
+                    <strong>
+                      Objectif de marche :{" "}
+                      {calculateWalkingObjective(formData.walkingTime)} minutes
+                      par jour
+                    </strong>
+                  </div>
+                </div>
+              )}
+            </Form.Item>
           )}
         </Form.Item>
       </>
