@@ -25,7 +25,7 @@ export default function Layout() {
       <Stack.Screen name="seance" options={{ title: t('Layout:ma_seance') }} />
       <Stack.Screen name="progression" options={{ title: t('Layout:ma_progression') }} />
       <Stack.Screen name="configuration" options={{ title: t('Layout:configuration') }} />
-      <Stack.Screen name="cahier-de-suivie" options={{ title: t('Layout:cahier_de_suivi') }} />
+      <Stack.Screen name="cahier-de-suivi" options={{ title: t('Layout:cahier_de_suivi') }} />
     </Stack>
   );
 }
