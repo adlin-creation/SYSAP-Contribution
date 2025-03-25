@@ -19,6 +19,7 @@ import patientCaregiverRoutes from "./routes/PatientCaregiverRoute";
 import caregiverRoutes from "./routes/CaregiverRoute";
 import professionalUserRoutes from "./routes/ProfessionalUserRoute";
 import evaluationRoutes from "./routes/EvaluationRoute";
+const cors = require('cors');
 
 import { errorHandler } from "./middleware/errorHandler"; // Import du middleware
 
@@ -26,19 +27,17 @@ const app = express();
 
 // //Reads .env file and makes it accessible via process.env
 dotenv.config();
+app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "OPTIONS, GET, POST, PUT, PATCH, DELETE"
-  );
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+app.use("/images", (req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*"); // Autorise toutes les origines
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   next();
-});
+}, express.static("images"));
 
 app.use(userRoutes);
 app.use(exerciseRoutes);
@@ -55,8 +54,6 @@ app.use(professionalUserRoutes);
 app.use(evaluationRoutes);
 
 // app.use("/", programPhaseRoutes);
-
-app.use("/images", express.static("images"));
 
 app.use("*", function (req, res) {
   res.send("The page doesn't exist");
