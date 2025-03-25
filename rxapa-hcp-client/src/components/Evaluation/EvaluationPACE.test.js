@@ -26,7 +26,6 @@ jest.mock(
 jest.mock("./images/pace_balance_tandem.png", () => "balance-tandem-mock");
 jest.mock("./images/pace_balance_unipodal.png", () => "balance-unipodal-mock");
 
-// Adapter le mock de traduction pour qu'il utilise les textes français originaux
 jest.mock("react-i18next", () => ({
   useTranslation: () => ({
     t: (key) => {
@@ -39,8 +38,6 @@ jest.mock("react-i18next", () => ({
         walking_objective: "Objectif de marche",
         minutes_per_day: "minutes par jour",
         sectionD_title: "OBJECTIF DE MARCHE",
-        // Ajouter d'autres traductions si nécessaire
-        // Sinon, retourner la clé comme avant
       };
       return translations[key] || key;
     },
@@ -64,11 +61,9 @@ describe("EvaluationPACE Component", () => {
     const distanceInput = screen.getByPlaceholderText("distance_placeholder");
     fireEvent.change(distanceInput, { target: { value: "20" } });
 
-    // Assurez-vous que le patient peut marcher est sélectionné
     const canWalkRadio = screen.getByText("Le patient peut marcher");
     fireEvent.click(canWalkRadio);
 
-    // Maintenant cherchez le champ de temps de marche qui devrait être visible
     const walkingTimeInput = screen.getByPlaceholderText(
       "Entrez le temps en secondes"
     );
@@ -106,7 +101,6 @@ describe("EvaluationPACE Component", () => {
   it("renders the component and shows all expected sections", () => {
     render(<EvaluationPACE />);
 
-    // Utilise les titres réels présents dans le composant
     [
       "sectionA_title",
       "sectionB_title",
