@@ -5,6 +5,7 @@ import axios from "axios";
 import useToken from "../Authentication/useToken";
 import Constants from "../Utils/Constants";
 import { useTranslation } from "react-i18next";
+import { exportPacePdf } from "./ExportEvaluationPdf";
 
 function EvaluationPACE({ onSubmit }) {
   const { t } = useTranslation("Evaluations");
@@ -249,6 +250,43 @@ function EvaluationPACE({ onSubmit }) {
                  "Échec de l'enregistrement des données"
       });
     }
+  };
+
+  const exportPdf = async () => {
+    const scoreA = calculateChairTestScore();
+    const scoreB = calculateBalanceScore();
+    const scoreC = calculateMobilityScore();
+    const scoreTotal = scoreA + scoreB + scoreC;
+    const color = determineFrenchColor(scoreA, scoreB, scoreC);
+    const level = determineLevel(scoreTotal);
+    const date = new Date().toISOString().split("T")[0];
+
+    const payload = {
+      date: date,
+      idPatient: patientId,
+      chairTestSupport: formData.chairTestSupport ? "with" : "without",
+      chairTestCount: parseInt(formData.chairTestCount, 10),
+      balanceFeetTogether: parseInt(formData.balanceFeetTogether, 10),
+      balanceSemiTandem: parseInt(formData.balanceSemiTandem, 10),
+      balanceTandem: parseInt(formData.balanceTandem, 10),
+      balanceOneFooted: parseInt(formData.balanceOneFooted, 10),
+      frtSitting: formData.frtPosition === true ? "sitting" : 
+                  formData.frtPosition === false ? "standing" : 
+                  "not_working",
+      frtDistance: formData.frtPosition === "armNotWorking" ? 0 : parseInt(formData.frtDistance, 10),
+      walkingTime: parseFloat(formData.walkingTime),
+      scores: {
+        cardioMusculaire: scoreA,
+        equilibre: scoreB,
+        mobilite: scoreC,
+        total: scoreTotal,
+        color: color,
+        level: level,
+        program: color + " " + level
+      }
+    };
+
+    await exportPacePdf(payload, token);
   };
 
   const calculateChairTestScore = () => {
@@ -563,6 +601,9 @@ function EvaluationPACE({ onSubmit }) {
         open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         footer={[
+          <Button key ="export" onClick={exportPdf}>
+            Télécharger PDF
+          </Button>,
           <Button key="close" onClick={() => setIsModalVisible(false)}>
             {t("button_close")}
           </Button>,
