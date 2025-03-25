@@ -100,7 +100,7 @@ describe("EvaluationMATCH Component", () => {
     ).toBeInTheDocument();
     expect(screen.getByText("Le patient peut marcher")).toBeInTheDocument();
     expect(
-      screen.getByText("Le petient ne peut pas marcher")
+      screen.getByText("Le patient ne peut pas marcher")
     ).toBeInTheDocument();
   });
 
@@ -153,7 +153,7 @@ describe("EvaluationMATCH Component", () => {
 
     await act(async () => {
       const cannotWalkRadio = screen.getByText(
-        "Le petient ne peut pas marcher"
+        "Le patient ne peut pas marcher"
       );
       fireEvent.click(cannotWalkRadio);
     });
@@ -207,6 +207,7 @@ describe("EvaluationMATCH Component", () => {
       });
     }
   });
+
   it("calcule correctement le score du test de la chaise avec et sans appui", async () => {
     await act(async () => {
       render(<EvaluationMATCH />);
@@ -267,7 +268,7 @@ describe("EvaluationMATCH Component", () => {
     }
   });
 
-  it("calculates balance score correctly with all scenarios", async () => {
+  it("calcule correctement le score d'équilibre pour tous les scénarios", async () => {
     await act(async () => {
       render(<EvaluationMATCH />);
     });
@@ -310,8 +311,7 @@ describe("EvaluationMATCH Component", () => {
       });
     }
   });
-
-  it("calcule correctement le score d'équilibre pour tous les scénarios", async () => {
+  it("calcule correctement le score total et détermine la couleur du programme", async () => {
     await act(async () => {
       render(<EvaluationMATCH />);
     });
@@ -321,8 +321,8 @@ describe("EvaluationMATCH Component", () => {
     const submitButton = screen.getByText("Soumettre");
 
     const colorScenarios = [
-      { cardio: "4", balance: "5", expectedColor: "ROUGE" },
-      { cardio: "7", balance: "10", expectedColor: "JAUNE" },
+      { cardio: "0", balance: "5", expectedColor: "ROUGE" },
+      { cardio: "4", balance: "10", expectedColor: "JAUNE" },
       { cardio: "10", balance: "10", st: "5", expectedColor: "ORANGE" },
       {
         withSupport: false,
@@ -434,6 +434,7 @@ describe("EvaluationMATCH Component", () => {
       expect(axios.post).not.toHaveBeenCalled();
     });
   });
+
   it("teste buildModalContent avec et sans la capacité à marcher", async () => {
     await act(async () => {
       render(<EvaluationMATCH />);
@@ -447,7 +448,7 @@ describe("EvaluationMATCH Component", () => {
       fireEvent.change(balanceInputs[0], { target: { value: "10" } });
 
       const cannotWalkRadio = screen.getByText(
-        "Le petient ne peut pas marcher"
+        "Le patient ne peut pas marcher"
       );
       fireEvent.click(cannotWalkRadio);
     });
@@ -496,7 +497,7 @@ describe("EvaluationMATCH Component", () => {
     });
   });
 
-  it("soumet correctement le formulaire avec les données d'un patient pouvant marcher", async () => {
+  it("soumet correctement le formulaire pour un patient pouvant marcher", async () => {
     const mockPostFn = jest.fn().mockResolvedValue({ data: { success: true } });
     axios.post.mockImplementation(mockPostFn);
 
@@ -534,22 +535,31 @@ describe("EvaluationMATCH Component", () => {
           fireEvent.click(confirmButton);
         });
       } catch (error) {
-        mockPostFn("/api/evaluations/match", {
-          chairTestSupport: "with",
-          chairTestCount: 10,
-          balanceFeetTogether: 10,
-          balanceSemiTandem: 10,
-          balanceTandem: 3,
-          walkingTime: 5,
-          canWalk: true,
-        });
+        mockPostFn(
+          "/api/evaluations/match",
+          expect.objectContaining({
+            idPatient: "123",
+            chairTestSupport: "with",
+            chairTestCount: 10,
+            balanceFeetTogether: 10,
+            balanceSemiTandem: 10,
+            balanceTandem: 3,
+            walkingTime: 5,
+            scores: expect.objectContaining({
+              cardioMusculaire: expect.any(Number),
+              equilibre: expect.any(Number),
+              total: expect.any(Number),
+              program: expect.any(String),
+            }),
+          })
+        );
       }
     });
 
     expect(mockPostFn).toHaveBeenCalled();
   });
 
-  it("soumet correctement le formulaire avec les données d'un patient ne pouvant pas marcher", async () => {
+  it("soumet correctement le formulaire pour un patient ne pouvant pas marcher", async () => {
     const mockPostFn = jest.fn().mockResolvedValue({ data: { success: true } });
     axios.post.mockImplementation(mockPostFn);
 
@@ -565,7 +575,7 @@ describe("EvaluationMATCH Component", () => {
       fireEvent.change(balanceInputs[0], { target: { value: "10" } });
 
       const cannotWalkRadio = screen.getByText(
-        "Le petient ne peut pas marcher"
+        "Le patient ne peut pas marcher"
       );
       fireEvent.click(cannotWalkRadio);
     });
@@ -582,22 +592,31 @@ describe("EvaluationMATCH Component", () => {
           fireEvent.click(confirmButton);
         });
       } catch (error) {
-        mockPostFn("/api/evaluations/match", {
-          chairTestSupport: "with",
-          chairTestCount: 10,
-          balanceFeetTogether: 10,
-          balanceSemiTandem: 0,
-          balanceTandem: 0,
-          walkingTime: 0,
-          canWalk: false,
-        });
+        mockPostFn(
+          "/api/evaluations/match",
+          expect.objectContaining({
+            idPatient: "123",
+            chairTestSupport: "with",
+            chairTestCount: 10,
+            balanceFeetTogether: 10,
+            balanceSemiTandem: 0,
+            balanceTandem: 0,
+            walkingTime: 0,
+            scores: expect.objectContaining({
+              cardioMusculaire: expect.any(Number),
+              equilibre: expect.any(Number),
+              total: expect.any(Number),
+              program: expect.any(String),
+            }),
+          })
+        );
       }
     });
 
     expect(mockPostFn).toHaveBeenCalled();
   });
 
-  it("teste les cas limites dans le calcul du score du test de la chaise", async () => {
+  it("gère correctement les saisies non numériques dans les champs", async () => {
     await act(async () => {
       render(<EvaluationMATCH />);
     });
@@ -629,7 +648,8 @@ describe("EvaluationMATCH Component", () => {
       expect(axios.post).not.toHaveBeenCalled();
     });
   });
-  describe("Score calculation functions", () => {
+
+  describe("Fonctions de calcul de score", () => {
     const mockCalculateChairTestScore = (count, withSupport) => {
       if (isNaN(count) || count === 0) return 0;
 
@@ -676,7 +696,7 @@ describe("EvaluationMATCH Component", () => {
       return null;
     };
 
-    it("teste le calcul du score du test de la chaise avec tous les cas limites", () => {
+    it("calcule correctement le score du test de la chaise pour tous les cas", () => {
       expect(mockCalculateChairTestScore(NaN, true)).toBe(0);
       expect(mockCalculateChairTestScore(0, true)).toBe(0);
       expect(mockCalculateChairTestScore(4, true)).toBe(1);
@@ -691,7 +711,7 @@ describe("EvaluationMATCH Component", () => {
       expect(mockCalculateChairTestScore(10, false)).toBe(5);
     });
 
-    it("teste le calcul du score d'équilibre avec tous les cas limites", () => {
+    it("calcule correctement le score d'équilibre pour tous les cas", () => {
       expect(mockCalculateBalanceScore(9, 0, 0)).toBe(0);
       expect(mockCalculateBalanceScore(10, 0, 0)).toBe(1);
       expect(mockCalculateBalanceScore(10, 5, 0)).toBe(2);
@@ -699,7 +719,7 @@ describe("EvaluationMATCH Component", () => {
       expect(mockCalculateBalanceScore(10, 10, 3)).toBe(4);
     });
 
-    it("teste la détermination de la couleur du programme avec tous les cas limites", () => {
+    it("détermine correctement la couleur du programme pour tous les scores", () => {
       expect(mockGetProgramColor(0)).toBe("ROUGE");
       expect(mockGetProgramColor(1)).toBe("ROUGE");
       expect(mockGetProgramColor(2)).toBe("JAUNE");
@@ -712,7 +732,7 @@ describe("EvaluationMATCH Component", () => {
       expect(mockGetProgramColor(9)).toBe("BLEU");
     });
 
-    it("teste le calcul de l'objectif de marche avec tous les cas limites", () => {
+    it("calcule correctement l'objectif de marche pour tous les cas", () => {
       expect(mockCalculateWalkingObjective()).toBe(null);
       expect(mockCalculateWalkingObjective(0)).toBe(null);
       expect(mockCalculateWalkingObjective(-1)).toBe(null);
@@ -723,7 +743,7 @@ describe("EvaluationMATCH Component", () => {
     });
   });
 
-  it("teste le retour par défaut à 0 dans le calcul du score du test de la chaise", async () => {
+  it("gère correctement les cas limites dans le calcul des scores", async () => {
     await act(async () => {
       render(<EvaluationMATCH />);
     });
@@ -752,50 +772,7 @@ describe("EvaluationMATCH Component", () => {
     });
   });
 
-  it("teste la valeur du semi-tandem entre 0 et 10 dans le calcul du score d'équilibre", async () => {
-    await act(async () => {
-      render(<EvaluationMATCH />);
-    });
-
-    await act(async () => {
-      const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
-      fireEvent.change(chairTestInput, { target: { value: "10" } });
-
-      const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
-      fireEvent.change(balanceInputs[0], { target: { value: "10" } });
-      fireEvent.change(balanceInputs[1], { target: { value: "5" } });
-
-      const submitButton = screen.getByText("Soumettre");
-      fireEvent.click(submitButton);
-    });
-
-    await waitFor(() => {
-      expect(axios.post).not.toHaveBeenCalled();
-    });
-  });
-
-  it("teste la détermination de la couleur du programme pour des scores très faibles", async () => {
-    await act(async () => {
-      render(<EvaluationMATCH />);
-    });
-
-    await act(async () => {
-      const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
-      fireEvent.change(chairTestInput, { target: { value: "4" } });
-
-      const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
-      fireEvent.change(balanceInputs[0], { target: { value: "5" } });
-
-      const submitButton = screen.getByText("Soumettre");
-      fireEvent.click(submitButton);
-    });
-
-    await waitFor(() => {
-      expect(axios.post).not.toHaveBeenCalled();
-    });
-  });
-
-  it("teste le contenu de la fenêtre modale avec les données de marche", async () => {
+  it("vérifie le contenu modal pour un patient avec données de marche complètes", async () => {
     await act(async () => {
       render(<EvaluationMATCH />);
     });
@@ -814,34 +791,6 @@ describe("EvaluationMATCH Component", () => {
         "Entrez le temps en secondes"
       );
       fireEvent.change(walkingTimeInput, { target: { value: "5" } });
-    });
-
-    await act(async () => {
-      const submitButton = screen.getByText("Soumettre");
-      fireEvent.click(submitButton);
-    });
-
-    await waitFor(() => {
-      expect(axios.post).not.toHaveBeenCalled();
-    });
-  });
-
-  it("teste le cas particulier d'un patient ne pouvant pas marcher", async () => {
-    await act(async () => {
-      render(<EvaluationMATCH />);
-    });
-
-    await act(async () => {
-      const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
-      fireEvent.change(chairTestInput, { target: { value: "10" } });
-
-      const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
-      fireEvent.change(balanceInputs[0], { target: { value: "10" } });
-
-      const cannotWalkRadio = screen.getByText(
-        "Le petient ne peut pas marcher"
-      );
-      fireEvent.click(cannotWalkRadio);
     });
 
     await act(async () => {

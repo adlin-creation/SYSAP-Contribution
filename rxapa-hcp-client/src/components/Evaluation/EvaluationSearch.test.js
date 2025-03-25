@@ -1,10 +1,10 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
-// Importer act depuis React Testing Library plutôt que react-dom/test-utils
 import { act } from "@testing-library/react";
 import EvaluationSearch from "./EvaluationSearch";
 import Constants from "../Utils/Constants";
+import { message } from 'antd';
 
 jest.mock("../Authentication/useToken", () => ({
   __esModule: true,
@@ -92,8 +92,9 @@ describe("EvaluationSearch Component", () => {
   });
 
   it("does not trigger search when input is empty", async () => {
-    fetch.mockClear();
-
+    // Créez un spy sur message.warning
+    const warningSpy = jest.spyOn(message, 'warning').mockImplementation(() => {});
+    
     await act(async () => {
       render(<EvaluationSearch />);
     });
@@ -103,7 +104,11 @@ describe("EvaluationSearch Component", () => {
       fireEvent.click(searchButton);
     });
 
-    expect(fetch).not.toHaveBeenCalled();
+    expect(global.fetch).not.toHaveBeenCalled();
+    expect(warningSpy).toHaveBeenCalledWith("Veuillez entrer un nom.");
+    
+    // Nettoyez le spy après le test
+    warningSpy.mockRestore();
   });
 
   it("searches by ID when input is numeric", async () => {
@@ -114,7 +119,7 @@ describe("EvaluationSearch Component", () => {
       birthday: "1980-01-01",
     };
 
-    fetch.mockResolvedValueOnce({
+    global.fetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(testPatient),
     });
@@ -133,12 +138,16 @@ describe("EvaluationSearch Component", () => {
       fireEvent.click(searchButton);
     });
 
-    expect(fetch).toHaveBeenCalledWith(`${Constants.SERVER_URL}/patient/123`, {
-      headers: { Authorization: "Bearer fake-token" },
-    });
+    expect(global.fetch).toHaveBeenCalledWith(
+      `${Constants.SERVER_URL}/patient/123`,
+      {
+        headers: { Authorization: "Bearer fake-token" },
+      }
+    );
 
     await waitFor(() => {
       expect(screen.getByText("Doe")).toBeInTheDocument();
+      expect(screen.getByText("John")).toBeInTheDocument();
     });
   });
 
@@ -152,7 +161,7 @@ describe("EvaluationSearch Component", () => {
       },
     ];
 
-    fetch.mockResolvedValueOnce({
+    global.fetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(testPatients),
     });
@@ -171,7 +180,7 @@ describe("EvaluationSearch Component", () => {
       fireEvent.click(searchButton);
     });
 
-    expect(fetch).toHaveBeenCalledWith(
+    expect(global.fetch).toHaveBeenCalledWith(
       `${Constants.SERVER_URL}/patients/search?term=Doe`,
       { headers: { Authorization: "Bearer fake-token" } }
     );
@@ -182,7 +191,7 @@ describe("EvaluationSearch Component", () => {
   });
 
   it("shows message when no patients found", async () => {
-    fetch.mockResolvedValueOnce({
+    global.fetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve([]),
     });
@@ -205,8 +214,9 @@ describe("EvaluationSearch Component", () => {
       expect(screen.getByText("Aucun patient trouvé.")).toBeInTheDocument();
     });
   });
+
   it("shows error message when fetch fails", async () => {
-    fetch.mockRejectedValueOnce(new Error("Server error"));
+    global.fetch.mockRejectedValueOnce(new Error("Server error"));
 
     await act(async () => {
       render(<EvaluationSearch />);
@@ -228,7 +238,6 @@ describe("EvaluationSearch Component", () => {
       ).toBeInTheDocument();
     });
   });
-
   it("navigates to evaluation page when button is clicked", async () => {
     const testPatient = {
       id: 123,
@@ -237,7 +246,7 @@ describe("EvaluationSearch Component", () => {
       birthday: "1980-01-01",
     };
 
-    fetch.mockResolvedValueOnce({
+    global.fetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(testPatient),
     });
@@ -276,7 +285,7 @@ describe("EvaluationSearch Component", () => {
       birthday: "1980-01-01",
     };
 
-    fetch.mockResolvedValueOnce({
+    global.fetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(testPatient),
     });
@@ -311,7 +320,7 @@ describe("EvaluationSearch Component", () => {
   });
 
   it("handles non-ok API response", async () => {
-    fetch.mockResolvedValueOnce({
+    global.fetch.mockResolvedValueOnce({
       ok: false,
       status: 500,
       statusText: "Internal Server Error",
@@ -345,7 +354,7 @@ describe("EvaluationSearch Component", () => {
       resolvePromise = resolve;
     });
 
-    fetch.mockReturnValueOnce(fetchPromise);
+    global.fetch.mockReturnValueOnce(fetchPromise);
 
     await act(async () => {
       render(<EvaluationSearch />);
@@ -369,6 +378,10 @@ describe("EvaluationSearch Component", () => {
         json: () => Promise.resolve([]),
       });
     });
+
+    await waitFor(() => {
+      expect(searchButton.classList.contains("ant-btn-loading")).toBe(false);
+    });
   });
 
   it("handles single patient response correctly", async () => {
@@ -379,7 +392,7 @@ describe("EvaluationSearch Component", () => {
       birthday: "1980-01-01",
     };
 
-    fetch.mockResolvedValueOnce({
+    global.fetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(testPatient),
     });
@@ -420,7 +433,7 @@ describe("EvaluationSearch Component", () => {
       },
     ];
 
-    fetch.mockResolvedValueOnce({
+    global.fetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(testPatients),
     });
@@ -455,7 +468,7 @@ describe("EvaluationSearch Component", () => {
       birthday: "1980-01-01",
     };
 
-    fetch.mockResolvedValueOnce({
+    global.fetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(testPatient),
     });
@@ -494,7 +507,7 @@ describe("EvaluationSearch Component", () => {
       birthday: "1980-01-01",
     };
 
-    fetch.mockResolvedValueOnce({
+    global.fetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(testPatient),
     });
@@ -523,5 +536,101 @@ describe("EvaluationSearch Component", () => {
     });
 
     expect(window.location.href).toBe("/evaluation-match/123");
+  });
+
+  it("navigates to patient evaluations page when view evaluations button is clicked", async () => {
+    const testPatient = {
+      id: 123,
+      lastname: "Doe",
+      firstname: "John",
+      birthday: "1980-01-01",
+    };
+
+    global.fetch.mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve(testPatient),
+    });
+
+    await act(async () => {
+      render(<EvaluationSearch />);
+    });
+
+    const searchInput = screen.getByPlaceholderText("Entrez un nom ou un ID");
+    await act(async () => {
+      fireEvent.change(searchInput, { target: { value: "123" } });
+    });
+
+    const searchButton = screen.getByRole("button", { name: /Rechercher/i });
+    await act(async () => {
+      fireEvent.click(searchButton);
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("Doe")).toBeInTheDocument();
+    });
+
+    const viewEvaluationsButton = screen.getByText("Afficher évaluations");
+    await act(async () => {
+      fireEvent.click(viewEvaluationsButton);
+    });
+
+    expect(window.location.href).toBe("/evaluations/patient/123");
+  });
+
+  it("handles search via Enter key press", async () => {
+    global.fetch.mockClear();
+    global.fetch.mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve({ id: 123, lastname: "Doe", firstname: "John" }),
+    });
+  
+    await act(async () => {
+      render(<EvaluationSearch />);
+    });
+  
+    const searchInput = screen.getByPlaceholderText("Entrez un nom ou un ID");
+    
+    await act(async () => {
+      fireEvent.change(searchInput, { target: { value: "123" } });
+    });
+  
+    // Simuler la pression de la touche Entrée de manière correcte
+    await act(async () => {
+      // Utiliser keyDown au lieu de keyPress car c'est ce que React utilise pour détecter l'événement Entrée
+      fireEvent.keyDown(searchInput, { key: "Enter", code: "Enter", charCode: 13 });
+    });
+  
+    // Attendre que le fetch soit appelé
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledWith(
+        `${Constants.SERVER_URL}/patient/123`,
+        { headers: { Authorization: "Bearer fake-token" } }
+      );
+    });
+  });
+
+  it("handles null response from API", async () => {
+    global.fetch.mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve(null),
+    });
+
+    await act(async () => {
+      render(<EvaluationSearch />);
+    });
+
+    const searchInput = screen.getByPlaceholderText("Entrez un nom ou un ID");
+    await act(async () => {
+      fireEvent.change(searchInput, { target: { value: "NonExistent" } });
+    });
+
+    const searchButton = screen.getByRole("button", { name: /Rechercher/i });
+    await act(async () => {
+      fireEvent.click(searchButton);
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("Aucun patient trouvé.")).toBeInTheDocument();
+    });
   });
 });
