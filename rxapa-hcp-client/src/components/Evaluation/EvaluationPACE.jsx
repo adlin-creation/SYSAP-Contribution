@@ -22,7 +22,7 @@ function EvaluationPACE() {
     frtPosition: true,
     frtDistance: "",
 
-    // Section D - Vitesse de marche 
+    // Section D - Vitesse de marche
     canWalk: undefined, // Ajouté pour le choix "peut marcher" ou "ne peut pas marcher"
     walkingTime: "",
   });
@@ -181,10 +181,8 @@ function EvaluationPACE() {
           ? 0
           : parseInt(formData.frtDistance, 10),
 
-      // walkingTime = 0 si canWalk === false 
-      walkingTime: formData.canWalk
-        ? parseFloat(formData.walkingTime || 0)
-        : 0,
+      // walkingTime = 0 si canWalk === false
+      walkingTime: formData.canWalk ? parseFloat(formData.walkingTime || 0) : 0,
 
       scores: {
         cardioMusculaire: scores.cardioMusculaire,
@@ -258,13 +256,14 @@ function EvaluationPACE() {
             }}
           >
             <p>
-              Vitesse de marche :{" "}
+              {t("walking_speed")} :{" "}
               {(4 / parseFloat(formData.walkingTime)).toFixed(2)} m/s
             </p>
             <p>
               <strong>
-                Objectif de marche / jour :{" "}
-                {calculateWalkingObjective(formData.walkingTime)} minutes
+                {t("walking_objective")} :{" "}
+                {calculateWalkingObjective(formData.walkingTime)}{" "}
+                {t("minutes_per_day")}
               </strong>
             </p>
           </div>
@@ -280,10 +279,7 @@ function EvaluationPACE() {
             }}
           >
             <p>
-              <strong>
-                Capacité de marche à travailler (Objectif à réévaluer
-                au cours du séjour)
-              </strong>
+              <strong>{t("walking_ability_to_work")}</strong>
             </p>
           </div>
         )}
@@ -291,7 +287,12 @@ function EvaluationPACE() {
     );
   };
 
-  const renderFormFields = (formData, handleChange, errors, isBalanceTestEnabled) => {
+  const renderFormFields = (
+    formData,
+    handleChange,
+    errors,
+    isBalanceTestEnabled
+  ) => {
     return (
       <>
         {/* Section A: CARDIO-MUSCULAIRE (inchangée) */}
@@ -326,9 +327,7 @@ function EvaluationPACE() {
 
         {/* Section B: ÉQUILIBRE (inchangée) */}
         <h2>{t("sectionB_title")}</h2>
-        <div style={{ marginBottom: 16 }}>
-          {t("balance_instructions")}
-        </div>
+        <div style={{ marginBottom: 16 }}>{t("balance_instructions")}</div>
         <Row gutter={16}>
           <Col span={12}>
             <Form.Item
@@ -462,8 +461,8 @@ function EvaluationPACE() {
         </Form.Item>
 
         {/* SECTION D : OBJECTIF DE MARCHE  */}
-        <h2>OBJECTIF DE MARCHE</h2>
-        <Form.Item label="Test 4 mètres – vitesse de marche confortable">
+        <h2>{t("sectionD_title")}</h2>
+        <Form.Item label={t("walk_test_label")}>
           <Radio.Group
             value={formData.canWalk}
             onChange={(e) =>
@@ -473,13 +472,13 @@ function EvaluationPACE() {
             }
             style={{ marginBottom: "16px" }}
           >
-            <Radio value={true}>Le patient peut marcher</Radio>
-            <Radio value={false}>Le petient ne peut pas marcher</Radio>
+            <Radio value={true}>{t("patient_can_walk")}</Radio>
+            <Radio value={false}>{t("patient_cannot_walk")}</Radio>
           </Radio.Group>
 
           {formData.canWalk && (
             <Form.Item
-              label="Temps nécessaire pour marcher 4 mètres (secondes)"
+              label={t("walking_time_label")}
               validateStatus={errors.walkingTime ? "error" : ""}
               help={errors.walkingTime}
             >
@@ -492,17 +491,17 @@ function EvaluationPACE() {
                     handleChange(e);
                   }
                 }}
-                placeholder="Entrez le temps en secondes"
+                placeholder={t("walktime_placeholder")}
               />
               {formData.walkingTime && !errors.walkingTime && (
                 <div style={{ marginTop: 8, color: "#666" }}>
-                  Vitesse de marche :{" "}
+                  {t("walking_speed")} :{" "}
                   {(4 / parseFloat(formData.walkingTime)).toFixed(2)} m/s
                   <div style={{ marginTop: 4 }}>
                     <strong>
-                      Objectif de marche :{" "}
-                      {calculateWalkingObjective(formData.walkingTime)} minutes
-                      par jour
+                      {t("walking_objective")} :{" "}
+                      {calculateWalkingObjective(formData.walkingTime)}{" "}
+                      {t("minutes_per_day")}
                     </strong>
                   </div>
                 </div>
