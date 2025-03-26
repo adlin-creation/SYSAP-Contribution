@@ -3,6 +3,7 @@ import { Row, Col, Input, Radio, Form } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import { exportPathPdf } from "./ExportEvaluationPdf";
 import Evaluation from "./Evaluation";
+import PropTypes from "prop-types";
 
 function EvaluationPATH() {
   const getInitialFormData = () => ({
@@ -343,5 +344,7 @@ function EvaluationPATH() {
     />
   );
 }
-
+EvaluationPATH.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};
 export default EvaluationPATH;

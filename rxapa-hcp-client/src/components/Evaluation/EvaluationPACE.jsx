@@ -3,6 +3,7 @@ import { Row, Col, Input, Radio, Form, Modal } from "antd";
 import Evaluation from "./Evaluation";
 import { useTranslation } from "react-i18next";
 import { exportPacePdf } from "./ExportEvaluationPdf";
+import PropTypes from "prop-types";
 
 // Fonction d'export PDF modifiée qui gère correctement le token
 const handleExportPacePdf = async (payload, token) => {
@@ -572,5 +573,7 @@ function EvaluationPACE() {
     />
   );
 }
-
+EvaluationPACE.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};
 export default EvaluationPACE;

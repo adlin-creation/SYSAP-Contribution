@@ -16,10 +16,11 @@ import { useQuery } from "@tanstack/react-query";
 import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
 import CreatePatient from "./CreatePatient";
-import PatientViewPage from "./PatientViewPage"; 
+import PatientViewPage from "./PatientViewPage";
 import PatientDetails from "./PatientDetails";
 import { useNavigate } from "react-router-dom"
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
 
 export default function PatientMenu({ role }) {
@@ -30,6 +31,7 @@ export default function PatientMenu({ role }) {
   const [message, setMessage] = useState("");
   const [isCreatePatient, setIsCreatePatient] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState(null);
+
 
   const { token } = useToken();
 
@@ -46,87 +48,25 @@ export default function PatientMenu({ role }) {
   );
 
 
-  // Faire un endpoint pour lister les patients avec aide(s) soignant(s).... 
-  const fetchProgram = async (ProgramEnrollement) => {
-    try {
-      const { data } = await axios.get(`${Constants.SERVER_URL}/programs`, {
-        headers: { Authorization: "Bearer " + token },
-      });
-      console.log(data);
-      return data.find((prog) => prog.id === ProgramEnrollement.ProgramId);
-    } catch (err) {
-      throw new Error(err.response?.data?.message || "Erreur lors de la récupération des programmes.");
-    }
-  };
-
-  // Fonction pour récupérer les enregistrements de programme liés à un patient
-  const fetchProgramEnrollements = async (patientId) => {
-    try {
-      const { data } = await axios.get(`${Constants.SERVER_URL}/program-enrollements`, {
-        headers: { Authorization: "Bearer " + token },
-      });
-      return data.filter((prog) => prog.PatientId === patientId);
-    } catch (err) {
-      throw new Error(err.response?.data?.message || "Erreur lors de la récupération des Programmes d'enrôlement.");
-    }
-  };
-
-  // Fonction pour récupérer les soignants liés aux enregistrements de programme
-  const fetchPatientCaregivers = async (programEnrollements) => {
-    try {
-      const { data } = await axios.get(`${Constants.SERVER_URL}/patient-caregivers`, {
-        headers: { Authorization: "Bearer " + token },
-      });
-      return data.filter((patientCaregiver) =>
-        programEnrollements.some(
-          (enrollment) => enrollment.id === patientCaregiver.ProgramEnrollementId
-        )
-      );
-    } catch (err) {
-      throw new Error(err.response?.data?.message || "Erreur lors de la récupération des soignants.");
-    }
-  };
-
-  // Fonction pour récupérer les détails des soignants
-  const fetchCaregiversDetails = async (caregivers) => {
-    try {
-      const caregiversDetails = await Promise.all(
-        caregivers.map((caregiver) =>
-          axios
-            .get(`${Constants.SERVER_URL}/caregiver/${caregiver.CaregiverId}`, {
-              headers: { Authorization: "Bearer " + token },
-            })
-            .then((res) => res.data)
-        )
-      );
-      return caregiversDetails;
-    } catch (err) {
-      throw new Error(err.response?.data?.message || "Erreur lors de la récupération des détails des soignants.");
-    }
-  };
-
   // Fonction principale pour gérer la recuperation en cascade jusqu'aux aides soignants
   const handleGetCaregivers = async (patient) => {
     console.log(patient);
     try {
-      const programEnrollements = await fetchProgramEnrollements(patient.id);
-      console.log("Enregistrements du patient :", programEnrollements);
 
-      const patient_caregivers = await fetchPatientCaregivers(programEnrollements);
-      console.log("Soignants associés :", patient_caregivers);
-
-      const caregivers = await fetchCaregiversDetails(patient_caregivers);
-      console.log("Détails des soignants :", caregivers);
-
-      openCaregiversModal(caregivers, patient_caregivers, programEnrollements);
+      const response = await axios.get(`${Constants.SERVER_URL}/patientDetails/${patient.id}`, {
+        headers: { Authorization: "Bearer " + token },
+      });
+      const { caregivers, patientCaregivers, programEnrollements } = response.data;
+      openCaregiversModal(patient, caregivers, patientCaregivers, programEnrollements);
     } catch (err) {
       console.error("Erreur :", err.message);
       openModal(err.message, true);
     }
   };
 
-  const openCaregiversModal = (caregivers, patient_caregivers, programEnrollements) => {
-    AntModal.info({
+  const openCaregiversModal = (patient, caregivers, patient_caregivers, programEnrollements) => {
+
+    const modal = AntModal.info({
       title: (
         <div style={{ fontSize: "18px", fontWeight: "bold" }}>
           Liste des soignants
@@ -144,7 +84,16 @@ export default function PatientMenu({ role }) {
                     onClick={() => viewCaregiverDetails(c, patient_caregivers, programEnrollements)}
                   >
                     {t("voir les details")}
-                  </Button>
+                  </Button>,
+                  <Button
+                    type="link"
+                    danger
+                    icon={<DeleteOutlined />}
+                    onClick={() => deleteCaregiver(c.id, patient, modal)}
+                  >
+                    {t("Supprimer")}
+                  </Button>,
+
                 ]}
               >
                 <p><MailOutlined /> {c.email}</p>
@@ -157,6 +106,40 @@ export default function PatientMenu({ role }) {
       onOk() { },
       width: "80%",
     });
+  };
+
+  const deleteCaregiver = (id, patient, modal) => {
+    AntModal.confirm({
+      title: "Confirmer la suppression",
+      content: "Êtes-vous sûr de vouloir supprimer ce soignant ?",
+      okText: "Oui",
+      cancelText: "Annuler",
+      onOk: async () => {
+
+        try {
+          const { data } = await axios.delete(`${Constants.SERVER_URL}/delete-caregiver/${id}`, {
+            headers: { Authorization: "Bearer " + token },
+          });
+          console.log(data);
+          modal.destroy();
+          refetchPatients();
+          handleGetCaregivers(patient);
+        } catch (err) {
+          console.log("Erreur lors de la suppression de l'aide soignant ");
+        }
+      },
+    });
+  };
+
+  const fetchProgram = async (ProgramEnrollement) => {
+    try {
+      const { data } = await axios.get(`${Constants.SERVER_URL}/programs`, {
+        headers: { Authorization: "Bearer " + token },
+      });
+      return data.find((prog) => prog.id === ProgramEnrollement.ProgramId);
+    } catch (err) {
+      throw new Error(err.response?.data?.message || "Erreur lors de la récupération des programmes.");
+    }
   };
 
   const viewCaregiverDetails = async (caregiver, patient_caregivers, programEnrollements) => {
@@ -276,7 +259,7 @@ export default function PatientMenu({ role }) {
         <Space size="middle">
           <Button type="link" onClick={() => handleView(record)}
             style={{ display: role === 'admin' ? 'none' : 'inline-block' }}>
-          <EyeOutlined /> {t("Patients:view_statistic_button")}
+            <EyeOutlined /> {t("Patients:view_statistic_button")}
           </Button>
           <Button type="link" onClick={() => handleEdit(record)}
             style={{ display: role === 'admin' ? 'none' : 'inline-block' }}
@@ -371,15 +354,15 @@ export default function PatientMenu({ role }) {
               {isCreatePatient
                 ? t("Patients:register_new_patient")
                 : selectedPatient
-                ? t("Patients:edit_patient_details")
-                : t("Patients:view_patient_details")}
+                  ? t("Patients:edit_patient_details")
+                  : t("Patients:view_patient_details")}
             </h2>
           </Col>
           <Col span={4} />
         </Row>
       )}
 
-      
+
       {!isCreatePatient && !selectedPatient && !viewingPatient ? (
         <>
           <div style={{ marginBottom: 16 }}>
@@ -392,12 +375,12 @@ export default function PatientMenu({ role }) {
               {t("Patients:register_patient")}
             </Button>
           </div>
-  
-          <Table 
-            columns={columns} 
-            dataSource={patientList} 
+
+          <Table
+            columns={columns}
+            dataSource={patientList}
             rowKey={(record) => record.id || Math.random().toString()}
-            loading={!patientList} 
+            loading={!patientList}
           />
         </>
       ) : isCreatePatient ? (
@@ -412,7 +395,7 @@ export default function PatientMenu({ role }) {
       ) : (
         <PatientViewPage patient={viewingPatient} onClose={() => setViewingPatient(null)} />
       )}
-  
+
       {isOpenModal && (
         <AntModal
           open={isOpenModal}
@@ -427,7 +410,10 @@ export default function PatientMenu({ role }) {
           <p>{message}</p>
         </AntModal>
       )}
-      
+
     </div>
-  ); 
+  );
 }
+PatientMenu.propTypes = {
+  role: PropTypes.string.isRequired,
+};

@@ -3,6 +3,7 @@ import { Row, Col, Input, Radio, Form } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import { exportMatchPdf } from "./ExportEvaluationPdf";
 import Evaluation from "./Evaluation";
+import PropTypes from "prop-types";
 
 function EvaluationMATCH() {
   const getInitialFormData = () => ({
@@ -358,3 +359,6 @@ function EvaluationMATCH() {
 }
 
 export default EvaluationMATCH;
+EvaluationMATCH.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};
