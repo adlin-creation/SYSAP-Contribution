@@ -30,8 +30,6 @@ dotenv.config();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/images", express.static("images"));
-
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
@@ -43,6 +41,28 @@ app.use((req, res, next) => {
 });
 
 app.use(userRoutes);
+
+// Static Image Serving
+const mimeTypes = {
+  'jpg': 'image/jpeg',
+  'jpeg': 'image/jpeg',
+  'png': 'image/png',
+  'webp': 'image/webp'
+};
+
+app.use("/images", (req, res, next) => {
+  res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  next();
+}, express.static("images", {
+  setHeaders: (res, filePath) => {
+    const ext = path.extname(filePath).toLowerCase().slice(1) as keyof typeof mimeTypes; // Déclare ext comme clé de mimeTypes
+    if (mimeTypes[ext]) {
+      res.set('Content-Type', mimeTypes[ext]);
+    }
+  }
+}));
+
 app.use(exerciseRoutes);
 app.use(blocRoutes);
 app.use(sessionRoutes);
