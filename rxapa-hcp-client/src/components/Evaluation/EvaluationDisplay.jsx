@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Card, Row, Col, Button, Empty, Spin, Typography, Result } from "antd";
-import { LeftOutlined, LockOutlined } from "@ant-design/icons";
+import { LeftOutlined, LockOutlined, PlusOutlined } from "@ant-design/icons";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import useToken from "../Authentication/useToken";
@@ -17,6 +17,8 @@ function EvaluationDisplay() {
   const [patient, setPatient] = useState(null); // Informations du patient
   const navigate = useNavigate();
   const { patientId } = useParams(); // Récupère l'ID du patient depuis l'URL
+  // version 2 a décommenter
+  //const [expandedEvaluation, setExpandedEvaluation] = useState(null); // ID de l'évaluation déployée
 
   useEffect(() => {
     fetchData();
@@ -59,7 +61,6 @@ function EvaluationDisplay() {
       }
 
       // Récupération des évaluations
-      // Correction de l'URL pour correspondre à la route réelle du backend
       const endpoint = patientId
         ? `evaluations/patient/${patientId}`
         : "evaluations";
@@ -132,6 +133,43 @@ function EvaluationDisplay() {
   const handleReturn = () => {
     navigate(-1);
   };
+  /*
+  // Version 2 avec toggle buttons a décommenter 
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    const day = date.getDate();
+
+    // Liste des mois en français
+    const months = [
+      "janvier",
+      "février",
+      "mars",
+      "avril",
+      "mai",
+      "juin",
+      "juillet",
+      "août",
+      "septembre",
+      "octobre",
+      "novembre",
+      "décembre",
+    ];
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+
+    return `${day} ${month} ${year}`;
+  };
+
+  const toggleEvaluation = (evaluationId) => {
+    if (expandedEvaluation === evaluationId) {
+      setExpandedEvaluation(null); // Fermer si déjà ouvert
+    } else {
+      setExpandedEvaluation(evaluationId); // Ouvrir sinon
+    }
+  };
+  */
 
   const renderSection = (title, content) => (
     <Col span={8}>
@@ -212,6 +250,7 @@ function EvaluationDisplay() {
       ];
     }
 
+    // A mettre en commentaire pour tester la version 2 (v1)
     return (
       <Card key={evaluation.id} style={{ marginBottom: 20, borderRadius: 8 }}>
         <Row>
@@ -293,6 +332,211 @@ function EvaluationDisplay() {
       </Card>
     </div>
   );
+  // jusqu'ici (v1)**
+
+  // version 2 a décommenter
+  /*
+  const renderEvaluation = (evaluation, index) => {
+    // Déterminer le type d'évaluation et extraire les données
+    let type = "Inconnu";
+    let cardioData = {};
+    let equilibreData = {};
+    let mobiliteData = {};
+    let scoreTotal = "";
+    let programmeRecommande = "";
+    let vitesseMarche = "";
+
+    if (evaluation.Evaluation_PACE) {
+      const pace = evaluation.Evaluation_PACE;
+      type = "PACE";
+      scoreTotal = `${pace.scoreTotal}/18`;
+      programmeRecommande = evaluation.Program?.name || "";
+      vitesseMarche = pace.vitesseDeMarche?.toFixed(2) || "0.00";
+
+      cardioData = {
+        support: pace.chairTestSupport ? "Avec appui" : "Sans appui",
+        count: pace.chairTestCount || 0,
+      };
+
+      equilibreData = {
+        test: "Unipodal",
+        time: pace.balanceOneFooted || 0,
+      };
+
+      mobiliteData = {
+        position: pace.frtSitting ? "Assis" : "Debout",
+        distance: pace.frtDistance || 0,
+      };
+    } else if (evaluation.Evaluation_PATH) {
+      const path = evaluation.Evaluation_PATH;
+      type = "PATH";
+      scoreTotal = path.scoreTotal;
+      programmeRecommande = evaluation.Program?.name || "";
+      vitesseMarche = path.vitesseDeMarche?.toFixed(2) || "0.00";
+
+      cardioData = {
+        support: path.chairTestSupport ? "Avec appui" : "Sans appui",
+        count: path.chairTestCount || 0,
+      };
+
+      equilibreData = {
+        test: "Tandem",
+        time: path.balanceTandem || 0,
+      };
+    } else if (evaluation.Evaluation_MATCH) {
+      const match = evaluation.Evaluation_MATCH;
+      type = "MATCH";
+      scoreTotal = `${match.scoreTotal}/9`;
+      programmeRecommande = evaluation.Program?.name || "";
+      vitesseMarche = match.vitesseDeMarche?.toFixed(2) || "0.00";
+
+      cardioData = {
+        support: match.chairTestSupport ? "Avec appui" : "Sans appui",
+        count: match.chairTestCount || 0,
+      };
+
+      equilibreData = {
+        test: "Tandem",
+        time: match.balanceTandem || 0,
+      };
+    }
+
+    const isExpanded = expandedEvaluation === evaluation.id;
+    const evaluationNumber = index + 1;
+
+    return (
+      <div
+        key={evaluation.id}
+        style={{
+          marginBottom: 20,
+          borderRadius: 8,
+          backgroundColor: "white",
+          padding: "20px",
+          boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
+        }}
+      >
+        <Row align="middle" justify="space-between">
+          <Col span={8}>
+            <Title level={4} style={{ margin: 0 }}>
+              Évaluation {evaluationNumber} :
+            </Title>
+          </Col>
+
+          <Col span={8}>
+            <Text strong style={{ fontSize: "16px" }}>
+              Date : {formatDate(evaluation.createdAt)}
+            </Text>
+          </Col>
+
+          <Col span={6}>
+            <Text strong style={{ fontSize: "16px" }}>
+              Type : {type}
+            </Text>
+          </Col>
+
+          <Col span={2} style={{ textAlign: "right" }}>
+            <Button
+              icon={<PlusOutlined />}
+              type="primary"
+              style={{ backgroundColor: "#1890ff" }}
+              onClick={() => toggleEvaluation(evaluation.id)}
+            />
+          </Col>
+        </Row>
+
+        {isExpanded && (
+          <div style={{ marginTop: 20 }}>
+            <Row gutter={[24, 16]}>
+              <Col span={8}>
+                <div>Score total : {scoreTotal}</div>
+                <div>Programme recommandé : {programmeRecommande}</div>
+                <div>Vitesse de marche (m/s) : {vitesseMarche}</div>
+              </Col>
+
+              <Col span={8}>
+                <div>
+                  <strong>Cardio-musculaire :</strong>
+                  <div>{cardioData.support}</div>
+                  <div>Nombre de levers : {cardioData.count}</div>
+                </div>
+              </Col>
+
+              <Col span={8}>
+                <div>
+                  <strong>Équilibre :</strong>
+                  <div>Dernier test effectué : {equilibreData.test}</div>
+                  <div>Temps (seconde) : {equilibreData.time}</div>
+                </div>
+              </Col>
+
+              {type === "PACE" && (
+                <Col span={8} offset={8}>
+                  <div>
+                    <strong>Mobilité :</strong>
+                    <div>{mobiliteData.position}</div>
+                    <div>Distance (cm) : {mobiliteData.distance}</div>
+                  </div>
+                </Col>
+              )}
+            </Row>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  
+  return (
+    <div className="p-6">
+      <Card className="shadow-sm" bodyStyle={{ padding: "24px" }}>
+        <Row style={{ marginBottom: 20 }}>
+          <Col span={8}>
+            <Button
+              type="primary"
+              icon={<LeftOutlined />}
+              onClick={handleReturn}
+            >
+              Retourner
+            </Button>
+          </Col>
+          <Col span={8} style={{ textAlign: "center" }}>
+            {patient && (
+              <Title level={4} style={{ margin: 0 }}>
+                {patient.firstname} {patient.lastname}
+              </Title>
+            )}
+          </Col>
+          <Col span={8}></Col>
+        </Row>
+
+        <Title level={3}>Évaluations effectuées</Title>
+
+        {loading ? (
+          <div style={{ textAlign: "center", padding: 50 }}>
+            <Spin size="large" />
+          </div>
+        ) : errorMessage ? (
+          <Result
+            status="error"
+            title="Erreur de chargement"
+            subTitle={errorMessage}
+            extra={
+              <Button type="primary" onClick={fetchData}>
+                Réessayer
+              </Button>
+            }
+          />
+        ) : evaluations.length === 0 ? (
+          <Empty description="Aucune évaluation trouvée" />
+        ) : (
+          evaluations.map((evaluation, index) =>
+            renderEvaluation(evaluation, index)
+          )
+        )}
+      </Card>
+    </div>
+  );
+  */
 }
 
 export default EvaluationDisplay;
