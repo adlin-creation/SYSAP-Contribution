@@ -21,36 +21,40 @@ const handleError = (res: Response, error: unknown, message: string) => {
     });
   }
 };
-
+const IMAGES_DIR = path.resolve(__dirname, "..", "images");
 /**
  * Returns an exercise image.
  */
 export const getImage = (req: Request, res: Response) => {
-  const imageName = req.params.imageName;
-  const imagePath = path.join(__dirname, "..", "images", imageName);
+  const { imageName } = req.params;
+  const imagePath = path.join(__dirname, "./images", imageName);
 
-  if (fs.existsSync(imagePath)) {
-    const readImageStream = fs.createReadStream(imagePath);
-    readImageStream.pipe(res);
-  } else {
-    res.status(404).json({ message: "Image non trouvée" });
-  }
+  res.sendFile(imagePath, (err) => {
+    if (err) {
+      res.status(404).json({ message: "Image not found" });
+    }
+  });
 };
 
 /**
  * Creates a new Exercise.
  */
 export const createExercise = async (req: Request, res: Response) => {
-  const { name, description, category, fitnessLevel } = req.body;
-  const exerciseImageFile = req.file;
-
-  if (!name || !description || !category || !fitnessLevel) {
-    return res.status(400).json({ message: "Tous les champs obligatoires doivent être remplis !" });
-  }
-
-  const imageUrl = exerciseImageFile?.path ?? "";
-
   try {
+    const { name, description, category, fitnessLevel } = req.body;
+
+
+    if (!name || !description || !category || !fitnessLevel) {
+      return res.status(400).json({ message: "Tous les champs obligatoires doivent être remplis !" });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ message: "Veuillez télécharger une image pour l'exercice." });
+    }
+
+    const imageUrl = `/images/${req.file.filename}`;
+
+    
     await Exercise.create({
       name,
       description,
@@ -59,27 +63,9 @@ export const createExercise = async (req: Request, res: Response) => {
       imageUrl,
     });
 
-    res.status(201).json({ message: "Exercice créé avec succès." });
+    res.status(201).json({ message: "Exercice créé avec succès.", imageUrl });
   } catch (error: unknown) {
-    // Supprimer le fichier uniquement s'il existe
-    if (imageUrl && fs.existsSync(imageUrl)) {
-      try {
-        deleteFile(imageUrl); // Nettoyer uniquement les fichiers locaux
-      } catch (fileError) {
-        console.error("Erreur lors de la suppression du fichier :", fileError);
-      }
-    }
-
-    // Gestion des erreurs
-    if (error instanceof Error) {
-      if (error.name === "SequelizeUniqueConstraintError") {
-        res.status(409).json({ message: "Un exercice avec ce nom existe déjà !" });
-      } else {
-        res.status(500).json({ message: "Erreur lors de la création de l'exercice.", error: error.message });
-      }
-    } else {
-      res.status(500).json({ message: "Erreur inconnue lors de la création de l'exercice." });
-    }
+    handleError(res, error, "Erreur lors de la création de l'exercice");
   }
 };
 

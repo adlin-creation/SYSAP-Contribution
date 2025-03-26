@@ -1,12 +1,13 @@
 import express from "express";
 import isAuth from "../util/isAuth";
+import upload from "../util/multerConfig";
+import { createExercise } from '../controller/ExerciseController';
 
 const router = express.Router();
 
 const exerciseController = require("../controller/ExerciseController");
 
-router.post("/create-exercise", isAuth, exerciseController.createExercise);
-
+router.post('/create-exercise', upload.single("file"), createExercise);
 router.post("/add/version", isAuth, exerciseController.addExerciseVersion);
 
 router.post(
@@ -19,6 +20,7 @@ router.get("/exercise/:exerciseKey", isAuth, exerciseController.getExercise);
 
 router.get("/exercises", isAuth, exerciseController.getExercises);
 
+
 router.delete(
   "/delete-exercise/:exerciseKey",
   isAuth,
@@ -30,6 +32,7 @@ router.put(
   isAuth,
   exerciseController.updateExercise
 );
+
 
 router.get("/images/:imageName", exerciseController.getImage);
 

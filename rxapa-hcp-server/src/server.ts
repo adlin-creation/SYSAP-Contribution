@@ -56,7 +56,7 @@ app.use(evaluationRoutes);
 
 // app.use("/", programPhaseRoutes);
 
-app.use("/images", express.static("images"));
+app.use("/images", express.static(path.join(__dirname, "../images")));
 
 app.use("*", function (req, res) {
   res.send("The page doesn't exist");

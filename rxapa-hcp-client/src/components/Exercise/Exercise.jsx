@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types"; // Import PropTypes for validation
+import PropTypes from "prop-types"; 
 import { Card } from "antd";
 import Constants from "../Utils/Constants";
 import { useTranslation } from "react-i18next";
@@ -10,7 +10,8 @@ const { Meta } = Card;
 export default function Exercise({ exercise, onClick, onSelect }) {
   const { t } = useTranslation();
   
-  const imageUrl = exercise.imageUrl ? `${Constants.SERVER_URL}/${exercise.imageUrl}` : null;
+  const imageUrl = exercise.imageUrl ? `${Constants.SERVER_URL}${exercise.imageUrl}` : null;
+
   const { name, fitnessLevel, category } = exercise;
 
   const handleCardClick = (event) => {
@@ -18,6 +19,7 @@ export default function Exercise({ exercise, onClick, onSelect }) {
     onSelect(exercise);
   };
 
+  console.log("Image URL:", imageUrl);
   return (
     <Card
       hoverable
@@ -29,7 +31,7 @@ export default function Exercise({ exercise, onClick, onSelect }) {
         style={{ backgroundImage: imageUrl ? `url(${imageUrl})` : "none" }}
       />
       <div className="exercise-info">
-        <Meta title={name} description={`${fitnessLevel} | ${category}`} />
+        <Meta title={name} description={`${fitnessLevel} | ${category} | ${imageUrl}`} />
       </div>
     </Card>
   );
