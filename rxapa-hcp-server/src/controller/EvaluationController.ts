@@ -156,7 +156,7 @@ exports.createMatchEvaluation = async (req: any, res: any, next: any) => {
     await Evaluation_MATCH.create(
       {
         // Section Cardio-musculaire
-        idPATH: evaluation.id,
+        idMATCH: evaluation.id,
         chairTestSupport: chairTestSupport === "with",
         chairTestCount: parseInt(chairTestCount),
         scoreCM: scores.cardioMusculaire,
