@@ -115,6 +115,9 @@ exports.updatePatientWithCaregivers = async (req: any, res: any, next: any) => {
     numberOfPrograms,
     numberOfCaregivers,
     role,
+    weight,
+    weightUnit,
+    birthday,
     caregivers,
   } = req.body;
   try {
@@ -129,6 +132,9 @@ exports.updatePatientWithCaregivers = async (req: any, res: any, next: any) => {
     patient.status = status;
     patient.numberOfPrograms = numberOfPrograms;
     patient.role = role;
+    patient.weight = weight;
+    patient.weightUnit = weightUnit;
+    patient.birthday = birthday;
     patient.numberOfCaregivers = numberOfCaregivers;
     await patient.save();
 
