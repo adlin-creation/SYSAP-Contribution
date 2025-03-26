@@ -168,16 +168,30 @@ function EvaluationPACE() {
     return "MARRON";
   };
 
+  const calculateSpeed = (walkingTime) => {
+    const time = parseFloat(walkingTime);
+    if (isNaN(time) || time <= 0) return "0.00";
+    return (4 / time).toFixed(2);
+  };
+
   const calculateWalkingObjective = (walkingTime) => {
-    if (!walkingTime || walkingTime <= 0) return null;
-
-    const speed = 4 / parseFloat(walkingTime);
-
+    const time = parseFloat(walkingTime);
+    
+    if (isNaN(time) || time < 0 || walkingTime === '') {
+      return null;
+    }
+    
+    if (time === 0) {
+      return 10;
+    }
+    
+    const speed = 4 / time;
+    
     if (speed < 0.4) return 10;
-    if (speed >= 0.4 && speed < 0.59) return 15;
-    if (speed >= 0.6 && speed < 0.79) return 20;
+    if (speed >= 0.4 && speed < 0.6) return 15;
+    if (speed >= 0.6 && speed < 0.8) return 20;
     if (speed >= 0.8) return 30;
-
+    
     return null;
   };
 
@@ -284,7 +298,7 @@ function EvaluationPACE() {
           >
             <p>
               {t("walking_speed")} :{" "}
-              {(4 / parseFloat(formData.walkingTime)).toFixed(2)} m/s
+              {calculateSpeed(formData.walkingTime)} m/s
             </p>
             <p>
               <strong>
@@ -326,7 +340,7 @@ function EvaluationPACE() {
       // Si le patient peut marcher, on vérifie que le temps est bien renseigné
       if (!formData.walkingTime) {
         newErrors.walkingTime = t("walking_time_required");
-      } else if (isNaN(formData.walkingTime) || parseFloat(formData.walkingTime) <= 0) {
+      } else if (isNaN(formData.walkingTime) || parseFloat(formData.walkingTime) < 0) {
         newErrors.walkingTime = t("walking_time_invalid");
       }
     }
@@ -543,7 +557,7 @@ function EvaluationPACE() {
               {formData.walkingTime && !errors.walkingTime && (
                 <div style={{ marginTop: 8, color: "#666" }}>
                   {t("walking_speed")} :{" "}
-                  {(4 / parseFloat(formData.walkingTime)).toFixed(2)} m/s
+                  {calculateSpeed(formData.walkingTime)} m/s
                   <div style={{ marginTop: 4 }}>
                     <strong>
                       {t("walking_objective")} :{" "}

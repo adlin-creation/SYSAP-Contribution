@@ -141,7 +141,7 @@ function EvaluationPATH() {
           >
             <p>
               Vitesse de marche :{" "}
-              {(4 / parseFloat(formData.walkingTime)).toFixed(2)} m/s
+              {calculateSpeed(formData.walkingTime)} m/s
             </p>
             <p>
               <strong>
@@ -173,16 +173,30 @@ function EvaluationPATH() {
     );
   };
 
+  const calculateSpeed = (walkingTime) => {
+    const time = parseFloat(walkingTime);
+    if (isNaN(time) || time <= 0) return "0.00";
+    return (4 / time).toFixed(2);
+  };
+
   const calculateWalkingObjective = (walkingTime) => {
-    if (!walkingTime || walkingTime <= 0) return null;
-
-    const speed = 4 / parseFloat(walkingTime);
-
+    const time = parseFloat(walkingTime);
+    
+    if (isNaN(time) || time < 0 || walkingTime === '') {
+      return null;
+    }
+    
+    if (time === 0) {
+      return 10;
+    }
+    
+    const speed = 4 / time;
+    
     if (speed < 0.4) return 10;
     if (speed >= 0.4 && speed < 0.6) return 15;
     if (speed >= 0.6 && speed < 0.8) return 20;
     if (speed >= 0.8) return 30;
-
+    
     return null;
   };
 
@@ -315,7 +329,7 @@ function EvaluationPATH() {
               {formData.walkingTime && !errors.walkingTime && (
                 <div style={{ marginTop: 8, color: "#666" }}>
                   Vitesse de marche :{" "}
-                  {(4 / parseFloat(formData.walkingTime)).toFixed(2)} m/s
+                  {calculateSpeed(formData.walkingTime)} m/s
                   <div style={{ marginTop: 4 }}>
                     <strong>
                       Objectif de marche :{" "}
