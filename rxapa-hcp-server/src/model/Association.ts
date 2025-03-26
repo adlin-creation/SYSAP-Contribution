@@ -113,11 +113,11 @@ export function createAssociations() {
   // Evaluation MATCH
   // Evaluation <> Evaluation_MATCH (One-to-One)
   Evaluation_MATCH.belongsTo(Evaluation, {
-    foreignKey: "idPATH",
+    foreignKey: "idMATCH",
     onDelete: "CASCADE",
   });
   Evaluation.hasOne(Evaluation_MATCH, {
-    foreignKey: "idPATH",
+    foreignKey: "idMATCH",
     onDelete: "CASCADE",
   });
 
