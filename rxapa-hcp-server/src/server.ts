@@ -19,7 +19,6 @@ import patientCaregiverRoutes from "./routes/PatientCaregiverRoute";
 import caregiverRoutes from "./routes/CaregiverRoute";
 import professionalUserRoutes from "./routes/ProfessionalUserRoute";
 import evaluationRoutes from "./routes/EvaluationRoute";
-const cors = require('cors');
 
 import { errorHandler } from "./middleware/errorHandler"; // Import du middleware
 
@@ -27,7 +26,6 @@ const app = express();
 
 // //Reads .env file and makes it accessible via process.env
 dotenv.config();
-app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
