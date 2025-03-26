@@ -30,12 +30,17 @@ dotenv.config();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/images", (req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*"); // Autorise toutes les origines
-  res.setHeader("Access-Control-Allow-Methods", "OPTIONS, GET, POST, PUT, PATCH, DELETE");
+app.use("/images", express.static("images"));
+
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "OPTIONS, GET, POST, PUT, PATCH, DELETE"
+  );
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
   next();
-}, express.static("images"));
+});
 
 app.use(userRoutes);
 app.use(exerciseRoutes);
