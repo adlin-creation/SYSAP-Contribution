@@ -334,13 +334,14 @@ export default function ProgramDetails({ program }) {
                     const file = e.target.files[0];
                     if (file) {
                       const allowedFormats = [
+                        "image/jpg",
                         "image/jpeg",
                         "image/png",
                         "image/webp",
                       ];
                       if (!allowedFormats.includes(file.type)) {
                         alert(
-                          "Invalid file format. Please upload a .jpg, .png, or .webp file."
+                          "Invalid file format. Please upload a .jpg, .png,.jpeg, or .webp file."
                         );
                         e.target.value = ""; 
                         return;
