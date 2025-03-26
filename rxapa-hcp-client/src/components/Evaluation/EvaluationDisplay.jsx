@@ -18,7 +18,7 @@ function EvaluationDisplay() {
   const navigate = useNavigate();
   const { patientId } = useParams(); // Récupère l'ID du patient depuis l'URL
   // version 2 a décommenter
-  //const [expandedEvaluation, setExpandedEvaluation] = useState(null); // ID de l'évaluation déployée
+  const [expandedEvaluation, setExpandedEvaluation] = useState(null); // ID de l'évaluation déployée
 
   useEffect(() => {
     fetchData();
@@ -133,8 +133,8 @@ function EvaluationDisplay() {
   const handleReturn = () => {
     navigate(-1);
   };
-  /*
-  // Version 2 avec toggle buttons a décommenter 
+
+  // Version 2 avec toggle buttons a décommenter
 
   const formatDate = (dateString) => {
     if (!dateString) return "";
@@ -169,7 +169,6 @@ function EvaluationDisplay() {
       setExpandedEvaluation(evaluationId); // Ouvrir sinon
     }
   };
-  */
 
   const renderSection = (title, content) => (
     <Col span={8}>
@@ -185,6 +184,8 @@ function EvaluationDisplay() {
     </Col>
   );
 
+  // A commenter pour tester la version 2 (v1)
+  /*
   const renderEvaluation = (evaluation, index) => {
     // Déterminer le type d'évaluation et extraire les données
     let type = "Inconnu";
@@ -250,7 +251,6 @@ function EvaluationDisplay() {
       ];
     }
 
-    // A mettre en commentaire pour tester la version 2 (v1)
     return (
       <Card key={evaluation.id} style={{ marginBottom: 20, borderRadius: 8 }}>
         <Row>
@@ -332,10 +332,11 @@ function EvaluationDisplay() {
       </Card>
     </div>
   );
+  */
   // jusqu'ici (v1)**
 
   // version 2 a décommenter
-  /*
+
   const renderEvaluation = (evaluation, index) => {
     // Déterminer le type d'évaluation et extraire les données
     let type = "Inconnu";
@@ -402,7 +403,7 @@ function EvaluationDisplay() {
     }
 
     const isExpanded = expandedEvaluation === evaluation.id;
-    const evaluationNumber = index + 1;
+    const evaluationNumber = evaluations.length - index;
 
     return (
       <div
@@ -485,7 +486,6 @@ function EvaluationDisplay() {
     );
   };
 
-  
   return (
     <div className="p-6">
       <Card className="shadow-sm" bodyStyle={{ padding: "24px" }}>
@@ -536,7 +536,6 @@ function EvaluationDisplay() {
       </Card>
     </div>
   );
-  */
 }
 
 export default EvaluationDisplay;
