@@ -1,5 +1,7 @@
 {
-    "bonjour": "Buenos días",
-    "jour": "Día",
-    "ma_seance_aujourdhui": "Mi sesión de hoy"
+    "button_my_program_today": "Mi sesión de hoy",
+ 
+    "info_day": "Día",
+
+    "title_hello": "Buenos días"
 }

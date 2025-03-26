@@ -42,7 +42,7 @@ export default function MaProgressionScreen() {
       const currentEndDate = new Date(currentStartDate);
       currentEndDate.setDate(currentStartDate.getDate() + 6);
       generatedWeeks.push([
-        `${t('Progression:semaine')} ${generatedWeeks.length + 1}`,
+        `${t('Progression:title_week')} ${generatedWeeks.length + 1}`,
         `${currentStartDate.toLocaleDateString('fr-FR')} - ${currentEndDate.toLocaleDateString('fr-FR')}`,
       ]);
       currentStartDate.setDate(currentStartDate.getDate() + 7);
@@ -88,19 +88,19 @@ export default function MaProgressionScreen() {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>{t('Progression:ma_progression')}</Text>
+      <Text style={styles.title}>{t('Progression:title_my_progress')}</Text>
       <View style={styles.optionsContainer}>
         <TouchableOpacity
           style={[styles.optionButton, !isAllPeriod && styles.selectedOption]}
           onPress={() => setIsAllPeriod(false)}
         >
-          <Text style={styles.optionText}>{t('Progression:la_semaine')}</Text>
+          <Text style={styles.optionText}>{t('Progression:button_filter_weekly')}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.optionButton, isAllPeriod && styles.selectedOption]}
           onPress={() => setIsAllPeriod(true)}
         >
-          <Text style={styles.optionText}>{t('Progression:depuis_le_debut')}</Text>
+          <Text style={styles.optionText}>{t('Progression:button_filter_since_beginning')}</Text>
         </TouchableOpacity>
       </View>
 
@@ -128,32 +128,32 @@ export default function MaProgressionScreen() {
       )}
 
       <Card style={styles.card}>
-        <Text style={styles.cardTitle}>{t('Progression:taux_completion')}</Text>
+        <Text style={styles.cardTitle}>{t('Progression:title_completion_rate')}</Text>
         <ProgressBar progress={completionRate / 100} color="#4CAF50" style={styles.progressBar} />
         <Text style={styles.progressText}>{completionRate}%</Text>
       </Card>
 
       <Card style={styles.card}>
-        <Text style={styles.cardTitle}>{isAllPeriod ? t('Progression:statistiques_depuis_debut') : t('Progression:statistiques_de_la_semaine')}</Text>
+        <Text style={styles.cardTitle}>{isAllPeriod ? t('Progression:title_statistics_since_beginning') : t('Progression:title_statistics_weekly')}</Text>
         <View style={styles.statsContainer}>
           <View style={styles.statsRow}>
-            <Text style={styles.statsLabel}>⚙️ {t('Progression:difficulte_moyenne')} :</Text>
+            <Text style={styles.statsLabel}>⚙️ {t('Progression:info_average_difficulty')} :</Text>
             <Text style={styles.statsValue}>{data.avgDifficulty}/4</Text>
           </View>
           <View style={styles.statsRow}>
-            <Text style={styles.statsLabel}>❤️ {t('Progression:douleur_moyenne')} :</Text>
+            <Text style={styles.statsLabel}>❤️ {t('Progression:info_average_pain')} :</Text>
             <Text style={styles.statsValue}>{data.avgPainLevel}/4</Text>
           </View>
           <View style={styles.statsRow}>
-           <Text style={styles.statsLabel}>😊 {t('Progression:satisfaction_moyenne')} :</Text>
+           <Text style={styles.statsLabel}>😊 {t('Progression:info_average_satisfaction')} :</Text>
            <Text style={styles.statsValue}>{data.avgSatisfactionLevel}/5</Text>
           </View>
           <View style={styles.statsRow}>
-            <Text style={styles.statsLabel}>🕒 {t('Progression:temps_marche')} :</Text>
+            <Text style={styles.statsLabel}>🕒 {t('Progression:info_walking_time')} :</Text>
             <Text style={styles.statsValue}>{formatWalkingTime(data.totalWalkingTime)}</Text>
           </View>
           <View style={styles.statsRow}>
-            <Text style={styles.statsLabel}>🏋️ {t('Progression:total_exercices')} :</Text>
+            <Text style={styles.statsLabel}>🏋️ {t('Progression:info_number_exercises')} :</Text>
             <Text style={styles.statsValue}>{data.totalExercises}</Text>
           </View>
         </View>
