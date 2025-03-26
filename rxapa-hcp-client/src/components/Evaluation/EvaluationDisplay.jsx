@@ -135,7 +135,7 @@ function EvaluationDisplay() {
   };
 
   // Version 2 avec toggle buttons a décommenter
-
+  /*
   const formatDate = (dateString) => {
     if (!dateString) return "";
     const date = new Date(dateString);
@@ -169,7 +169,7 @@ function EvaluationDisplay() {
       setExpandedEvaluation(evaluationId); // Ouvrir sinon
     }
   };
-
+*/
   const renderSection = (title, content) => (
     <Col span={8}>
       <Title level={5}>{title}</Title>
@@ -185,7 +185,7 @@ function EvaluationDisplay() {
   );
 
   // A commenter pour tester la version 2 (v1)
-  /*
+
   const renderEvaluation = (evaluation, index) => {
     // Déterminer le type d'évaluation et extraire les données
     let type = "Inconnu";
@@ -332,11 +332,11 @@ function EvaluationDisplay() {
       </Card>
     </div>
   );
-  */
+
   // jusqu'ici (v1)**
 
   // version 2 a décommenter
-
+  /*
   const renderEvaluation = (evaluation, index) => {
     // Déterminer le type d'évaluation et extraire les données
     let type = "Inconnu";
@@ -536,6 +536,7 @@ function EvaluationDisplay() {
       </Card>
     </div>
   );
+  */
 }
 
 export default EvaluationDisplay;
