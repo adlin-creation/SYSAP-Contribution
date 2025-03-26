@@ -40,8 +40,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(userRoutes);
-
 // Static Image Serving
 const mimeTypes = {
   'jpg': 'image/jpeg',
@@ -63,6 +61,7 @@ app.use("/images", (req, res, next) => {
   }
 }));
 
+app.use(userRoutes);
 app.use(exerciseRoutes);
 app.use(blocRoutes);
 app.use(sessionRoutes);
