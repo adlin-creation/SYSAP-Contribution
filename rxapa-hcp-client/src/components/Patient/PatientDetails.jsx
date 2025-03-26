@@ -20,10 +20,11 @@ import dayjs from "dayjs";
 
 function PatientDetails({ patient, onClose, refetchPatients }) {
   const { t } = useTranslation();
-  const { handleSubmit, control, setValue } = useForm();
+  const { handleSubmit, control, setValue, getValues } = useForm();
   const { token } = useToken();
   const [caregivers, setCaregivers] = useState([]);
 
+  // Charger les informations du patient dans le formulaire
   useEffect(() => {
     if (patient) {
       setValue("firstname", patient.firstname);
@@ -39,6 +40,7 @@ function PatientDetails({ patient, onClose, refetchPatients }) {
     }
   }, [patient, setValue]);
 
+  // Charger les caregivers du patient
   useEffect(() => {
     const getPatientCaregivers = async () => {
       try {
@@ -49,6 +51,14 @@ function PatientDetails({ patient, onClose, refetchPatients }) {
           }
         );
         setCaregivers(response.data);
+        response.data.forEach((caregiver, index) => {
+          setValue(`caregivers[${index}].id`, caregiver.id);
+          setValue(`caregivers[${index}].firstname`, caregiver.firstname);
+          setValue(`caregivers[${index}].lastname`, caregiver.lastname);
+          setValue(`caregivers[${index}].email`, caregiver.email);
+          setValue(`caregivers[${index}].phoneNumber`, caregiver.phoneNumber);
+          setValue(`caregivers[${index}].relationship`, caregiver.relationship);
+        });
       } catch (err) {
         AntModal.error({
           content:
@@ -63,7 +73,7 @@ function PatientDetails({ patient, onClose, refetchPatients }) {
     if (patient.numberOfCaregivers > 0) {
       getPatientCaregivers();
     }
-  }, [patient.id, token, t, patient.numberOfCaregivers]);
+  }, [patient.id, token, t, patient.numberOfCaregivers, setValue]);
 
   useEffect(() => {
     if (caregivers.length > 0) {
@@ -78,12 +88,13 @@ function PatientDetails({ patient, onClose, refetchPatients }) {
   }, [caregivers, setValue]);
 
   const onSubmit = (data) => {
+    const updatedCaregivers = getValues("caregivers");
     const patientData = {
       ...data,
       weight: Number(data.weight),
       birthday: data.birthday ? data.birthday.format("YYYY-MM-DD") : null,
       role: "patient",
-      caregivers: caregivers || [],
+      caregivers: updatedCaregivers || [],
     };
 
     axios
@@ -218,6 +229,11 @@ function PatientDetails({ patient, onClose, refetchPatients }) {
               <h3>{t("Patients:caregivers_list")}</h3>
               {caregivers.map((_, index) => (
                 <Row gutter={16} key={caregivers[index].id}>
+                  <Col span={24}>
+                    <h4>
+                      {t("Patients:caregiver")} {index + 1}
+                    </h4>
+                  </Col>
                   <Col span={12}>
                     <Form.Item label={t("Patients:first_name")} required>
                       <Controller
@@ -235,6 +251,50 @@ function PatientDetails({ patient, onClose, refetchPatients }) {
                         control={control}
                         defaultValue=""
                         render={({ field }) => <Input {...field} />}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item label={t("Patients:email")} required>
+                      <Controller
+                        name={`caregivers[${index}].email`}
+                        control={control}
+                        render={({ field }) => (
+                          <Input type="email" {...field} />
+                        )}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item label={t("Patients:phone_number")} required>
+                      <Controller
+                        name={`caregivers[${index}].phoneNumber`}
+                        control={control}
+                        render={({ field }) => <Input {...field} />}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item label={t("Patients:relationship")} required>
+                      <Controller
+                        name={`caregivers[${index}].relationship`}
+                        control={control}
+                        render={({ field }) => (
+                          <Select {...field}>
+                            <Select.Option value="parent">
+                              {t("Patients:relation_parent")}
+                            </Select.Option>
+                            <Select.Option value="sibling">
+                              {t("Patients:relation_sibling")}
+                            </Select.Option>
+                            <Select.Option value="friend">
+                              {t("Patients:relation_friend")}
+                            </Select.Option>
+                            <Select.Option value="other">
+                              {t("Patients:relation_other")}
+                            </Select.Option>
+                          </Select>
+                        )}
                       />
                     </Form.Item>
                   </Col>
