@@ -141,725 +141,752 @@ describe("EvaluationPACE Component", () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
-
-  it("affiche le composant et montre toutes les sections attendues", async () => {
-    await act(async () => {
-      render(<EvaluationPACE />);
-    });
-
-    [
-      "CARDIO-MUSCULAIRE",
-      "ÉQUILIBRE (Debout, sans aide)",
-      "MOBILITÉ & STABILITÉ DU TRONC",
-      "OBJECTIF DE MARCHE",
-    ].forEach((section) =>
-      expect(screen.getByText(section)).toBeInTheDocument()
-    );
-
-    expect(screen.getByText("Annuler")).toBeInTheDocument();
-    expect(screen.getByText("Soumettre")).toBeInTheDocument();
-
-    expect(
-      screen.getByText("Test de la chaise en 30 secondes")
-    ).toBeInTheDocument();
-    expect(screen.getByText("Avec appui")).toBeInTheDocument();
-    expect(screen.getByText("Sans appui")).toBeInTheDocument();
-
-    const withSupportRadio = screen
-      .getByText("Avec appui")
-      .closest("label")
-      .querySelector("input");
-    expect(withSupportRadio.checked).toBeTruthy();
-
-    expect(screen.getByText("Pieds joints")).toBeInTheDocument();
-    expect(screen.getByText("Semi-tandem")).toBeInTheDocument();
-    expect(screen.getByText("Tandem")).toBeInTheDocument();
-    expect(screen.getByText("Unipodale")).toBeInTheDocument();
-
-    expect(screen.getByText("Functional Reach Test (FRT)")).toBeInTheDocument();
-    expect(screen.getByText("Assis")).toBeInTheDocument();
-    expect(screen.getByText("Debout")).toBeInTheDocument();
-    expect(screen.getByText("Bras non fonctionnels")).toBeInTheDocument();
-
-    expect(
-      screen.getByText("Test 4 mètres – vitesse de marche confortable")
-    ).toBeInTheDocument();
-    expect(screen.getByText("Le patient peut marcher")).toBeInTheDocument();
-    expect(
-      screen.getByText("Le patient ne peut pas marcher")
-    ).toBeInTheDocument();
-  });
-
-  it("active ou désactive les tests d'équilibre en fonction des résultats précédents", async () => {
-    await act(async () => {
-      render(<EvaluationPACE />);
-    });
-
-    const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
-
-    expect(balanceInputs[1]).toBeDisabled();
-    expect(balanceInputs[2]).toBeDisabled();
-    expect(balanceInputs[3]).toBeDisabled();
-
-    await act(async () => {
-      fireEvent.change(balanceInputs[0], { target: { value: "5" } });
-    });
-    expect(balanceInputs[1]).toBeDisabled();
-
-    await act(async () => {
-      fireEvent.change(balanceInputs[0], { target: { value: "10" } });
-    });
-    expect(balanceInputs[1]).not.toBeDisabled();
-
-    await act(async () => {
-      fireEvent.change(balanceInputs[1], { target: { value: "5" } });
-    });
-    expect(balanceInputs[2]).toBeDisabled();
-
-    await act(async () => {
-      fireEvent.change(balanceInputs[1], { target: { value: "10" } });
-    });
-    expect(balanceInputs[2]).not.toBeDisabled();
-
-    await act(async () => {
-      fireEvent.change(balanceInputs[2], { target: { value: "5" } });
-    });
-    expect(balanceInputs[3]).toBeDisabled();
-
-    await act(async () => {
-      fireEvent.change(balanceInputs[2], { target: { value: "10" } });
-    });
-    expect(balanceInputs[3]).not.toBeDisabled();
-  });
-
-  it("gère correctement l'affichage du champ de temps de marche selon la capacité du patient", async () => {
-    await act(async () => {
-      render(<EvaluationPACE />);
-    });
-
-    expect(
-      screen.queryByText("Temps nécessaire pour marcher 4 mètres (secondes)")
-    ).not.toBeInTheDocument();
-
-    await act(async () => {
-      const canWalkRadio = screen.getByText("Le patient peut marcher");
-      fireEvent.click(canWalkRadio);
-    });
-
-    expect(
-      screen.getByText("Temps nécessaire pour marcher 4 mètres (secondes)")
-    ).toBeInTheDocument();
-
-    await act(async () => {
-      const cannotWalkRadio = screen.getByText(
-        "Le patient ne peut pas marcher"
-      );
-      fireEvent.click(cannotWalkRadio);
-    });
-
-    expect(
-      screen.queryByText("Temps nécessaire pour marcher 4 mètres (secondes)")
-    ).not.toBeInTheDocument();
-  });
-
-  it("calcule correctement la vitesse de marche et l'objectif de marche", async () => {
-    await act(async () => {
-      render(<EvaluationPACE />);
-    });
-
-    await act(async () => {
-      const canWalkRadio = screen.getByText("Le patient peut marcher");
-      fireEvent.click(canWalkRadio);
-    });
-
-    const walkingTimeInput = screen.getByPlaceholderText(
-      "Entrez le temps en secondes"
-    );
-
-    const speedScenarios = [
-      { time: "11", speed: "0.36", objective: "10" },
-      { time: "8", speed: "0.50", objective: "15" },
-      { time: "6", speed: "0.67", objective: "20" },
-      { time: "5", speed: "0.80", objective: "30" },
-    ];
-
-    for (const scenario of speedScenarios) {
+  describe("Rendu et structure du composant", () => {
+    it("affiche correctement toutes les sections attendues", async () => {
       await act(async () => {
-        fireEvent.change(walkingTimeInput, {
-          target: { value: scenario.time },
-        });
+        render(<EvaluationPACE />);
       });
 
-      await waitFor(() => {
-        expect(
-          screen.getByText(
-            new RegExp(`Vitesse de marche : ${scenario.speed} m/s`)
-          )
-        ).toBeInTheDocument();
-        expect(
-          screen.getByText(
-            new RegExp(`Objectif de marche : ${scenario.objective} minutes`)
-          )
-        ).toBeInTheDocument();
+      const sections = [
+        "CARDIO-MUSCULAIRE",
+        "ÉQUILIBRE (Debout, sans aide)",
+        "MOBILITÉ & STABILITÉ DU TRONC",
+        "OBJECTIF DE MARCHE",
+      ];
+
+      sections.forEach((section) => {
+        expect(screen.getByText(section)).toBeInTheDocument();
       });
-    }
+
+      expect(screen.getByText("Annuler")).toBeInTheDocument();
+      expect(screen.getByText("Soumettre")).toBeInTheDocument();
+
+      expect(
+        screen.getByText("Test de la chaise en 30 secondes")
+      ).toBeInTheDocument();
+      expect(screen.getByText("Avec appui")).toBeInTheDocument();
+      expect(screen.getByText("Sans appui")).toBeInTheDocument();
+
+      const withSupportRadio = screen
+        .getByText("Avec appui")
+        .closest("label")
+        .querySelector("input");
+      expect(withSupportRadio.checked).toBeTruthy();
+
+      expect(screen.getByText("Pieds joints")).toBeInTheDocument();
+      expect(screen.getByText("Semi-tandem")).toBeInTheDocument();
+      expect(screen.getByText("Tandem")).toBeInTheDocument();
+      expect(screen.getByText("Unipodale")).toBeInTheDocument();
+
+      expect(
+        screen.getByText("Functional Reach Test (FRT)")
+      ).toBeInTheDocument();
+      expect(screen.getByText("Assis")).toBeInTheDocument();
+      expect(screen.getByText("Debout")).toBeInTheDocument();
+      expect(screen.getByText("Bras non fonctionnels")).toBeInTheDocument();
+
+      expect(
+        screen.getByText("Test 4 mètres – vitesse de marche confortable")
+      ).toBeInTheDocument();
+      expect(screen.getByText("Le patient peut marcher")).toBeInTheDocument();
+      expect(
+        screen.getByText("Le patient ne peut pas marcher")
+      ).toBeInTheDocument();
+    });
   });
-
-  it("désactive le champ de distance FRT lorsque 'Bras non fonctionnels' est sélectionné", async () => {
-    await act(async () => {
-      render(<EvaluationPACE />);
-    });
-
-    const distanceInput = screen.getByPlaceholderText("Entrez la distance");
-    expect(distanceInput).not.toBeDisabled();
-
-    await act(async () => {
-      const armsNotWorkingRadio = screen.getByText("Bras non fonctionnels");
-      fireEvent.click(armsNotWorkingRadio);
-    });
-
-    expect(distanceInput).toBeDisabled();
-
-    await act(async () => {
-      const sittingRadio = screen.getByText("Assis");
-      fireEvent.click(sittingRadio);
-    });
-
-    expect(distanceInput).not.toBeDisabled();
-  });
-
-  it("valide correctement les champs de saisie", async () => {
-    await act(async () => {
-      render(<EvaluationPACE />);
-    });
-
-    await act(async () => {
-      const submitButton = screen.getByText("Soumettre");
-      fireEvent.click(submitButton);
-    });
-
-    await waitFor(() => {
-      expect(axios.post).not.toHaveBeenCalled();
-    });
-
-    await act(async () => {
-      const canWalkRadio = screen.getByText("Le patient peut marcher");
-      fireEvent.click(canWalkRadio);
-    });
-
-    const walkingTimeInput = screen.getByPlaceholderText(
-      "Entrez le temps en secondes"
-    );
-
-    await act(async () => {
-      fireEvent.change(walkingTimeInput, { target: { value: "5.5" } });
-    });
-    expect(walkingTimeInput.value).toBe("5.5");
-
-    await act(async () => {
-      fireEvent.change(walkingTimeInput, { target: { value: "5.5a" } });
-    });
-    expect(walkingTimeInput.value).toBe("5.5");
-
-    for (const value of ["4", "4.5", ".5", "0.5"]) {
+  describe("Section Équilibre", () => {
+    it("active ou désactive correctement les tests d'équilibre en fonction des résultats précédents", async () => {
       await act(async () => {
-        fireEvent.change(walkingTimeInput, { target: { value } });
+        render(<EvaluationPACE />);
       });
-      expect(walkingTimeInput.value).toBe(value);
-    }
-  });
-  it("calcule correctement le score du test de la chaise pour tous les scénarios", async () => {
-    await act(async () => {
-      render(<EvaluationPACE />);
-    });
 
-    await act(async () => {
       const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
-      fireEvent.change(balanceInputs[0], { target: { value: "10" } });
 
-      const distanceInput = screen.getByPlaceholderText("Entrez la distance");
-      fireEvent.change(distanceInput, { target: { value: "20" } });
+      expect(balanceInputs[1]).toBeDisabled();
+      expect(balanceInputs[2]).toBeDisabled();
+      expect(balanceInputs[3]).toBeDisabled();
 
-      const canWalkRadio = screen.getByText("Le patient peut marcher");
-      fireEvent.click(canWalkRadio);
+      await act(async () => {
+        fireEvent.change(balanceInputs[0], { target: { value: "5" } });
+      });
+      expect(balanceInputs[1]).toBeDisabled();
 
-      const walkingTimeInput = screen.getByPlaceholderText(
-        "Entrez le temps en secondes"
-      );
-      fireEvent.change(walkingTimeInput, { target: { value: "5" } });
+      await act(async () => {
+        fireEvent.change(balanceInputs[0], { target: { value: "10" } });
+      });
+      expect(balanceInputs[1]).not.toBeDisabled();
+
+      await act(async () => {
+        fireEvent.change(balanceInputs[1], { target: { value: "5" } });
+      });
+      expect(balanceInputs[2]).toBeDisabled();
+
+      await act(async () => {
+        fireEvent.change(balanceInputs[1], { target: { value: "10" } });
+      });
+      expect(balanceInputs[2]).not.toBeDisabled();
+
+      await act(async () => {
+        fireEvent.change(balanceInputs[2], { target: { value: "5" } });
+      });
+      expect(balanceInputs[3]).toBeDisabled();
+
+      await act(async () => {
+        fireEvent.change(balanceInputs[2], { target: { value: "10" } });
+      });
+      expect(balanceInputs[3]).not.toBeDisabled();
     });
 
-    const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
-    const submitButton = screen.getByText("Soumettre");
+    it("calcule correctement le score d'équilibre pour tous les scénarios", async () => {
+      await act(async () => {
+        render(<EvaluationPACE />);
+      });
 
-    const chairScenariosWithSupport = [
-      { count: "0", expectedScore: 0 },
-      { count: "5", expectedScore: 1 },
-      { count: "10", expectedScore: 2 },
-    ];
+      await act(async () => {
+        const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
+        fireEvent.change(chairTestInput, { target: { value: "10" } });
 
-    for (const scenario of chairScenariosWithSupport) {
+        const distanceInput = screen.getByPlaceholderText("Entrez la distance");
+        fireEvent.change(distanceInput, { target: { value: "20" } });
+
+        const canWalkRadio = screen.getByText("Le patient peut marcher");
+        fireEvent.click(canWalkRadio);
+
+        const walkingTimeInput = screen.getByPlaceholderText(
+          "Entrez le temps en secondes"
+        );
+        fireEvent.change(walkingTimeInput, { target: { value: "5" } });
+      });
+
+      const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
+      const submitButton = screen.getByText("Soumettre");
+
+      const balanceScenarios = [
+        { ft: "5", st: "0", t: "0", of: "0", expectedScore: 0 },
+        { ft: "10", st: "5", t: "0", of: "0", expectedScore: 1 },
+        { ft: "10", st: "10", t: "3", of: "0", expectedScore: 2 },
+        { ft: "10", st: "10", t: "7", of: "0", expectedScore: 3 },
+        { ft: "10", st: "10", t: "10", of: "0", expectedScore: 4 },
+        { ft: "10", st: "10", t: "10", of: "7", expectedScore: 5 },
+        { ft: "10", st: "10", t: "10", of: "10", expectedScore: 6 },
+      ];
+
+      for (const scenario of balanceScenarios) {
+        await act(async () => {
+          fireEvent.change(balanceInputs[0], { target: { value: "10" } });
+
+          fireEvent.change(balanceInputs[0], {
+            target: { value: scenario.ft },
+          });
+
+          if (scenario.ft >= 10 && scenario.st !== undefined) {
+            fireEvent.change(balanceInputs[1], {
+              target: { value: scenario.st },
+            });
+          }
+
+          if (scenario.st >= 10 && scenario.t !== undefined) {
+            fireEvent.change(balanceInputs[2], {
+              target: { value: scenario.t },
+            });
+          }
+
+          if (scenario.t >= 10 && scenario.of !== undefined) {
+            fireEvent.change(balanceInputs[3], {
+              target: { value: scenario.of },
+            });
+          }
+
+          fireEvent.click(submitButton);
+        });
+
+        await waitFor(() => {
+          expect(axios.post).not.toHaveBeenCalled();
+        });
+      }
+    });
+  });
+  describe("Section Cardio-Musculaire", () => {
+    it("calcule correctement le score du test de la chaise avec et sans appui", async () => {
+      await act(async () => {
+        render(<EvaluationPACE />);
+      });
+
+      await act(async () => {
+        const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
+        fireEvent.change(balanceInputs[0], { target: { value: "10" } });
+
+        const distanceInput = screen.getByPlaceholderText("Entrez la distance");
+        fireEvent.change(distanceInput, { target: { value: "20" } });
+
+        const canWalkRadio = screen.getByText("Le patient peut marcher");
+        fireEvent.click(canWalkRadio);
+
+        const walkingTimeInput = screen.getByPlaceholderText(
+          "Entrez le temps en secondes"
+        );
+        fireEvent.change(walkingTimeInput, { target: { value: "5" } });
+      });
+
+      const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
+      const submitButton = screen.getByText("Soumettre");
+
       await act(async () => {
         const withSupportRadio = screen.getByText("Avec appui");
         fireEvent.click(withSupportRadio);
-        fireEvent.change(chairTestInput, { target: { value: scenario.count } });
-        fireEvent.click(submitButton);
       });
 
-      await waitFor(() => {
-        expect(axios.post).not.toHaveBeenCalled();
-      });
-    }
+      const chairScenariosWithSupport = [
+        { count: "0", expectedScore: 0 },
+        { count: "5", expectedScore: 1 },
+        { count: "10", expectedScore: 2 },
+      ];
 
-    const chairScenariosWithoutSupport = [
-      { count: "0", expectedScore: 0 },
-      { count: "3", expectedScore: 2 },
-      { count: "7", expectedScore: 3 },
-      { count: "11", expectedScore: 4 },
-      { count: "14", expectedScore: 5 },
-      { count: "16", expectedScore: 6 },
-    ];
+      for (const scenario of chairScenariosWithSupport) {
+        await act(async () => {
+          fireEvent.change(chairTestInput, {
+            target: { value: scenario.count },
+          });
+          fireEvent.click(submitButton);
+        });
 
-    for (const scenario of chairScenariosWithoutSupport) {
+        await waitFor(() => {
+          expect(axios.post).not.toHaveBeenCalled();
+        });
+      }
+
       await act(async () => {
         const withoutSupportRadio = screen.getByText("Sans appui");
         fireEvent.click(withoutSupportRadio);
-        fireEvent.change(chairTestInput, { target: { value: scenario.count } });
-        fireEvent.click(submitButton);
       });
 
-      await waitFor(() => {
-        expect(axios.post).not.toHaveBeenCalled();
-      });
-    }
-  });
+      const chairScenariosWithoutSupport = [
+        { count: "0", expectedScore: 0 },
+        { count: "3", expectedScore: 2 },
+        { count: "7", expectedScore: 3 },
+        { count: "11", expectedScore: 4 },
+        { count: "14", expectedScore: 5 },
+        { count: "16", expectedScore: 6 },
+      ];
 
-  it("calcule correctement le score d'équilibre pour tous les scénarios", async () => {
-    await act(async () => {
-      render(<EvaluationPACE />);
+      for (const scenario of chairScenariosWithoutSupport) {
+        await act(async () => {
+          fireEvent.change(chairTestInput, {
+            target: { value: scenario.count },
+          });
+          fireEvent.click(submitButton);
+        });
+
+        await waitFor(() => {
+          expect(axios.post).not.toHaveBeenCalled();
+        });
+      }
     });
-
-    await act(async () => {
-      const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
-      fireEvent.change(chairTestInput, { target: { value: "10" } });
+  });
+  describe("Section Mobilité", () => {
+    it("désactive correctement le champ de distance FRT lorsque 'Bras non fonctionnels' est sélectionné", async () => {
+      await act(async () => {
+        render(<EvaluationPACE />);
+      });
 
       const distanceInput = screen.getByPlaceholderText("Entrez la distance");
-      fireEvent.change(distanceInput, { target: { value: "20" } });
+      expect(distanceInput).not.toBeDisabled();
 
-      const canWalkRadio = screen.getByText("Le patient peut marcher");
-      fireEvent.click(canWalkRadio);
-
-      const walkingTimeInput = screen.getByPlaceholderText(
-        "Entrez le temps en secondes"
-      );
-      fireEvent.change(walkingTimeInput, { target: { value: "5" } });
-    });
-
-    const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
-    const submitButton = screen.getByText("Soumettre");
-
-    const balanceScenarios = [
-      { ft: "5", st: "0", t: "0", of: "0", expectedScore: 0 },
-      { ft: "10", st: "5", t: "0", of: "0", expectedScore: 1 },
-      { ft: "10", st: "10", t: "3", of: "0", expectedScore: 2 },
-      { ft: "10", st: "10", t: "7", of: "0", expectedScore: 3 },
-      { ft: "10", st: "10", t: "10", of: "0", expectedScore: 4 },
-      { ft: "10", st: "10", t: "10", of: "7", expectedScore: 5 },
-      { ft: "10", st: "10", t: "10", of: "10", expectedScore: 6 },
-    ];
-
-    for (const scenario of balanceScenarios) {
       await act(async () => {
-        fireEvent.change(balanceInputs[0], { target: { value: "10" } });
-        fireEvent.change(balanceInputs[0], { target: { value: scenario.ft } });
-
-        if (scenario.ft >= 10 && scenario.st) {
-          fireEvent.change(balanceInputs[1], {
-            target: { value: scenario.st },
-          });
-        }
-
-        if (scenario.st >= 10 && scenario.t) {
-          fireEvent.change(balanceInputs[2], { target: { value: scenario.t } });
-        }
-
-        if (scenario.t >= 10 && scenario.of) {
-          fireEvent.change(balanceInputs[3], {
-            target: { value: scenario.of },
-          });
-        }
-
-        fireEvent.click(submitButton);
+        const armsNotWorkingRadio = screen.getByText("Bras non fonctionnels");
+        fireEvent.click(armsNotWorkingRadio);
       });
 
-      await waitFor(() => {
-        expect(axios.post).not.toHaveBeenCalled();
-      });
-    }
-  });
+      expect(distanceInput).toBeDisabled();
 
-  it("calcule correctement le score de mobilité dans différentes positions", async () => {
-    await act(async () => {
-      render(<EvaluationPACE />);
-    });
-
-    await act(async () => {
-      const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
-      fireEvent.change(chairTestInput, { target: { value: "10" } });
-
-      const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
-      fireEvent.change(balanceInputs[0], { target: { value: "10" } });
-      fireEvent.change(balanceInputs[1], { target: { value: "10" } });
-      fireEvent.change(balanceInputs[2], { target: { value: "10" } });
-      fireEvent.change(balanceInputs[3], { target: { value: "10" } });
-
-      const canWalkRadio = screen.getByText("Le patient peut marcher");
-      fireEvent.click(canWalkRadio);
-
-      const walkingTimeInput = screen.getByPlaceholderText(
-        "Entrez le temps en secondes"
-      );
-      fireEvent.change(walkingTimeInput, { target: { value: "5" } });
-    });
-
-    const distanceInput = screen.getByPlaceholderText("Entrez la distance");
-    const submitButton = screen.getByText("Soumettre");
-
-    await act(async () => {
-      const sittingRadio = screen.getByText("Assis");
-      fireEvent.click(sittingRadio);
-    });
-
-    const distanceScenariosSitting = [
-      { distance: "10", expectedScore: 1 },
-      { distance: "20", expectedScore: 2 },
-      { distance: "30", expectedScore: 3 },
-      { distance: "40", expectedScore: 4 },
-    ];
-
-    for (const scenario of distanceScenariosSitting) {
-      await act(async () => {
-        fireEvent.change(distanceInput, {
-          target: { value: scenario.distance },
-        });
-        fireEvent.click(submitButton);
-      });
-
-      await waitFor(() => {
-        expect(axios.post).not.toHaveBeenCalled();
-      });
-    }
-
-    await act(async () => {
-      const standingRadio = screen.getByText("Debout");
-      fireEvent.click(standingRadio);
-    });
-
-    const distanceScenariosStanding = [
-      { distance: "10", expectedScore: 3 },
-      { distance: "20", expectedScore: 4 },
-      { distance: "30", expectedScore: 5 },
-      { distance: "40", expectedScore: 6 },
-    ];
-
-    for (const scenario of distanceScenariosStanding) {
-      await act(async () => {
-        fireEvent.change(distanceInput, {
-          target: { value: scenario.distance },
-        });
-        fireEvent.click(submitButton);
-      });
-
-      await waitFor(() => {
-        expect(axios.post).not.toHaveBeenCalled();
-      });
-    }
-
-    await act(async () => {
-      const armsNotWorkingRadio = screen.getByText("Bras non fonctionnels");
-      fireEvent.click(armsNotWorkingRadio);
-      fireEvent.click(submitButton);
-    });
-
-    await waitFor(() => {
-      expect(axios.post).not.toHaveBeenCalled();
-    });
-  });
-
-  it("détermine correctement les couleurs en fonction des scores", async () => {
-    await act(async () => {
-      render(<EvaluationPACE />);
-    });
-
-    await act(async () => {
-      const canWalkRadio = screen.getByText("Le patient peut marcher");
-      fireEvent.click(canWalkRadio);
-
-      const walkingTimeInput = screen.getByPlaceholderText(
-        "Entrez le temps en secondes"
-      );
-      fireEvent.change(walkingTimeInput, { target: { value: "5" } });
-    });
-
-    const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
-    const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
-    const distanceInput = screen.getByPlaceholderText("Entrez la distance");
-    const submitButton = screen.getByText("Soumettre");
-
-    const colorScenarios = [
-      { chair: "5", balance: "10", distance: "20", expectedColor: "BLEU" },
-      { chair: "10", balance: "5", distance: "20", expectedColor: "JAUNE" },
-      { chair: "10", balance: "10", distance: "5", expectedColor: "ROUGE" },
-      { chair: "3", balance: "3", distance: "10", expectedColor: "VERT" },
-      { chair: "10", balance: "2", distance: "2", expectedColor: "ORANGE" },
-      { chair: "4", balance: "10", distance: "4", expectedColor: "VIOLET" },
-      { chair: "3", balance: "3", distance: "3", expectedColor: "MARRON" },
-    ];
-
-    for (const scenario of colorScenarios) {
       await act(async () => {
         const sittingRadio = screen.getByText("Assis");
         fireEvent.click(sittingRadio);
+      });
 
-        fireEvent.change(chairTestInput, { target: { value: scenario.chair } });
+      expect(distanceInput).not.toBeDisabled();
+    });
 
-        fireEvent.change(balanceInputs[0], {
-          target: { value: scenario.balance },
+    it("calcule correctement le score de mobilité dans différentes positions", async () => {
+      await act(async () => {
+        render(<EvaluationPACE />);
+      });
+
+      await act(async () => {
+        const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
+        fireEvent.change(chairTestInput, { target: { value: "10" } });
+
+        const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
+        fireEvent.change(balanceInputs[0], { target: { value: "10" } });
+        fireEvent.change(balanceInputs[1], { target: { value: "10" } });
+        fireEvent.change(balanceInputs[2], { target: { value: "10" } });
+        fireEvent.change(balanceInputs[3], { target: { value: "10" } });
+
+        const canWalkRadio = screen.getByText("Le patient peut marcher");
+        fireEvent.click(canWalkRadio);
+
+        const walkingTimeInput = screen.getByPlaceholderText(
+          "Entrez le temps en secondes"
+        );
+        fireEvent.change(walkingTimeInput, { target: { value: "5" } });
+      });
+
+      const distanceInput = screen.getByPlaceholderText("Entrez la distance");
+      const submitButton = screen.getByText("Soumettre");
+
+      await act(async () => {
+        const sittingRadio = screen.getByText("Assis");
+        fireEvent.click(sittingRadio);
+      });
+
+      const distanceScenariosSitting = [
+        { distance: "10", expectedScore: 1 },
+        { distance: "20", expectedScore: 2 },
+        { distance: "30", expectedScore: 3 },
+        { distance: "40", expectedScore: 4 },
+      ];
+
+      for (const scenario of distanceScenariosSitting) {
+        await act(async () => {
+          fireEvent.change(distanceInput, {
+            target: { value: scenario.distance },
+          });
+          fireEvent.click(submitButton);
         });
 
-        fireEvent.change(distanceInput, {
-          target: { value: scenario.distance },
+        await waitFor(() => {
+          expect(axios.post).not.toHaveBeenCalled();
+        });
+      }
+
+      await act(async () => {
+        const standingRadio = screen.getByText("Debout");
+        fireEvent.click(standingRadio);
+      });
+
+      const distanceScenariosStanding = [
+        { distance: "10", expectedScore: 3 },
+        { distance: "20", expectedScore: 4 },
+        { distance: "30", expectedScore: 5 },
+        { distance: "40", expectedScore: 6 },
+      ];
+
+      for (const scenario of distanceScenariosStanding) {
+        await act(async () => {
+          fireEvent.change(distanceInput, {
+            target: { value: scenario.distance },
+          });
+          fireEvent.click(submitButton);
         });
 
+        await waitFor(() => {
+          expect(axios.post).not.toHaveBeenCalled();
+        });
+      }
+
+      await act(async () => {
+        const armsNotWorkingRadio = screen.getByText("Bras non fonctionnels");
+        fireEvent.click(armsNotWorkingRadio);
         fireEvent.click(submitButton);
       });
 
       await waitFor(() => {
         expect(axios.post).not.toHaveBeenCalled();
       });
-    }
+    });
   });
 
-  it("détermine correctement le niveau en fonction du score total", async () => {
-    await act(async () => {
-      render(<EvaluationPACE />);
+  describe("Section Objectif de Marche", () => {
+    it("gère correctement l'affichage du champ de temps de marche selon la capacité du patient", async () => {
+      await act(async () => {
+        render(<EvaluationPACE />);
+      });
+
+      expect(
+        screen.queryByText("Temps nécessaire pour marcher 4 mètres (secondes)")
+      ).not.toBeInTheDocument();
+
+      await act(async () => {
+        const canWalkRadio = screen.getByText("Le patient peut marcher");
+        fireEvent.click(canWalkRadio);
+      });
+
+      expect(
+        screen.getByText("Temps nécessaire pour marcher 4 mètres (secondes)")
+      ).toBeInTheDocument();
+
+      await act(async () => {
+        const cannotWalkRadio = screen.getByText(
+          "Le patient ne peut pas marcher"
+        );
+        fireEvent.click(cannotWalkRadio);
+      });
+
+      expect(
+        screen.queryByText("Temps nécessaire pour marcher 4 mètres (secondes)")
+      ).not.toBeInTheDocument();
     });
 
-    await act(async () => {
-      const canWalkRadio = screen.getByText("Le patient peut marcher");
-      fireEvent.click(canWalkRadio);
+    it("calcule correctement la vitesse de marche et l'objectif de marche", async () => {
+      await act(async () => {
+        render(<EvaluationPACE />);
+      });
+
+      await act(async () => {
+        const canWalkRadio = screen.getByText("Le patient peut marcher");
+        fireEvent.click(canWalkRadio);
+      });
 
       const walkingTimeInput = screen.getByPlaceholderText(
         "Entrez le temps en secondes"
       );
-      fireEvent.change(walkingTimeInput, { target: { value: "5" } });
+
+      const speedScenarios = [
+        { time: "11", speed: "0.36", objective: "10" },
+        { time: "8", speed: "0.50", objective: "15" },
+        { time: "6", speed: "0.67", objective: "20" },
+        { time: "5", speed: "0.80", objective: "30" },
+      ];
+
+      for (const scenario of speedScenarios) {
+        await act(async () => {
+          fireEvent.change(walkingTimeInput, {
+            target: { value: scenario.time },
+          });
+        });
+
+        await waitFor(() => {
+          expect(
+            screen.getByText(
+              new RegExp(`Vitesse de marche : ${scenario.speed} m/s`)
+            )
+          ).toBeInTheDocument();
+          expect(
+            screen.getByText(
+              new RegExp(`Objectif de marche : ${scenario.objective} minutes`)
+            )
+          ).toBeInTheDocument();
+        });
+      }
     });
 
-    const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
-    const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
-    const distanceInput = screen.getByPlaceholderText("Entrez la distance");
-    const submitButton = screen.getByText("Soumettre");
-
-    const levelScenarios = [
-      // Niveau I (score total <= 4)
-      {
-        chair: "2",
-        balance: "5",
-        distance: "10",
-        support: true,
-        expected: "I",
-      },
-
-      // Niveau II (5 <= score total <= 8)
-      {
-        chair: "5",
-        balance: "10",
-        distance: "20",
-        support: true,
-        expected: "II",
-      },
-
-      // Niveau III (9 <= score total <= 12)
-      {
-        chair: "10",
-        balance: "10",
-        distance: "20",
-        support: false,
-        expected: "III",
-      },
-
-      // Niveau IV (13 <= score total <= 15)
-      {
-        chair: "14",
-        balance: "10",
-        distance: "30",
-        support: false,
-        expected: "IV",
-      },
-
-      // Niveau V (score total >= 16)
-      {
-        chair: "16",
-        balance: "10",
-        distance: "40",
-        support: false,
-        expected: "V",
-      },
-    ];
-
-    for (const scenario of levelScenarios) {
+    it("valide correctement les champs de saisie", async () => {
       await act(async () => {
-        const supportRadio = screen.getByText(
-          scenario.support ? "Avec appui" : "Sans appui"
+        render(<EvaluationPACE />);
+      });
+
+      await act(async () => {
+        const submitButton = screen.getByText("Soumettre");
+        fireEvent.click(submitButton);
+      });
+
+      await waitFor(() => {
+        expect(axios.post).not.toHaveBeenCalled();
+      });
+
+      await act(async () => {
+        const canWalkRadio = screen.getByText("Le patient peut marcher");
+        fireEvent.click(canWalkRadio);
+      });
+
+      const walkingTimeInput = screen.getByPlaceholderText(
+        "Entrez le temps en secondes"
+      );
+
+      await act(async () => {
+        fireEvent.change(walkingTimeInput, { target: { value: "5.5" } });
+      });
+      expect(walkingTimeInput.value).toBe("5.5");
+
+      await act(async () => {
+        fireEvent.change(walkingTimeInput, { target: { value: "5.5a" } });
+      });
+      expect(walkingTimeInput.value).toBe("5.5");
+
+      for (const value of ["4", "4.5", ".5", "0.5"]) {
+        await act(async () => {
+          fireEvent.change(walkingTimeInput, { target: { value } });
+        });
+        expect(walkingTimeInput.value).toBe(value);
+      }
+    });
+  });
+  describe("Détermination des couleurs et niveaux", () => {
+    it("détermine correctement les couleurs en fonction des scores", async () => {
+      await act(async () => {
+        render(<EvaluationPACE />);
+      });
+
+      await act(async () => {
+        const canWalkRadio = screen.getByText("Le patient peut marcher");
+        fireEvent.click(canWalkRadio);
+
+        const walkingTimeInput = screen.getByPlaceholderText(
+          "Entrez le temps en secondes"
         );
-        fireEvent.click(supportRadio);
+        fireEvent.change(walkingTimeInput, { target: { value: "5" } });
+      });
 
-        fireEvent.change(chairTestInput, { target: { value: scenario.chair } });
+      const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
+      const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
+      const distanceInput = screen.getByPlaceholderText("Entrez la distance");
+      const submitButton = screen.getByText("Soumettre");
 
+      const colorScenarios = [
+        { chair: "5", balance: "10", distance: "20", expectedColor: "BLEU" },
+        { chair: "10", balance: "5", distance: "20", expectedColor: "JAUNE" },
+        { chair: "10", balance: "10", distance: "5", expectedColor: "ROUGE" },
+        { chair: "3", balance: "3", distance: "10", expectedColor: "VERT" },
+        { chair: "10", balance: "2", distance: "2", expectedColor: "ORANGE" },
+        { chair: "4", balance: "10", distance: "4", expectedColor: "VIOLET" },
+        { chair: "3", balance: "3", distance: "3", expectedColor: "MARRON" },
+      ];
+
+      for (const scenario of colorScenarios) {
+        await act(async () => {
+          const sittingRadio = screen.getByText("Assis");
+          fireEvent.click(sittingRadio);
+
+          fireEvent.change(chairTestInput, {
+            target: { value: scenario.chair },
+          });
+
+          fireEvent.change(balanceInputs[0], {
+            target: { value: scenario.balance },
+          });
+
+          fireEvent.change(distanceInput, {
+            target: { value: scenario.distance },
+          });
+
+          fireEvent.click(submitButton);
+        });
+
+        await waitFor(() => {
+          expect(axios.post).not.toHaveBeenCalled();
+        });
+      }
+    });
+
+    it("détermine correctement le niveau en fonction du score total", async () => {
+      await act(async () => {
+        render(<EvaluationPACE />);
+      });
+
+      await act(async () => {
+        const canWalkRadio = screen.getByText("Le patient peut marcher");
+        fireEvent.click(canWalkRadio);
+
+        const walkingTimeInput = screen.getByPlaceholderText(
+          "Entrez le temps en secondes"
+        );
+        fireEvent.change(walkingTimeInput, { target: { value: "5" } });
+      });
+
+      const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
+      const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
+      const distanceInput = screen.getByPlaceholderText("Entrez la distance");
+      const submitButton = screen.getByText("Soumettre");
+
+      const levelScenarios = [
+        {
+          chair: "2",
+          balance: "5",
+          distance: "10",
+          support: true,
+          expected: "I",
+        },
+        {
+          chair: "5",
+          balance: "10",
+          distance: "20",
+          support: true,
+          expected: "II",
+        },
+        {
+          chair: "10",
+          balance: "10",
+          distance: "20",
+          support: false,
+          expected: "III",
+        },
+        {
+          chair: "14",
+          balance: "10",
+          distance: "30",
+          support: false,
+          expected: "IV",
+        },
+        {
+          chair: "16",
+          balance: "10",
+          distance: "40",
+          support: false,
+          expected: "V",
+        },
+      ];
+
+      for (const scenario of levelScenarios) {
+        await act(async () => {
+          const supportRadio = screen.getByText(
+            scenario.support ? "Avec appui" : "Sans appui"
+          );
+          fireEvent.click(supportRadio);
+
+          fireEvent.change(chairTestInput, {
+            target: { value: scenario.chair },
+          });
+
+          fireEvent.change(balanceInputs[0], { target: { value: "10" } });
+
+          const sittingRadio = screen.getByText("Assis");
+          fireEvent.click(sittingRadio);
+
+          fireEvent.change(distanceInput, {
+            target: { value: scenario.distance },
+          });
+
+          fireEvent.click(submitButton);
+        });
+
+        await waitFor(() => {
+          expect(axios.post).not.toHaveBeenCalled();
+        });
+      }
+    });
+  });
+  describe("Soumission du formulaire", () => {
+    it("soumet correctement le formulaire avec un patient qui peut marcher", async () => {
+      const mockPostFn = jest
+        .fn()
+        .mockResolvedValue({ data: { success: true } });
+      axios.post.mockImplementation(mockPostFn);
+
+      await act(async () => {
+        render(<EvaluationPACE />);
+      });
+
+      await act(async () => {
+        const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
+        fireEvent.change(chairTestInput, { target: { value: "10" } });
+
+        const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
+        fireEvent.change(balanceInputs[0], { target: { value: "10" } });
+        fireEvent.change(balanceInputs[1], { target: { value: "10" } });
+        fireEvent.change(balanceInputs[2], { target: { value: "10" } });
+        fireEvent.change(balanceInputs[3], { target: { value: "10" } });
+
+        const sittingRadio = screen.getByText("Assis");
+        fireEvent.click(sittingRadio);
+
+        const distanceInput = screen.getByPlaceholderText("Entrez la distance");
+        fireEvent.change(distanceInput, { target: { value: "30" } });
+
+        const canWalkRadio = screen.getByText("Le patient peut marcher");
+        fireEvent.click(canWalkRadio);
+
+        const walkingTimeInput = screen.getByPlaceholderText(
+          "Entrez le temps en secondes"
+        );
+        fireEvent.change(walkingTimeInput, { target: { value: "5" } });
+      });
+
+      await act(async () => {
+        const submitButton = screen.getByText("Soumettre");
+        fireEvent.click(submitButton);
+      });
+
+      await waitFor(() => {
+        try {
+          const confirmButton = screen.getByText("Confirmer");
+          act(() => {
+            fireEvent.click(confirmButton);
+          });
+        } catch (error) {
+          mockPostFn(
+            "/api/evaluations/pace",
+            expect.objectContaining({
+              idPatient: "123",
+              chairTestSupport: "with",
+              chairTestCount: 10,
+              balanceFeetTogether: 10,
+              balanceSemiTandem: 10,
+              balanceTandem: 10,
+              balanceOneFooted: 10,
+              frtSitting: "sitting",
+              frtDistance: 30,
+              walkingTime: 5,
+              canWalk: true,
+            })
+          );
+        }
+      });
+
+      expect(mockPostFn).toHaveBeenCalled();
+    });
+
+    it("soumet correctement le formulaire avec un patient qui ne peut pas marcher", async () => {
+      const mockPostFn = jest
+        .fn()
+        .mockResolvedValue({ data: { success: true } });
+      axios.post.mockImplementation(mockPostFn);
+
+      await act(async () => {
+        render(<EvaluationPACE />);
+      });
+
+      await act(async () => {
+        const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
+        fireEvent.change(chairTestInput, { target: { value: "10" } });
+
+        const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
         fireEvent.change(balanceInputs[0], { target: { value: "10" } });
 
         const sittingRadio = screen.getByText("Assis");
         fireEvent.click(sittingRadio);
 
-        fireEvent.change(distanceInput, {
-          target: { value: scenario.distance },
-        });
+        const distanceInput = screen.getByPlaceholderText("Entrez la distance");
+        fireEvent.change(distanceInput, { target: { value: "20" } });
 
+        const cannotWalkRadio = screen.getByText(
+          "Le patient ne peut pas marcher"
+        );
+        fireEvent.click(cannotWalkRadio);
+      });
+
+      await act(async () => {
+        const submitButton = screen.getByText("Soumettre");
         fireEvent.click(submitButton);
       });
 
       await waitFor(() => {
-        expect(axios.post).not.toHaveBeenCalled();
+        try {
+          const confirmButton = screen.getByText("Confirmer");
+          act(() => {
+            fireEvent.click(confirmButton);
+          });
+        } catch (error) {
+          mockPostFn(
+            "/api/evaluations/pace",
+            expect.objectContaining({
+              idPatient: "123",
+              chairTestSupport: "with",
+              chairTestCount: 10,
+              balanceFeetTogether: 10,
+              balanceSemiTandem: 0,
+              balanceTandem: 0,
+              balanceOneFooted: 0,
+              frtSitting: "sitting",
+              frtDistance: 20,
+              walkingTime: 0,
+              canWalk: false,
+            })
+          );
+        }
       });
-    }
-  });
 
-  it("soumet correctement le formulaire avec un patient qui peut marcher", async () => {
-    const mockPostFn = jest.fn().mockResolvedValue({ data: { success: true } });
-    axios.post.mockImplementation(mockPostFn);
-
-    await act(async () => {
-      render(<EvaluationPACE />);
+      expect(mockPostFn).toHaveBeenCalled();
     });
-
-    await act(async () => {
-      const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
-      fireEvent.change(chairTestInput, { target: { value: "10" } });
-
-      const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
-      fireEvent.change(balanceInputs[0], { target: { value: "10" } });
-      fireEvent.change(balanceInputs[1], { target: { value: "10" } });
-      fireEvent.change(balanceInputs[2], { target: { value: "10" } });
-      fireEvent.change(balanceInputs[3], { target: { value: "10" } });
-
-      const sittingRadio = screen.getByText("Assis");
-      fireEvent.click(sittingRadio);
-
-      const distanceInput = screen.getByPlaceholderText("Entrez la distance");
-      fireEvent.change(distanceInput, { target: { value: "30" } });
-
-      const canWalkRadio = screen.getByText("Le patient peut marcher");
-      fireEvent.click(canWalkRadio);
-
-      const walkingTimeInput = screen.getByPlaceholderText(
-        "Entrez le temps en secondes"
-      );
-      fireEvent.change(walkingTimeInput, { target: { value: "5" } });
-    });
-
-    await act(async () => {
-      const submitButton = screen.getByText("Soumettre");
-      fireEvent.click(submitButton);
-    });
-
-    await waitFor(() => {
-      try {
-        const confirmButton = screen.getByText("Confirmer");
-        act(() => {
-          fireEvent.click(confirmButton);
-        });
-      } catch (error) {
-        mockPostFn(
-          "/api/evaluations/pace",
-          expect.objectContaining({
-            idPatient: "123",
-            chairTestSupport: "with",
-            chairTestCount: 10,
-            balanceFeetTogether: 10,
-            balanceSemiTandem: 10,
-            balanceTandem: 10,
-            balanceOneFooted: 10,
-            frtSitting: "sitting",
-            frtDistance: 30,
-            walkingTime: 5,
-            canWalk: true,
-          })
-        );
-      }
-    });
-
-    expect(mockPostFn).toHaveBeenCalled();
-  });
-
-  it("soumet correctement le formulaire avec un patient qui ne peut pas marcher", async () => {
-    const mockPostFn = jest.fn().mockResolvedValue({ data: { success: true } });
-    axios.post.mockImplementation(mockPostFn);
-
-    await act(async () => {
-      render(<EvaluationPACE />);
-    });
-
-    await act(async () => {
-      const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
-      fireEvent.change(chairTestInput, { target: { value: "10" } });
-
-      const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
-      fireEvent.change(balanceInputs[0], { target: { value: "10" } });
-
-      const sittingRadio = screen.getByText("Assis");
-      fireEvent.click(sittingRadio);
-
-      const distanceInput = screen.getByPlaceholderText("Entrez la distance");
-      fireEvent.change(distanceInput, { target: { value: "20" } });
-
-      const cannotWalkRadio = screen.getByText(
-        "Le patient ne peut pas marcher"
-      );
-      fireEvent.click(cannotWalkRadio);
-    });
-
-    await act(async () => {
-      const submitButton = screen.getByText("Soumettre");
-      fireEvent.click(submitButton);
-    });
-
-    await waitFor(() => {
-      try {
-        const confirmButton = screen.getByText("Confirmer");
-        act(() => {
-          fireEvent.click(confirmButton);
-        });
-      } catch (error) {
-        mockPostFn(
-          "/api/evaluations/pace",
-          expect.objectContaining({
-            idPatient: "123",
-            chairTestSupport: "with",
-            chairTestCount: 10,
-            balanceFeetTogether: 10,
-            balanceSemiTandem: 0,
-            balanceTandem: 0,
-            balanceOneFooted: 0,
-            frtSitting: "sitting",
-            frtDistance: 20,
-            walkingTime: 0,
-            canWalk: false,
-          })
-        );
-      }
-    });
-
-    expect(mockPostFn).toHaveBeenCalled();
   });
 
   describe("Tests unitaires des fonctions de calcul", () => {
@@ -963,8 +990,8 @@ describe("EvaluationPACE Component", () => {
         if (!walkingTime || walkingTime <= 0) return null;
         const speed = 4 / parseFloat(walkingTime);
         if (speed < 0.4) return 10;
-        if (speed >= 0.4 && speed < 0.59) return 15;
-        if (speed >= 0.6 && speed < 0.79) return 20;
+        if (speed >= 0.4 && speed < 0.6) return 15;
+        if (speed >= 0.6 && speed < 0.8) return 20;
         if (speed >= 0.8) return 30;
         return null;
       };

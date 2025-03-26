@@ -1,7 +1,6 @@
 import React from "react";
 import { Row, Col, Input, Radio, Form } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
-import { exportPathPdf } from "./ExportEvaluationPdf";
 import Evaluation from "./Evaluation";
 import PropTypes from "prop-types";
 
@@ -354,7 +353,6 @@ function EvaluationPATH() {
       renderFormFields={renderFormFields}
       buildPayload={buildPayload}
       buildModalContent={buildModalContent}
-      exportPdf={exportPathPdf}
     />
   );
 }
