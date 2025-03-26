@@ -230,6 +230,8 @@ function EvaluationPACE() {
         equilibre: scores.equilibre,
         mobilite: scores.mobilite,
         total: scores.total,
+        level: scores.level,
+        color: scores.frenchColor,
         program: scores.program,
       },
     };
