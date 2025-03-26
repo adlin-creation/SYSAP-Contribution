@@ -16,9 +16,9 @@ import { useQuery } from "@tanstack/react-query";
 import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
 import CreatePatient from "./CreatePatient";
+import AddCargiver from "./AddCargiver";
 import PatientViewPage from "./PatientViewPage";
 import PatientDetails from "./PatientDetails";
-import { useNavigate } from "react-router-dom"
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 
@@ -31,6 +31,7 @@ export default function PatientMenu({ role }) {
   const [message, setMessage] = useState("");
   const [isCreatePatient, setIsCreatePatient] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState(null);
+  const [selectedAddCargiver, setSelectedAddCargiver] = useState(null);
 
 
   const { token } = useToken();
@@ -69,7 +70,7 @@ export default function PatientMenu({ role }) {
     const modal = AntModal.info({
       title: (
         <div style={{ fontSize: "18px", fontWeight: "bold" }}>
-          Liste des soignants
+          Liste des aides soignants
         </div>
       ), content: caregivers.length ? (
         <Row gutter={[16, 16]}>
@@ -105,8 +106,31 @@ export default function PatientMenu({ role }) {
       ) : <p>{t("Aucune aide soignante disponible")}</p>,
       onOk() { },
       width: "80%",
+      footer: (_, { OkBtn }) => (
+        <>
+          {caregivers.length < 2 && (
+            <Button
+              type="primary"
+              onClick={() => {
+                // Fonction pour ajouter un nouveau caregiver
+                modal.destroy();
+                handleAddCargiver(patient);
+                // Appeler votre fonction pour ajouter un caregiver ici
+                // Par exemple: openAddCaregiverModal(patient);
+              }}
+            >
+              {t("Ajouter un aide  soignant")}
+            </Button>
+          )}
+          <OkBtn />
+        </>
+      ),
     });
   };
+
+  const handleAddCargiver = (patient) => {
+    setSelectedAddCargiver(patient);
+  }
 
   const deleteCaregiver = (id, patient, modal) => {
     AntModal.confirm({
@@ -334,7 +358,7 @@ export default function PatientMenu({ role }) {
   return (
     <div>
       {/* Affiche le bouton Back et le titre si on est en mode création, édition ou vue détaillée */}
-      {(isCreatePatient || selectedPatient || viewingPatient) && (
+      {(isCreatePatient || selectedPatient || viewingPatient || selectedAddCargiver) && (
         <Row align="middle" justify="space-between" style={{ marginBottom: "20px" }}>
           <Col>
             <Button
@@ -363,7 +387,7 @@ export default function PatientMenu({ role }) {
       )}
 
 
-      {!isCreatePatient && !selectedPatient && !viewingPatient ? (
+      {!isCreatePatient && !selectedPatient && !viewingPatient && !selectedAddCargiver ? (
         <>
           <div style={{ marginBottom: 16 }}>
             <Button
@@ -392,9 +416,16 @@ export default function PatientMenu({ role }) {
           refetchPatients={refetchPatients}
           openModal={openModal}
         />
+      ) : selectedAddCargiver ? (
+        <AddCargiver
+          patient={selectedAddCargiver}
+          refetchPatients={refetchPatients}
+          onClose={() => setSelectedAddCargiver(null)}
+        />
       ) : (
         <PatientViewPage patient={viewingPatient} onClose={() => setViewingPatient(null)} />
-      )}
+      )
+      }
 
       {isOpenModal && (
         <AntModal
