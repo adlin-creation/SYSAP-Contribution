@@ -11,6 +11,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import useToken from "../Authentication/useToken";
 import Modal from "../Modal/Modal";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
 let sessionNames = [];
 
@@ -233,3 +234,9 @@ export default function AddSessions({
     </div>
   );
 }
+AddSessions.propTypes = {
+  setIsAddSession: PropTypes.func.isRequired,
+  refetchSessions: PropTypes.func.isRequired,
+  cycle: PropTypes.object.isRequired,
+  allSessions: PropTypes.array.isRequired,
+};

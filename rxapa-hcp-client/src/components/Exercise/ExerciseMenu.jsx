@@ -122,33 +122,41 @@ export default function ExerciseMenu() {
       });
   };
 
-  const filteredExercises = exerciseList?.filter((exercise) => {
-    if (
-      attributes.fitnessLevel !== "ALL" &&
-      attributes.fitnessLevel !== null &&
-      attributes.fitnessLevel !== exercise.fitnessLevel
-    ) {
+// Ajoute la condition pour la recherche dans la description
+const filteredExercises = exerciseList?.filter((exercise) => {
+  // Filtrage basé sur le niveau de fitness
+  if (
+    attributes.fitnessLevel !== "ALL" &&
+    attributes.fitnessLevel !== exercise.fitnessLevel
+  ) {
+    return false;
+  }
+
+  // Filtrage basé sur la catégorie
+  if (
+    attributes.category !== "ALL" &&
+    attributes.category !== exercise.category
+  ) {
+    return false;
+  }
+
+  // Filtrage basé sur la recherche
+  if (attributes.searchTerm) {
+    // Recherche dans le nom et la description de l'exercice
+    const searchTermLower = attributes.searchTerm.toLowerCase();
+    const nameMatch = exercise.name.toLowerCase().includes(searchTermLower);
+    const descriptionMatch = exercise.description.toLowerCase().includes(searchTermLower);
+
+    // Si la recherche ne correspond ni au nom ni à la description, on le filtre
+    if (!nameMatch && !descriptionMatch) {
       return false;
     }
+  }
 
-    if (
-      attributes.category !== "ALL" &&
-      attributes.category !== null &&
-      attributes.category !== exercise.category
-    ) {
-      return false;
-    }
+  return true;
+});
 
-    if (
-      attributes.ageRange !== "ALL" &&
-      attributes.ageRange !== null &&
-      attributes.ageRange !== exercise.targetAgeRange
-    ) {
-      return false;
-    }
-
-    return exercise;
-  });
+  
 
   return (
     <div>

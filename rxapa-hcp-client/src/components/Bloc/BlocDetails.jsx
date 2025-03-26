@@ -11,6 +11,8 @@ import useToken from "../Authentication/useToken";
 import { useTranslation } from "react-i18next";
 // import ExerciseTable2 from "./ExerciseTable2";
 
+import PropTypes from "prop-types";
+
 export default function BlocDetails({ blocKey, refetchBlocs }) {
   const { t } = useTranslation();
   const { handleSubmit, control } = useForm();
@@ -196,3 +198,8 @@ export default function BlocDetails({ blocKey, refetchBlocs }) {
     </Row>
   );
 }
+
+BlocDetails.propTypes = {
+  blocKey: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  refetchBlocs: PropTypes.func.isRequired,
+};

@@ -8,6 +8,7 @@ import image from "../../images/phase2.jpeg";
 import AppButton from "../Button/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTranslation } from "react-i18next";
+import PropTypes from 'prop-types';
 
 export default function Phase({ phase, deletePhase, onSelect, onClick }) {
   const { t } = useTranslation();
@@ -82,3 +83,23 @@ export default function Phase({ phase, deletePhase, onSelect, onClick }) {
     </Card>
   );
 }
+Phase.propTypes = {
+  phase: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    startConditionType: PropTypes.string,
+    startConditionValue: PropTypes.string,
+    endConditionType: PropTypes.string,
+    endConditionValue: PropTypes.string,
+    frequency: PropTypes.number,
+    Phase_Cycles: PropTypes.arrayOf(
+      PropTypes.shape({
+        WeeklyCycle: PropTypes.shape({
+          name: PropTypes.string
+        })
+      })
+    ),
+  }).isRequired,
+  deletePhase: PropTypes.func.isRequired,
+  onSelect: PropTypes.func.isRequired,
+  onClick: PropTypes.func.isRequired,
+};
