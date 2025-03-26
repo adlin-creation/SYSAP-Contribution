@@ -14,6 +14,14 @@ router.get("/programs", isAuth, programController.getPrograms);
 
 router.get("/search", isAuth, programController.searchPrograms);
 
+router.get(
+  "/programs/:id/sessions",
+  isAuth,
+  programController.getSessionsByProgram
+);
+
+router.get("/:id", isAuth, programController.getProgramDetails);
+
 router.post(
   "/:programKey/add-phase",
   isAuth,
@@ -23,7 +31,7 @@ router.post(
 router.get("/:programKey/phases", isAuth, programController.getProgramPhases);
 
 router.put(
-  "/update-program/:programKey",
+  "/update-program/:Key",
   isAuth,
   upload.single("image"),
   programController.updateProgram
