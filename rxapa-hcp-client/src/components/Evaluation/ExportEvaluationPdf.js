@@ -6,7 +6,6 @@ import Constants from "../Utils/Constants";
 
 export const exportMatchPdf = async(evaluationData, token) => {
   try {
-    console.log("Evaluation Data : ", evaluationData);
     const url = '/evaluation_pdf/Arbre_decisionnel_MATCH.pdf';
     const existingPdfBytes = await fetch(url).then(res => res.arrayBuffer());
     const pdfDoc = await PDFDocument.load(existingPdfBytes);
@@ -58,7 +57,7 @@ export const exportMatchPdf = async(evaluationData, token) => {
         firstPage.drawCircle({
           x: 532,
           y: 624,
-          size: 10,
+          size : 8,
           borderWidth: 2,
           borderColor: rgb(1, 0, 0)
         });
@@ -67,7 +66,7 @@ export const exportMatchPdf = async(evaluationData, token) => {
         firstPage.drawCircle({
           x: 532,
           y: 608,
-          size: 10,
+          size : 8,
           borderWidth: 2,
           borderColor: rgb(1, 0, 0)
         });
@@ -76,7 +75,7 @@ export const exportMatchPdf = async(evaluationData, token) => {
         firstPage.drawCircle({
           x: 532,
           y: 588,
-          size: 10,
+          size : 8,
           borderWidth: 2,
           borderColor: rgb(1, 0, 0)
         });
@@ -86,7 +85,7 @@ export const exportMatchPdf = async(evaluationData, token) => {
           firstPage.drawCircle({
             x: 532,
             y: 569,
-            size: 10,
+            size : 8,
             borderWidth: 2,
             borderColor: rgb(1, 0, 0)
           });
@@ -94,7 +93,7 @@ export const exportMatchPdf = async(evaluationData, token) => {
           firstPage.drawCircle({
             x: 532,
             y: 549,
-            size: 10,
+            size : 8,
             borderWidth: 2,
             borderColor: rgb(1, 0, 0)
           });
@@ -104,7 +103,7 @@ export const exportMatchPdf = async(evaluationData, token) => {
         firstPage.drawCircle({
           x: 532,
           y: 528,
-          size: 10,
+          size : 8,
           borderWidth: 2,
           borderColor: rgb(1, 0, 0)
         });
@@ -113,7 +112,7 @@ export const exportMatchPdf = async(evaluationData, token) => {
         firstPage.drawCircle({
           x: 532,
           y: 513,
-          size: 10,
+          size: 8,
           borderWidth: 2,
           borderColor: rgb(1, 0, 0)
         });
@@ -145,7 +144,7 @@ export const exportMatchPdf = async(evaluationData, token) => {
         firstPage.drawCircle({
           x: 532,
           y: 453,
-          size: 10,
+          size : 8,
           borderWidth: 2,
           borderColor: rgb(1, 0, 0)
         });
@@ -154,7 +153,7 @@ export const exportMatchPdf = async(evaluationData, token) => {
         firstPage.drawCircle({
           x: 532,
           y: 438,
-          size: 10,
+          size : 8,
           borderWidth: 2,
           borderColor: rgb(1, 0, 0)
         });
@@ -163,7 +162,7 @@ export const exportMatchPdf = async(evaluationData, token) => {
         firstPage.drawCircle({
           x: 532,
           y: 422,
-          size: 10,
+          size : 8,
           borderWidth: 2,
           borderColor: rgb(1, 0, 0)
         });
@@ -172,7 +171,7 @@ export const exportMatchPdf = async(evaluationData, token) => {
         firstPage.drawCircle({
           x: 532,
           y: 407,
-          size: 10,
+          size : 8,
           borderWidth: 2,
           borderColor: rgb(1, 0, 0)
         });
@@ -181,7 +180,7 @@ export const exportMatchPdf = async(evaluationData, token) => {
         firstPage.drawCircle({
           x: 532,
           y: 377,
-          size: 10,
+          size : 8,
           borderWidth: 2,
           borderColor: rgb(1, 0, 0)
         });
@@ -217,7 +216,7 @@ export const exportMatchPdf = async(evaluationData, token) => {
     }
 
     // TEMPS DE MARCHE
-    if (isNaN(evaluationData.walkingTime)) {
+    if (evaluationData.walkingTime === 0) {
       firstPage.drawText('+', {x: 31, y: 161, size: 20, rotate: degrees(45)});
     } else {
       const walkingSpeed = 4 / evaluationData.walkingTime;
@@ -319,7 +318,7 @@ export const exportPathPdf = async(evaluationData, token) => {
         firstPage.drawCircle({
           x: 532,
           y: 516,
-          size: 10,
+          size : 8,
           borderWidth: 2,
           borderColor: rgb(1, 0, 0)
         });
@@ -328,7 +327,7 @@ export const exportPathPdf = async(evaluationData, token) => {
         firstPage.drawCircle({
           x: 532,
           y: 531,
-          size: 10,
+          size : 8,
           borderWidth: 2,
           borderColor: rgb(1, 0, 0)
         });
@@ -337,7 +336,7 @@ export const exportPathPdf = async(evaluationData, token) => {
         firstPage.drawCircle({
           x: 532,
           y: 546,
-          size: 10,
+          size : 8,
           borderWidth: 2,
           borderColor: rgb(1, 0, 0)
         });
@@ -347,7 +346,7 @@ export const exportPathPdf = async(evaluationData, token) => {
           firstPage.drawCircle({
             x: 532,
             y: 561,
-            size: 10,
+            size : 8,
             borderWidth: 2,
             borderColor: rgb(1, 0, 0)
           });
@@ -355,7 +354,7 @@ export const exportPathPdf = async(evaluationData, token) => {
           firstPage.drawCircle({
             x: 532,
             y: 576,
-            size: 10,
+            size : 8,
             borderWidth: 2,
             borderColor: rgb(1, 0, 0)
           });
@@ -365,7 +364,7 @@ export const exportPathPdf = async(evaluationData, token) => {
         firstPage.drawCircle({
           x: 532,
           y: 592,
-          size: 10,
+          size : 8,
           borderWidth: 2,
           borderColor: rgb(1, 0, 0)
         });
@@ -374,7 +373,7 @@ export const exportPathPdf = async(evaluationData, token) => {
         firstPage.drawCircle({
           x: 532,
           y: 607,
-          size: 10,
+          size : 8,
           borderWidth: 2,
           borderColor: rgb(1, 0, 0)
         });
@@ -406,7 +405,7 @@ export const exportPathPdf = async(evaluationData, token) => {
         firstPage.drawCircle({
           x: 532,
           y: 456,
-          size: 10,
+          size : 8,
           borderWidth: 2,
           borderColor: rgb(1, 0, 0)
         });
@@ -415,7 +414,7 @@ export const exportPathPdf = async(evaluationData, token) => {
         firstPage.drawCircle({
           x: 532,
           y: 441,
-          size: 10,
+          size : 8,
           borderWidth: 2,
           borderColor: rgb(1, 0, 0)
         });
@@ -424,7 +423,7 @@ export const exportPathPdf = async(evaluationData, token) => {
         firstPage.drawCircle({
           x: 532,
           y: 425,
-          size: 10,
+          size : 8,
           borderWidth: 2,
           borderColor: rgb(1, 0, 0)
         });
@@ -433,7 +432,7 @@ export const exportPathPdf = async(evaluationData, token) => {
         firstPage.drawCircle({
           x: 532,
           y: 408,
-          size: 10,
+          size : 8,
           borderWidth: 2,
           borderColor: rgb(1, 0, 0)
         });
@@ -442,7 +441,7 @@ export const exportPathPdf = async(evaluationData, token) => {
         firstPage.drawCircle({
           x: 532,
           y: 380,
-          size: 10,
+          size : 8,
           borderWidth: 2,
           borderColor: rgb(1, 0, 0)
         });
@@ -562,8 +561,8 @@ export const exportPathPdf = async(evaluationData, token) => {
     firstPage.drawText(evaluationData.scores.program, {x: 455, y: 281, size: 15})
 
     // TEMPS DE MARCHE
-    if (isNaN(evaluationData.walkingTime)) {
-      firstPage.drawText('+', {x: 31, y: 161, size: 20, rotate: degrees(45)});
+    if (evaluationData.walkingTime === 0) {
+      firstPage.drawText('+', {x: 31, y: 170, size: 20, rotate: degrees(45)});
     } else {
       const walkingSpeed = 4 / evaluationData.walkingTime;
       firstPage.drawText('+', {x: 31.5, y: 153, size: 20, rotate: degrees(45)});
@@ -996,8 +995,8 @@ export const exportPacePdf = async(evaluationData, token) => {
 
 
     // TEMPS DE MARCHE
-    if (isNaN(evaluationData.walkingTime)) {
-      firstPage.drawText('+', {x: 31, y: 161, size: 20, rotate: degrees(45)});
+    if (evaluationData.walkingTime === 0) {
+      firstPage.drawText('Le patient ne peut pas marcher', {x: 310, y: 137, size: 12});
     } else {
       const walkingSpeed = 4 / evaluationData.walkingTime;
       firstPage.drawText(`${evaluationData.walkingTime}`, {x: 285, y: 124, size: 12})
