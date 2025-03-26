@@ -41,7 +41,7 @@ export default function ReminderNotification() {
     const requestPermissions = async () => {
       const { status } = await Notifications.requestPermissionsAsync();
       if (status !== 'granted') {
-        Alert.alert(t('Config:permission_refusee'), t('Config:activer_notifications_svp'));
+        Alert.alert(t('Config:error_permission_denied'), t('Config:error_notifications_required'));
       }
     };
     requestPermissions();
@@ -49,7 +49,7 @@ export default function ReminderNotification() {
 
   const addReminder = async () => {
     if (!selectedTime || !newTitle) {
-      Alert.alert(t('Config:erreur'), t("Config:entrer_heure_et_titre_svp"));
+      Alert.alert(t('Config:error_error'), t("Config:error_time_and_title_required"));
       return;
     }
 
@@ -69,8 +69,8 @@ export default function ReminderNotification() {
     try {
       await Notifications.scheduleNotificationAsync({
         content: {
-          title: `${t("Config:rappel")}: ${newTitle} 📅`,
-          body: t('Config:faire_votre_seance'),
+          title: `${t("Config:title_reminder")}: ${newTitle} 📅`,
+          body: t('Config:title_reminder_subtitle'),
           sound: 'default',
         },
         trigger: trigger as Notifications.DailyTriggerInput,
@@ -78,25 +78,25 @@ export default function ReminderNotification() {
 
       setReminders([...reminders, newReminder]);
       setShowModal(false);
-      Alert.alert(t('Config:rappel_ajoute'), `${t('Config:rappel_rajoute_a')} ${selectedTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`);
+      Alert.alert(t('Config:success_reminder_added'), `${t('Config:success_reminder_added_to')} ${selectedTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`);
     } catch (error) {
-      Alert.alert(t('Config:erreur'), t("Config:err_rappel"));
+      Alert.alert(t('Config:error_error'), t("Config:error_reminder_creation"));
     }
   };
 
   const deleteReminder = (id: string) => {
     setReminders(reminders.filter((reminder) => reminder.id !== id));
-    Alert.alert(t('Config:rappel_supprime'), t("Config:rappel_supprime_confirmation"));
+    Alert.alert(t('Config:success_reminder_deleted'), t("Config:success_reminder_deleted_subtitle"));
   };
 
   return (
     <LinearGradient colors={['#e0f7fa', '#1B365D']} style={styles.container}>
-      <Text style={styles.header}>{t('Config:rappels_programmes')}</Text>
+      <Text style={styles.header}>{t('Config:title_programmed_reminders')}</Text>
 
       <FlatList
         data={reminders}
         keyExtractor={(item) => item.id}
-        ListEmptyComponent={<Text style={styles.noReminderText}>{t('Config:aucun_rappel')}</Text>}
+        ListEmptyComponent={<Text style={styles.noReminderText}>{t('Config:title_no_reminders')}</Text>}
         renderItem={({ item }) => (
           <View style={styles.reminderCard}>
             <View style={styles.reminderTextContainer}>
@@ -109,27 +109,27 @@ export default function ReminderNotification() {
               style={styles.deleteButton}
               onPress={() => deleteReminder(item.id)}
             >
-              <Text style={styles.deleteButtonText}>{t('Config:supprimer')}</Text>
+              <Text style={styles.deleteButtonText}>{t('Config:button_delete')}</Text>
             </TouchableOpacity>
           </View>
         )}
       />
 
       <TouchableOpacity style={styles.addButton} onPress={() => setShowModal(true)}>
-        <Text style={styles.addButtonText}>+ {t('Config:ajouter_un_rappel')}</Text>
+        <Text style={styles.addButtonText}>+ {t('Config:button_add_reminder')}</Text>
       </TouchableOpacity>
 
       <Modal visible={showModal} transparent animationType="slide">
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalHeader}>{t('Config:nouveau_rappel')}</Text>
+            <Text style={styles.modalHeader}>{t('Config:title_new_reminder')}</Text>
             <TextInput
-              placeholder={t('Config:titre_du_rappel')}
+              placeholder={t('Config:placeholder_reminder_title')}
               value={newTitle}
               onChangeText={setNewTitle}
               style={styles.input}
             />
-            <Text style={styles.label}>{t('Config:selectionner_heure')} :</Text>
+            <Text style={styles.label}>{t('Config:placeholder_select_time')} :</Text>
             <DateTimePicker
               value={selectedTime || new Date()}
               mode="time"
@@ -141,10 +141,10 @@ export default function ReminderNotification() {
             />
             <View style={styles.modalButtonContainer}>
               <TouchableOpacity style={[styles.modalButton, styles.planButton]} onPress={addReminder}>
-                <Text style={styles.modalButtonText}>{t('Config:planifier')}</Text>
+                <Text style={styles.modalButtonText}>{t('Config:button_schedule_reminder')}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={[styles.modalButton, styles.cancelButton]} onPress={() => setShowModal(false)}>
-                <Text style={styles.modalButtonText}>{t('Config:annuler')}</Text>
+                <Text style={styles.modalButtonText}>{t('Config:button_cancel_reminder')}</Text>
               </TouchableOpacity>
             </View>
           </View>
