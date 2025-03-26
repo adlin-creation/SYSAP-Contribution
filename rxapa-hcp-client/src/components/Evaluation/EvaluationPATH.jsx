@@ -78,11 +78,11 @@ function EvaluationPATH() {
       idPatient: patientId,
       chairTestSupport: formData.chairTestSupport ? "with" : "without",
       chairTestCount: parseInt(formData.chairTestCount || 0, 10), // Ajouter || 0 pour éviter NaN
-      balanceFeetTogether: parseInt(formData.balanceFeetTogether || 0, 10),
+      balanceFeetTogether: parseFloat(formData.balanceFeetTogether || 0, 10),
       balanceSemiTandem: isBalanceTestEnabled('balanceSemiTandem') ? 
-                        parseInt(formData.balanceSemiTandem || 0, 10) : 0,
+                        parseFloat(formData.balanceSemiTandem || 0, 10) : 0,
       balanceTandem: isBalanceTestEnabled('balanceTandem') ? 
-                    parseInt(formData.balanceTandem || 0, 10) : 0,
+      parseFloat(formData.balanceTandem || 0, 10) : 0,
       // Conditionnellement définir walkingTime en fonction de canWalk
       walkingTime: formData.canWalk
         ? parseFloat(formData.walkingTime || 0)

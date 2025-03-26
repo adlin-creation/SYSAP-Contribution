@@ -200,15 +200,15 @@ function EvaluationPACE() {
       idPatient: patientId,
       chairTestSupport: formData.chairTestSupport ? "with" : "without",
       chairTestCount: parseInt(formData.chairTestCount, 10),
-      balanceFeetTogether: parseInt(formData.balanceFeetTogether, 10),
+      balanceFeetTogether: parseFloat(formData.balanceFeetTogether, 10),
       balanceSemiTandem: isBalanceTestEnabled("balanceSemiTandem")
-        ? parseInt(formData.balanceSemiTandem || 0, 10)
+        ? parseFloat(formData.balanceSemiTandem || 0, 10)
         : 0,
       balanceTandem: isBalanceTestEnabled("balanceTandem")
-        ? parseInt(formData.balanceTandem || 0, 10)
+        ? parseFloat(formData.balanceTandem || 0, 10)
         : 0,
       balanceOneFooted: isBalanceTestEnabled("balanceOneFooted")
-        ? parseInt(formData.balanceOneFooted || 0, 10)
+        ? parseFloat(formData.balanceOneFooted || 0, 10)
         : 0,
       frtSitting:
         formData.frtPosition === true
@@ -219,7 +219,7 @@ function EvaluationPACE() {
       frtDistance:
         formData.frtPosition === "armNotWorking"
           ? 0
-          : parseInt(formData.frtDistance, 10),
+          : parseFloat(formData.frtDistance, 10),
 
       // walkingTime = 0 si canWalk === false
       walkingTime: formData.canWalk ? parseFloat(formData.walkingTime || 0) : 0,
