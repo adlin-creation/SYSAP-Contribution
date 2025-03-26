@@ -1,9 +1,9 @@
 {
-    "authentification": "المصادقة",
-    "deconnexion": "تسجيل الخروج",
-    "mon_programme": "برنامجي",
-    "ma_seance": "جلستي",
-    "ma_progression": "تقدمي",
-    "configuration": "الإعدادات",
-    "cahier_de_suivi": "دفتر المتابعة"
+    "title_authentication": "المصادقة",
+    "title_logout": "تسجيل الخروج",
+    "title_my_program": "برنامجي",
+    "title_my_session": "جلستي",
+    "title_my_progress": "تقدمي",
+    "title_settings": "الإعدادات",
+    "title_tracking_notebook": "دفتر المتابعة"
 }

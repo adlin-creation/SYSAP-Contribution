@@ -20,6 +20,7 @@ import PatientViewPage from "./PatientViewPage";
 import PatientDetails from "./PatientDetails";
 import { useNavigate } from "react-router-dom"
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
 
 export default function PatientMenu({ role }) {
@@ -413,3 +414,6 @@ export default function PatientMenu({ role }) {
     </div>
   );
 }
+PatientMenu.propTypes = {
+  role: PropTypes.string.isRequired,
+};

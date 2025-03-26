@@ -1,8 +1,9 @@
 {
-    "err_id_programme": "لم يتم العثور على معرف البرنامج. يرجى تسجيل الدخول.",
-    "err_aucun_exercice": "لم يتم العثور على تمارين لهذه الجلسة.",
-    "err_recuperation_exercices": "حدث خطأ أثناء استرجاع التمارين.",
-    "chargement_exercices": "جارٍ تحميل التمارين...",
-    "liste_exercices": "قائمة التمارين",
-    "aucun_exercice": "لا توجد تمارين متاحة."
+    "error_invalid_enrollment_code": "لم يتم العثور على معرف البرنامج. يرجى تسجيل الدخول.",
+    "error_exercise_not_found": "لم يتم العثور على تمارين لهذه الجلسة.",
+    "error_fetching_exercises": "حدث خطأ أثناء استرجاع التمارين.",
+    
+    "title_loading_exercises": "جارٍ تحميل التمارين...",
+    "title_exercise_list": "قائمة التمارين",
+    "title_no_exercise": "لا توجد تمارين متاحة."
 }

@@ -1,14 +1,16 @@
 {
-    "semaine": "Semana",
-    "ma_progression": "Mi Progreso",
-    "la_semaine": "La semana",
-    "depuis_le_debut": "Desde el principio",
-    "taux_completion": "Tasa de Finalización",
-    "difficulte_moyenne": "Dificultad Promedio",
-    "douleur_moyenne": "Dolor Promedio",
-    "satisfaction_moyenne": "Satisfacción Promedio",
-    "temps_marche": "Tiempo de Caminata",
-    "total_exercices": "Total de Ejercicios",
-    "statistiques_depuis_debut": "Estadísticas desde el principio",
-    "statistiques_de_la_semaine": "Estadísticas de la semana"
+    "button_filter_weekly": "La semana",
+    "button_filter_since_beginning": "Desde el principio",
+
+    "info_average_difficulty": "Dificultad Promedio",
+    "info_average_pain": "Dolor Promedio",
+    "info_average_satisfaction": "Satisfacción Promedio",
+    "info_walking_time": "Tiempo de Caminata",
+    "info_number_exercises": "Total de Ejercicios",
+
+    "title_week": "Semana",
+    "title_my_progress": "Mi Progreso",
+    "title_completion_rate": "Tasa de Finalización",
+    "title_statistics_since_beginning": "Estadísticas desde el principio",
+    "title_statistics_weekly": "Estadísticas de la semana"
 }

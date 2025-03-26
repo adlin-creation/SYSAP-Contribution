@@ -30,7 +30,7 @@ export default function IndexScreen() {
   const handleSubmit = async () => {
     setErrorMessage(null); // Réinitialise le message d'erreur
     if (!code.trim()) {
-      setErrorMessage(t('Index:entrer_code'));
+      setErrorMessage(t('Index:error_enter_code'));
       return;
     }
 
@@ -49,7 +49,7 @@ export default function IndexScreen() {
         // Navigate to HomeScreen
         router.push('/home');
       } else {
-        setErrorMessage(t('Index:erreur_code_incorrect'));
+        setErrorMessage(t('Index:error_incorrect_code'));
       }
     } catch (error) {
       console.error(error);
@@ -71,11 +71,11 @@ export default function IndexScreen() {
         />
       </View>
       <View style={styles.formContainer}>
-        <Text style={styles.title}>{t('Index:authentification')}</Text>
-        <Text style={styles.subtitle}>{t('Index:saisir_code_personnel')}</Text>
+        <Text style={styles.title}>{t('Index:title_authentication')}</Text>
+        <Text style={styles.subtitle}>{t('Index:info_enter_code')}</Text>
         <TextInput
           style={styles.input}
-          placeholder={t('Index:entrer_votre_code')}
+          placeholder={t('Index:placeholder_enter_code')}
           value={code}
           onChangeText={(text) => {
             setCode(text);
@@ -92,7 +92,7 @@ export default function IndexScreen() {
           onPress={handleSubmit}
           disabled={loading}
         >
-          <Text style={styles.buttonText}>{t('Index:connexion')}</Text>
+          <Text style={styles.buttonText}>{t('Index:title_login')}</Text>
         </TouchableOpacity>
 
         {/* Ajout de l'option pour "Je n'ai pas le code personnel" */}
@@ -100,7 +100,7 @@ export default function IndexScreen() {
           style={styles.noCodeButton}
           onPress={() => setShowModal(true)}
         >
-          <Text style={styles.noCodeText}>{t('Index:aucun_code_perso')}</Text>
+          <Text style={styles.noCodeText}>{t('Index:button_no_code')}</Text>
         </TouchableOpacity>
       </View>
 
@@ -108,21 +108,21 @@ export default function IndexScreen() {
       <Modal visible={showModal} transparent animationType="slide">
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>{t('Index:question_besoin_aide')}</Text>
+            <Text style={styles.modalTitle}>{t('Index:title_need_help')}</Text>
             <Text style={styles.modalText}>
-              {t('Index:contact_aide_code')}
+              {t('Index:title_contact_info')}
             </Text>
             <Text style={styles.modalText}>
-              - {t('Index:contact_it')} <Text style={styles.highlight}>TEST@ssss.gouv.qc.ca</Text>
+              - {t('Index:title_contact_it_department')} <Text style={styles.highlight}>TEST@ssss.gouv.qc.ca</Text>
             </Text>
             <Text style={styles.modalText}>
-              - {t('Index:contact_kine')}
+              - {t('Index:title_contact_kinesiologist')}
             </Text>
             <TouchableOpacity
               style={styles.closeButton}
               onPress={() => setShowModal(false)}
             >
-              <Text style={styles.closeButtonText}>{t("index:fermer")}</Text>
+              <Text style={styles.closeButtonText}>{t("index:button_close")}</Text>
             </TouchableOpacity>
           </View>
         </View>
