@@ -6,6 +6,7 @@ import Constants from "../Utils/Constants";
 
 export const exportMatchPdf = async(evaluationData, token) => {
   try {
+    console.log("Evaluation Data : ", evaluationData);
     const url = '/evaluation_pdf/Arbre_decisionnel_MATCH.pdf';
     const existingPdfBytes = await fetch(url).then(res => res.arrayBuffer());
     const pdfDoc = await PDFDocument.load(existingPdfBytes);
@@ -610,7 +611,6 @@ export const exportPathPdf = async(evaluationData, token) => {
 
 export const exportPacePdf = async(evaluationData, token) => {
   try {
-    console.log("Evaluation Data : ", evaluationData);
     const url = '/evaluation_pdf/Arbre_decisionnel_PACE.pdf';
     const existingPdfBytes = await fetch(url).then(res => res.arrayBuffer());
     const pdfDoc = await PDFDocument.load(existingPdfBytes);

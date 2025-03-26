@@ -1,8 +1,34 @@
 import React from "react";
 import { Row, Col, Input, Radio, Form, Modal } from "antd";
 import Evaluation from "./Evaluation";
+import { exportPacePdf } from "./ExportEvaluationPdf";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
+
+// Fonction d'export PDF modifiée qui gère correctement le token
+const handleExportPacePdf = async (payload, token) => {
+  if (!payload || !token) {
+    console.error("Données manquantes pour l'exportation PDF");
+    Modal.error({
+      title: "Erreur",
+      content: "Données manquantes pour l'exportation PDF"
+    });
+    return;
+  }
+  
+  try {
+    await exportPacePdf(payload, token);
+  } catch (error) {
+    console.error("Erreur lors de l'exportation PDF PACE:", error);
+    if (error.response) {
+      console.error("Réponse du serveur:", error.response.status, error.response.data);
+    }
+    Modal.error({
+      title: "Erreur d'exportation PDF",
+      content: "Échec de l'exportation du PDF PACE. Veuillez vérifier votre connexion et réessayer."
+    });
+  }
+}
 
 function EvaluationPACE() {
   const { t } = useTranslation("Evaluations");
@@ -557,6 +583,7 @@ function EvaluationPACE() {
       buildPayload={buildPayload}
       buildModalContent={buildModalContent}
       validateForm={validateForm}
+      exportPdf={handleExportPacePdf}
     />
   );
 }
