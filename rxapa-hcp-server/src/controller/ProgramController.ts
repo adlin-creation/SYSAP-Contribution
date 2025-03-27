@@ -35,19 +35,13 @@ exports.createProgram = [
     const imageUrl = req.body.imageUrl;
     const sessions = req.body;
 
-    console.log("Parsed sessions:", sessions);
 
     try {
-      console.log("Body received:", req.body);
-      console.log("File received:", req.file);
-      console.log("Sessions received:", req.body.sessions);
 
       const rawSessions = req.body.sessions;
-      console.log("Sessions received (raw):", rawSessions);
 
       // Vérification que les sessions sont bien dans un format tableau
       const sessions = Array.isArray(rawSessions) ? rawSessions : [];
-      console.log("Sessions après parsing :", sessions);
 
       if (!sessions.length) {
         return res.status(400).json({ message: "No valide session given" });
@@ -58,7 +52,6 @@ exports.createProgram = [
       if (req.file) {
         imagePath = `/images/${req.file.filename}`; //Stockage local
       } else if (imageUrl) {
-        console.log("Received Image URL:", imageUrl);
         imagePath = imageUrl; // Si l'utilisateur a fourni un lien
       } else {
         return res
@@ -352,33 +345,29 @@ function initializePhaseState(programPhases: any) {
 exports.updateProgram = [
   validateProgram,
   async (req: any, res: any, next: any) => {
-    const programKey = req.params.Key;
-    console.log("Program Key:", programKey);
+    const programKey = req.params.programKey;
     const { name, description, duration, duration_unit, sessions } = req.body;
     let program;
 
     try {
       // Trouver le programme par sa clé unique
-      program = await Program.findOne({ where: { id: programKey } });
+      program = await Program.findOne({ where: { key: programKey } });
       if (!program) {
         return res.status(404).json({ message: "Program not found" });
       }
 
-      console.log("Program found:", program);
     } catch (error: any) {
       return res.status(500).json({ message: "Error: Can't find the program" });
     }
 
     try {
       const rawSessions = sessions || [];
-      console.log("Sessions received (raw):", rawSessions);
 
       // Vérification que les sessions sont bien dans un format tableau
       const validSessions = Array.isArray(rawSessions) ? rawSessions : [];
       const filteredSessions = validSessions.filter(
         (session) => session !== "undefined" && session !== null
       );
-      console.log("Sessions après parsing :", filteredSessions);
 
       if (!filteredSessions.length) {
         return res.status(400).json({ message: "No valid session given" });
@@ -403,7 +392,7 @@ exports.updateProgram = [
           updatedAt: new Date(),
         },
         {
-          where: { id: programKey },
+          where: { key: programKey },
         }
       );
 
@@ -439,7 +428,6 @@ exports.updateProgram = [
                 sessionId: sessionsToDelete,
               },
             });
-            console.log(`Sessions ${sessionsToDelete} deleted successfully.`);
           }
 
           // Traiter les sessions sélectionnées (ajout/mise à jour)
@@ -454,11 +442,9 @@ exports.updateProgram = [
                 { sessionId },
                 { where: { programId: program.id, sessionId } }
               );
-              console.log(`Session ${sessionId} updated successfully.`);
             } else {
               // Créer la session si elle n'existe pas
               await ProgramSession.create({ programId: program.id, sessionId });
-              console.log(`Session ${sessionId} created successfully.`);
             }
           }
         } catch (error) {
