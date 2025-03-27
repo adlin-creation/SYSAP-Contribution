@@ -41,6 +41,28 @@ app.use((req, res, next) => {
 });
 
 app.use(userRoutes);
+
+// Static Image Serving
+const mimeTypes = {
+  'jpg': 'image/jpeg',
+  'jpeg': 'image/jpeg',
+  'png': 'image/png',
+  'webp': 'image/webp'
+};
+
+app.use("/images", (req, res, next) => {
+  res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  next();
+}, express.static("images", {
+  setHeaders: (res, filePath) => {
+    const ext = path.extname(filePath).toLowerCase().slice(1) as keyof typeof mimeTypes; // Déclare ext comme clé de mimeTypes
+    if (mimeTypes[ext]) {
+      res.set('Content-Type', mimeTypes[ext]);
+    }
+  }
+}));
+
 app.use(exerciseRoutes);
 app.use(blocRoutes);
 app.use(sessionRoutes);
@@ -55,8 +77,6 @@ app.use(professionalUserRoutes);
 app.use(evaluationRoutes);
 
 // app.use("/", programPhaseRoutes);
-
-app.use("/images", express.static(path.join(__dirname, "../images")));
 
 app.use("*", function (req, res) {
   res.send("The page doesn't exist");

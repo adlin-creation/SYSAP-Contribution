@@ -31,7 +31,7 @@ export default function Exercise({ exercise, onClick, onSelect }) {
         style={{ backgroundImage: imageUrl ? `url(${imageUrl})` : "none" }}
       />
       <div className="exercise-info">
-        <Meta title={name} description={`${fitnessLevel} | ${category} | ${imageUrl}`} />
+        <Meta title={name} description={`${fitnessLevel} | ${category}`} />
       </div>
     </Card>
   );
