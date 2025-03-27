@@ -1,15 +1,11 @@
-import React, { useState } from "react";
-import { Row, Col, Input, Button, Form, Radio, Modal } from "antd";
-import { useParams } from "react-router-dom";
-import axios from "axios";
-import useToken from "../Authentication/useToken";
-import Constants from "../Utils/Constants";
+import React from "react";
+import { Row, Col, Input, Radio, Form } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
+import Evaluation from "./Evaluation";
 import PropTypes from "prop-types";
 
-function EvaluationMATCH({ onSubmit }) {
-  const { patientId } = useParams();
-  const [formData, setFormData] = useState({
+function EvaluationMATCH() {
+  const getInitialFormData = () => ({
     // Section Cardio-musculaire
     chairTestSupport: true,
     chairTestCount: "",
@@ -20,70 +16,89 @@ function EvaluationMATCH({ onSubmit }) {
     balanceTandem: "",
 
     // Section Objectif de marche
+    canWalk: undefined,
     walkingTime: "",
   });
-  const { token } = useToken();
-  const [errors, setErrors] = useState({});
-  const [submissionData, setSubmissionData] = useState(null);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-
-    if (errors[name]) {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: "",
-      }));
-    }
-  };
-
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [modalMessage, setModalMessage] = useState(null);
-
-  const handleSubmit = () => {
-    const newErrors = {};
-
-    // Validation
-    if (!formData.chairTestCount) {
-      newErrors.chairTestCount = "Le nombre de levers est requis";
-    } else if (isNaN(formData.chairTestCount) || formData.chairTestCount < 0) {
-      newErrors.chairTestCount = "Veuillez entrer un nombre valide";
-    }
-
-    ["balanceFeetTogether", "balanceSemiTandem", "balanceTandem"].forEach(
-      (field) => {
-        if (!formData[field]) {
-          newErrors[field] = "Le temps est requis";
-        } else if (isNaN(formData[field]) || formData[field] < 0) {
-          newErrors[field] = "Veuillez entrer un temps valide";
-        }
-      }
-    );
-
-    if (formData.canWalk) {
-      if (!formData.walkingTime) {
-        newErrors.walkingTime = "Le temps de marche est requis";
-      } else if (isNaN(formData.walkingTime) || formData.walkingTime <= 0) {
-        newErrors.walkingTime = "Veuillez entrer un temps de marche valide";
-      }
-    }
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-
-    const scoreCM = calculateChairTestScore();
-    const scoreBalance = calculateBalanceScore();
-
+  const calculateScores = (formData) => {
+    const scoreCM = calculateChairTestScore(formData);
+    const scoreBalance = calculateBalanceScore(formData);
     const totalScore = scoreCM + scoreBalance;
     const programColor = getProgramColor(totalScore);
 
-    setModalMessage(
+    return {
+      cardioMusculaire: scoreCM,
+      equilibre: scoreBalance,
+      total: totalScore,
+      program: programColor,
+    };
+  };
+
+  const calculateChairTestScore = (formData) => {
+    const count = parseInt(formData.chairTestCount);
+    const withSupport = formData.chairTestSupport;
+
+    if (isNaN(count) || count === 0) return 0;
+
+    if (withSupport) {
+      // Avec appui
+      if (count < 5) return 1; // B < 5 levers
+      if (count >= 5 && count <= 9) return 2; // C 5-9 levers
+      if (count >= 10) return 3; // D ≥ 10 levers
+    } else {
+      // Sans appui
+      if (count >= 3 && count <= 5) return 3; // E 3 à 5 levers
+      if (count < 3) return 2; // Si E < 3, accorder le score C (2)
+      if (count >= 5 && count <= 9) return 4; // F 5-9 levers
+      if (count >= 10) return 5; // G ≥ 10 levers
+    }
+
+    return 0;
+  };
+
+  const calculateBalanceScore = (formData) => {
+    const feetTogether = parseFloat(formData.balanceFeetTogether || 0);
+    const semiTandem = parseFloat(formData.balanceSemiTandem || 0);
+    const tandem = parseFloat(formData.balanceTandem || 0);
+
+    // Vérifier dans l'ordre selon le document
+    if (tandem >= 3) return 4;
+    if (semiTandem >= 10) return 3;
+    if (semiTandem < 10 && semiTandem > 0) return 2;
+    if (feetTogether >= 10) return 1;
+    return 0;
+  };
+
+  const getProgramColor = (totalScore) => {
+    if (totalScore <= 1) return "ROUGE";
+    if (totalScore <= 3) return "JAUNE";
+    if (totalScore <= 5) return "ORANGE";
+    if (totalScore <= 7) return "VERT";
+    return "BLEU";
+  };
+
+  const buildPayload = (formData, scores, patientId, isBalanceTestEnabled) => {
+    return {
+      idPatient: patientId,
+      chairTestSupport: formData.chairTestSupport ? "with" : "without",
+      chairTestCount: parseInt(formData.chairTestCount, 10),
+      balanceFeetTogether: parseFloat(formData.balanceFeetTogether, 10),
+      balanceSemiTandem: isBalanceTestEnabled('balanceSemiTandem') ? 
+                        parseFloat(formData.balanceSemiTandem || 0, 10) : 0,
+      balanceTandem: isBalanceTestEnabled('balanceTandem') ? 
+                    parseFloat(formData.balanceTandem || 0, 10) : 0,
+      walkingTime: formData.canWalk ? parseFloat(formData.walkingTime || 0) : 0,
+      scores: {
+        cardioMusculaire: scores.cardioMusculaire,
+        equilibre: scores.equilibre,
+        total: scores.total,
+        program: scores.program,
+      }
+    };
+  };
+
+  const buildModalContent = (scores, formData) => {
+    return (
       <div className="results-container">
         <h3
           style={{
@@ -97,10 +112,10 @@ function EvaluationMATCH({ onSubmit }) {
 
         <div style={{ marginBottom: "15px" }}>
           <strong>Scores individuels :</strong>
-          <p>Cardio-musculaire : {scoreCM}/5</p>
-          <p>Équilibre : {scoreBalance}/4</p>
+          <p>Cardio-musculaire : {scores.cardioMusculaire}/5</p>
+          <p>Équilibre : {scores.equilibre}/4</p>
           <p>
-            <strong>SCORE TOTAL : {totalScore}/9</strong>
+            <strong>SCORE TOTAL : {scores.total}/9</strong>
           </p>
         </div>
 
@@ -114,7 +129,7 @@ function EvaluationMATCH({ onSubmit }) {
         >
           <p>
             <strong>Programme MATCH recommandé : </strong>
-            <span style={{ fontWeight: "bold" }}> {programColor}</span>
+            <span style={{ fontWeight: "bold" }}> {scores.program}</span>
           </p>
         </div>
 
@@ -128,7 +143,7 @@ function EvaluationMATCH({ onSubmit }) {
           >
             <p>
               Vitesse de marche :{" "}
-              {(4 / parseFloat(formData.walkingTime)).toFixed(2)} m/s
+              {calculateSpeed(formData.walkingTime)} m/s
             </p>
             <p>
               <strong>
@@ -157,324 +172,201 @@ function EvaluationMATCH({ onSubmit }) {
         )}
       </div>
     );
-
-    setIsModalVisible(true);
   };
 
-  const handleConfirm = async () => {
-    const scoreCM = calculateChairTestScore();
-    const scoreBalance = calculateBalanceScore();
-    const scoreTotal = scoreCM + scoreBalance; // Assurez-vous de calculer le score total
-    const programMatch = getProgramColor(scoreTotal);
-  
-    const payload = {
-      idPatient: patientId,
-      chairTestSupport: formData.chairTestSupport ? "with" : "without",
-      chairTestCount: parseInt(formData.chairTestCount, 10),
-      balanceFeetTogether: parseInt(formData.balanceFeetTogether, 10),
-      balanceSemiTandem: parseInt(formData.balanceSemiTandem, 10),
-      balanceTandem: parseInt(formData.balanceTandem, 10),
-      walkingTime: parseFloat(formData.walkingTime),
-      scores: {
-        cardioMusculaire: scoreCM,
-        equilibre: scoreBalance,
-        total: scoreTotal, // Ajout du score total
-        program: programMatch,
-      }
-    };
-
-    if (!payload) {
-      console.error("Aucune donnée à envoyer");
-      return;
-    }
-    const endpoint = "/create-match-evaluation";
-
-    try {
-      console.log("Payload envoyé :", JSON.stringify(payload, null, 2));
-
-      const response = await axios.post(
-        `${Constants.SERVER_URL}${endpoint}`,
-        payload,
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      // Gérer le succès
-      Modal.success({
-        title: "Succès",
-        content: "Évaluation enregistrée avec succès",
-      });
-
-      // Recharger la page
-      window.location.reload();
-    } catch (error) {
-      console.error("Erreur détaillée :", {
-        status: error.response?.status,
-        data: error.response?.data,
-        message: error.message,
-        payload: payload,
-      });
-
-      Modal.error({
-        title: "Erreur",
-        content:
-          error.response?.data?.message ||
-          error.response?.data ||
-          error.message ||
-          "Échec de l'enregistrement des données",
-      });
-    }
-  };
-
-  const calculateChairTestScore = () => {
-    const count = parseInt(formData.chairTestCount);
-    const withSupport = formData.chairTestSupport;
-
-    if (count === 0) return 0;
-
-    if (withSupport) {
-      // Avec appui
-      if (count < 5) return 1; // B < 5 levers
-      if (count >= 5 && count <= 9) return 2; // C 5-9 levers
-      if (count >= 10) return 3; // D ≥ 10 levers
-    } else {
-      // Sans appui
-      if (count >= 3 && count <= 5) return 3; // E 3 à 5 levers
-      if (count < 3) return 2; // Si E < 3, accorder le score C (2)
-      if (count >= 5 && count <= 9) return 4; // F 5-9 levers
-      if (count >= 10) return 5; // G ≥ 10 levers
-    }
-
-    return 0;
-  };
-
-  const calculateBalanceScore = () => {
-    const feetTogether = parseFloat(formData.balanceFeetTogether);
-    const semiTandem = parseFloat(formData.balanceSemiTandem);
-    const tandem = parseFloat(formData.balanceTandem);
-
-    // Si le score cardio-musculaire est 0, seulement évaluer l'équilibre pieds joints
-    const cardioScore = calculateChairTestScore();
-    if (cardioScore <= 1) {
-      return feetTogether >= 10 ? 1 : 0;
-    }
-
-    // Vérifier dans l'ordre selon le document
-    if (tandem >= 3) return 4;
-    if (semiTandem >= 10) return 3;
-    if (semiTandem < 10 && semiTandem > 0) return 2;
-    if (feetTogether >= 10) return 1;
-    return 0;
+  const calculateSpeed = (walkingTime) => {
+    const time = parseFloat(walkingTime);
+    if (isNaN(time) || time <= 0) return "0.00";
+    return (4 / time).toFixed(2);
   };
 
   const calculateWalkingObjective = (walkingTime) => {
-    if (!walkingTime || walkingTime <= 0) return null;
-
-    const speed = 4 / parseFloat(walkingTime);
-
+    const time = parseFloat(walkingTime);
+    
+    if (isNaN(time) || time < 0 || walkingTime === '') {
+      return null;
+    }
+    
+    if (time === 0) {
+      return 10;
+    }
+    
+    const speed = 4 / time;
+    
     if (speed < 0.4) return 10;
     if (speed >= 0.4 && speed < 0.6) return 15;
     if (speed >= 0.6 && speed < 0.8) return 20;
     if (speed >= 0.8) return 30;
-
+    
     return null;
   };
 
-  const getProgramColor = (totalScore) => {
-    if (totalScore <= 1) return "ROUGE";
-    if (totalScore <= 3) return "JAUNE";
-    if (totalScore <= 5) return "ORANGE";
-    if (totalScore <= 7) return "VERT";
-    return "BLEU";
-  };
-
-  const onClose = () => {
-    window.location.reload();
-  };
-
-  return (
-    <Row justify="center">
-      <Col span={16}>
-        <Form
-          layout="vertical"
-          onFinish={handleSubmit}
-          initialValues={formData}
-        >
-          {/* Section A: CARDIO-MUSCULAIRE */}
-          <h2>CARDIO-MUSCULAIRE</h2>
-          <Form.Item label="Test de la chaise en 30 secondes">
-            <div
+  const renderFormFields = (formData, handleChange, errors, isBalanceTestEnabled, calculateWalkingObjective) => {
+    return (
+      <>
+        {/* Section A: CARDIO-MUSCULAIRE */}
+        <h2>CARDIO-MUSCULAIRE</h2>
+        <Form.Item label="Test de la chaise en 30 secondes">
+          <div
             style={{ marginBottom: "15px", fontStyle: "italic", color: "#666" }}
           >
             <InfoCircleOutlined style={{ marginRight: "5px" }} />
             Commencer avec support. Si le patient réussi a faire 5 levers ou plus, 
             refaire le test sans support
           </div>
-            <Radio.Group
-              name="chairTestSupport"
-              value={formData.chairTestSupport}
-              onChange={(e) =>
-                setFormData({ ...formData, chairTestSupport: e.target.value })
-              }
-            >
-              <Radio value={true}>Avec appui</Radio>
-              <Radio value={false}>Sans appui</Radio>
-            </Radio.Group>
-          </Form.Item>
-
-          <Form.Item
-            label="Nombre de levers"
-            validateStatus={errors.chairTestCount ? "error" : ""}
-            help={errors.chairTestCount}
+          <Radio.Group
+            name="chairTestSupport"
+            value={formData.chairTestSupport}
+            onChange={(e) =>
+              handleChange({
+                target: { name: "chairTestSupport", value: e.target.value }
+              })
+            }
           >
-            <Input
-              name="chairTestCount"
-              value={formData.chairTestCount}
-              onChange={handleChange}
-              placeholder="Entrez le nombre"
-            />
-          </Form.Item>
+            <Radio value={true}>Avec appui</Radio>
+            <Radio value={false}>Sans appui</Radio>
+          </Radio.Group>
+        </Form.Item>
 
-          {/* Section B: ÉQUILIBRE */}
-          <h2>ÉQUILIBRE (Debout, sans aide)</h2>
-          <div
-            style={{ marginBottom: "15px", fontStyle: "italic", color: "#666" }}
-          >
-            <InfoCircleOutlined style={{ marginRight: "5px" }} />
-            Si le patient ne peut pas accomplir 5 levers avec support, 
-            seulement faire le test d'équilibre pieds joints
-            <br/>
-            <InfoCircleOutlined style={{ marginRight: "5px" }} />
-            Si le patient n'arrive pas a garder un éuilibre dans une partie, entrer 0
-          </div>
-          <Row gutter={16}>
-            <Col span={8}>
-              <Form.Item
-                label="Temps Pieds joints (secondes)"
-                validateStatus={errors.balanceFeetTogether ? "error" : ""}
-                help={errors.balanceFeetTogether}
-                tooltip="< 10 secondes = Score 0, ≥ 10 secondes = Score 1"
-              >
-                <Input
-                  name="balanceFeetTogether"
-                  value={formData.balanceFeetTogether}
-                  onChange={handleChange}
-                  placeholder="Entrez le temps"
-                />
-              </Form.Item>
-            </Col>
-            <Col span={8}>
-              <Form.Item
-                label="Temps Semi-tandem (secondes)"
-                validateStatus={errors.balanceSemiTandem ? "error" : ""}
-                help={errors.balanceSemiTandem}
-                tooltip="< 10 secondes = Score 2, ≥ 10 secondes = Score 3"
-              >
-                <Input
-                  name="balanceSemiTandem"
-                  value={formData.balanceSemiTandem}
-                  onChange={handleChange}
-                  placeholder="Entrez le temps"
-                />
-              </Form.Item>
-            </Col>
-            <Col span={8}>
-              <Form.Item
-                label="Temps Tandem (secondes)"
-                validateStatus={errors.balanceTandem ? "error" : ""}
-                help={errors.balanceTandem}
-                tooltip="≥ 3 secondes = Score 4"
-              >
-                <Input
-                  name="balanceTandem"
-                  value={formData.balanceTandem}
-                  onChange={handleChange}
-                  placeholder="Entrez le temps"
-                />
-              </Form.Item>
-            </Col>
-          </Row>
+        <Form.Item
+          label="Nombre de levers"
+          validateStatus={errors.chairTestCount ? "error" : ""}
+          help={errors.chairTestCount}
+        >
+          <Input
+            name="chairTestCount"
+            value={formData.chairTestCount}
+            onChange={handleChange}
+            placeholder="Entrez le nombre"
+          />
+        </Form.Item>
 
-          {/* Section C: VITESSE DE MARCHE */}
-          <h2>OBJECTIF DE MARCHE</h2>
-          <Form.Item label="Test 4 mètres – vitesse de marche confortable">
-            <Radio.Group
-              value={formData.canWalk}
-              onChange={(e) =>
-                setFormData({ ...formData, canWalk: e.target.value })
-              }
-              style={{ marginBottom: "16px" }}
+        {/* Section B: ÉQUILIBRE */}
+        <h2>ÉQUILIBRE (Debout, sans aide)</h2>
+        <div
+          style={{ marginBottom: "15px", fontStyle: "italic", color: "#666" }}
+        >
+          <InfoCircleOutlined style={{ marginRight: "5px" }} />
+          Si le patient ne peut pas accomplir 5 levers avec support, 
+          seulement faire le test d'équilibre pieds joints
+          <br/>
+          <InfoCircleOutlined style={{ marginRight: "5px" }} />
+          Si le patient n'arrive pas a garder un éuilibre dans une partie, entrer 0
+        </div>
+        <Row gutter={16}>
+          <Col span={8}>
+            <Form.Item
+              label="Temps Pieds joints (secondes)"
+              validateStatus={errors.balanceFeetTogether ? "error" : ""}
+              help={errors.balanceFeetTogether}
+              tooltip="< 10 secondes = Score 0, ≥ 10 secondes = Score 1"
             >
-              <Radio value={true}>Le patient peut marcher</Radio>
-              <Radio value={false}>
-                Le petient ne peut pas marcher
-              </Radio>
-            </Radio.Group>
+              <Input
+                name="balanceFeetTogether"
+                value={formData.balanceFeetTogether}
+                onChange={handleChange}
+                placeholder="Entrez le temps"
+              />
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item
+              label="Temps Semi-tandem (secondes)"
+              validateStatus={errors.balanceSemiTandem ? "error" : ""}
+              help={errors.balanceSemiTandem}
+              tooltip="< 10 secondes = Score 2, ≥ 10 secondes = Score 3"
+            >
+              <Input
+                name="balanceSemiTandem"
+                value={formData.balanceSemiTandem}
+                onChange={handleChange}
+                placeholder="Entrez le temps"
+                disabled={!isBalanceTestEnabled('balanceSemiTandem')}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item
+              label="Temps Tandem (secondes)"
+              validateStatus={errors.balanceTandem ? "error" : ""}
+              help={errors.balanceTandem}
+              tooltip="≥ 3 secondes = Score 4"
+            >
+              <Input
+                name="balanceTandem"
+                value={formData.balanceTandem}
+                onChange={handleChange}
+                placeholder="Entrez le temps"
+                disabled={!isBalanceTestEnabled('balanceTandem')}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
 
-            {formData.canWalk && (
-              <Form.Item
-                label="Temps nécessaire pour marcher 4 mètres (secondes)"
-                validateStatus={errors.walkingTime ? "error" : ""}
-                help={errors.walkingTime}
-              >
-                <Input
-                  name="walkingTime"
-                  value={formData.walkingTime}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    if (value === "" || /^\d*\.?\d*$/.test(value)) {
-                      handleChange(e);
-                    }
-                  }}
-                  placeholder="Entrez le temps en secondes"
-                />
-                {formData.walkingTime && !errors.walkingTime && (
-                  <div style={{ marginTop: 8, color: "#666" }}>
-                    Vitesse de marche :{" "}
-                    {(4 / parseFloat(formData.walkingTime)).toFixed(2)} m/s
-                    <div style={{ marginTop: 4 }}>
-                      <strong>
-                        Objectif de marche :{" "}
-                        {calculateWalkingObjective(formData.walkingTime)}{" "}
-                        minutes par jour
-                      </strong>
-                    </div>
+        {/* Section C: VITESSE DE MARCHE */}
+        <h2>OBJECTIF DE MARCHE</h2>
+        <Form.Item label="Test 4 mètres – vitesse de marche confortable">
+          <Radio.Group
+            value={formData.canWalk}
+            onChange={(e) =>
+              handleChange({
+                target: { name: "canWalk", value: e.target.value }
+              })
+            }
+            style={{ marginBottom: "16px" }}
+          >
+            <Radio value={true}>Le patient peut marcher</Radio>
+            <Radio value={false}>
+              Le patient ne peut pas marcher
+            </Radio>
+          </Radio.Group>
+
+          {formData.canWalk && (
+            <Form.Item
+              label="Temps nécessaire pour marcher 4 mètres (secondes)"
+              validateStatus={errors.walkingTime ? "error" : ""}
+              help={errors.walkingTime}
+            >
+              <Input
+                name="walkingTime"
+                value={formData.walkingTime}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (value === "" || /^\d*\.?\d*$/.test(value)) {
+                    handleChange(e);
+                  }
+                }}
+                placeholder="Entrez le temps en secondes"
+              />
+              {formData.walkingTime && !errors.walkingTime && (
+                <div style={{ marginTop: 8, color: "#666" }}>
+                  Vitesse de marche :{" "}
+                  {calculateSpeed(formData.walkingTime)} m/s
+                  <div style={{ marginTop: 4 }}>
+                    <strong>
+                      Objectif de marche :{" "}
+                      {calculateWalkingObjective(formData.walkingTime)}{" "}
+                      minutes par jour
+                    </strong>
                   </div>
-                )}
-              </Form.Item>
-            )}
-          </Form.Item>
+                </div>
+              )}
+            </Form.Item>
+          )}
+        </Form.Item>
+      </>
+    );
+  };
 
-          <Form.Item>
-            <Button onClick={() => onClose()} style={{ marginRight: 8 }}>
-              Annuler
-            </Button>
-            <Button type="primary" htmlType="submit">
-              Soumettre
-            </Button>
-          </Form.Item>
-        </Form>
-      </Col>
-      <Modal
-        title="Résultats"
-        open={isModalVisible}
-        onCancel={() => setIsModalVisible(false)}
-        footer={[
-          <Button key="close" onClick={() => setIsModalVisible(false)}>
-            Fermer
-          </Button>,
-          <Button key="submit" type="primary" onClick={handleConfirm}>
-            Confirmer
-          </Button>,
-        ]}
-      >
-        {modalMessage}
-      </Modal>
-    </Row>
+  return (
+    <Evaluation
+      evaluationType="MATCH"
+      getInitialFormData={getInitialFormData}
+      calculateScores={calculateScores}
+      renderFormFields={renderFormFields}
+      buildPayload={buildPayload}
+      buildModalContent={buildModalContent}
+    />
   );
 }
 
