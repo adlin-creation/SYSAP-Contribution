@@ -8,10 +8,10 @@ import image from "../../images/phase2.jpeg";
 import AppButton from "../Button/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTranslation } from "react-i18next";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 export default function Phase({ phase, deletePhase, onSelect, onClick }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("Phases");
   return (
     <Card sx={{ maxWidth: 345 }} className="bloc">
       <CardMedia
@@ -25,31 +25,25 @@ export default function Phase({ phase, deletePhase, onSelect, onClick }) {
           {phase.name}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {`${t("Phases:start_condition_type_label")}: ${
-            phase.startConditionType
-          }`}
+          {`${t("start_condition_type_label")}: ${phase.startConditionType}`}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {`${t("Phases:start_condition_value_label")}: ${
-            phase.startConditionValue
-          }`}
+          {`${t("start_condition_value_label")}: ${phase.startConditionValue}`}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {`${t("Phases:end_condition_type_label")}: ${phase.endConditionType}`}
+          {`${t("end_condition_type_label")}: ${phase.endConditionType}`}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {`${t("Phases:end_condition_value_label")}: ${
-            phase.endConditionValue
-          }`}
+          {`${t("end_condition_value_label")}: ${phase.endConditionValue}`}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           {console.log("Phase inside: ", phase)}
-          {`${t("Phases:weekly_cycle_label")}: ${
+          {`${t("weekly_cycle_label")}: ${
             phase?.Phase_Cycles[0]?.WeeklyCycle?.name
           }`}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {`${t("Phases:frequency")}: ${phase.frequency}`}
+          {`${t("frequency")}: ${phase.frequency}`}
         </Typography>
       </CardContent>
       <CardActions>
@@ -61,7 +55,7 @@ export default function Phase({ phase, deletePhase, onSelect, onClick }) {
             onClick(event);
           }}
           name={"edit-phase"}
-          displayText={t("Phases:edit_button")}
+          displayText={t("edit_button")}
           variant={"contained"}
           type={"button"}
           size={"medium"}
@@ -71,7 +65,7 @@ export default function Phase({ phase, deletePhase, onSelect, onClick }) {
             // calls parent function to delete the exercise
             deletePhase(phase);
           }}
-          displayText={t("Sessions:delete_button")}
+          displayText={t("delete_button")}
           variant={"contained"}
           type={"button"}
           color={"error"}
@@ -94,8 +88,8 @@ Phase.propTypes = {
     Phase_Cycles: PropTypes.arrayOf(
       PropTypes.shape({
         WeeklyCycle: PropTypes.shape({
-          name: PropTypes.string
-        })
+          name: PropTypes.string,
+        }),
       })
     ),
   }).isRequired,

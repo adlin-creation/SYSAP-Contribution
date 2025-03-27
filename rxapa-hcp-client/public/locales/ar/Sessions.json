@@ -26,5 +26,9 @@
   "description_label": "الوصف",
   "day_time_label": "وقت اليوم",
   "required_label": "مطلوب",
-  "add_bloc_button": "إضافة كتلة"
+  "add_bloc_button": "إضافة كتلة",
+  "title_select_day_time": "يرجى اختيار وقت اليوم",
+  "title_select_a_bloc": "يرجى اختيار كتلة",
+  "label_select_a_bloc": "اختيار كتلة",
+  "label_select_start_condition_type": "اختر نوع شرط البداية"
 }

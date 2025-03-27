@@ -23,7 +23,7 @@ export default function PhaseMenu() {
   const [message, setMessage] = useState("");
 
   const { token } = useToken();
-  const { t } = useTranslation();
+  const { t } = useTranslation("Phases");
 
   // selected program phase to be edited
   const [selectedPhase, setSelectedPhase] = useState(null);
@@ -74,10 +74,10 @@ export default function PhaseMenu() {
   /// PROGRAM PHASE QUERY VALIDATIONS ///
   /////////////////////////////////////
   if (isPhaseLoading) {
-    return <h1>{t("Phases:loading_program_phases")}</h1>;
+    return <h1>{t("loading_program_phases")}</h1>;
   }
   if (isPhaseLoadingError) {
-    return <h1>{t("Phases:error_loading_program_phases")}</h1>;
+    return <h1>{t("error_loading_program_phases")}</h1>;
   }
 
   /**
@@ -121,9 +121,11 @@ export default function PhaseMenu() {
       })
       .then((res) => {
         refetchPhases();
-        openModal(res.data.message, false);
+        openModal(t(`Backend:${res.data.message}`), false);
       })
-      .catch((err) => openModal(err.response.data.message, true));
+      .catch((err) =>
+        openModal(t(`Backend:${err.response.data.message}`), true)
+      );
   };
 
   /**
@@ -156,7 +158,7 @@ export default function PhaseMenu() {
             type="primary"
             icon={<PlusOutlined />}
           >
-            {t("Phases:create_phase")}
+            {t("create_phase")}
           </Button>
 
           {/* Display exisitng cycles */}
@@ -184,14 +186,14 @@ export default function PhaseMenu() {
           type="primary"
           icon={<ArrowLeftOutlined />}
         >
-          {t("Phases:back_button")}
+          {t("back_button")}
         </Button>
       )}
 
       {/* show create session input elements when create day session is clicked */}
       {buttonState.isCreatePhase && (
         <div>
-          <h3>{t("Phases:enter_phase_details")}</h3>
+          <h3>{t("enter_phase_details")}</h3>
           <CreatePhase refetchPhases={refetchPhases} cycleList={cycleList} />
         </div>
       )}

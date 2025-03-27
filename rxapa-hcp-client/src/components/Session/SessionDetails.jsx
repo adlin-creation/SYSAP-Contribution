@@ -12,9 +12,8 @@ import useToken from "../Authentication/useToken";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 
-
 export default function SessionDetails({ sessionKey }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("Sessions");
   const { handleSubmit, control } = useForm();
   const [isAddBloc, setIsAddBloc] = useState(false);
 
@@ -75,17 +74,17 @@ export default function SessionDetails({ sessionKey }) {
   /// QUERY VALIDATIONS          ///
   //////////////////////////////////
   if (isBlockListLoading) {
-    return <h1>{t("Sessions:blocs_list_load")}</h1>;
+    return <h1>{t("blocs_list_load")}</h1>;
   }
   if (isBlockListLoadingError) {
-    return <h1>{t("Sessions:blocs_list_loading_error")}</h1>;
+    return <h1>{t("blocs_list_loading_error")}</h1>;
   }
 
   if (isSessionLoading) {
-    return <h1>{t("Sessions:sessions_loading")}</h1>;
+    return <h1>{t("sessions_loading")}</h1>;
   }
   if (isSessionLoadingError) {
-    return <h1>{t("Sessions:sessions_loading_error_msg")}</h1>;
+    return <h1>{t("sessions_loading_error_msg")}</h1>;
   }
 
   /**
@@ -129,7 +128,7 @@ export default function SessionDetails({ sessionKey }) {
       <Row>
         <div className="input-element">
           <h4>
-            {t("Sessions:edit")} {session.name}
+            {t("edit")} {session.name}
           </h4>
         </div>
 
@@ -143,7 +142,7 @@ export default function SessionDetails({ sessionKey }) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder={t("Sessions:update_session_placeholder")}
+                  placeholder={t("update_session_placeholder")}
                   // required
                 />
               )}
@@ -175,7 +174,7 @@ export default function SessionDetails({ sessionKey }) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder={t("Sessions:session_constraints_placeholder")}
+                  placeholder={t("session_constraints_placeholder")}
                   // required
                 />
               )}
@@ -185,7 +184,7 @@ export default function SessionDetails({ sessionKey }) {
           <div className="input-element">
             <AppButton
               onClick={updateSession}
-              displayText={t("Sessions:update_button")}
+              displayText={t("update_button")}
               variant={"contained"}
               endIcon={<CheckOutlined />}
               type={"submit"}
@@ -197,7 +196,7 @@ export default function SessionDetails({ sessionKey }) {
           <BlocTable blocs={session?.Bloc_Sessions} />
           <AppButton
             onClick={addBloc}
-            displayText={t("Sessions:add_bloc_button")}
+            displayText={t("add_bloc_button")}
             variant={"contained"}
             endIcon={<PlusOutlined />}
             type={"button"}

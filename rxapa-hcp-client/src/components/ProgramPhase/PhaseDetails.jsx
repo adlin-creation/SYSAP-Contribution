@@ -12,7 +12,7 @@ import PropTypes from "prop-types";
 
 export default function PhaseDetail({ programPhase, refetchPhases }) {
   const { handleSubmit } = useForm();
-  const { t } = useTranslation();
+  const { t } = useTranslation("Phases");
 
   const [selectedStartConditionType, setselectedStartConditionType] =
     useState(null);
@@ -68,10 +68,10 @@ export default function PhaseDetail({ programPhase, refetchPhases }) {
       .then((res) => {
         // update the list of exercises
         refetchPhases();
-        openModal(res.data.message, false);
+        openModal(t(`Backend:${res.data.message}`), false);
       })
       .catch((err) => {
-        openModal(err.response.data.message, true);
+        openModal(t(`Backend:${err.response.data.message}`), true);
       });
   };
 
@@ -105,19 +105,19 @@ export default function PhaseDetail({ programPhase, refetchPhases }) {
         <Row>
           <Col span={8}>
             <div className={"input-element"}>
-              <label>{t("Phases:phase_name_label")}</label>
+              <label>{t("phase_name_label")}</label>
               <h5>{programPhase.name}</h5>
             </div>
           </Col>
           <Col span={16}>
             <div className="input-element">
-              <h5>{t("Phases:update_phase_name_title")}</h5>
+              <h5>{t("update_phase_name_title")}</h5>
 
               <Input
                 onChange={async (event) => {
                   setPhaseAttribute("name", event.target.value);
                 }}
-                placeholder={t("Phases:phase_name_placeholder")}
+                placeholder={t("phase_name_placeholder")}
                 // required
               />
             </div>
@@ -126,22 +126,20 @@ export default function PhaseDetail({ programPhase, refetchPhases }) {
         <Row>
           <Col span={8}>
             <div className={"input-element"}>
-              <label>{t("Phases:start_condition_type_label")}</label>
+              <label>{t("start_condition_type_label")}</label>
               <body>{programPhase.startConditionType}</body>
             </div>
           </Col>
           <Col span={16}>
             <div className="input-element">
-              <h5>{t("Phases:update_start_condition_type_title")}</h5>
+              <h5>{t("update_start_condition_type_title")}</h5>
 
               <Select
                 value={selectedStartConditionType}
                 onChange={(value) => {
                   setselectedStartConditionType(value);
                 }}
-                placeholder={t(
-                  "Phases:select_start_condition_type_placeholder"
-                )}
+                placeholder={t("select_start_condition_type_placeholder")}
                 options={[
                   { value: "TimeElapsed", label: "TimeElapsed" },
                   { value: "PerformanceGoal", label: "PerformanceGoal" },
@@ -153,19 +151,19 @@ export default function PhaseDetail({ programPhase, refetchPhases }) {
         <Row>
           <Col span={8}>
             <div className={"input-element"}>
-              <label>{t("Phases:start_condition_value_label")}</label>
+              <label>{t("start_condition_value_label")}</label>
               <body>{programPhase.startConditionValue}</body>
             </div>
           </Col>
           <Col span={16}>
             <div className="input-element">
-              <h5>{t("Phases:update_start_condition_value_title")}</h5>
+              <h5>{t("update_start_condition_value_title")}</h5>
 
               <Input
                 onChange={async (event) => {
                   setPhaseAttribute("startConditionValue", event.target.value);
                 }}
-                placeholder={t("Phases:start_condition_value_placeholder")}
+                placeholder={t("start_condition_value_placeholder")}
                 type="number"
                 // required
               />
@@ -175,20 +173,20 @@ export default function PhaseDetail({ programPhase, refetchPhases }) {
         <Row>
           <Col span={8}>
             <div className={"input-element"}>
-              <label>{t("Phases:end_condition_type_label")}</label>
+              <label>{t("end_condition_type_label")}</label>
               <h5>{programPhase.endConditionType}</h5>
             </div>
           </Col>
           <Col span={16}>
             <div className="input-element">
-              <h5>{t("Phases:update_end_condition_type_title")}</h5>
+              <h5>{t("update_end_condition_type_title")}</h5>
 
               <Select
                 value={selectedEndConditionType}
                 onChange={(value) => {
                   setselectedEndConditionType(value);
                 }}
-                placeholder={t("Phases:select_end_condition_type_placeholder")}
+                placeholder={t("select_end_condition_type_placeholder")}
                 options={[
                   { value: "TimeElapsed", label: "TimeElapsed" },
                   { value: "PerformanceGoal", label: "PerformanceGoal" },
@@ -200,19 +198,19 @@ export default function PhaseDetail({ programPhase, refetchPhases }) {
         <Row>
           <Col span={8}>
             <div className={"input-element"}>
-              <label>{t("Phases:end_condition_value_label")}:</label>
+              <label>{t("end_condition_value_label")}:</label>
               <body>{programPhase.endConditionValue}</body>
             </div>
           </Col>
           <Col span={16}>
             <div className="input-element">
-              <h5>{t("Phases:update_end_condition_value_title")}</h5>
+              <h5>{t("update_end_condition_value_title")}</h5>
 
               <Input
                 onChange={async (event) => {
                   setPhaseAttribute("endConditionValue", event.target.value);
                 }}
-                placeholder={t("Phases:end_condition_value_placeholder")}
+                placeholder={t("end_condition_value_placeholder")}
                 type="number"
                 // required
               />
@@ -222,24 +220,24 @@ export default function PhaseDetail({ programPhase, refetchPhases }) {
         <Row>
           <Col span={8}>
             <div className={"input-element"}>
-              <label>{t("Phases:frequency_label")}</label>
+              <label>{t("frequency_label")}</label>
               <body>{programPhase.frequency}</body>
             </div>
           </Col>
           <Col span={16}>
             <div className={"input-element"}>
-              <h5>{t("Phases:update_frequency_title")}</h5>
+              <h5>{t("update_frequency_title")}</h5>
 
               <Input
                 onChange={async (event) => {
                   setPhaseAttribute("frequency", event.target.value);
                 }}
-                placeholder={t("Phases:frequency_placeholder")}
+                placeholder={t("frequency_placeholder")}
                 // required
               />
 
               <AppButton
-                displayText={t("Phases:update_button")}
+                displayText={t("update_button")}
                 variant={"contained"}
                 endIcon={<CheckOutlined />}
                 type={"submit"}
@@ -260,9 +258,15 @@ PhaseDetail.propTypes = {
     key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     name: PropTypes.string.isRequired,
     startConditionType: PropTypes.string,
-    startConditionValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    startConditionValue: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number,
+    ]),
     endConditionType: PropTypes.string,
-    endConditionValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    endConditionValue: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number,
+    ]),
     frequency: PropTypes.number,
   }).isRequired,
 };

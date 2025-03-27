@@ -12,7 +12,7 @@ import useToken from "../Authentication/useToken";
 import { useTranslation } from "react-i18next";
 
 export default function SessionList(props) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("Sessions");
   // tracks the state of two buttons: create a session and edit a day session
   const [buttonState, setButtonState] = useState({
     isCreateSession: false,
@@ -56,10 +56,10 @@ export default function SessionList(props) {
   /// SESSION QUERY VALIDATIONS ///
   /////////////////////////////////////
   if (isSessionLoading) {
-    return <h1>{t("Sessions:sessions_loading")}</h1>;
+    return <h1>{t("sessions_loading")}</h1>;
   }
   if (isSessionLoadingError) {
-    return <h1>{t("Sessions:sessions_loading_error_msg")}</h1>;
+    return <h1>{t("sessions_loading_error_msg")}</h1>;
   }
 
   /**
@@ -140,7 +140,7 @@ export default function SessionList(props) {
             type="primary"
             icon={<PlusOutlined />}
           >
-            {t("Sessions:create_session")}
+            {t("create_session")}
           </Button>
 
           {/* Display exisitng sessions */}
@@ -168,14 +168,14 @@ export default function SessionList(props) {
           type="primary"
           icon={<ArrowLeftOutlined />}
         >
-          {t("Sessions:back_button")}
+          {t("back_button")}
         </Button>
       )}
 
       {/* show create session input elements when create day session is clicked */}
       {buttonState.isCreateSession && (
         <div>
-          <h3>{t("Sessions:session_details_title")}</h3>
+          <h3>{t("session_details_title")}</h3>
           <CreateSession refetchSessions={refetchSessions} />
         </div>
       )}

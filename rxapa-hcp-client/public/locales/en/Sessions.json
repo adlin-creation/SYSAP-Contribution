@@ -26,5 +26,9 @@
   "description_label": "Description",
   "day_time_label": "Day Time",
   "required_label": "Required",
-  "add_bloc_button": "Add bloc"
+  "add_bloc_button": "Add bloc",
+  "title_select_day_time": "Please select day time",
+  "title_select_a_bloc": "Please select a bloc",
+  "label_select_a_bloc": "Select a bloc",
+  "label_select_start_condition_type": "Select Start Condition Type"
 }

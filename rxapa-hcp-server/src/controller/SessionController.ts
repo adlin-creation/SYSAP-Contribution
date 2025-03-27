@@ -211,7 +211,7 @@ exports.updateSession = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.json({ message: "cant_find " + `${name}` + "session_word"});
+    res.json({ message: "cant_find " + `${name}` + "session_word" });
     return res;
   }
 

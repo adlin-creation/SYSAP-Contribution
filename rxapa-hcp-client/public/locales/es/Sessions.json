@@ -26,5 +26,9 @@
   "description_label": "Descripción",
   "day_time_label": "Horario del día",
   "required_label": "Requerido",
-  "add_bloc_button": "Agregar bloque"
+  "add_bloc_button": "Agregar bloque",
+  "title_select_day_time": "Por favor, seleccione la hora del día",
+  "title_select_a_bloc": "Por favor, seleccione un bloque",
+  "label_select_a_bloc": "Seleccionar un bloque",
+  "label_select_start_condition_type": "Seleccionar tipo de condición de inicio"
 }

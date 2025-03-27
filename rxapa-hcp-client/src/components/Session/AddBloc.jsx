@@ -47,7 +47,7 @@ export default function AddBloc({
   blocNames = blocList?.map((bloc) => bloc.name);
 
   const { handleSubmit } = useForm();
-  const { t } = useTranslation();
+  const { t } = useTranslation("Sessions");
   /**
    * API function call when the submit to add a bloc is clicked.
    * @param {*} data  - contains start parameter values to add a bloc
@@ -98,7 +98,7 @@ export default function AddBloc({
     <div>
       {/* Dropdown menu to select an exercise to be used in the day session */}
       <div className="input-element">
-        <h5>Please select a bloc</h5>
+        <h5>{t("title_select_a_bloc")}</h5>
 
         <Autocomplete
           value={selectedBlocName}
@@ -112,13 +112,13 @@ export default function AddBloc({
           options={blocNames}
           // sx={{ width: 300 }}
           renderInput={(params) => (
-            <TextField {...params} label="Select a bloc" />
+            <TextField {...params} label={t("label_select_a_bloc")} />
           )}
         />
       </div>
 
       <div className="input-element">
-        <h5>Please select day time</h5>
+        <h5>{t("title_select_day_time")}</h5>
 
         <Autocomplete
           // className="input-element"
@@ -139,7 +139,10 @@ export default function AddBloc({
           ]}
           // sx={{ width: 400 }}
           renderInput={(params) => (
-            <TextField {...params} label="Select Start Condition Type" />
+            <TextField
+              {...params}
+              label={t("label_select_start_condition_type")}
+            />
           )}
         />
       </div>

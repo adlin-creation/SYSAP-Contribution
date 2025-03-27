@@ -75,7 +75,7 @@ export const createProfessionalUser = async (req: any, res: any, next: any) => {
     next(error); // Pour une meilleure gestion des erreurs
     res
       .status(error.statusCode)
-      .json({ message: error.message || "Backend:error_creating_user" });
+      .json({ message: error.message || "error_creating_user" });
   }
   return res;
 };
@@ -89,7 +89,7 @@ exports.updateProfessionalUser = async (req: any, res: any, next: any) => {
   try {
     const professionalUser = await Professional_User.findByPk(userId);
     if (!professionalUser) {
-      return res.status(404).json({ message: "Backend:error_user_not_found" });
+      return res.status(404).json({ message: "error_user_not_found" });
     }
     professionalUser.firstname = firstname;
     professionalUser.lastname = lastname;
@@ -103,9 +103,7 @@ exports.updateProfessionalUser = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res
-      .status(error.statusCode)
-      .json({ message: "Backend:error_updating_user" });
+    res.status(error.statusCode).json({ message: "error_updating_user" });
   }
   return res;
 };
@@ -118,17 +116,15 @@ exports.deleteProfessionalUser = async (req: any, res: any, next: any) => {
   try {
     const professionalUser = await Professional_User.findByPk(userId);
     if (!professionalUser) {
-      return res.status(404).json({ message: "Backend:error_user_not_found" });
+      return res.status(404).json({ message: "error_user_not_found" });
     }
     await professionalUser.destroy();
-    res.status(200).json({ message: "Backend:success_user_deleted" });
+    res.status(200).json({ message: "success_user_deleted" });
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res
-      .status(error.statusCode)
-      .json({ message: "Backend:error_deleting_user" });
+    res.status(error.statusCode).json({ message: "error_deleting_user" });
   }
   return res;
 };
@@ -141,16 +137,14 @@ exports.getProfessionalUser = async (req: any, res: any, next: any) => {
   try {
     const professionalUser = await Professional_User.findByPk(userId);
     if (!professionalUser) {
-      return res.status(404).json({ message: "Backend:error_user_not_found" });
+      return res.status(404).json({ message: "error_user_not_found" });
     }
     res.status(200).json(professionalUser);
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res
-      .status(error.statusCode)
-      .json({ message: "Backend:error_loading_user" });
+    res.status(error.statusCode).json({ message: "error_loading_user" });
   }
   return res;
 };
@@ -166,9 +160,7 @@ exports.getProfessionalUsers = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res
-      .status(error.statusCode)
-      .json({ message: "Backend:error_loading_users" });
+    res.status(error.statusCode).json({ message: "error_loading_users" });
   }
   return res;
 };
@@ -200,7 +192,7 @@ exports.getKinesiologistPatients = async (req: any, res: any, next: any) => {
     }
     res
       .status(error.statusCode)
-      .json({ message: "Backend:error_loading_kinesiologist_patients" });
+      .json({ message: "error_loading_kinesiologist_patients" });
   }
   return res;
 };
@@ -232,7 +224,7 @@ exports.getDoctorPatients = async (req: any, res: any, next: any) => {
     }
     res
       .status(error.statusCode)
-      .json({ message: "Backend:error_loading_doctor_patients" });
+      .json({ message: "error_loading_doctor_patients" });
   }
   return res;
 };
@@ -273,8 +265,6 @@ exports.generatePassword = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res
-      .status(error.statusCode)
-      .json({ message: "Backend:error_generating_password" });
+    res.status(error.statusCode).json({ message: "error_generating_password" });
   }
 };

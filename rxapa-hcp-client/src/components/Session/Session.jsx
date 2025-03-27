@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 
 export default function Session({ onClick, onSelect, session, deleteSession }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("Sessions");
   const [isOpenModal, setIsOpenModal] = useState(false);
 
   function openModal() {
@@ -25,15 +25,15 @@ export default function Session({ onClick, onSelect, session, deleteSession }) {
     <div className="day-session">
       <List style={{ textAlign: "center" }}>
         <h3>
-          {t("Sessions:session_name")}: {session.name}
+          {t("session_name")}: {session.name}
         </h3>
         <br></br>
         <h5>
-          {t("Sessions:session_description")}: {session.description}
+          {t("session_description")}: {session.description}
         </h5>
         <br></br>
         <h5>
-          {t("Sessions:session_constraints")}: {session.constraints}
+          {t("session_constraints")}: {session.constraints}
         </h5>
 
         <div>
@@ -45,7 +45,7 @@ export default function Session({ onClick, onSelect, session, deleteSession }) {
               onClick(event);
             }}
             name={"edit-session"}
-            displayText={t("Sessions:edit_button")}
+            displayText={t("edit_button")}
             variant={"contained"}
             type={"button"}
             size={"medium"}
@@ -55,7 +55,7 @@ export default function Session({ onClick, onSelect, session, deleteSession }) {
               // calls parent function to delete the cycle
               deleteSession(session);
             }}
-            displayText={t("Sessions:delete_button")}
+            displayText={t("delete_button")}
             variant={"contained"}
             type={"button"}
             color={"error"}
