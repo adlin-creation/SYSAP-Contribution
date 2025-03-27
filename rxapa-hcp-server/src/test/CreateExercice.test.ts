@@ -44,7 +44,7 @@ describe("createExercise", () => {
                 size: 1024,
                 destination: "/uploads",
                 filename: "image.jpg",
-                path: "/uploads/image.jpg",
+                path: "/images/image.jpg",
                 buffer: Buffer.from(""),
                 stream: new Readable(),
             },

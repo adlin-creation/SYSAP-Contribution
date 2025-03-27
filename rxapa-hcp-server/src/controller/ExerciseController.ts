@@ -65,7 +65,7 @@ export const createExercise = async (req: Request, res: Response) => {
 
     res.status(201).json({ message: "Exercice créé avec succès.", imageUrl });
   } catch (error: unknown) {
-    handleError(res, error, "Erreur lors de la création de l'exercice");
+    handleError(res, error, "Erreur lors de la création de l'exercice.");
   }
 };
 
