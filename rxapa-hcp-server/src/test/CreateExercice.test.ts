@@ -82,6 +82,7 @@ describe("createExercise", () => {
     expect(res.status).toHaveBeenCalledWith(201);
     expect(res.json).toHaveBeenCalledWith({
       message: "Exercice créé avec succès.",
+      imageUrl: "/images/image.jpg",
     });
   });
 

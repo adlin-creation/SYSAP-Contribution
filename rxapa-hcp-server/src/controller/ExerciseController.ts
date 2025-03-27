@@ -5,6 +5,7 @@ import fs from "fs";
 import path from "path";
 import { Request, Response } from "express";
 import { deleteFile } from "../util/file";
+import { UniqueConstraintError } from "sequelize";
 
 // Utility function to handle errors
 const handleError = (res: Response, error: unknown, message: string) => {
@@ -43,18 +44,25 @@ export const createExercise = async (req: Request, res: Response) => {
   try {
     const { name, description, category, fitnessLevel } = req.body;
 
-
+    // Check if all required fields are provided
     if (!name || !description || !category || !fitnessLevel) {
       return res.status(400).json({ message: "Tous les champs obligatoires doivent être remplis !" });
     }
 
+    // Check if exercise already exists
+    const existingExercise = await Exercise.findOne({ where: { name } });
+    if (existingExercise) {
+      return res.status(409).json({ message: "Un exercice avec ce nom existe déjà !" });
+    }
+
+    // Check if file is uploaded
     if (!req.file) {
       return res.status(400).json({ message: "Veuillez télécharger une image pour l'exercice." });
     }
 
     const imageUrl = `/images/${req.file.filename}`;
 
-    
+    // Create new exercise
     await Exercise.create({
       name,
       description,
@@ -63,8 +71,20 @@ export const createExercise = async (req: Request, res: Response) => {
       imageUrl,
     });
 
+    // Return success response
     res.status(201).json({ message: "Exercice créé avec succès.", imageUrl });
   } catch (error: unknown) {
+    // If the error is a UniqueConstraintError, return 409
+    if (error instanceof UniqueConstraintError) {
+      return res.status(409).json({ message: "Un exercice avec ce nom existe déjà !" });
+    }
+
+    // Delete the uploaded file in case of an error
+    if (req.file) {
+      deleteFile(req.file.path);
+    }
+
+    // General error handler
     handleError(res, error, "Erreur lors de la création de l'exercice.");
   }
 };
