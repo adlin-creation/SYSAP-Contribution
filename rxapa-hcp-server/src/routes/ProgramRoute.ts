@@ -48,6 +48,6 @@ router.delete(
   programController.deleteProgram
 );
 
-router.patch('/programs/:programKey/toggle', programController.toggleProgramActivation);
+router.patch('/programs/:programKey/toggle', isAuth, programController.toggleProgramActivation);
 
 export default router;
