@@ -32,7 +32,7 @@ export const createSessionRecord = async (req: Request, res: Response) => {
             });
             return res.status(400).json({
                 success: false,
-                message: 'Tous les champs obligatoires doivent être renseignés',
+                message: 'error_all_fields_required',
             });
         }
 
@@ -67,14 +67,14 @@ export const createSessionRecord = async (req: Request, res: Response) => {
         // Réponse avec les données insérées
         return res.status(201).json({
             success: true,
-            message: 'Session enregistrée avec succès',
+            message: 'success_session_recorded',
             data: result.rows[0],
         });
     } catch (err) {
         console.error('Erreur lors de l\'enregistrement de la session:', err);
         return res.status(500).json({
             success: false,
-            message: 'Erreur interne du serveur',
+            message: 'error_internal_server_error',
         });
     }
 };
@@ -93,7 +93,7 @@ export const getSessionRecords = async (req: Request, res: Response) => {
             console.warn('ID du programme manquant ou invalide.');
             return res.status(400).json({
                 success: false,
-                message: 'Un ID valide pour l\'enregistrement du programme est requis',
+                message: 'error_valid_enrollment_id_required',
             });
         }
 
@@ -113,7 +113,7 @@ export const getSessionRecords = async (req: Request, res: Response) => {
             console.info('Aucune session trouvée pour l\'ID fourni.');
             return res.status(404).json({
                 success: false,
-                message: 'Aucune session trouvée pour cet ID.',
+                message: 'error_no_session_found_id',
             });
         }
 
@@ -126,7 +126,7 @@ export const getSessionRecords = async (req: Request, res: Response) => {
         console.error('Erreur lors de la récupération des sessions:', err);
         return res.status(500).json({
             success: false,
-            message: 'Erreur interne du serveur',
+            message: 'error_internal_server_error',
         });
     }
 };

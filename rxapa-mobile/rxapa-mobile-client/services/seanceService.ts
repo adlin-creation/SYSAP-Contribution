@@ -13,12 +13,12 @@ class SeanceService {
       );
       const data = await response.json();
       if (!response.ok) {
-        throw new Error(data.message || 'Erreur lors de la récupération des exercices.');
+        throw new Error(data.message || 'error_fetching_exercises');
       }
       return { success: true, data: data.data };
     } catch (error) {
       console.error('Erreur dans SeanceService:', error);
-      return { success: false, message: 'Une erreur est survenue lors de la récupération des exercices.' };
+      return { success: false, message: 'error_while_fetching_exercises' };
     }
   }
 }
