@@ -6,8 +6,10 @@ import Constants from "../Utils/Constants";
 import "./ProgramStyles.css";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
+import ToggleProgramButton from "../Program/ToggleProgramButton";
 
-export default function Program({ onClick, onSelect, program, deleteProgram }) {
+
+export default function Program({ onClick, onSelect, program, deleteProgram, refetchPrograms }) {
   const { t } = useTranslation();
   return (
     <div className="program">
@@ -56,21 +58,28 @@ export default function Program({ onClick, onSelect, program, deleteProgram }) {
           >
             {t("Programs:delete_button")}
           </Button>
+
+          <ToggleProgramButton program={program} onToggle={refetchPrograms} />
+
         </div>
       </List>
     </div>
   );
 }
+
 Program.propTypes = {
   onClick: PropTypes.func.isRequired,
   onSelect: PropTypes.func.isRequired,
   deleteProgram: PropTypes.func.isRequired,
+  refetchPrograms: PropTypes.func.isRequired,
   program: PropTypes.shape({
     name: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     duration: PropTypes.number.isRequired,
     duration_unit: PropTypes.string.isRequired,
     image: PropTypes.string.isRequired,
+    key: PropTypes.string.isRequired, // aussi important a cause de .key dans le composant
+    actif: PropTypes.bool.isRequired, // aussi nécessaire pour le bouton Activer/Désactiver
   }).isRequired,
 };
 

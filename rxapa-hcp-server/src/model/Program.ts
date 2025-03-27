@@ -40,5 +40,10 @@ export const Program = sequelize.define("Program", {
   image: {
     type: dataTypes.STRING, // Stocke soit une URL, soit un chemin de fichier
     allowNull: true,
+  },
+  actif: {
+    type: dataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: true, // ou false selon la logique par défaut
   }
 });
