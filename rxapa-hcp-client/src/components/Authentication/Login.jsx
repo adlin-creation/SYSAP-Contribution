@@ -10,6 +10,7 @@ import "./Auth.css";
 import PropTypes from "prop-types";
 import LanguageSwitcher from "../LanguageSwitcher/LanguageSwitcher";
 import { useTranslation } from "react-i18next";
+import SetNewPassword from "./SetNewPassword";
 
 export default function Login({ setToken }) {
   const [isSignup, setIsSignup] = useState(false);
@@ -117,6 +118,11 @@ export default function Login({ setToken }) {
               <Button type="link" onClick={register}>
                 {t("Authentication:register_button")}
               </Button>
+
+              <Button type="link" onClick={() => navigate("/set-new-password")}>
+                Mot de passe oublie
+              </Button>
+
             </div>
           </Form>
         </div>
