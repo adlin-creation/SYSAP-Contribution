@@ -112,7 +112,7 @@ function EvaluationPACE() {
     const balanceScore = calculateBalanceScore(formData);
 
     // Position debout (si B ≥ 5 OU Assis = 40 cm)
-    if (isStanding && balanceScore >= 5) {
+    if (isStanding) {
       if (distance > 35) return 6;
       if (distance >= 27) return 5;
       if (distance >= 15) return 4;
