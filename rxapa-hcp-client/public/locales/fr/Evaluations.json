@@ -10,16 +10,15 @@
   "button_pace": "Évaluation PACE",
   "button_path": "Évaluation PATH",
   "button_match": "Évaluation MATCH",
-  
-  "sectionA_title": "A. CARDIO-MUSCULAIRE",
+  "sectionA_title": "CARDIO-MUSCULAIRE",
   "chair_test_label": "Test de la chaise en 30 secondes",
   "with_support": "Avec appui",
   "without_support": "Sans appui",
   "stand_count": "Nombre de levers",
+  "stand_count_placeholder": "Entrez le nombre de levers",
   "error_stand_required": "Le nombre de levers est requis",
   "error_stand_invalid": "Veuillez entrer un nombre valide",
-  
-  "sectionB_title": "B. ÉQUILIBRE",
+  "sectionB_title": "ÉQUILIBRE",
   "balance_instructions": "Réalisez les équilibres dans l'ordre. Le score sera attribué selon l'équilibre le plus grand obtenu",
   "feet_together": "1. Pieds joints",
   "feet_semi_tandem": "2. Pieds semi tandem",
@@ -29,8 +28,7 @@
   "tandem": "Tandem",
   "one_foot": "Unipodal",
   "time_placeholder": "Entrez le temps en secondes",
-  
-  "sectionC_title": "C. MOBILITÉ & STABILITÉ DU TRONC",
+  "sectionC_title": "MOBILITÉ & STABILITÉ DU TRONC",
   "frt_label": "Functional Reach Test (FRT)",
   "sitting": "Assis",
   "standing": "Debout",
@@ -38,14 +36,18 @@
   "distance_label": "Distance (cm)",
   "error_distance_required": "La distance est requise",
   "distance_placeholder": "Entrez distance en cm",
-  
   "sectionD_title": "VITESSE DE MARCHE",
   "walk_test_label": "Test 4 mètres - Temps nécessaire pour marcher 4-mètres",
+  "patient_can_walk": "Le patient peut marcher",
+  "patient_cannot_walk": "Le patient ne peut pas marcher",
+  "walking_time_label": "Temps de marche sur 4 mètres",
   "error_walktime_required": "Le temps de marche est requis",
   "error_walktime_invalid": "Veuillez entrer un temps de marche valide",
   "walktime_placeholder": "Entrez temps en secondes",
-  "walk_speed": "Vitesse de marche",
-  
+  "walking_speed": "Vitesse de marche",
+  "walking_objective": "Objectif de marche",
+  "minutes_per_day": "minutes par jour",
+  "walking_ability_to_work": "Capacité à marcher à travailler",
   "modal_results_title": "Résultats",
   "modal_results_eval": "Évaluation PACE",
   "individual_scores": "Scores individuels:",
@@ -55,14 +57,12 @@
   "total_score": "Score Total",
   "level": "Niveau",
   "recommended_program": "Programme recommandé",
-  "speed_calculation": "Walking speed",
-  "walk_objective": "Walking objective:",
-
+  "speed_calculation": "Vitesse de marche",
+  "walk_objective": "Objectif de marche",
   "button_close": "Fermer",
   "button_confirm": "Confirmer",
   "button_cancel": "Annuler",
   "button_submit": "Soumettre",
-  
   "color_brown": "MARRON",
   "color_green": "VERT",
   "color_orange": "ORANGE",
@@ -70,9 +70,8 @@
   "color_blue": "BLEU",
   "color_yellow": "JAUNE",
   "color_red": "ROUGE",
-
-  "success_title": "Success",
-  "success_message": "Assessment saved successfully",
-  "error_title": "Error",
-  "error_message": "Failed to save assessment data"
-}
+  "success_title": "Succès",
+  "success_message": "Évaluation enregistrée avec succès",
+  "error_title": "Erreur",
+  "error_message": "Échec de l'enregistrement des données d'évaluation"
+  }
