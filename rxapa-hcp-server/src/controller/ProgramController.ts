@@ -35,19 +35,13 @@ exports.createProgram = [
     const imageUrl = req.body.imageUrl;
     const sessions = req.body;
 
-    console.log("Parsed sessions:", sessions);
 
     try {
-      console.log("Body received:", req.body);
-      console.log("File received:", req.file);
-      console.log("Sessions received:", req.body.sessions);
 
       const rawSessions = req.body.sessions;
-      console.log("Sessions received (raw):", rawSessions);
 
       // Vérification que les sessions sont bien dans un format tableau
       const sessions = Array.isArray(rawSessions) ? rawSessions : [];
-      console.log("Sessions après parsing :", sessions);
 
       if (!sessions.length) {
         return res.status(400).json({ message: "No valide session given" });
@@ -58,7 +52,6 @@ exports.createProgram = [
       if (req.file) {
         imagePath = `/images/${req.file.filename}`; //Stockage local
       } else if (imageUrl) {
-        console.log("Received Image URL:", imageUrl);
         imagePath = imageUrl; // Si l'utilisateur a fourni un lien
       } else {
         return res
@@ -347,49 +340,174 @@ function initializePhaseState(programPhases: any) {
 }
 
 /**
- * Updates an exisitng program.
+ * Updates an exisitng program and the sessions allocates to them.
  */
-exports.updateProgram = async (req: any, res: any, next: any) => {
-  const programKey = req.params.programKey;
-  const name = req.body.name;
-  const description = req.body.description;
-  const duration = req.body.duration;
+exports.updateProgram = [
+  validateProgram,
+  async (req: any, res: any, next: any) => {
+    const programKey = req.params.programKey;
+    const { name, description, duration, duration_unit, sessions } = req.body;
+    let program;
 
-  let program;
+    try {
+      // Trouver le programme par sa clé unique
+      program = await Program.findOne({ where: { key: programKey } });
+      if (!program) {
+        return res.status(404).json({ message: "Program not found" });
+      }
 
-  try {
-    program = await Program.findOne({
-      where: { key: programKey },
-    });
-  } catch (error: any) {
-    if (!error.statusCode) {
-      error.statusCode = 500;
+    } catch (error: any) {
+      return res.status(500).json({ message: "Error: Can't find the program" });
     }
-    res
-      .status(error.statusCode)
-      .json({ message: `Error: Can't find the weekly cycle` });
+
+    try {
+      const rawSessions = sessions || [];
+
+      // Vérification que les sessions sont bien dans un format tableau
+      const validSessions = Array.isArray(rawSessions) ? rawSessions : [];
+      const filteredSessions = validSessions.filter(
+        (session) => session !== "undefined" && session !== null
+      );
+
+      if (!filteredSessions.length) {
+        return res.status(400).json({ message: "No valid session given" });
+      }
+
+      let imagePath = "";
+
+      if (req.file) {
+        imagePath = `/images/${req.file.filename}`;
+      } else {
+        return res.status(400).json({ message: "No image provided" });
+      }
+
+      // Mise à jour des informations du programme
+      await Program.update(
+        {
+          name,
+          description,
+          duration,
+          duration_unit,
+          image: imagePath,
+          updatedAt: new Date(),
+        },
+        {
+          where: { key: programKey },
+        }
+      );
+
+      // Mettre à jour les sessions existantes
+      if (filteredSessions && filteredSessions.length > 0) {
+        if (!program?.id) {
+          console.error("Program ID is undefined");
+          return res.status(400).json({ message: "Program ID is undefined" });
+        }
+
+        try {
+          // Récupérer toutes les sessions actuelles liées à ce programme
+          const existingSessions: { sessionId: number }[] =
+            await ProgramSession.findAll({
+              where: { programId: program.id },
+            });
+
+          // Extraire uniquement les sessionId existants
+          const existingSessionIds = existingSessions.map(
+            (session) => session.sessionId
+          );
+
+          // Identifier les sessions à SUPPRIMER (celles qui ne sont plus sélectionnées)
+          const sessionsToDelete = existingSessionIds.filter(
+            (id) => !filteredSessions.includes(id)
+          );
+
+          // Supprimer les sessions non sélectionnées
+          if (sessionsToDelete.length > 0) {
+            await ProgramSession.destroy({
+              where: {
+                programId: program.id,
+                sessionId: sessionsToDelete,
+              },
+            });
+          }
+
+          // Traiter les sessions sélectionnées (ajout/mise à jour)
+          for (const sessionId of filteredSessions) {
+            const existingSession = await ProgramSession.findOne({
+              where: { programId: program.id, sessionId },
+            });
+
+            if (existingSession) {
+              // Mettre à jour la session existante (ajoute d'autres champs si nécessaire)
+              await ProgramSession.update(
+                { sessionId },
+                { where: { programId: program.id, sessionId } }
+              );
+            } else {
+              // Créer la session si elle n'existe pas
+              await ProgramSession.create({ programId: program.id, sessionId });
+            }
+          }
+        } catch (error) {
+          console.error("Error updating sessions:", error);
+          return res.status(500).json({ message: "Internal server error" });
+        }
+      }
+
+      res.status(200).json({ message: "The program has been updated" });
+    } catch (error: any) {
+      console.error(error);
+      return res.status(500).json({ message: "Failed to update the program" });
+    }
     return res;
-  }
+  },
+];
 
-  // Use sequelize (Database Framework) to update the exercise day session
+/**
+ * Get session associate to a program
+ */
+
+exports.getSessionsByProgram = async (req: any, res: any, next: any) => {
   try {
-    await program.update({
-      name: name,
-      description: description,
-      duration: duration,
+    const { id } = req.params;
+
+    // Récupérer les sessions associées au programme
+    const sessions = await ProgramSession.findAll({
+      where: { programId: id },
+      attributes: ["sessionId"],
     });
 
-    res.status(200).json({ message: `The program has been updated` });
-    // Otherwise, the action was not successful. Hence, let the user know that
-    // his request was unsuccessful.
-  } catch (error: any) {
-    if (!error.statusCode) {
-      error.statusCode = 500;
+    res.json(sessions.map((ps: { sessionId: number }) => ps.sessionId));
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Erreur lors de la récupération des sessions." });
+  }
+};
+
+/**
+ * Get a program details with associate sessions
+ */
+
+exports.getProgramDetails = async (req: any, res: any, next: any) => {
+  try {
+    const programId = req.params.key;
+
+    // Récupérer le programme avec ses sessions associées
+    const program = await Program.findByPk(programId, {
+      include: {
+        model: Session,
+        through: { attributes: [] },
+      },
+    });
+
+    if (!program) {
+      return res.status(404).json({ message: "Programme non trouvé" });
     }
 
-    return res
-      .status(error.statusCode)
-      .json({ message: `Failed to update the program` });
+    res.json(program);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Erreur serveur" });
   }
 };
 
