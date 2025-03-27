@@ -21,30 +21,30 @@ export default function HomeScreen() {
           source={require('../assets/images/Logo-Rx-APA-Allonge-sans-texte-Bleu-sur-fond-blanc-removebg-preview.png')}
           style={styles.logo}
         />
-        <Text style={styles.greeting}>{t('Home:bienvenue')}, John Doe !</Text>
+        <Text style={styles.greeting}>{t('Home:title_welcome')}, John Doe !</Text>
       </View>
 
       {/* Menu sous forme de cartes */}
       <View style={styles.menuContainer}>
         <TouchableOpacity style={styles.card} onPress={() => router.push('/programme')}>
           <MaterialIcons name="fitness-center" size={30} color="#1B365D" />
-          <Text style={styles.cardText}>{t('Home:mon_programme')}</Text>
+          <Text style={styles.cardText}>{t('Home:title_my_program')}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.card} onPress={() => router.push('/seance')}>
           <Ionicons name="timer-outline" size={30} color="#1B365D" />
-          <Text style={styles.cardText}>{t('Home:ma_seance')}</Text>
+          <Text style={styles.cardText}>{t('Home:title_my_session')}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.card} onPress={() => router.push('/progression')}>
           <Ionicons name="bar-chart-outline" size={30} color="#1B365D" />
-          <Text style={styles.cardText}>{t('Home:ma_progression')}</Text>
+          <Text style={styles.cardText}>{t('Home:title_my_progress')}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.card} onPress={() => router.push('/configuration')}>
           <Ionicons name="settings-outline" size={30} color="#1B365D" />
-          <Text style={styles.cardText}>{t('Home:configuration')}</Text>
+          <Text style={styles.cardText}>{t('Home:title_settings')}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.card} onPress={() => router.push('/cahier-de-suivi')}>
           <MaterialIcons name="assignment" size={30} color="#1B365D" />
-          <Text style={styles.cardText}>{t('Home:cahier_suivi')}</Text>
+          <Text style={styles.cardText}>{t('Home:title_tracking_notebook')}</Text>
         </TouchableOpacity>
       </View>
 

@@ -23,6 +23,11 @@ export default function BlocDetails({ blocKey, refetchBlocs }) {
   const [isErrorMessage, setIsErrorMessage] = useState(false);
   const [message, setMessage] = useState("");
 
+  // State to manage confirmation modal before saving
+  const [pendingData, setPendingData] = useState(null);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+
+
   function addExercise() {
     setIsAddExercise(true);
   }
@@ -119,10 +124,23 @@ export default function BlocDetails({ blocKey, refetchBlocs }) {
       .catch((err) => openModal(err.response.data.message, true));
   };
 
+  // Function to validate before saving updates
+  const handleValidationBeforeSubmit = (data) => {
+    setPendingData(data);
+    setIsConfirmModalOpen(true);
+  };
+
+  const confirmUpdate = () => {
+    onSubmit(pendingData);
+    setIsConfirmModalOpen(false);
+    setPendingData(null);
+  };
+
+
   return (
     <Row justify="center" align="middle" style={{ minHeight: "50vh" }}>
       <Col span={12}>
-        <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
+        <Form layout="vertical" onFinish={handleSubmit(handleValidationBeforeSubmit)}>
           <Form.Item label={t("Blocs:new_bloc_name")}>
             <Controller
               name="name"
@@ -194,6 +212,25 @@ export default function BlocDetails({ blocKey, refetchBlocs }) {
             <p style={{ color: isErrorMessage ? "red" : "green" }}>{message}</p>
           </Modal>
         )}
+
+        <Modal // Confirmation modal before saving bloc changes
+          title={t("Blocs:confirm_changes_title")}
+          open={isConfirmModalOpen}
+          onOk={confirmUpdate}
+          onCancel={() => setIsConfirmModalOpen(false)}
+          cancelText={t("Blocs:cancel_button")}
+        >
+          <p>{t("Blocs:confirm_changes_message")}</p>
+          <ul>
+            <li>
+              <strong>{t("Blocs:name_label")}:</strong> {pendingData?.name}
+            </li>
+            <li>
+              <strong>{t("Blocs:description_label")}:</strong> {pendingData?.description}
+            </li>
+          </ul>
+        </Modal>
+
       </Col>
     </Row>
   );

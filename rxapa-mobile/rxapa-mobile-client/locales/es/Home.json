@@ -1,8 +1,8 @@
 {
-    "bienvenue": "Bienvenido",
-    "mon_programme": "Mi programa",
-    "ma_seance": "Mi sesión",
-    "ma_progression": "Mi progresión",
-    "configuration": "Configuración",
-    "cahier_suivi": "Cuaderno de seguimiento"
+    "title_welcome": "Bienvenido",
+    "title_my_program": "Mi programa",
+    "title_my_session": "Mi sesión",
+    "title_my_progress": "Mi progresión",
+    "title_settings": "Configuración",
+    "title_tracking_notebook": "Cuaderno de seguimiento"
 }
