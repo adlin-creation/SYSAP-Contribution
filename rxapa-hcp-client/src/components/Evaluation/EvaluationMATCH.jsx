@@ -2,6 +2,7 @@ import React from "react";
 import { Row, Col, Input, Radio, Form } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import Evaluation from "./Evaluation";
+import { exportMatchPdf } from "./ExportEvaluationPdf";
 import PropTypes from "prop-types";
 
 function EvaluationMATCH() {
@@ -366,6 +367,7 @@ function EvaluationMATCH() {
       renderFormFields={renderFormFields}
       buildPayload={buildPayload}
       buildModalContent={buildModalContent}
+      exportPdf={exportMatchPdf}
     />
   );
 }
