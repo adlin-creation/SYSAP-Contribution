@@ -5,6 +5,8 @@ import fs from "fs";
 import path from "path";
 import { Request, Response } from "express";
 import { deleteFile } from "../util/file";
+import { UniqueConstraintError } from "sequelize";
+
 
 // Utility function to handle errors
 const handleError = (res: Response, error: unknown, message: string) => {
@@ -21,20 +23,19 @@ const handleError = (res: Response, error: unknown, message: string) => {
     });
   }
 };
-
+const IMAGES_DIR = path.resolve(__dirname, "..", "images");
 /**
  * Returns an exercise image.
  */
 export const getImage = (req: Request, res: Response) => {
-  const imageName = req.params.imageName;
-  const imagePath = path.join(__dirname, "..", "images", imageName);
+  const { imageName } = req.params;
+  const imagePath = path.join(__dirname, "./images", imageName);
 
-  if (fs.existsSync(imagePath)) {
-    const readImageStream = fs.createReadStream(imagePath);
-    readImageStream.pipe(res);
-  } else {
-    res.status(404).json({ message: "Image non trouvée" });
-  }
+  res.sendFile(imagePath, (err) => {
+    if (err) {
+      res.status(404).json({ message: "Image not found" });
+    }
+  });
 };
 
 /**
@@ -44,12 +45,30 @@ export const createExercise = async (req: Request, res: Response) => {
   const { name, description, category, fitnessLevel, videoUrl } = req.body;
   const exerciseImageFile = req.file;
 
-  if (!name || !category || !fitnessLevel) {
+  if (!name || !description || !category || !fitnessLevel) {
     return res.status(400).json({ message: "Tous les champs obligatoires doivent être remplis !" });
   }
 
-  const imageUrl = exerciseImageFile?.path ?? "";
+  // Check if exercise already exists
+  const existingExercise = await Exercise.findOne({ where: { name } });
+  if (existingExercise) {
+    return res.status(409).json({ message: "Un exercice avec ce nom existe déjà !" });
+  }
 
+  // Validate video URL if provided
+  const videoUrlRegex = /^(https?:\/\/)?(www\.)?(youtube|vimeo)\.(com|be)\/(watch\?v=|.*\/)([a-zA-Z0-9_-]{11,})$/;
+  if (videoUrl && !videoUrlRegex.test(videoUrl)) {
+    return res.status(400).json({ message: "URL vidéo invalide." });
+  }
+
+  // Check if file is uploaded
+  if (!req.file) {
+    return res.status(400).json({ message: "Veuillez télécharger une image pour l'exercice." });
+  }
+
+  const imageUrl = `/images/${req.file.filename}`;
+
+  // Create new exercise
   try {
     await Exercise.create({
       name,
@@ -60,29 +79,23 @@ export const createExercise = async (req: Request, res: Response) => {
       imageUrl,
     });
 
-    res.status(201).json({ message: "Exercice créé avec succès." });
+    // Return success response
+    res.status(201).json({ message: "Exercice créé avec succès.", imageUrl });
   } catch (error: unknown) {
-    // Supprimer le fichier uniquement s'il existe
-    if (imageUrl && fs.existsSync(imageUrl)) {
-      try {
-        deleteFile(imageUrl); // Nettoyer uniquement les fichiers locaux
-      } catch (fileError) {
-        console.error("Erreur lors de la suppression du fichier :", fileError);
-      }
+    if (error instanceof UniqueConstraintError) {
+      return res.status(409).json({ message: "Un exercice avec ce nom existe déjà !" });
     }
 
-    // Gestion des erreurs
-    if (error instanceof Error) {
-      if (error.name === "SequelizeUniqueConstraintError") {
-        res.status(409).json({ message: "Un exercice avec ce nom existe déjà !" });
-      } else {
-        res.status(500).json({ message: "Erreur lors de la création de l'exercice.", error: error.message });
-      }
-    } else {
-      res.status(500).json({ message: "Erreur inconnue lors de la création de l'exercice." });
+    // Delete the uploaded file in case of an error
+    if (req.file) {
+      deleteFile(req.file.path);
     }
+
+    // General error handler
+    handleError(res, error, "Erreur lors de la création de l'exercice.");
   }
 };
+
 
 /**
  * Updates an existing Exercise.
@@ -227,7 +240,7 @@ export const deleteExercise = async (req: Request, res: Response) => {
     await exercise.destroy();
 
     // Utilisation de l'optional chaining pour vérifier imageUrl
-    if (exercise.imageUrl?.startsWith("/uploads")) {
+    if (exercise.imageUrl?.startsWith("/images")) {
       deleteFile(exercise.imageUrl); // Nettoyer uniquement les fichiers locaux
     }
 

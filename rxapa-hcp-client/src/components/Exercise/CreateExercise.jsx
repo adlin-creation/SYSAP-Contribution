@@ -63,52 +63,40 @@ export default function CreateExercise(props) {
       return;
     }
 
-    // Traduire la catégorie sélectionnée en français
-    const categoryInFrench = categoryTranslation[selectedExerciseCategory] || selectedExerciseCategory;
-    const fitnessLevelInFrench = fitnessLevelTranslation[selectedFitnessLevel] || selectedFitnessLevel;
+  const categoryInFrench = categoryTranslation[selectedExerciseCategory] || selectedExerciseCategory;
+  const fitnessLevelInFrench = fitnessLevelTranslation[selectedFitnessLevel] || selectedFitnessLevel;
 
-    let formData = new FormData();
-    const combinedData = {
-      name: name,
-      description: description,
-      category: categoryInFrench,  
-      fitnessLevel: fitnessLevelInFrench,
-      videoUrl: videoUrl,
-      exerciseImage: exerciseImage,
-    };
+  let formData = new FormData();
+  formData.append("name", name);
+  formData.append("description", description);
+  formData.append("category", categoryInFrench);
+  formData.append("fitnessLevel", fitnessLevelInFrench);
+  formData.append("videoUrl",videoUrl);
 
-    console.log("Submitting Data:", combinedData);
-  
-    if (exerciseImage) {
-      formData.append("image", exerciseImage);
-    }
-    formData.append("name", combinedData.name);
-    formData.append("description", combinedData.description);
-    formData.append("category", combinedData.category);
-    formData.append("fitnessLevel", combinedData.fitnessLevel);
-    formData.append("exerciseVideo", combinedData.exerciseVideo);
+  if (exerciseImage) {
+    formData.append("file", exerciseImage);  
+  }
+  axios
+    .post(`${Constants.SERVER_URL}/create-exercise`, formData, {
+      headers: {
+        "Authorization": "Bearer " + token,
+        "Content-Type": "multipart/form-data", 
+      },
+    })
+    .then((res) => {
+      openModal(res.data.message, false);
+      props.refetchExercises();
+    })
+    .catch((err) => {
+      const errorMessage = err.response
+        ? err.response.data.message
+        : "An error occurred";
+      openModal(errorMessage, true);
+    });
+};
 
-    axios
-      .post(`${Constants.SERVER_URL}/create-exercise`, combinedData, {
-        headers: {
-          Authorization: "Bearer " + token,
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((res) => {
-        openModal(res.data.message, false);
-        props.refetchExercises();
-      })
-      .catch((err) => {
-        const errorMessage = err.response
-          ? err.response.data.message
-          : "An error occurred";
-        openModal(errorMessage, true);
-      });
-  };
 
   function onChangeImage(event) {
-    console.log("The image is: ", event.target.files[0]);
     const image = event.target.files[0];
     setExerciseImage(image);
   }
