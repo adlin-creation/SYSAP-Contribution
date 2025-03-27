@@ -7,7 +7,7 @@ const router = express.Router();
 
 const exerciseController = require("../controller/ExerciseController");
 
-router.post('/create-exercise', upload.single("file"), createExercise);
+router.post('/create-exercise',isAuth, upload.single("file"), createExercise);
 router.post("/add/version", isAuth, exerciseController.addExerciseVersion);
 
 router.post(
