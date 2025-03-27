@@ -583,3 +583,24 @@ export const searchPrograms = async (req: any, res: any, next: any) => {
       .json({ message: "Erreur serveur lors de la recherche des programmes" });
   }
 };
+
+exports.toggleProgramActivation = async (req: any, res: any) => {
+  const programKey = req.params.programKey;
+  const { actif } = req.body; // true pour activer, false pour désactiver
+
+  try {
+    const program = await Program.findOne({ where: { key: programKey } });
+
+    if (!program) {
+      return res.status(404).json({ message: "Programme introuvable." });
+    }
+
+    await program.update({ actif });
+
+    const action = actif ? "activé" : "désactivé";
+    res.status(200).json({ message: `Le programme a été ${action}.` });
+  } catch (error: any) {
+    console.error("Erreur lors de la mise à jour :", error);
+    res.status(500).json({ message: "Erreur lors de l’activation/désactivation." });
+  }
+};
