@@ -18,8 +18,6 @@ export default function Exercise({ exercise, onClick, onSelect }) {
     onClick(event);
     onSelect(exercise);
   };
-
-  console.log("Image URL:", imageUrl);
   return (
     <Card
       hoverable

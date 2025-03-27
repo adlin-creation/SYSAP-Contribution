@@ -97,12 +97,7 @@ export default function CreateExercise(props) {
 
 
   function onChangeImage(event) {
-    console.log("The image is: ", event.target.files[0]);
     const image = event.target.files[0];
-    setExerciseImage(image);
-    console.log("Selected Image:", image);
-    console.log("Image Type:", image.type);
-    console.log("Image Size:", image.size);
     setExerciseImage(image);
   }
 
