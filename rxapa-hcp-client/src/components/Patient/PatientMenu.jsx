@@ -51,9 +51,7 @@ export default function PatientMenu({ role }) {
 
   // Fonction principale pour gérer la recuperation en cascade jusqu'aux aides soignants
   const handleGetCaregivers = async (patient) => {
-    console.log(patient);
     try {
-
       const response = await axios.get(`${Constants.SERVER_URL}/patientDetails/${patient.id}`, {
         headers: { Authorization: "Bearer " + token },
       });
@@ -112,11 +110,8 @@ export default function PatientMenu({ role }) {
             <Button
               type="primary"
               onClick={() => {
-                // Fonction pour ajouter un nouveau caregiver
                 modal.destroy();
-                handleAddCargiver(patient);
-                // Appeler votre fonction pour ajouter un caregiver ici
-                // Par exemple: openAddCaregiverModal(patient);
+                handleAddCargiver(patient)
               }}
             >
               {t("Ajouter un aide  soignant")}

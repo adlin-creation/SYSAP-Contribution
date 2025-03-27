@@ -77,15 +77,9 @@ exports.addCaregiver = async (req: any, res: any, next: any) => {
     ? existingBindedProgram.ProgramId
     : null;
 
-
-
   const { caregiver, programEnrollment } = req.body;
   const { programId, startDate, endDate } = programEnrollment;
   const { email } = caregiver;
-
-  console.log(program);
-  console.log(programId);
-
 
   const transaction = await sequelize.transaction();
 
@@ -130,13 +124,11 @@ exports.addCaregiver = async (req: any, res: any, next: any) => {
       },
       { transaction }
     );
-    console.log(createdProgramEnrollement);
 
     const existingCaregiver = await Caregiver.findOne({
       where: { email: caregiver.email },
     });
     if (existingCaregiver) {
-      // Annulation de la transaction et retour d'une erreur
       await transaction.rollback();
       return res.status(409).json({
         message: `Existing caregiver with this email: ${caregiver.email}`,
@@ -149,9 +141,6 @@ exports.addCaregiver = async (req: any, res: any, next: any) => {
 
     const createdCaregiver = await Caregiver.create(caregiver, { transaction });
 
-    console.log(createdCaregiver);
-
-
     const createdPatientCargiver = await Patient_Caregiver.create(
       {
         date: new Date(),
@@ -161,7 +150,6 @@ exports.addCaregiver = async (req: any, res: any, next: any) => {
       },
       { transaction }
     );
-    console.log(createdPatientCargiver);
 
     await transaction.commit();
 
