@@ -792,8 +792,6 @@ export const exportPacePdf = async(evaluationData, token) => {
     }
 
     // C - MOBILITÉ & STABILITÉ DU TRONC 
-
-    console.log(evaluationData);
     firstPage.drawText(`Distance réussi: ${evaluationData.frtDistance} cm`, {x: 230, y: 407, size: 10});
 
     switch (evaluationData.frtSitting) {
