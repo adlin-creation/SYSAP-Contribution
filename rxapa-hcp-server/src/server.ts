@@ -70,15 +70,6 @@ app.use("/images", (req, res, next) => {
 }));
 
 app.use(userRoutes);
-
-// Static Image Serving
-const mimeTypes = {
-  'jpg': 'image/jpeg',
-  'jpeg': 'image/jpeg',
-  'png': 'image/png',
-  'webp': 'image/webp'
-};
-
 app.use("/images", (req, res, next) => {
   res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
   res.setHeader("Access-Control-Allow-Origin", "*");

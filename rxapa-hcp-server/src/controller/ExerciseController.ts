@@ -7,6 +7,7 @@ import { Request, Response } from "express";
 import { deleteFile } from "../util/file";
 import { UniqueConstraintError } from "sequelize";
 
+
 // Utility function to handle errors
 const handleError = (res: Response, error: unknown, message: string) => {
   if (error instanceof Error) {
@@ -44,25 +45,31 @@ export const createExercise = async (req: Request, res: Response) => {
   const { name, description, category, fitnessLevel, videoUrl } = req.body;
   const exerciseImageFile = req.file;
 
-    
-    if (!name || !description || !category || !fitnessLevel) {
-      return res.status(400).json({ message: "Tous les champs obligatoires doivent être remplis !" });
-    }
+  if (!name || !description || !category || !fitnessLevel) {
+    return res.status(400).json({ message: "Tous les champs obligatoires doivent être remplis !" });
+  }
 
-    // Check if exercise already exists
-    const existingExercise = await Exercise.findOne({ where: { name } });
-    if (existingExercise) {
-      return res.status(409).json({ message: "Un exercice avec ce nom existe déjà !" });
-    }
+  // Check if exercise already exists
+  const existingExercise = await Exercise.findOne({ where: { name } });
+  if (existingExercise) {
+    return res.status(409).json({ message: "Un exercice avec ce nom existe déjà !" });
+  }
 
-    // Check if file is uploaded
-    if (!req.file) {
-      return res.status(400).json({ message: "Veuillez télécharger une image pour l'exercice." });
-    }
+  // Validate video URL if provided
+  const videoUrlRegex = /^(https?:\/\/)?(www\.)?(youtube|vimeo)\.(com|be)\/(watch\?v=|.*\/)([a-zA-Z0-9_-]{11,})$/;
+  if (videoUrl && !videoUrlRegex.test(videoUrl)) {
+    return res.status(400).json({ message: "URL vidéo invalide." });
+  }
 
-    const imageUrl = `/images/${req.file.filename}`;
+  // Check if file is uploaded
+  if (!req.file) {
+    return res.status(400).json({ message: "Veuillez télécharger une image pour l'exercice." });
+  }
 
-    // Create new exercise
+  const imageUrl = `/images/${req.file.filename}`;
+
+  // Create new exercise
+  try {
     await Exercise.create({
       name,
       description,
@@ -75,7 +82,6 @@ export const createExercise = async (req: Request, res: Response) => {
     // Return success response
     res.status(201).json({ message: "Exercice créé avec succès.", imageUrl });
   } catch (error: unknown) {
-    // If the error is a UniqueConstraintError, return 409
     if (error instanceof UniqueConstraintError) {
       return res.status(409).json({ message: "Un exercice avec ce nom existe déjà !" });
     }
@@ -89,6 +95,7 @@ export const createExercise = async (req: Request, res: Response) => {
     handleError(res, error, "Erreur lors de la création de l'exercice.");
   }
 };
+
 
 /**
  * Updates an existing Exercise.
