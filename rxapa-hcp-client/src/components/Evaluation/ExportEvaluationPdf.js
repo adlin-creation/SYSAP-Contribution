@@ -263,7 +263,6 @@ export const exportMatchPdf = async(evaluationData, token) => {
   }
 }
 
-
 export const exportPathPdf = async(evaluationData, token) => {
   try {
     const url = '/evaluation_pdf/Arbre_decisionnel_PATH.pdf';
@@ -793,6 +792,30 @@ export const exportPacePdf = async(evaluationData, token) => {
     }
 
     // C - MOBILITÉ & STABILITÉ DU TRONC 
+
+    console.log(evaluationData);
+    firstPage.drawText(`Distance réussi: ${evaluationData.frtDistance} cm`, {x: 230, y: 407, size: 10});
+
+    switch (evaluationData.frtSitting) {
+      case "sitting":
+        firstPage.drawLine({
+          start: {x: 385, y: 408},
+          end: {x: 415, y: 408},
+          thickness: 2,
+          color: rgb(1, 0, 0)
+        });
+        break;
+      case "standing":
+        firstPage.drawLine({
+          start: {x: 498, y: 408},
+          end: {x: 537, y: 408},
+          thickness: 2,
+          color: rgb(1, 0, 0)
+        });
+        break;
+      default:
+    }
+
     switch (evaluationData.scores.mobilite) {
       case 0:
         firstPage.drawCircle({
