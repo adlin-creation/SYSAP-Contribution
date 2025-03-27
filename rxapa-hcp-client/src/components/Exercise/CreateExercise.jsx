@@ -17,8 +17,11 @@ export default function CreateExercise(props) {
   const { t } = useTranslation();
 
   const [selectedExerciseCategory, setSelectedExerciseCategory] = useState(null);
-  const [selectedFitnessLevel, setSelectedFitnessLevel] = useState(null); // Assurez-vous que la valeur initiale est null
+  const [selectedFitnessLevel, setSelectedFitnessLevel] = useState(null); 
   const [exerciseImage, setExerciseImage] = useState(null);
+
+  // Expression régulière pour vérifier un lien vidéo valide
+  const videoUrlRegex = /^(https?:\/\/)?(www\.)?(youtube|vimeo)\.(com|be)\/(watch\?v=|.*\/)([a-zA-Z0-9_-]{11,})$/;
 
   // Correspondance des catégories en anglais vers le français
   const categoryTranslation = {
@@ -51,8 +54,14 @@ export default function CreateExercise(props) {
     setIsErrorMessage(false);
   }
 
- const onSubmit = (data) => {
-  const { name, description } = data;
+  const onSubmit = (data) => {
+    const { name, description, videoUrl } = data;
+
+    // Vérification du lien vidéo
+    if (!videoUrlRegex.test(videoUrl)) {
+      openModal(t("Exercises:invalid_video_link"), true); // Afficher un message d'erreur si le lien est invalide
+      return;
+    }
 
   const categoryInFrench = categoryTranslation[selectedExerciseCategory] || selectedExerciseCategory;
   const fitnessLevelInFrench = fitnessLevelTranslation[selectedFitnessLevel] || selectedFitnessLevel;
@@ -62,6 +71,7 @@ export default function CreateExercise(props) {
   formData.append("description", description);
   formData.append("category", categoryInFrench);
   formData.append("fitnessLevel", fitnessLevelInFrench);
+  formData.append("videoUrl",videoUrl);
 
   if (exerciseImage) {
     formData.append("file", exerciseImage);  
@@ -166,16 +176,32 @@ export default function CreateExercise(props) {
                 )}
               />
             </Form.Item>
+
+            <Form.Item label={t("Exercises:enter_exercise_video")} className="input-element">
+              <Controller
+                name="videoUrl"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <Input
+                    onChange={onChange}
+                    value={value}
+                    placeholder={t("Exercises:exercise_video")}
+                    required
+                  />
+                )}
+              />
+            </Form.Item>
   
             <Form.Item label={t("Exercises:enter_exercise_image")} className="input-element">
               <input type="file" accept="image/*" onChange={onChangeImage} />
             </Form.Item>
-  
+
             <Form.Item className="input-element">
               <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
                 {t("Exercises:submit_button")}
               </Button>
             </Form.Item>
+
           </Form>
   
           {isOpenModal && (

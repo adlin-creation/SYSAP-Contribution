@@ -8,6 +8,7 @@ import "./Styles.css";
 import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
 export default function CreateSession(props) {
   const { t } = useTranslation();
@@ -121,3 +122,6 @@ export default function CreateSession(props) {
     </Col>
   );
 }
+CreateSession.propTypes = {
+  refetchSessions: PropTypes.func.isRequired,
+};

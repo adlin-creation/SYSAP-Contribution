@@ -33,5 +33,10 @@
   "required_label": "مطلوب",
   "cancel_button": "إلغاء",
   "close_button": "إغلاق",
-  "back_button": "رجوع"
+  "back_button": "رجوع",
+
+  "confirm_changes_title": "تأكيد التعديلات",
+  "confirm_changes_message": "هل تريد حقًا حفظ هذه التعديلات؟",
+  "confirm_add_exercise_title": "تأكيد إضافة التمرين",
+  "confirm_add_exercise_message": "هل تريد حقًا إضافة هذا التمرين إلى هذا الكتلة؟"
 }

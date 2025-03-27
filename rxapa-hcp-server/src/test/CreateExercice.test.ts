@@ -53,11 +53,53 @@ describe("createExercise", () => {
       }) as jest.MockedFunction<Response['status']>,
     };
   });
+    beforeEach(() => {
+        req = {
+            body: {
+                name: "Push-up",
+                description: "Un exercice de force au poids du corps qui sollicite principalement les pectoraux, les triceps et les épaules.",
+                category: "Force",
+                fitnessLevel: "Intermédiaire",
+                videoUrl: "https://www.youtube.com/watch?v=8CE4ijWlQ18"
+            },
+            file: {
+                fieldname: "exerciseImage",
+                originalname: "image.jpg",
+                encoding: "7bit",
+                mimetype: "image/jpeg",
+                size: 1024,
+                destination: "/uploads",
+                filename: "image.jpg",
+                path: "/uploads/image.jpg",
+                buffer: Buffer.from(""),
+                stream: new Readable(),
+            },
+        };
+        res = {
+            statusCode: 500,
+            json: jest.fn() as jest.MockedFunction<Response['json']>,
+            status: jest.fn((code: number) => {
+                (res as any).statusCode = code;
+                return res;
+            }) as jest.MockedFunction<Response['status']>,
+        };
+    });
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
+    it("Should create an exercise successfully", async () => {
+        mockCreate.mockResolvedValue({
+            id: 1,
+            key: "550e8400-e29b-41d4-a716-446655440000",
+            name: "Push-up",
+            description: "Un exercice de force au poids du corps qui sollicite principalement les pectoraux, les triceps et les épaules.",
+            category: "Force",
+            fitnessLevel: "Intermédiaire",
+            videoUrl: "https://www.youtube.com/watch?v=8CE4ijWlQ18",
+            imageUrl: "/uploads/image.jpg",
+        });
   it("Should create an exercise successfully", async () => {
     mockCreate.mockResolvedValue({
       id: 1,
@@ -71,6 +113,14 @@ describe("createExercise", () => {
 
     await createExercise(req as Request, res as Response);
 
+        expect(mockCreate).toHaveBeenCalledWith({
+            name: "Push-up",
+            description: "Un exercice de force au poids du corps qui sollicite principalement les pectoraux, les triceps et les épaules.",
+            category: "Force",
+            fitnessLevel: "Intermédiaire",
+            videoUrl: "https://www.youtube.com/watch?v=8CE4ijWlQ18",
+            imageUrl: "/uploads/image.jpg",
+        });
     expect(mockCreate).toHaveBeenCalledWith({
       name: "Push-up",
       description: "Un exercice de force au poids du corps qui sollicite principalement les pectoraux, les triceps et les épaules.",
@@ -91,6 +141,14 @@ describe("createExercise", () => {
 
     await createExercise(req as Request, res as Response);
 
+        expect(mockCreate).toHaveBeenCalledWith({
+            name: "Push-up",
+            description: "Un exercice de force au poids du corps qui sollicite principalement les pectoraux, les triceps et les épaules.",
+            category: "Force",
+            fitnessLevel: "Intermédiaire",
+            videoUrl: "https://www.youtube.com/watch?v=8CE4ijWlQ18",
+            imageUrl: "/uploads/image.jpg",
+        });
     expect(mockCreate).toHaveBeenCalledWith({
       name: "Push-up",
       description: "Un exercice de force au poids du corps qui sollicite principalement les pectoraux, les triceps et les épaules.",

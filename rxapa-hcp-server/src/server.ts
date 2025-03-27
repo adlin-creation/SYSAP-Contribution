@@ -1,11 +1,11 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
+import cookieParser from "cookie-parser";
 const path = require("path");
 
 import { createAssociations } from "./model/Association";
-
 import { initDatabase } from "./util/database";
-
 import sessionRoutes from "./routes/SessionRoute";
 import blocRoutes from "./routes/BlocRoute";
 import exerciseRoutes from "./routes/ExerciseRoute";
@@ -27,10 +27,18 @@ const app = express();
 // //Reads .env file and makes it accessible via process.env
 dotenv.config();
 
+app.use(cookieParser()); // Ajouté pour lire les cookies côté backend (CSRF)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use((req, res, next) => {
+app.use(
+  cors({
+    origin: "http://localhost:3000", 
+    credentials: true, // Autorise les cookies + en-têtes personnalisés
+  })
+);
+
+/*app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
     "Access-Control-Allow-Methods",
@@ -38,7 +46,28 @@ app.use((req, res, next) => {
   );
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
   next();
-});
+});*/
+
+// Static Image Serving
+const mimeTypes = {
+  'jpg': 'image/jpeg',
+  'jpeg': 'image/jpeg',
+  'png': 'image/png',
+  'webp': 'image/webp'
+};
+
+app.use("/images", (req, res, next) => {
+  res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  next();
+}, express.static("images", {
+  setHeaders: (res, filePath) => {
+    const ext = path.extname(filePath).toLowerCase().slice(1) as keyof typeof mimeTypes; // Déclare ext comme clé de mimeTypes
+    if (mimeTypes[ext]) {
+      res.set('Content-Type', mimeTypes[ext]);
+    }
+  }
+}));
 
 app.use(userRoutes);
 

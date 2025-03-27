@@ -5,6 +5,7 @@ import axios from "axios";
 import useToken from "../Authentication/useToken";
 import Constants from "../Utils/Constants";
 import { InfoCircleOutlined } from "@ant-design/icons";
+import PropTypes from "prop-types";
 
 function EvaluationPATH({ onSubmit }) {
   const { patientId } = useParams();
@@ -407,5 +408,7 @@ function EvaluationPATH({ onSubmit }) {
     </Row>
   );
 }
-
+EvaluationPATH.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};
 export default EvaluationPATH;

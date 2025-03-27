@@ -41,10 +41,10 @@ export const getImage = (req: Request, res: Response) => {
  * Creates a new Exercise.
  */
 export const createExercise = async (req: Request, res: Response) => {
-  try {
-    const { name, description, category, fitnessLevel } = req.body;
+  const { name, description, category, fitnessLevel, videoUrl } = req.body;
+  const exerciseImageFile = req.file;
 
-    // Check if all required fields are provided
+    
     if (!name || !description || !category || !fitnessLevel) {
       return res.status(400).json({ message: "Tous les champs obligatoires doivent être remplis !" });
     }
@@ -68,6 +68,7 @@ export const createExercise = async (req: Request, res: Response) => {
       description,
       category,
       fitnessLevel,
+      videoUrl,
       imageUrl,
     });
 
@@ -94,7 +95,7 @@ export const createExercise = async (req: Request, res: Response) => {
  */
 export const updateExercise = async (req: Request, res: Response) => {
   const exerciseKey = req.params.exerciseKey;
-  const { name, description, category, fitnessLevel } = req.body;
+  const { name, description, category, fitnessLevel, videoUrl } = req.body;
 
   try {
     const exercise = await Exercise.findOne({ where: { key: exerciseKey } });
@@ -107,10 +108,12 @@ export const updateExercise = async (req: Request, res: Response) => {
       description: description || exercise.description,
       category: category || exercise.category,
       fitnessLevel: fitnessLevel || exercise.fitnessLevel,
+      videoUrl: videoUrl || exercise.videoUrl,
     });
 
     res.status(200).json({ message: "Exercice mis à jour avec succès." });
   } catch (error: unknown) {
+
 
     if (error instanceof Error) {
       if (error.name === "SequelizeUniqueConstraintError") {
@@ -118,7 +121,13 @@ export const updateExercise = async (req: Request, res: Response) => {
       } else {
         res.status(500).json({ message: "Erreur lors de la mise à jour de l'exercice.", error: error.message });
       }
+      if (error.name === "SequelizeUniqueConstraintError") {
+        res.status(409).json({ message: "Un exercice avec ce nom existe déjà !" });
+      } else {
+        res.status(500).json({ message: "Erreur lors de la mise à jour de l'exercice.", error: error.message });
+      }
     } else {
+      res.status(500).json({ message: "Erreur inconnue lors de la mise à jour de l'exercice." });
       res.status(500).json({ message: "Erreur inconnue lors de la mise à jour de l'exercice." });
     }
   }

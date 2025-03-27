@@ -14,6 +14,9 @@ import useToken from "../Authentication/useToken";
 import FilterExercise from "../Exercise/FilterExercise";
 import Modal from "../Modal/Modal";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
+import { Modal as AntdModal } from "antd";
+
 
 let exerciseNames = [];
 
@@ -31,6 +34,10 @@ export default function AddExercise({
   const [isErrorMessage, setIsErrorMessage] = useState(false);
   const [message, setMessage] = useState("");
   const { t } = useTranslation();
+
+  // Validation before submitting the exercise
+  const [pendingExerciseData, setPendingExerciseData] = useState(null);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
   const handleChange = (event) => {
     setIsExerciseRequired(event.target.checked);
@@ -52,6 +59,30 @@ export default function AddExercise({
     control,
     // formState: { errors },
   } = useForm();
+
+  // Intermediate function to validate before submission
+  const handleValidationBeforeSubmit = (data) => {
+    const { numberOfSeries, numberOfRepetition, restingInstruction, minutes } = data;
+
+    const combinedData = {
+      numberOfSeries: Number(numberOfSeries),
+      numberOfRepetition: Number(numberOfRepetition),
+      restingInstruction: restingInstruction,
+      minutes: minutes,
+      required: isExerciseRequired,
+      exerciseName: selectedExerciseName,
+    };
+
+    setPendingExerciseData(combinedData);
+    setIsConfirmModalOpen(true);
+  };
+
+  const confirmExerciseSubmission = () => {
+    onSubmit(pendingExerciseData);
+    setIsConfirmModalOpen(false);
+    setPendingExerciseData(null);
+  };
+
 
   // data contains rank and number of series
   const onSubmit = (data) => {
@@ -167,7 +198,7 @@ export default function AddExercise({
         />
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(handleValidationBeforeSubmit)}>
         <div className="input-element">
           <h5>{t("Blocs:please_enter_number_of_series")}</h5>
           <Controller
@@ -288,6 +319,30 @@ export default function AddExercise({
           isErrorMessage={isErrorMessage}
         />
       )}
+      
+      <AntdModal // Confirmation modal before submitting the exercise
+        title={t("Blocs:confirm_add_exercise_title")}
+        open={isConfirmModalOpen}
+        onOk={confirmExerciseSubmission}
+        onCancel={() => setIsConfirmModalOpen(false)}
+        cancelText={t("Blocs:cancel_button")}
+      >
+        <p>{t("Blocs:confirm_add_exercise_message")}</p>
+        <ul>
+          <li><strong>{t("Blocs:name_label")}:</strong> {pendingExerciseData?.exerciseName}</li>
+          <li><strong>{t("Blocs:number_of_series_label")}:</strong> {pendingExerciseData?.numberOfSeries}</li>
+          <li><strong>{t("Blocs:number_of_repetitions_label")}:</strong> {pendingExerciseData?.numberOfRepetition}</li>
+          <li><strong>{t("Blocs:number_of_minutes_label")}:</strong> {pendingExerciseData?.minutes}</li>
+          <li><strong>{t("Blocs:resting_instruction_label")}:</strong> {pendingExerciseData?.restingInstruction}</li>
+        </ul>
+      </AntdModal>
     </div>
   );
+  
 }
+AddExercise.propTypes = {
+  setIsAddExercise: PropTypes.func.isRequired,
+  refetchBloc: PropTypes.func.isRequired,
+  bloc: PropTypes.object.isRequired,
+  allExercises: PropTypes.array.isRequired,
+};

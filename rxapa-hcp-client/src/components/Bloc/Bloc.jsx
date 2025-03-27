@@ -4,6 +4,7 @@ import { DeleteOutlined } from "@ant-design/icons";
 import image from "../../images/bloc-exercise.jpeg";
 import "./Styles.css";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
 const { Meta } = Card;
 const { Title, Text } = Typography;
@@ -49,3 +50,9 @@ export default function Bloc({ bloc, onClick, onSelect, deleteBloc }) {
     </Card>
   );
 }
+Bloc.propTypes = {
+  bloc: PropTypes.object.isRequired,
+  onClick: PropTypes.func.isRequired,
+  onSelect: PropTypes.func.isRequired,
+  deleteBloc: PropTypes.func.isRequired,
+};

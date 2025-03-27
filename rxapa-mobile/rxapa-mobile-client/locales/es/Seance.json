@@ -1,8 +1,9 @@
 {
-    "err_id_programme": "Su identificador de programa no se encuentra. Por favor, autentíquese.",
-    "err_aucun_exercice": "No se encontraron ejercicios para esta sesión.",
-    "err_recuperation_exercices": "Ocurrió un error al recuperar los ejercicios.",
-    "chargement_exercices": "Cargando ejercicios...",
-    "liste_exercices": "Lista de ejercicios",
-    "aucun_exercice": "No hay ejercicios disponibles."
+    "error_invalid_enrollment_code": "Su identificador de programa no se encuentra. Por favor, autentíquese.",
+    "error_exercise_not_found": "No se encontraron ejercicios para esta sesión.",
+    "error_fetching_exercises": "Ocurrió un error al recuperar los ejercicios.",
+   
+    "title_loading_exercises": "Cargando ejercicios...",
+    "title_exercise_list": "Lista de ejercicios",
+    "title_no_exercise": "No hay ejercicios disponibles."
 }
