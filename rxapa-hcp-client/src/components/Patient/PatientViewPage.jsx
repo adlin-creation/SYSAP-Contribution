@@ -7,6 +7,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
 import { useTranslation } from "react-i18next";
 import Constants from "../Utils/Constants";
 import "./Styles.css"; // Import the CSS file
+import PropTypes from "prop-types";
 
 export default function PatientData({ patient, onClose }) {
   const { t } = useTranslation();
@@ -221,3 +222,19 @@ export default function PatientData({ patient, onClose }) {
     </div>
   );
 }
+PatientData.propTypes = {
+  patient: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    firstname: PropTypes.string.isRequired,
+    lastname: PropTypes.string.isRequired,
+    email: PropTypes.string,
+    phoneNumber: PropTypes.string,
+    status: PropTypes.string,
+    numberOfPrograms: PropTypes.number,
+  }).isRequired,
+  onClose: PropTypes.func,
+};
+
+PatientData.defaultProps = {
+  onClose: () => {},
+};

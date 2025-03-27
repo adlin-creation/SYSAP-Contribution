@@ -21,7 +21,7 @@ function KinesiologistDetails({
     formState: { errors },
   } = useForm();
   const { token } = useToken();
-  const { t } = useTranslation();
+  const { t } = useTranslation("Professionals");
 
   // Pré-remplir le formulaire avec les données du kinésiologue
   useEffect(() => {
@@ -51,8 +51,8 @@ function KinesiologistDetails({
       .then(() => {
         refetchKinesiologists();
         AntModal.success({
-          content: t("Professionals:Kinesiologist:updating_success_msg"),
-          okText: t("Professionals:Kinesiologist:close_button"),
+          content: t("Kinesiologist.updating_success_msg"),
+          okText: t("Kinesiologist.close_button"),
           centered: true,
           onOk: () => {
             onClose();
@@ -61,10 +61,11 @@ function KinesiologistDetails({
       })
       .catch((err) => {
         const errorMessage =
-          err.response?.data?.message || "Error updating kinesiologist";
+          t(`Backend:${err.response?.data?.message}`) ||
+          t("Kinesiologist.error_updating_kinesiologist");
         AntModal.error({
           content: errorMessage,
-          okText: t("Professionals:Doctors:close_button"),
+          okText: t("Kinesiologist.close_button"),
           centered: true,
         });
       });
@@ -78,7 +79,7 @@ function KinesiologistDetails({
             {/* First Name and Last Name fields */}
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Kinesiologist:first_name_label")}
+                label={t("Kinesiologist.first_name_label")}
                 required
                 validateStatus={errors.firstname ? "error" : ""}
                 help={errors.firstname?.message}
@@ -87,10 +88,10 @@ function KinesiologistDetails({
                   name="firstname"
                   control={control}
                   rules={{
-                    required: "Le prénom est obligatoire",
+                    required: t("Kinesiologist.required_first_name_error"),
                     minLength: {
                       value: 2,
-                      message: "Le prénom doit contenir au moins 2 caractères",
+                      message: t("Kinesiologist.first_name_min_length_error"),
                     },
                   }}
                   render={({ field }) => <Input {...field} />}
@@ -99,7 +100,7 @@ function KinesiologistDetails({
             </Col>
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Kinesiologist:last_name_label")}
+                label={t("Kinesiologist.last_name_label")}
                 required
                 validateStatus={errors.lastname ? "error" : ""}
                 help={errors.lastname?.message}
@@ -108,10 +109,10 @@ function KinesiologistDetails({
                   name="lastname"
                   control={control}
                   rules={{
-                    required: "Le nom est obligatoire",
+                    required: t("Kinesiologist.required_last_name_error"),
                     minLength: {
                       value: 2,
-                      message: "Le nom doit contenir au moins 2 caractères",
+                      message: t("Kinesiologist.last_name_min_length_error"),
                     },
                   }}
                   render={({ field }) => <Input {...field} />}
@@ -124,7 +125,7 @@ function KinesiologistDetails({
             {/* Email and Phone Number fields */}
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Kinesiologist:email")}
+                label={t("Kinesiologist.email")}
                 required
                 validateStatus={errors.email ? "error" : ""}
                 help={errors.email?.message}
@@ -133,10 +134,10 @@ function KinesiologistDetails({
                   name="email"
                   control={control}
                   rules={{
-                    required: "L'email est obligatoire",
+                    required: t("Kinesiologist.required_email_error"),
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: "Format d'email invalide",
+                      message: t("Kinesiologist.invalid_email_format_error"),
                     },
                   }}
                   render={({ field }) => <Input type="email" {...field} />}
@@ -145,7 +146,7 @@ function KinesiologistDetails({
             </Col>
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Kinesiologist:phone_number")}
+                label={t("Kinesiologist.phone_number")}
                 required
                 validateStatus={errors.phoneNumber ? "error" : ""}
                 help={errors.phoneNumber?.message}
@@ -154,10 +155,10 @@ function KinesiologistDetails({
                   name="phoneNumber"
                   control={control}
                   rules={{
-                    required: "Le numéro de téléphone est obligatoire",
+                    required: t("Kinesiologist.required_phone_number_error"),
                     pattern: {
                       value: /^[0-9+\s-]{8,}$/,
-                      message: "Format de numéro de téléphone invalide",
+                      message: t("Kinesiologist.invalid_phone_number_error"),
                     },
                   }}
                   render={({ field }) => <Input {...field} />}
@@ -169,7 +170,7 @@ function KinesiologistDetails({
           <Row gutter={16}>
             {/* Status field */}
             <Col span={12}>
-              <Form.Item label={t("Professionals:Kinesiologist:status")}>
+              <Form.Item label={t("Kinesiologist.status")}>
                 <Controller
                   name="active"
                   control={control}
@@ -177,12 +178,8 @@ function KinesiologistDetails({
                     <Switch
                       checked={value}
                       onChange={onChange}
-                      checkedChildren={t(
-                        "Professionals:Kinesiologist:active_status"
-                      )}
-                      unCheckedChildren={t(
-                        "Professionals:Kinesiologist:inactive_status"
-                      )}
+                      checkedChildren={t("Kinesiologist.active_status")}
+                      unCheckedChildren={t("Kinesiologist.inactive_status")}
                     />
                   )}
                 />
@@ -192,7 +189,7 @@ function KinesiologistDetails({
 
           <Form.Item>
             <Button type="primary" htmlType="submit" icon={<SaveOutlined />}>
-              {t("Professionals:Kinesiologist:update_kinesiologist_button")}
+              {t("Kinesiologist.update_kinesiologist_button")}
             </Button>
           </Form.Item>
         </Form>

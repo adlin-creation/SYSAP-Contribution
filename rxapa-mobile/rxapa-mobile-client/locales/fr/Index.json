@@ -1,14 +1,18 @@
 {
-    "entrer_code": "Veuillez entrer un code.",
-    "entrer_votre_code": "Entrez votre code",
-    "erreur_code_incorrect": "Le code saisi est incorrect. Veuillez réessayer.",
-    "authentification": "AUTHENTIFICATION",
-    "saisir_code_personnel": "Veuillez saisir votre code personnel",
-    "connexion": "CONNEXION",
-    "aucun_code_perso": "Je n'ai pas le code personnel",
-    "question_besoin_aide": "Besoin d'aide ?",
-    "contact_aide_code": "Si vous n'avez pas le code personnel ou si vous l'avez oublié, veuillez contacter :",
-    "contact_it": "Le département TI :",
-    "contact_kine": "Votre kinésiologue pour obtenir un code valide.",
-    "fermer": "Fermer"
+    "error_enter_code": "Veuillez entrer un code.",
+    "error_incorrect_code": "Le code saisi est incorrect. Veuillez réessayer.",
+
+    "button_no_code": "Je n'ai pas le code personnel",
+    "button_close": "Fermer",
+
+    "info_enter_code": "Veuillez saisir votre code personnel",
+
+    "placeholder_enter_code": "Entrez votre code",
+    
+    "title_authentication": "AUTHENTIFICATION",
+    "title_login": "CONNEXION",
+    "title_need_help": "Besoin d'aide ?",
+    "title_contact_info": "Si vous n'avez pas le code personnel ou si vous l'avez oublié, veuillez contacter :",
+    "title_contact_it_department": "Le département TI :",
+    "title_contact_kinesiologist": "Votre kinésiologue pour obtenir un code valide."
 }

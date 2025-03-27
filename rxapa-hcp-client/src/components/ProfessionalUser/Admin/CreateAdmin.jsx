@@ -14,7 +14,7 @@ import Constants from "../../Utils/Constants";
 import useToken from "../../Authentication/useToken";
 import PropTypes from "prop-types";
 import "./Styles.css";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 function CreateAdmin({ refetchAdmins }) {
   const {
@@ -24,6 +24,7 @@ function CreateAdmin({ refetchAdmins }) {
     formState: { errors },
   } = useForm();
   const { token } = useToken();
+  const { t } = useTranslation("Professionals");
 
   const onSubmit = (data) => {
     const adminData = {
@@ -38,12 +39,12 @@ function CreateAdmin({ refetchAdmins }) {
       })
       .then((res) => {
         refetchAdmins();
-        openModal(t("Professionals:Admins:creating_success_msg"), false);
+        openModal(t("Admins.creating_success_msg"), false);
       })
       .catch((err) =>
         openModal(
           t(`Backend:${err.response?.data?.message}`) ||
-            t("Professionals:Admins:creating_error_msg"),
+            t("Admins.creating_error_msg"),
           true
         )
       );
@@ -52,7 +53,7 @@ function CreateAdmin({ refetchAdmins }) {
   const openModal = (message, isError) => {
     AntModal[isError ? "error" : "success"]({
       content: message,
-      okText: t("Professionals:Admins:close_button"),
+      okText: t("Admins.close_button"),
       centered: true,
       onOk: () => {
         if (!isError) {
@@ -74,7 +75,7 @@ function CreateAdmin({ refetchAdmins }) {
       // Met à jour le champ password avec le mot de passe généré
       reset({ ...control._formValues, password: generatedPassword });
     } catch (err) {
-      openModal(t("Professionals:Admins:generating_password_error_msg"), true);
+      openModal(t("Admins.generating_password_error_msg"), true);
     }
   };
 
@@ -85,7 +86,7 @@ function CreateAdmin({ refetchAdmins }) {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Admins:first_name_label")}
+                label={t("Admins.first_name_label")}
                 required
                 validateStatus={errors.firstname ? "error" : ""}
                 help={errors.firstname?.message}
@@ -94,22 +95,16 @@ function CreateAdmin({ refetchAdmins }) {
                   name="firstname"
                   control={control}
                   rules={{
-                    required: t(
-                      "Professionals:Admins:required_first_name_error"
-                    ),
+                    required: t("Admins.required_first_name_error"),
                     minLength: {
                       value: 2,
-                      message: t(
-                        "Professionals:Admins:first_name_min_length_error"
-                      ),
+                      message: t("Admins.first_name_min_length_error"),
                     },
                   }}
                   render={({ field }) => (
                     <Input
                       {...field}
-                      placeholder={t(
-                        "Professionals:Admins:enter_first_name_placeholder"
-                      )}
+                      placeholder={t("Admins.enter_first_name_placeholder")}
                     />
                   )}
                 />
@@ -117,7 +112,7 @@ function CreateAdmin({ refetchAdmins }) {
             </Col>
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Admins:last_name_label")}
+                label={t("Admins.last_name_label")}
                 required
                 validateStatus={errors.lastname ? "error" : ""}
                 help={errors.lastname?.message}
@@ -126,20 +121,16 @@ function CreateAdmin({ refetchAdmins }) {
                   name="lastname"
                   control={control}
                   rules={{
-                    required: t(
-                      "Professionals:Admins:required_last_name_error"
-                    ),
+                    required: t("Admins.required_last_name_error"),
                     minLength: {
                       value: 2,
-                      message: t(
-                        "Professionals:Admins:last_name_min_length_error"
-                      ),
+                      message: t("Admins.last_name_min_length_error"),
                     },
                   }}
                   render={({ field }) => (
                     <Input
                       {...field}
-                      placeholder={t("Professionals:Admins:enter_last_name")}
+                      placeholder={t("Admins.enter_last_name")}
                     />
                   )}
                 />
@@ -150,7 +141,7 @@ function CreateAdmin({ refetchAdmins }) {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Admins:email")}
+                label={t("Admins.email")}
                 required
                 validateStatus={errors.email ? "error" : ""}
                 help={errors.email?.message}
@@ -159,20 +150,16 @@ function CreateAdmin({ refetchAdmins }) {
                   name="email"
                   control={control}
                   rules={{
-                    required: t("Professionals:Admins:required_email_error"),
+                    required: t("Admins.required_email_error"),
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: t(
-                        "Professionals:Admins:invalid_email_format_error"
-                      ),
+                      message: t("Admins.invalid_email_format_error"),
                     },
                   }}
                   render={({ field }) => (
                     <Input
                       {...field}
-                      placeholder={t(
-                        "Professionals:Admins:enter_email_placeholder"
-                      )}
+                      placeholder={t("Admins.enter_email_placeholder")}
                     />
                   )}
                 />
@@ -180,7 +167,7 @@ function CreateAdmin({ refetchAdmins }) {
             </Col>
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Admins:confirm_email_label")}
+                label={t("Admins.confirm_email_label")}
                 required
                 validateStatus={errors.confirmEmail ? "error" : ""}
                 help={errors.confirmEmail?.message}
@@ -189,19 +176,15 @@ function CreateAdmin({ refetchAdmins }) {
                   name="confirmEmail"
                   control={control}
                   rules={{
-                    required: t(
-                      "Professionals:Admins:required_email_confirmation_error"
-                    ),
+                    required: t("Admins.required_email_confirmation_error"),
                     validate: (value) =>
                       value === control._formValues.email ||
-                      t("Professionals:Admins:email_mismatch_error"),
+                      t("Admins.email_mismatch_error"),
                   }}
                   render={({ field }) => (
                     <Input
                       {...field}
-                      placeholder={t(
-                        "Professionals:Admins:confirm_email_placeholder"
-                      )}
+                      placeholder={t("Admins.confirm_email_placeholder")}
                     />
                   )}
                 />
@@ -212,7 +195,7 @@ function CreateAdmin({ refetchAdmins }) {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Admins:phone_number")}
+                label={t("Admins.phone_number")}
                 required
                 validateStatus={errors.phoneNumber ? "error" : ""}
                 help={errors.phoneNumber?.message}
@@ -221,22 +204,16 @@ function CreateAdmin({ refetchAdmins }) {
                   name="phoneNumber"
                   control={control}
                   rules={{
-                    required: t(
-                      "Professionals:Admins:required_phone_number_error"
-                    ),
+                    required: t("Admins.required_phone_number_error"),
                     pattern: {
                       value: /^[0-9+\s-]{8,}$/,
-                      message: t(
-                        "Professionals:Admins:invalid_phone_number_error"
-                      ),
+                      message: t("Admins.invalid_phone_number_error"),
                     },
                   }}
                   render={({ field }) => (
                     <Input
                       {...field}
-                      placeholder={t(
-                        "Professionals:Admins:phone_number_placeholder"
-                      )}
+                      placeholder={t("Admins.phone_number_placeholder")}
                     />
                   )}
                 />
@@ -247,7 +224,7 @@ function CreateAdmin({ refetchAdmins }) {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Admins:password_label")}
+                label={t("Admins.password_label")}
                 required
                 validateStatus={errors.password ? "error" : ""}
                 help={errors.password?.message}
@@ -257,32 +234,24 @@ function CreateAdmin({ refetchAdmins }) {
                     name="password"
                     control={control}
                     rules={{
-                      required: t(
-                        "Professionals:Admins:required_password_error"
-                      ),
+                      required: t("Admins.required_password_error"),
                       minLength: {
                         value: 8,
-                        message: t(
-                          "Professionals:Admins:password_min_length_error"
-                        ),
+                        message: t("Admins.password_min_length_error"),
                       },
                       pattern: {
                         value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-                        message: t(
-                          "Professionals:Admins:password_requirements_error"
-                        ),
+                        message: t("Admins.password_requirements_error"),
                       },
                     }}
                     render={({ field }) => (
                       <>
                         <Input.Password
                           {...field}
-                          placeholder={t(
-                            "Professionals:Admins:password_placeholder"
-                          )}
+                          placeholder={t("Admins.password_placeholder")}
                           style={{ width: "calc(100% - 40px)" }}
                         />
-                        <Tooltip title="Générer un mot de passe">
+                        <Tooltip title={t("Admins.generate_password_tooltip")}>
                           <Button
                             icon={<KeyOutlined />}
                             onClick={generatePassword}
@@ -298,7 +267,7 @@ function CreateAdmin({ refetchAdmins }) {
 
           <Form.Item className="submit-button">
             <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
-              {t("Professionals:Admins:create_admin_button")}
+              {t("Admins.create_admin_button")}
             </Button>
           </Form.Item>
         </Form>

@@ -1,18 +1,21 @@
 import React from "react";
-import { Row, Col, Input, Button, Form, Modal, Select } from "antd";
+import { Row, Col, Input, Button, Form, Modal, Select, Typography } from "antd";
 import { CheckOutlined } from "@ant-design/icons";
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
 import useToken from "../Authentication/useToken";
 import Constants from "../Utils/Constants";
 import { useTranslation } from "react-i18next";
-import PropTypes from "prop-types"; // Import PropTypes
+import PropTypes from "prop-types";
+import ReactPlayer from "react-player";
 import "./Styles.css";
 
 export default function ExerciseDetail({ exercise, refetchExercises }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("Exercises");
   const { handleSubmit, control, setValue } = useForm();
   const { token } = useToken();
+
+  const [currentExercise, setCurrentExercise] = React.useState(exercise);
 
   const [isEditing, setIsEditing] = React.useState(false);
   const [isOpenModal, setIsOpenModal] = React.useState(false);
@@ -21,14 +24,12 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isSaveClicked, setIsSaveClicked] = React.useState(false);
 
-  // Function to open the modal with a message
   function openModal(message, isError) {
     setMessage(message);
     setIsErrorMessage(isError);
     setIsOpenModal(true);
   }
 
-  // Function to close the modal
   function closeModal() {
     setIsOpenModal(false);
     setMessage("");
@@ -36,26 +37,27 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
     setIsSaveClicked(false);
   }
 
-  // Submit handler
   const onSubmit = (data) => {
     if (isSaveClicked) {
       setIsSubmitting(true);
-
       axios
-        .put(`${Constants.SERVER_URL}/update-exercise/${exercise.key}`, data, {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        })
+        .put(
+          `${Constants.SERVER_URL}/update-exercise/${currentExercise.key}`,
+          data,
+          {
+            headers: { Authorization: "Bearer " + token },
+          }
+        )
         .then((res) => {
+          setCurrentExercise((prev) => ({ ...prev, ...data }));
           refetchExercises();
-          openModal(t(`Backend:${res.data.message}`), false);
+          openModal(res.data.message, false);
           setIsSubmitting(false);
+          setIsEditing(false);
         })
         .catch((err) => {
           openModal(
-            t(`Backend:${err.response?.data?.message}`) ||
-              t("unexpected_error"),
+            t(`Backend:${err.response?.data?.message}`) || t("error_message"),
             true
           );
           setIsSubmitting(false);
@@ -63,157 +65,195 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
     }
   };
 
-  // Function to enable editing mode and pre-fill fields
   const startEditing = () => {
     setIsEditing(true);
-    setValue("name", exercise.name);
-    setValue("description", exercise.description);
-    setValue("category", exercise.category);
-    setValue("fitnessLevel", exercise.fitnessLevel);
+    setValue("name", currentExercise.name);
+    setValue("description", currentExercise.description);
+    setValue("category", currentExercise.category);
+    setValue("fitnessLevel", currentExercise.fitnessLevel);
+    setValue("videoUrl", currentExercise.videoUrl);
   };
 
   return (
-    <Row justify="center" align="middle" style={{ minHeight: "50vh" }}>
-      <Col span={12}>
-        <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
-          {/* Field for exercise name */}
-          <Form.Item label={t("Exercises:exercise_name")}>
-            <Controller
-              name="name"
-              control={control}
-              defaultValue={exercise.name}
-              render={({ field: { onChange, value } }) => (
-                <Input
-                  onChange={onChange}
-                  value={value}
-                  placeholder={t("Exercises:exercise_name")}
-                  required
-                  disabled={!isEditing}
-                />
-              )}
-            />
-          </Form.Item>
+    <div className="exercise-detail-container">
+      {/* Titre de l'exercice */}
+      <Typography.Title level={1} className="exercise-title">
+        {currentExercise.name}
+      </Typography.Title>
 
-          {/* Field for category */}
-          <Form.Item label={t("Exercises:category_placeholder")}>
-            <Controller
-              name="category"
-              control={control}
-              defaultValue={exercise.category}
-              render={({ field: { onChange, value } }) => (
-                <Select
-                  onChange={onChange}
-                  value={value}
-                  placeholder={t("Exercises:category_placeholder")}
-                  style={{ width: "100%" }}
-                  allowClear
-                  disabled={!isEditing}
+      {/* Conteneur principal pour la vidéo et les informations */}
+      <Row gutter={40} style={{ width: "100%" }}>
+        {/* Colonne pour la vidéo */}
+        <Col span={12} className="video-container">
+          {currentExercise.videoUrl && (
+            <div className="video-wrapper">
+              <ReactPlayer
+                url={currentExercise.videoUrl}
+                controls
+                width="100%"
+                height="100%"
+                className="react-player"
+              />
+            </div>
+          )}
+        </Col>
+
+        {/* Colonne pour les informations */}
+        <Col span={12} className="info-container">
+          <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
+            {/* Nom de l'exercice */}
+            <Form.Item
+              label={t("exercise_name")}
+              style={{ fontWeight: "bold" }}
+            >
+              <Controller
+                name="name"
+                control={control}
+                defaultValue={currentExercise.name}
+                render={({ field }) => (
+                  <Input {...field} required disabled={!isEditing} />
+                )}
+              />
+            </Form.Item>
+
+            {/* Catégorie de l'exercice */}
+            <Form.Item
+              label={t("category_placeholder")}
+              style={{ fontWeight: "bold" }}
+            >
+              <Controller
+                name="category"
+                control={control}
+                defaultValue={currentExercise.category}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    style={{ width: "100%" }}
+                    allowClear
+                    disabled={!isEditing}
+                  >
+                    {[
+                      t("aerobic"),
+                      t("strength"),
+                      t("endurance"),
+                      t("flexibility"),
+                      t("balance"),
+                    ].map((category) => (
+                      <Select.Option key={category} value={category}>
+                        {category}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                )}
+              />
+            </Form.Item>
+
+            {/* Niveau de fitness */}
+            <Form.Item
+              label={t("fitness_level_placeholder")}
+              style={{ fontWeight: "bold" }}
+            >
+              <Controller
+                name="fitnessLevel"
+                control={control}
+                defaultValue={currentExercise.fitnessLevel}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    style={{ width: "100%" }}
+                    allowClear
+                    disabled={!isEditing}
+                  >
+                    {[t("easy"), t("intermediate"), t("advanced")].map(
+                      (level) => (
+                        <Select.Option key={level} value={level}>
+                          {level}
+                        </Select.Option>
+                      )
+                    )}
+                  </Select>
+                )}
+              />
+            </Form.Item>
+
+            {/* Description de l'exercice */}
+            <Form.Item
+              label={t("exercise_description")}
+              style={{ fontWeight: "bold" }}
+            >
+              <Controller
+                name="description"
+                control={control}
+                defaultValue={currentExercise.description}
+                render={({ field }) => (
+                  <Input.TextArea
+                    {...field}
+                    rows={4}
+                    required
+                    disabled={!isEditing}
+                  />
+                )}
+              />
+            </Form.Item>
+
+            {/* URL de la vidéo */}
+            <Form.Item
+              label={t("exercise_video")}
+              style={{ fontWeight: "bold" }}
+            >
+              <Controller
+                name="videoUrl"
+                control={control}
+                defaultValue={currentExercise.videoUrl}
+                render={({ field }) => (
+                  <Input {...field} required disabled={!isEditing} />
+                )}
+              />
+            </Form.Item>
+
+            {/* Boutons d'édition et de sauvegarde */}
+            <Form.Item>
+              {!isEditing ? (
+                <Button type="primary" onClick={startEditing}>
+                  {t("modify")}
+                </Button>
+              ) : (
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  icon={<CheckOutlined />}
+                  loading={isSubmitting}
+                  onClick={() => setIsSaveClicked(true)}
                 >
-                  {[
-                    t("Exercises:aerobic"),
-                    t("Exercises:strength"),
-                    t("Exercises:endurance"),
-                    t("Exercises:flexibility"),
-                    t("Exercises:balance"),
-                  ].map((category) => (
-                    <Select.Option key={category} value={category}>
-                      {category}
-                    </Select.Option>
-                  ))}
-                </Select>
+                  {t("save")}
+                </Button>
               )}
-            />
-          </Form.Item>
+            </Form.Item>
+          </Form>
 
-          {/* Field for fitness level */}
-          <Form.Item label={t("Exercises:fitness_level_placeholder")}>
-            <Controller
-              name="fitnessLevel"
-              control={control}
-              defaultValue={exercise.fitnessLevel}
-              render={({ field: { onChange, value } }) => (
-                <Select
-                  onChange={onChange}
-                  value={value}
-                  placeholder={t("Exercises:fitness_level_placeholder")}
-                  style={{ width: "100%" }}
-                  allowClear
-                  disabled={!isEditing}
-                >
-                  {[
-                    t("Exercises:easy"),
-                    t("Exercises:intermediate"),
-                    t("Exercises:advanced"),
-                  ].map((level) => (
-                    <Select.Option key={level} value={level}>
-                      {level}
-                    </Select.Option>
-                  ))}
-                </Select>
-              )}
-            />
-          </Form.Item>
-
-          {/* Field for exercise description */}
-          <Form.Item label={t("Exercises:exercise_description")}>
-            <Controller
-              name="description"
-              control={control}
-              defaultValue={exercise.description}
-              render={({ field: { onChange, value } }) => (
-                <Input.TextArea
-                  onChange={onChange}
-                  value={value}
-                  placeholder={t("Exercises:exercise_description")}
-                  rows={4}
-                  required
-                  disabled={!isEditing}
-                />
-              )}
-            />
-          </Form.Item>
-
-          {/* Button for editing or saving */}
-          <Form.Item>
-            {!isEditing ? (
-              <Button type="primary" onClick={startEditing}>
-                {t("Exercises:modify")}
-              </Button>
-            ) : (
-              <Button
-                type="primary"
-                htmlType="submit"
-                icon={<CheckOutlined />}
-                loading={isSubmitting}
-                onClick={() => setIsSaveClicked(true)}
-              >
-                {t("Exercises:save")}
-              </Button>
-            )}
-          </Form.Item>
-        </Form>
-
-        {/* Modal after submission */}
-        {isOpenModal && (
-          <Modal
-            title="Feedback"
-            open={isOpenModal}
-            onCancel={closeModal}
-            footer={[
-              <Button key="close" onClick={closeModal}>
-                {t("Close")}
-              </Button>,
-            ]}
-          >
-            <p style={{ color: isErrorMessage ? "red" : "green" }}>{message}</p>
-          </Modal>
-        )}
-      </Col>
-    </Row>
+          {/* Modal pour les messages de feedback */}
+          {isOpenModal && (
+            <Modal
+              title={t("Feedback")}
+              open={isOpenModal}
+              onCancel={closeModal}
+              footer={[
+                <Button key="close" onClick={closeModal}>
+                  {t("Close")}
+                </Button>,
+              ]}
+            >
+              <p style={{ color: isErrorMessage ? "red" : "green" }}>
+                {message}
+              </p>
+            </Modal>
+          )}
+        </Col>
+      </Row>
+    </div>
   );
 }
 
-// Add PropTypes to validate the props
 ExerciseDetail.propTypes = {
   exercise: PropTypes.shape({
     key: PropTypes.string.isRequired,
@@ -221,6 +261,7 @@ ExerciseDetail.propTypes = {
     description: PropTypes.string.isRequired,
     category: PropTypes.string.isRequired,
     fitnessLevel: PropTypes.string.isRequired,
+    videoUrl: PropTypes.string.isRequired,
   }).isRequired,
   refetchExercises: PropTypes.func.isRequired,
 };

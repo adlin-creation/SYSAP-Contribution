@@ -29,8 +29,10 @@ export default function DoctorPatients() {
   if (error) {
     return (
       <div style={{ textAlign: "center", marginTop: "20px" }}>
-        <h3>Error loading patients</h3>
-        <Button onClick={() => navigate("/doctors")}>Return to Doctors</Button>
+        <h3>{t("Professionals:Physicians:error_loading_patients")}</h3>
+        <Button onClick={() => navigate("/doctors")}>
+          {t("Professionals:Physicians:back_to_physicians_button")}
+        </Button>
       </div>
     );
   }

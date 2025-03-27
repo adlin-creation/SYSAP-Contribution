@@ -7,6 +7,7 @@ import "./ProgramStyles.css";
 import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
 export default function CreateProgram(props) {
   const { t } = useTranslation("Programs");
@@ -38,7 +39,7 @@ export default function CreateProgram(props) {
         setSessions(res.data);
       })
       .catch((err) => {
-        openModal(err.res.data.message, true);
+        openModal(t(`Backend:${err.res.data.message}`), true);
       });
   }, [token]);
 
@@ -110,10 +111,12 @@ export default function CreateProgram(props) {
       })
       .then((res) => {
         props.refetchPrograms();
-        openModal(res.data.message, false);
+        openModal(t(`Backend:${res.data.message}`), false);
         reset();
       })
-      .catch((err) => openModal(err.response.data.message, true));
+      .catch((err) =>
+        openModal(t(`Backend:${err.response.data.message}`), true)
+      );
   };
   /**
    * Opens modal to provide feedback to the user.
@@ -271,7 +274,9 @@ export default function CreateProgram(props) {
                     </div>
                   ))
                 ) : (
-                  <p className="no-sessions-message">No sessions found</p>
+                  <p className="no-sessions-message">
+                    {t("text_no_sessions_found")}
+                  </p>
                 )}
 
                 <Button
@@ -280,7 +285,7 @@ export default function CreateProgram(props) {
                   className="confirm-button"
                   onClick={() => setDropdownVisible(false)}
                 >
-                  Confirm Selection
+                  {t("button_confirm_selection")}
                 </Button>
               </div>
             )}
@@ -299,7 +304,7 @@ export default function CreateProgram(props) {
             onCancel={closeModal}
             footer={[
               <Button key="close" onClick={closeModal}>
-                {t("close_button")}
+                {t("button_close")}
               </Button>,
             ]}
           >
@@ -310,3 +315,6 @@ export default function CreateProgram(props) {
     </Row>
   );
 }
+CreateProgram.propTypes = {
+  refetchPrograms: PropTypes.func.isRequired,
+};

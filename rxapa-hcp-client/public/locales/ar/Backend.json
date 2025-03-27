@@ -87,6 +87,11 @@
   "error_updating_program": "فشل في تحديث البرنامج.",
   "error_no_program_found": "لم يتم العثور على أي برامج.",
   "error_searching_programs": "خطأ في الخادم أثناء البحث عن البرامج.",
+  "error_program_name_required": "اسم البرنامج مطلوب.",
+  "error_description_too_long": "الوصف طويل جدًا (الحد الأقصى 500 حرف).",
+  "error_duration_minimum": "يجب أن تكون المدة على الأقل يومًا واحدًا أو أسبوعًا واحدًا.",
+  "error_duration_unit": "وحدة المدة يجب أن تكون 'أيام' أو 'أسابيع'.",
+  "error_invalid_image_url": "يجب أن تكون الصورة URL صالحًا بتنسيق .jpg أو .png أو .webp.",
 
   "error_creating_enrollement": "خطأ في إنشاء تسجيل البرنامج.",
   "error_patient_data_required": "مطلوب بيانات المريض.",

@@ -1,4 +1,5 @@
 import { Button } from "@mui/material";
+import PropTypes from "prop-types";
 
 function AppButton(props) {
   return (
@@ -24,5 +25,19 @@ function AppButton(props) {
     </Button>
   );
 }
+AppButton.propTypes = {
+  onClick: PropTypes.func,
+  variant: PropTypes.string,
+  startIcon: PropTypes.node,
+  endIcon: PropTypes.node,
+  href: PropTypes.string,
+  color: PropTypes.string,
+  size: PropTypes.string,
+  type: PropTypes.string,
+  value: PropTypes.string,
+  name: PropTypes.string,
+  parentComponent: PropTypes.string,
+  displayText: PropTypes.node, // 
+};
 
 export default AppButton;

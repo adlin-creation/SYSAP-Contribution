@@ -5,6 +5,7 @@
   "category_placeholder": "Catégorie",
   "fitness_level_placeholder": "Niveau de forme physique",
   "age_groupe_placeholder": "Tranche d'age",
+  "search_placeholder": "Rechercher",
   "all": "Tous",
   "aerobic": "Aérobique",
   "strength": "Force",
@@ -22,7 +23,7 @@
   "exercise_name": "Nom de l'exercice",
   "enter_exercise_description": "Entrez la description de l'exercice :",
   "exercise_description": "Description de l'exercice",
-  "enter_exercise_video": "Veuillez entrer la vidéo d'instruction de l'exercice :",
+  "enter_exercise_video": "Veuillez entrer le lien de la vidéo d'instruction de l'exercice :",
   "exercise_video": "Vidéo d'instruction de l'exercice",
   "enter_exercise_image": "Veuillez soumettre l'image de l'exercice :",
   "exercise_image": "Image de l'exercice :",
@@ -34,5 +35,6 @@
   "update_button": "Mettre à jour",
   "modify": "Modifier",
   "save": "Sauvegarder",
-  "error_message": "Une erreur est survenue"
+  "error_message": "Une erreur est survenue",
+  "invalid_video_link": "Veuillez entrer un lien de vidéo valide"
 }

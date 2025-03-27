@@ -9,7 +9,7 @@ import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 
 function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("Professionals");
   const {
     handleSubmit,
     control,
@@ -46,8 +46,8 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
       .then(() => {
         refetchAdmins();
         AntModal.success({
-          content: t("Professionals:Admins:updating_success_msg"),
-          okText: t("Professionals:Admins:close_button"),
+          content: t("Admins.updating_success_msg"),
+          okText: t("Admins.close_button"),
           centered: true,
           onOk: () => {
             onClose();
@@ -57,10 +57,10 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
       .catch((err) => {
         const errorMessage =
           t(`Backend:${err.response?.data?.message}`) ||
-          t("Professionals:Admins:updating_admin_error_msg");
+          t("Admins.updating_admin_error_msg");
         AntModal.error({
           content: errorMessage,
-          okText: t("Professionals:Admins:close_button"),
+          okText: t("Admins.close_button"),
           centered: true,
         });
       });
@@ -74,7 +74,7 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
             {/* First Name and Last Name fields */}
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Admins:first_name_label")}
+                label={t("Admins.first_name_label")}
                 required
                 validateStatus={errors.firstname ? "error" : ""}
                 help={errors.firstname?.message}
@@ -83,14 +83,10 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
                   name="firstname"
                   control={control}
                   rules={{
-                    required: t(
-                      "Professionals:Admins:required_first_name_error"
-                    ),
+                    required: t("Admins.required_first_name_error"),
                     minLength: {
                       value: 2,
-                      message: t(
-                        "Professionals:Admins:first_name_min_length_error"
-                      ),
+                      message: t("Admins.first_name_min_length_error"),
                     },
                   }}
                   render={({ field }) => <Input {...field} />}
@@ -99,7 +95,7 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
             </Col>
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Admins:last_name_label")}
+                label={t("Admins.last_name_label")}
                 required
                 validateStatus={errors.lastname ? "error" : ""}
                 help={errors.lastname?.message}
@@ -108,14 +104,10 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
                   name="lastname"
                   control={control}
                   rules={{
-                    required: t(
-                      "Professionals:Admins:required_last_name_error"
-                    ),
+                    required: t("Admins.required_last_name_error"),
                     minLength: {
                       value: 2,
-                      message: t(
-                        "Professionals:Admins:last_name_min_length_error"
-                      ),
+                      message: t("Admins.last_name_min_length_error"),
                     },
                   }}
                   render={({ field }) => <Input {...field} />}
@@ -128,7 +120,7 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
             {/* Email and Phone Number fields */}
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Admins:email")}
+                label={t("Admins.email")}
                 required
                 validateStatus={errors.email ? "error" : ""}
                 help={errors.email?.message}
@@ -137,12 +129,10 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
                   name="email"
                   control={control}
                   rules={{
-                    required: t("Professionals:Admins:required_email_error"),
+                    required: t("Admins.required_email_error"),
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: t(
-                        "Professionals:Admins:invalid_email_format_error"
-                      ),
+                      message: t("Admins.invalid_email_format_error"),
                     },
                   }}
                   render={({ field }) => <Input type="email" {...field} />}
@@ -151,7 +141,7 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
             </Col>
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Admins:phone_number")}
+                label={t("Admins.phone_number")}
                 required
                 validateStatus={errors.phoneNumber ? "error" : ""}
                 help={errors.phoneNumber?.message}
@@ -160,14 +150,10 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
                   name="phoneNumber"
                   control={control}
                   rules={{
-                    required: t(
-                      "Professionals:Admins:required_phone_number_error"
-                    ),
+                    required: t("Admins.required_phone_number_error"),
                     pattern: {
                       value: /^[0-9+\s-]{8,}$/,
-                      message: t(
-                        "Professionals:Admins:invalid_phone_number_error"
-                      ),
+                      message: t("Admins.invalid_phone_number_error"),
                     },
                   }}
                   render={({ field }) => <Input {...field} />}
@@ -179,7 +165,7 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
           <Row gutter={16}>
             {/* Status field */}
             <Col span={12}>
-              <Form.Item label={t("Professionals:Admins:status")}>
+              <Form.Item label={t("Admins.status")}>
                 <Controller
                   name="active"
                   control={control}
@@ -187,10 +173,8 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
                     <Switch
                       checked={value}
                       onChange={onChange}
-                      checkedChildren={t("Professionals:Admins:active_status")}
-                      unCheckedChildren={t(
-                        "Professionals:Admins:inactive_status"
-                      )}
+                      checkedChildren={t("Admins.active_status")}
+                      unCheckedChildren={t("Admins.inactive_status")}
                     />
                   )}
                 />
@@ -200,7 +184,7 @@ function AdminDetails({ admin, onClose, refetchAdmins, openModal }) {
 
           <Form.Item>
             <Button type="primary" htmlType="submit" icon={<SaveOutlined />}>
-              {t("Professionals:Admins:update_admin_button")}
+              {t("Admins.update_admin_button")}
             </Button>
           </Form.Item>
         </Form>

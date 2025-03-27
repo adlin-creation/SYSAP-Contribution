@@ -23,14 +23,14 @@ export default function ProgramMenu() {
   const [message, setMessage] = useState("");
 
   const { token } = useToken();
-  const { t } = useTranslation();
+  const { t } = useTranslation("Programs");
   // selected program to be edited
   const [selectedProgram, setSelectedProgram] = useState(null);
 
-   // Search state
-   const [searchTerm, setSearchTerm] = useState("");
+  // Search state
+  const [searchTerm, setSearchTerm] = useState("");
 
-    // New state variables for duration, duration unit, and description keywords
+  // New state variables for duration, duration unit, and description keywords
   const [duration, setDuration] = useState("");
   const [durationUnit, setDurationUnit] = useState("");
   const [descriptionKeywords, setDescriptionKeywords] = useState("");
@@ -38,9 +38,9 @@ export default function ProgramMenu() {
   const [pageSize] = useState(8); // Nombre de programmes par page
 
   const durationUnits = [
-    {value: "", label: "Search by duration unit"},
-    { value: "days", label: "days" }, 
-    { value: "weeks", label: "weeks" }, 
+    { value: "", label: "Search by duration unit" },
+    { value: "days", label: "days" },
+    { value: "weeks", label: "weeks" },
   ];
 
   //////////////////////////////
@@ -69,10 +69,10 @@ export default function ProgramMenu() {
   /// PROGRAM QUERY VALIDATIONS ///
   /////////////////////////////////////
   if (isProgramLoading) {
-    return <h1>{t("Programs:loading_program_phases")}</h1>;
+    return <h1>{t("loading_program_phases")}</h1>;
   }
   if (isProgramLoadingError) {
-    return <h1>{t("Programs:loading_program_phases_error")}</h1>;
+    return <h1>{t("loading_program_phases_error")}</h1>;
   }
 
   /**
@@ -120,9 +120,11 @@ export default function ProgramMenu() {
       })
       .then((res) => {
         refetchPrograms();
-        openModal(res.data.message, false);
+        openModal(t(`Backend:${res.data.message}`), false);
       })
-      .catch((err) => openModal(err.response.data.message, true));
+      .catch((err) =>
+        openModal(t(`Backend:${err.response.data.message}`), true)
+      );
   };
 
   // Fonction pour gérer le terme de recherche
@@ -206,14 +208,14 @@ export default function ProgramMenu() {
                 icon={<PlusOutlined />}
                 className="create-button"
               >
-                {t("Programs:create_program_button")}
+                {t("create_program_button")}
               </Button>
             </Col>
 
             {/* create a search bar*/}
             <Col>
               <Input
-                placeholder= "Search a program"
+                placeholder="Search a program"
                 value={searchTerm}
                 onChange={handleSearchChange}
                 className="search-input"
@@ -300,14 +302,14 @@ export default function ProgramMenu() {
               type="primary"
               icon={<ArrowLeftOutlined />}
             >
-              {t("Programs:back_button")}
+              {t("back_button")}
             </Button>
           </Col>
           <Col flex="auto" style={{ textAlign: "center" }}>
             <h2>
-            {buttonState.isCreateProgram
-                ? t("Programs:create_program")
-                : `${t("Programs:edit_title")} ${selectedProgram?.name}`}
+              {buttonState.isCreateProgram
+                ? t("create_program")
+                : `${t("edit_title")} ${selectedProgram?.name}`}
             </h2>
           </Col>
           <Col span={4} />
@@ -331,7 +333,7 @@ export default function ProgramMenu() {
           onCancel={closeModal}
           footer={[
             <Button key="close" onClick={closeModal}>
-              {t("Programs:close_button")}
+              {t("button_close")}
             </Button>,
           ]}
         >

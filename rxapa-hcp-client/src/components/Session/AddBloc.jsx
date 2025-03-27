@@ -13,6 +13,7 @@ import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
 import Modal from "../Modal/Modal";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
 let blocNames = [];
 
@@ -188,3 +189,15 @@ export default function AddBloc({
     </div>
   );
 }
+AddBloc.propTypes = {
+  session: PropTypes.shape({
+    key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  }).isRequired,
+  blocList: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  setIsAddBloc: PropTypes.func.isRequired,
+  refetchSession: PropTypes.func.isRequired,
+};

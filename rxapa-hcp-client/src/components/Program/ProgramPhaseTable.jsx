@@ -8,38 +8,39 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
 export default function ProgramPhaseTable({ programPhases }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const { t } = useTranslation();
+  const { t } = useTranslation("Programs");
   const columns = [
-    { id: "phaseName", label: t("Programs:phase_name_label"), minWidth: 170 },
+    { id: "phaseName", label: t("phase_name_label"), minWidth: 170 },
     {
       id: "startConditionType",
-      label: t("Programs:start_condition_type_label"),
+      label: t("start_condition_type_label"),
       minWidth: 170,
     },
     {
       id: "startConditionValue",
-      label: t("Programs:start_condition_value_label"),
+      label: t("start_condition_value_label"),
       minWidth: 170,
       align: "center",
     },
     {
       id: "endConditionType",
-      label: t("Programs:end_condition_type_label"),
+      label: t("end_condition_type_label"),
       minWidth: 170,
     },
     {
       id: "endConditionValue",
-      label: t("Programs:end_condition_value_label"),
+      label: t("end_condition_value_label"),
       minWidth: 170,
       align: "center",
     },
     {
       id: "frequency",
-      label: t("Programs:frequency_label"),
+      label: t("frequency_label"),
       minWidth: 170,
       align: "center",
       format: (value) => value.toLocaleString("en-US"),
@@ -126,3 +127,23 @@ export default function ProgramPhaseTable({ programPhases }) {
     </Paper>
   );
 }
+ProgramPhaseTable.propTypes = {
+  programPhases: PropTypes.arrayOf(
+    PropTypes.shape({
+      ProgramPhase: PropTypes.shape({
+        name: PropTypes.string,
+        startConditionType: PropTypes.string,
+        startConditionValue: PropTypes.oneOfType([
+          PropTypes.string,
+          PropTypes.number,
+        ]),
+        endConditionType: PropTypes.string,
+        endConditionValue: PropTypes.oneOfType([
+          PropTypes.string,
+          PropTypes.number,
+        ]),
+        frequency: PropTypes.number,
+      }),
+    })
+  ).isRequired,
+};

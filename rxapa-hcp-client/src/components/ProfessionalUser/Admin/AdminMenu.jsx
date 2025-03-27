@@ -21,7 +21,7 @@ import Constants from "../../Utils/Constants";
 import useToken from "../../Authentication/useToken";
 import CreateAdmin from "./CreateAdmin";
 import AdminDetails from "./AdminDetails";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 export default function AdminMenu() {
   const [isCreateAdmin, setIsCreateAdmin] = useState(false);
@@ -29,7 +29,7 @@ export default function AdminMenu() {
   const [selectedAdmin, setSelectedAdmin] = useState(null);
 
   const { token } = useToken();
-
+  const { t } = useTranslation("Professionals");
   const adminUrl = `${Constants.SERVER_URL}/professional-users`;
   const {
     data: adminList,
@@ -46,42 +46,40 @@ export default function AdminMenu() {
 
   const columns = [
     {
-      title: t("Professionals:Admins:name"),
+      title: t("Admins.name"),
       key: "name",
       render: (_, record) => `${record.firstname} ${record.lastname}`,
     },
     {
-      title: t("Professionals:Admins:email"),
+      title: t("Admins.email"),
       dataIndex: "email",
       key: "email",
     },
     {
-      title: t("Professionals:Admins:phone"),
+      title: t("Admins.phone"),
       dataIndex: "phoneNumber",
       key: "phoneNumber",
     },
     {
-      title: t("Professionals:Admins:status"),
+      title: t("Admins.status"),
       key: "active",
       dataIndex: "active",
       render: (active) => (
         <Tag color={active ? "green" : "red"}>
-          {active
-            ? t("Professionals:Admins:active_status")
-            : t("Professionals:Admins:inactive_status")}
+          {active ? t("Admins.active_status") : t("Admins.inactive_status")}
         </Tag>
       ),
     },
     {
-      title: t("Professionals:Admins:actions"),
+      title: t("Admins.actions"),
       key: "actions",
       render: (_, record) => (
         <Space size="middle">
           <Button type="link" onClick={() => handleEdit(record)}>
-            <EditOutlined /> {t("Professionals:Admins:edit_button")}
+            <EditOutlined /> {t("Admins.edit_button")}
           </Button>
           <Button type="link" danger onClick={() => handleDelete(record)}>
-            <DeleteOutlined /> {t("Professionals:Admins:delete_button")}
+            <DeleteOutlined /> {t("Admins.delete_button")}
           </Button>
         </Space>
       ),
@@ -95,8 +93,8 @@ export default function AdminMenu() {
 
   const handleDelete = (admin) => {
     AntModal.confirm({
-      title: t("Professionals:Admins:title_delete_admin_confirmation"),
-      content: t("Professionals:Admins:warning_permanent_delete", {
+      title: t("Admins.title_delete_admin_confirmation"),
+      content: t("Admins.warning_permanent_delete", {
         firstname: admin.firstname,
         lastname: admin.lastname,
       }),
@@ -156,9 +154,9 @@ export default function AdminMenu() {
     if (error) {
       return (
         <div style={{ textAlign: "center", marginTop: "20px" }}>
-          <h3>{t("Professionals:Admins:error_loading_admins")}</h3>
+          <h3>{t("Admins.error_loading_admins")}</h3>
           <Button onClick={() => refetchAdmins()}>
-            {t("Professionals:Admins:button_retry")}
+            {t("Admins.button_retry")}
           </Button>
         </div>
       );
@@ -178,11 +176,11 @@ export default function AdminMenu() {
             icon={<PlusOutlined />}
             onClick={() => setIsCreateAdmin(true)}
           >
-            {t("Professionals:Admins:register_admin_button")}
+            {t("Admins.register_admin_button")}
           </Button>
           {adminList?.length > 0 && (
             <span>
-              {t("Professionals:Admins:total_admins")}: {adminList.length}
+              {t("Admins.total_admins")}: {adminList.length}
             </span>
           )}
         </div>
@@ -198,9 +196,9 @@ export default function AdminMenu() {
           pagination={{
             pageSize: 10,
             showTotal: (total, range) =>
-              `${range[0]}-${range[1]} ${t(
-                "Professionals:Admins:of"
-              )} ${total} ${t("Professionals:Admins:admins")}`,
+              `${range[0]}-${range[1]} ${t("Admins.of")} ${total} ${t(
+                "Admins.admins"
+              )}`,
           }}
         />
       </>
@@ -226,14 +224,14 @@ export default function AdminMenu() {
               type="primary"
               icon={<ArrowLeftOutlined />}
             >
-              {t("Professionals:Admins:back_button")}
+              {t("Admins.back_button")}
             </Button>
           </Col>
           <Col flex="auto" style={{ textAlign: "center" }}>
             <h2 style={{ marginBottom: 0 }}>
               {isCreateAdmin
-                ? t("Professionals:Admins:register_new_admin")
-                : t("Professionals:Admins:edit_Admin_title")}
+                ? t("Admins.register_new_admin")
+                : t("Admins.edit_Admin_title")}
             </h2>
           </Col>
           <Col span={4} />

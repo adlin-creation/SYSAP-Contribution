@@ -1,8 +1,9 @@
 {
-    "err_id_programme": "Your program ID could not be found. Please authenticate.",
-    "err_aucun_exercice": "No exercises found for this session.",
-    "err_recuperation_exercices": "An error occurred while retrieving the exercises.",
-    "chargement_exercices": "Loading exercises...",
-    "liste_exercices": "List of exercises",
-    "aucun_exercice": "No exercises available."
+    "error_invalid_enrollment_code": "Your program ID could not be found. Please authenticate.",
+    "error_exercise_not_found": "No exercises found for this session.",
+    "error_fetching_exercises": "An error occurred while retrieving the exercises.",
+   
+    "title_loading_exercises": "Loading exercises...",
+    "title_exercise_list": "List of exercises",
+    "title_no_exercise": "No exercises available."
 }

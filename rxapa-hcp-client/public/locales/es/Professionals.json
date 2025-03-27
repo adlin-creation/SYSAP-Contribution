@@ -16,6 +16,7 @@
     "last_name_label": "Apellido",
     "required_last_name_error": "El apellido es obligatorio",
     "last_name_min_length_error": "El apellido debe tener al menos 2 caracteres",
+    "enter_last_name_placeholder": "Ingrese el apellido",
     "enter_last_name": "Ingrese el apellido",
     "required_email_error": "El correo electrónico es obligatorio",
     "invalid_email_format_error": "Formato de correo electrónico inválido",
@@ -50,7 +51,16 @@
     "work_environment_label": "Entorno de trabajo",
     "work_environment_required": "El entorno de trabajo es obligatorio",
     "work_environment_min_length": "El entorno de trabajo debe contener al menos 2 caracteres",
-    "work_environment_placeholder": "Seleccione el entorno de trabajo"
+    "work_environment_placeholder": "Seleccione el entorno de trabajo",
+    "success_physician_creation": "¡Médico creado con éxito!",
+    "error_physician_creation": "Error al crear el médico",
+    "error_updating_physician": "Error al actualizar el médico",
+    "error_generating_password": "Error al generar la contraseña",
+    "success_physician_deletion": "Médico eliminado con éxito",
+    "error_physician_deletion": "Error al eliminar el médico",
+    "error_loading_physicians": "Error al cargar los médicos",
+    "error_loading_patients": "Error al cargar los pacientes",
+    "generate_password_tooltip": "Generar una contraseña"
   },
   "Kinesiologist": {
     "name": "Nombre",
@@ -106,7 +116,13 @@
     "work_environment_label": "Entorno de trabajo",
     "work_environment_required": "El entorno de trabajo es obligatorio",
     "work_environment_min_length": "El entorno de trabajo debe contener al menos 2 caracteres",
-    "work_environment_placeholder": "Seleccione el entorno de trabajo"
+    "work_environment_placeholder": "Seleccione el entorno de trabajo",
+    "error_updating_kinesiologist": "Error al actualizar al kinesiólogo",
+    "success_kinesiologist_deletion": "Kinesiólogo eliminado con éxito",
+    "error_kinesiologist_deletion": "Error al eliminar al kinesiólogo",
+    "error_loading_kinesiologists": "Error al cargar los kinesiólogos",
+    "error_loading_patients": "Error al cargar los pacientes",
+    "generate_password_tooltip": "Generar una contraseña"
   },
   "Admins": {
     "name": "Nombre",
@@ -161,6 +177,7 @@
     "title_delete_admin_confirmation": "¿Está seguro de que desea eliminar este administrador?",
     "warning_permanent_delete": "Esto se eliminará permanentemente {{firstname}} {{lastname}}",
     "error_loading_admins": "Error al cargar los administradores",
-    "button_retry": "Reintentar"
+    "button_retry": "Reintentar",
+    "generate_password_tooltip": "Generar una contraseña"
   }
 }

@@ -1,22 +1,26 @@
 {
-    "permission_refusee": "تم رفض الإذن",
-    "activer_notifications_svp": "قم بتفعيل الإشعارات لتلقي التذكيرات.",
-    "erreur": "خطأ",
-    "entrer_heure_et_titre_svp": "يرجى تحديد وقت وعنوان.",
-    "rappel": "تذكير",
-    "faire_votre_seance": "حان وقت القيام بجلسة التمرين!",
-    "rappel_ajoute": "تمت إضافة التذكير",
-    "rappel_rajoute_a": "تمت إضافة التذكير إلى",
-    "err_rappel": "تعذر جدولة التذكير.",
-    "rappel_supprime": "تم حذف التذكير",
-    "rappel_supprime_confirmation": "تم حذف التذكير بنجاح.",
-    "rappels_programmes": "التذكيرات المجدولة",
-    "aucun_rappel": "لا يوجد تذكيرات حتى الآن.",
-    "supprimer": "حذف",
-    "ajouter_un_rappel": "إضافة تذكير",
-    "nouveau_rappel": "تذكير جديد",
-    "titre_du_rappel": "عنوان التذكير",
-    "selectionner_heure": "حدد الوقت",
-    "planifier": "جدولة",
-    "annuler": "إلغاء"
+    "error_permission_denied": "تم رفض الإذن",
+    "error_notifications_required": "قم بتفعيل الإشعارات لتلقي التذكيرات.",
+    "error_error": "خطأ",
+    "error_time_and_title_required": "يرجى تحديد وقت وعنوان.",
+    "error_reminder_creation": "تعذر جدولة التذكير.",
+    
+    "success_reminder_added": "تمت إضافة التذكير",
+    "success_reminder_added_to": "تمت إضافة التذكير إلى",
+    "success_reminder_deleted": "تم حذف التذكير",
+    "success_reminder_deleted_subtitle": "تم حذف التذكير بنجاح.",
+    
+    "button_delete": "حذف",
+    "button_add_reminder": "إضافة تذكير",
+    "button_schedule_reminder": "جدولة",
+    "button_cancel_reminder": "إلغاء",
+    
+    "placeholder_reminder_title": "عنوان التذكير",
+    "placeholder_select_time": "حدد الوقت",
+    
+    "title_reminder": "تذكير",
+    "title_reminder_subtitle": "حان وقت القيام بجلسة التمرين!",
+    "title_programmed_reminders": "التذكيرات المجدولة",
+    "title_no_reminders": "لا يوجد تذكيرات حتى الآن.",
+    "title_new_reminder": "تذكير جديد"
 }

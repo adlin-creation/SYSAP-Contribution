@@ -35,5 +35,6 @@
   "update_button": "Actualizar",
   "modify": "Modificar",
   "save": "Guardar",
-  "error_message": "Ocurrió un error"
+  "error_message": "Ocurrió un error",
+  "invalid_video_link": "Por favor, ingrese un enlace de video válido"
 }

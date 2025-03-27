@@ -46,7 +46,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
     { value: "Clinique: autre", label: "Clinique: autre" },
   ];
 
-  const { t } = useTranslation();
+  const { t } = useTranslation("Professionals");
   const {
     handleSubmit,
     control,
@@ -72,12 +72,12 @@ function CreateKinesiologist({ refetchKinesiologists }) {
       )
       .then((res) => {
         refetchKinesiologists();
-        openModal(t("Professionals:Kinesiologist:creating_success_msg"), false);
+        openModal(t("Kinesiologist.creating_success_msg"), false);
       })
       .catch((err) =>
         openModal(
-          err.response?.data?.message ||
-            t("Professionals:Kinesiologist:creating_error_msg"),
+          t(`Backend:${err.response?.data?.message}`) ||
+            t("Kinesiologist.creating_error_msg"),
           true
         )
       );
@@ -108,10 +108,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
       // Met à jour le champ password avec le mot de passe généré
       reset({ ...control._formValues, password: generatedPassword });
     } catch (err) {
-      openModal(
-        t("Professionals:Kinesiologist:generating_password_error_msg"),
-        true
-      );
+      openModal(t("Kinesiologist.generating_password_error_msg"), true);
     }
   };
 
@@ -122,7 +119,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Kinesiologist:first_name_label")}
+                label={t("Kinesiologist.first_name_label")}
                 required
                 validateStatus={errors.firstname ? "error" : ""}
                 help={errors.firstname?.message}
@@ -131,21 +128,17 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                   name="firstname"
                   control={control}
                   rules={{
-                    required: t(
-                      "Professionals:Kinesiologist:required_first_name_error"
-                    ),
+                    required: t("Kinesiologist.required_first_name_error"),
                     minLength: {
                       value: 2,
-                      message: t(
-                        "Professionals:Kinesiologist:first_name_min_length_error"
-                      ),
+                      message: t("Kinesiologist.first_name_min_length_error"),
                     },
                   }}
                   render={({ field }) => (
                     <Input
                       {...field}
                       placeholder={t(
-                        "Professionals:Kinesiologist:enter_first_name_placeholder"
+                        "Kinesiologist.enter_first_name_placeholder"
                       )}
                     />
                   )}
@@ -154,7 +147,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
             </Col>
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Kinesiologist:last_name_label")}
+                label={t("Kinesiologist.last_name_label")}
                 required
                 validateStatus={errors.lastname ? "error" : ""}
                 help={errors.lastname?.message}
@@ -163,22 +156,16 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                   name="lastname"
                   control={control}
                   rules={{
-                    required: t(
-                      "Professionals:Kinesiologist:required_last_name_error"
-                    ),
+                    required: t("Kinesiologist.required_last_name_error"),
                     minLength: {
                       value: 2,
-                      message: t(
-                        "Professionals:Kinesiologist:last_name_min_length_error"
-                      ),
+                      message: t("Kinesiologist.last_name_min_length_error"),
                     },
                   }}
                   render={({ field }) => (
                     <Input
                       {...field}
-                      placeholder={t(
-                        "Professionals:Kinesiologist:enter_last_name"
-                      )}
+                      placeholder={t("Kinesiologist.enter_last_name")}
                     />
                   )}
                 />
@@ -189,7 +176,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Kinesiologist:email")}
+                label={t("Kinesiologist.email")}
                 required
                 validateStatus={errors.email ? "error" : ""}
                 help={errors.email?.message}
@@ -198,22 +185,16 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                   name="email"
                   control={control}
                   rules={{
-                    required: t(
-                      "Professionals:Kinesiologist:required_email_error"
-                    ),
+                    required: t("Kinesiologist.required_email_error"),
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: t(
-                        "Professionals:Kinesiologist:invalid_email_format_error"
-                      ),
+                      message: t("Kinesiologist.invalid_email_format_error"),
                     },
                   }}
                   render={({ field }) => (
                     <Input
                       {...field}
-                      placeholder={t(
-                        "Professionals:Kinesiologist:enter_email_placeholder"
-                      )}
+                      placeholder={t("Kinesiologist.enter_email_placeholder")}
                     />
                   )}
                 />
@@ -221,7 +202,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
             </Col>
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Kinesiologist:confirm_email_label")}
+                label={t("Kinesiologist.confirm_email_label")}
                 required
                 validateStatus={errors.confirmEmail ? "error" : ""}
                 help={errors.confirmEmail?.message}
@@ -231,18 +212,16 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                   control={control}
                   rules={{
                     required: t(
-                      "Professionals:Kinesiologist:required_email_confirmation_error"
+                      "Kinesiologist.required_email_confirmation_error"
                     ),
                     validate: (value) =>
                       value === control._formValues.email ||
-                      t("Professionals:Kinesiologist:email_mismatch_error"),
+                      t("Kinesiologist.email_mismatch_error"),
                   }}
                   render={({ field }) => (
                     <Input
                       {...field}
-                      placeholder={t(
-                        "Professionals:Kinesiologist:confirm_email_placeholder"
-                      )}
+                      placeholder={t("Kinesiologist.confirm_email_placeholder")}
                     />
                   )}
                 />
@@ -253,7 +232,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Kinesiologist:phone_number")}
+                label={t("Kinesiologist.phone_number")}
                 required
                 validateStatus={errors.phoneNumber ? "error" : ""}
                 help={errors.phoneNumber?.message}
@@ -262,22 +241,16 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                   name="phoneNumber"
                   control={control}
                   rules={{
-                    required: t(
-                      "Professionals:Kinesiologist:required_phone_number_error"
-                    ),
+                    required: t("Kinesiologist.required_phone_number_error"),
                     pattern: {
                       value: /^[0-9+\s-]{8,}$/,
-                      message: t(
-                        "Professionals:Kinesiologist:invalid_phone_number_error"
-                      ),
+                      message: t("Kinesiologist.invalid_phone_number_error"),
                     },
                   }}
                   render={({ field }) => (
                     <Input
                       {...field}
-                      placeholder={t(
-                        "Professionals:Kinesiologist:phone_number_placeholder"
-                      )}
+                      placeholder={t("Kinesiologist.phone_number_placeholder")}
                     />
                   )}
                 />
@@ -285,7 +258,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
             </Col>
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Kinesiologist:work_environment_label")}
+                label={t("Kinesiologist.work_environment_label")}
                 required
                 validateStatus={errors.workEnvironment ? "error" : ""}
                 help={errors.workEnvironment?.message}
@@ -294,21 +267,17 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                   name="workEnvironment"
                   control={control}
                   rules={{
-                    required: t(
-                      "Professionals:Kinesiologist:work_environment_required"
-                    ),
+                    required: t("Kinesiologist.work_environment_required"),
                     minLength: {
                       value: 2,
-                      message: t(
-                        "Professionals:Kinesiologist:work_environment_min_length"
-                      ),
+                      message: t("Kinesiologist.work_environment_min_length"),
                     },
                   }}
                   render={({ field }) => (
                     <Select
                       {...field}
                       placeholder={t(
-                        "Professionals:Kinesiologist:work_environment_placeholder"
+                        "Kinesiologist.work_environment_placeholder"
                       )}
                     >
                       {milieuxTravail.map((milieu) => (
@@ -326,7 +295,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                label={t("Professionals:Kinesiologist:password_label")}
+                label={t("Kinesiologist.password_label")}
                 required
                 validateStatus={errors.password ? "error" : ""}
                 help={errors.password?.message}
@@ -336,32 +305,26 @@ function CreateKinesiologist({ refetchKinesiologists }) {
                     name="password"
                     control={control}
                     rules={{
-                      required: t(
-                        "Professionals:Kinesiologist:required_password_error"
-                      ),
+                      required: t("Kinesiologist.required_password_error"),
                       minLength: {
                         value: 8,
-                        message: t(
-                          "Professionals:Kinesiologist:password_min_length_error"
-                        ),
+                        message: t("Kinesiologist.password_min_length_error"),
                       },
                       pattern: {
                         value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-                        message: t(
-                          "Professionals:Kinesiologist:password_requirements_error"
-                        ),
+                        message: t("Kinesiologist.password_requirements_error"),
                       },
                     }}
                     render={({ field }) => (
                       <>
                         <Input.Password
                           {...field}
-                          placeholder={t(
-                            "Professionals:Kinesiologist:password_placeholder"
-                          )}
+                          placeholder={t("Kinesiologist.password_placeholder")}
                           style={{ width: "calc(100% - 40px)" }}
                         />
-                        <Tooltip title="Générer un mot de passe">
+                        <Tooltip
+                          title={t("Kinesiologist.generate_password_tooltip")}
+                        >
                           <Button
                             icon={<KeyOutlined />}
                             onClick={generatePassword}
@@ -377,7 +340,7 @@ function CreateKinesiologist({ refetchKinesiologists }) {
 
           <Form.Item className="submit-button">
             <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
-              {t("Professionals:Kinesiologist:create_kenisiologist_button")}
+              {t("Kinesiologist.create_kenisiologist_button")}
             </Button>
           </Form.Item>
         </Form>

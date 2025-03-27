@@ -5,6 +5,7 @@ import axios from "axios";
 import useToken from "../Authentication/useToken";
 import Constants from "../Utils/Constants";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
 function EvaluationPACE({ onSubmit }) {
   const { t } = useTranslation("Evaluations");
@@ -601,5 +602,7 @@ function EvaluationPACE({ onSubmit }) {
     </Row>
   );
 }
-
+EvaluationPACE.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};
 export default EvaluationPACE;

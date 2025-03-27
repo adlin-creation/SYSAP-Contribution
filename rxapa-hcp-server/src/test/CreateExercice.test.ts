@@ -35,6 +35,7 @@ describe("createExercise", () => {
                 description: "Un exercice de force au poids du corps qui sollicite principalement les pectoraux, les triceps et les épaules.",
                 category: "Force",
                 fitnessLevel: "Intermédiaire",
+                videoUrl: "https://www.youtube.com/watch?v=8CE4ijWlQ18"
             },
             file: {
                 fieldname: "exerciseImage",
@@ -71,6 +72,7 @@ describe("createExercise", () => {
             description: "Un exercice de force au poids du corps qui sollicite principalement les pectoraux, les triceps et les épaules.",
             category: "Force",
             fitnessLevel: "Intermédiaire",
+            videoUrl: "https://www.youtube.com/watch?v=8CE4ijWlQ18",
             imageUrl: "/uploads/image.jpg",
         });
 
@@ -81,6 +83,7 @@ describe("createExercise", () => {
             description: "Un exercice de force au poids du corps qui sollicite principalement les pectoraux, les triceps et les épaules.",
             category: "Force",
             fitnessLevel: "Intermédiaire",
+            videoUrl: "https://www.youtube.com/watch?v=8CE4ijWlQ18",
             imageUrl: "/uploads/image.jpg",
         });
 
@@ -100,6 +103,7 @@ describe("createExercise", () => {
             description: "Un exercice de force au poids du corps qui sollicite principalement les pectoraux, les triceps et les épaules.",
             category: "Force",
             fitnessLevel: "Intermédiaire",
+            videoUrl: "https://www.youtube.com/watch?v=8CE4ijWlQ18",
             imageUrl: "/uploads/image.jpg",
         });
 
@@ -131,4 +135,6 @@ describe("createExercise", () => {
             error: "Exercise creation failed",
         });
     });
+
+    
 });

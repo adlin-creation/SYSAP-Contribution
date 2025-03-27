@@ -5,9 +5,10 @@ import Constants from "../Utils/Constants";
 
 import "./ProgramStyles.css";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
 export default function Program({ onClick, onSelect, program, deleteProgram }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("Programs");
   return (
     <div className="program">
       <List style={{ textAlign: "center" }}>
@@ -18,16 +19,15 @@ export default function Program({ onClick, onSelect, program, deleteProgram }) {
         />
 
         <h3>
-          {t("Programs:name_title")}: {program.name}
+          {t("name_title")}: {program.name}
         </h3>
         <br />
         <h5>
-          {t("Programs:description_title")}: {program.description}
+          {t("description_title")}: {program.description}
         </h5>
         <br />
         <h5>
-          {t("Programs:duration_title")}: {program.duration}{" "}
-          {program.duration_unit}
+          {t("duration_title")}: {program.duration} {program.duration_unit}
         </h5>
 
         <div className="espace-boutton">
@@ -41,7 +41,7 @@ export default function Program({ onClick, onSelect, program, deleteProgram }) {
             name="edit-program"
             type="primary"
           >
-            {t("Programs:edit_button")}
+            {t("edit_button")}
           </Button>
           <Button
             onClick={() => {
@@ -53,10 +53,22 @@ export default function Program({ onClick, onSelect, program, deleteProgram }) {
             danger
             icon={<DeleteOutlined />}
           >
-            {t("Programs:delete_button")}
+            {t("delete_button")}
           </Button>
         </div>
       </List>
     </div>
   );
 }
+Program.propTypes = {
+  onClick: PropTypes.func.isRequired,
+  onSelect: PropTypes.func.isRequired,
+  deleteProgram: PropTypes.func.isRequired,
+  program: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    duration: PropTypes.number.isRequired,
+    duration_unit: PropTypes.string.isRequired,
+    image: PropTypes.string.isRequired,
+  }).isRequired,
+};

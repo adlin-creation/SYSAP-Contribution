@@ -87,6 +87,11 @@
   "error_updating_program": "Échec de la mise à jour du programme.",
   "error_no_program_found": "Aucun programme trouvé.",
   "error_searching_programs": "Erreur serveur lors de la recherche des programmes.",
+  "error_program_name_required": "Le nom du programme est requis.",
+  "error_description_too_long": "La description est trop longue (max 500 caractères).",
+  "error_duration_minimum": "La durée doit être d'au moins 1 jour ou 1 semaine.",
+  "error_duration_unit": "L'unité de durée doit être 'days' ou 'weeks'.",
+  "error_invalid_image_url": "L'image doit être une URL valide en .jpg, .png ou .webp.",
 
   "error_creating_enrollement": "Erreur lors de la création de l'inscription au programme.",
   "error_patient_data_required": "Les données du patient sont requises.",

@@ -35,5 +35,6 @@
   "update_button": "تحديث",
   "modify": "تعديل",
   "save": "حفظ",
-  "error_message": "حدث خطأ"
+  "error_message": "حدث خطأ",
+  "invalid_video_link": "يرجى إدخال رابط فيديو صالح"
 }

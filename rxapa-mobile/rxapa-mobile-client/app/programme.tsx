@@ -43,19 +43,19 @@ export default function ProgrammeScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.greeting}>{t('Programme:bonjour')}, {fullName}!</Text>
+      <Text style={styles.greeting}>{t('Programme:title_hello')}, {fullName}!</Text>
       <Text style={styles.programName}>{programName}</Text>
       <View style={styles.dayContainer}>
         <TouchableOpacity style={styles.dayButton} onPress={decrementDay}>
           <Text style={styles.buttonText}>-</Text>
         </TouchableOpacity>
-        <Text style={styles.dayText}>{t('Programme:jour')} {currentDay}</Text>
+        <Text style={styles.dayText}>{t('Programme:info_day')} {currentDay}</Text>
         <TouchableOpacity style={styles.dayButton} onPress={incrementDay}>
           <Text style={styles.buttonText}>+</Text>
         </TouchableOpacity>
       </View>
       <TouchableOpacity style={styles.startButton}>
-        <Text style={styles.startButtonText}>{t('Programme:ma_seance_aujourdhui')}</Text>
+        <Text style={styles.startButtonText}>{t('Programme:button_my_program_today')}</Text>
       </TouchableOpacity>
     </View>
   );

@@ -21,7 +21,7 @@
   "create_program": "إنشاء برنامج",
   "submit_button": "إرسال",
   "back_button": "عودة",
-  "close_button": "إغلاق",
+  "button_close": "إغلاق",
   "edit_button": "تعديل",
   "delete_button": "حذف",
   "name_title": "الاسم",
@@ -34,5 +34,9 @@
   "end_condition_type_label": "نوع شرط النهاية",
   "end_condition_value_label": "قيمة شرط النهاية",
   "frequency_label": "التكرار",
-  "edit_title": "تعديل"
+  "edit_title": "تعديل",
+
+  "select_program_phase": "يرجى اختيار مرحلة البرنامج",
+  "button_confirm_selection": "تأكيد الاختيار",
+  "text_no_sessions_found": "لم يتم العثور على جلسات"
 }

@@ -25,7 +25,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 export default function DoctorMenu() {
-  const { t } = useTranslation();
+  const { t } = useTranslation("Professionals");
   const [isCreateDoctor, setIsCreateDoctor] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
@@ -49,34 +49,34 @@ export default function DoctorMenu() {
 
   const columns = [
     {
-      title: t("Professionals:Physicians:name"),
+      title: t("Physicians.name"),
       key: "name",
       render: (_, record) => `${record.firstname} ${record.lastname}`,
     },
     {
-      title: t("Professionals:Physicians:email"),
+      title: t("Physicians.email"),
       dataIndex: "email",
       key: "email",
     },
     {
-      title: t("Professionals:Physicians:phone"),
+      title: t("Physicians.phone"),
       dataIndex: "phoneNumber",
       key: "phoneNumber",
     },
     {
-      title: t("Professionals:Physicians:status"),
+      title: t("Physicians.status"),
       key: "active",
       dataIndex: "active",
       render: (active) => (
         <Tag color={active ? "green" : "red"}>
           {active
-            ? t("Professionals:Physicians:active_status")
-            : t("Professionals:Physicians:inactive_status")}
+            ? t("Physicians.active_status")
+            : t("Physicians.inactive_status")}
         </Tag>
       ),
     },
     {
-      title: t("Professionals:Physicians:actions"),
+      title: t("Physicians.actions"),
       key: "actions",
       render: (_, record) => (
         <Space size="middle">
@@ -85,10 +85,10 @@ export default function DoctorMenu() {
             onClick={() => navigate(`/doctor-patients/${record.id}`)}
           >
             <UserOutlined />
-            {t("Professionals:Physicians:patients_button")}
+            {t("Physicians.patients_button")}
           </Button>
           <Button type="link" onClick={() => handleEdit(record)}>
-            <EditOutlined /> {t("Professionals:Physicians:edit_button")}
+            <EditOutlined /> {t("Physicians.edit_button")}
           </Button>
         </Space>
       ),
@@ -117,11 +117,12 @@ export default function DoctorMenu() {
           )
           .then(() => {
             refetchDoctors();
-            openModal("physician successfully deleted", false);
+            openModal(t("Physicians.success_physician_deletion"), false);
           })
           .catch((err) =>
             openModal(
-              err.response?.data?.message || "Error deleting physician",
+              t(`Backend:${err.response?.data?.message}`) ||
+                t("Physicians.error_physician_deletion"),
               true
             )
           );
@@ -159,7 +160,7 @@ export default function DoctorMenu() {
     if (error) {
       return (
         <div style={{ textAlign: "center", marginTop: "20px" }}>
-          <h3>Error loading physicians</h3>
+          <h3>{t("Physicians.error_loading_physicians")}</h3>
           <Button onClick={() => refetchDoctors()}>Retry</Button>
         </div>
       );
@@ -179,12 +180,11 @@ export default function DoctorMenu() {
             icon={<PlusOutlined />}
             onClick={() => setIsCreateDoctor(true)}
           >
-            {t("Professionals:Physicians:register_physician")}
+            {t("Physicians.register_physician")}
           </Button>
           {doctorList?.length > 0 && (
             <span>
-              {t("Professionals:Physicians:total_physicians")}:{" "}
-              {doctorList.length}
+              {t("Physicians.total_physicians")}: {doctorList.length}
             </span>
           )}
         </div>
@@ -200,9 +200,9 @@ export default function DoctorMenu() {
           pagination={{
             pageSize: 10,
             showTotal: (total, range) =>
-              `${range[0]}-${range[1]} ${t(
-                "Professionals:Physicians:of"
-              )} ${total} ${t("Professionals:Physicians:physicians")}`,
+              `${range[0]}-${range[1]} ${t("Physicians.of")} ${total} ${t(
+                "Physicians.physicians"
+              )}`,
           }}
         />
       </>
@@ -228,14 +228,14 @@ export default function DoctorMenu() {
               type="primary"
               icon={<ArrowLeftOutlined />}
             >
-              {t("Professionals:Physicians:back_button")}
+              {t("Physicians.back_button")}
             </Button>
           </Col>
           <Col flex="auto" style={{ textAlign: "center" }}>
             <h2 style={{ marginBottom: 0 }}>
               {isCreateDoctor
-                ? t("Professionals:Physicians:register_physician_title")
-                : t("Professionals:Physicians:edit_physician")}
+                ? t("Physicians.register_physician_title")
+                : t("Physicians.edit_physician")}
             </h2>
           </Col>
           <Col span={4} />

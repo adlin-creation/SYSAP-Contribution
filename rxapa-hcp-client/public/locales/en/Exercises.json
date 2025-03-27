@@ -35,5 +35,6 @@
   "update_button": "Update",
   "modify": "Modify",
   "save": "Save",
-  "error_message": "An error occurred"
+  "error_message": "An error occurred",
+  "invalid_video_link": "Please enter a valid link"
 }

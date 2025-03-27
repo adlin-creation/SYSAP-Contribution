@@ -18,7 +18,7 @@ exports.createProgram = [
     const sessions = Array.isArray(rawSessions) ? rawSessions : [];
 
     if (!sessions.length) {
-      return res.status(400).json({ message: "Backend:error_no_valid_session" });
+      return res.status(400).json({ message: "error_no_valid_session" });
     }
 
     let imagePath = "";
@@ -28,7 +28,7 @@ exports.createProgram = [
     } else if (imageUrl) {
       imagePath = imageUrl;
     } else {
-      return res.status(400).json({ message: "Backend:error_no_image_provided" });
+      return res.status(400).json({ message: "error_no_image_provided" });
     }
 
     try {
@@ -47,10 +47,12 @@ exports.createProgram = [
         });
       }
 
-      res.status(201).json({ message: "Backend:success_program_created" });
+      res.status(201).json({ message: "success_program_created" });
     } catch (error: any) {
       if (!error.statusCode) error.statusCode = 500;
-      res.status(error.statusCode).json({ message: "Backend:error_program_creation_failed" });
+      res
+        .status(error.statusCode)
+        .json({ message: "error_program_creation_failed" });
     }
     return res;
   },
@@ -62,7 +64,7 @@ exports.getPrograms = async (req: any, res: any, next: any) => {
     res.status(200).json(programs);
   } catch (error: any) {
     if (!error.statusCode) error.statusCode = 500;
-    res.status(error.statusCode).json({ message: "Backend:error_loading_programs" });
+    res.status(error.statusCode).json({ message: "error_loading_programs" });
   }
   return res;
 };
@@ -81,7 +83,9 @@ exports.getProgramPhases = async (req: any, res: any, next: any) => {
     res.status(200).json(programPhases);
   } catch (error: any) {
     if (!error.statusCode) error.statusCode = 500;
-    res.status(error.statusCode).json({ message: "Backend:error_loading_program_phases" });
+    res
+      .status(error.statusCode)
+      .json({ message: "error_loading_program_phases" });
   }
   return res;
 };
@@ -101,7 +105,7 @@ exports.getProgram = async (req: any, res: any, next: any) => {
     res.status(200).json(program);
   } catch (error: any) {
     if (!error.statusCode) error.statusCode = 500;
-    res.status(error.statusCode).json({ message: "Backend:error_loading_program" });
+    res.status(error.statusCode).json({ message: "error_loading_program" });
   }
   return res;
 };
@@ -114,13 +118,13 @@ exports.addProgramPhase = async (req: any, res: any, next: any) => {
     const program = await Program.findOne({ where: { key: programKey } });
 
     if (!program) {
-      return res.status(404).json({ message: "Backend:error_program_not_found" });
+      return res.status(404).json({ message: "error_program_not_found" });
     }
 
     const phase = await ProgramPhase.findOne({ where: { name: phaseName } });
 
     if (!phase) {
-      return res.status(404).json({ message: "Backend:error_phase_not_found" });
+      return res.status(404).json({ message: "error_phase_not_found" });
     }
 
     const rank = (await program.countProgramPhase_Programs()) + 1;
@@ -131,10 +135,10 @@ exports.addProgramPhase = async (req: any, res: any, next: any) => {
       rank,
     });
 
-    res.status(201).json({ message: "Backend:success_phase_added" });
+    res.status(201).json({ message: "success_phase_added" });
   } catch (error: any) {
     if (!error.statusCode) error.statusCode = 500;
-    res.status(error.statusCode).json({ message: "Backend:error_adding_phase" });
+    res.status(error.statusCode).json({ message: "error_adding_phase" });
   }
 
   return res;
@@ -147,14 +151,14 @@ exports.deleteProgram = async (req: any, res: any) => {
     const program = await Program.findOne({ where: { key: programKey } });
 
     if (!program) {
-      return res.status(404).json({ message: "Backend:error_program_not_found" });
+      return res.status(404).json({ message: "error_program_not_found" });
     }
 
     await program.destroy();
-    res.status(200).json({ message: "Backend:success_program_deleted" });
+    res.status(200).json({ message: "success_program_deleted" });
   } catch (error: any) {
     if (!error.statusCode) error.statusCode = 500;
-    res.status(error.statusCode).json({ message: "Backend:error_deleting_program" });
+    res.status(error.statusCode).json({ message: "error_deleting_program" });
   }
 
   return res;
@@ -168,15 +172,15 @@ exports.updateProgram = async (req: any, res: any, next: any) => {
     const program = await Program.findOne({ where: { key: programKey } });
 
     if (!program) {
-      return res.status(404).json({ message: "Backend:error_program_not_found" });
+      return res.status(404).json({ message: "error_program_not_found" });
     }
 
     await program.update({ name, description, duration });
 
-    res.status(200).json({ message: "Backend:success_program_updated" });
+    res.status(200).json({ message: "success_program_updated" });
   } catch (error: any) {
     if (!error.statusCode) error.statusCode = 500;
-    res.status(error.statusCode).json({ message: "Backend:error_updating_program" });
+    res.status(error.statusCode).json({ message: "error_updating_program" });
   }
 
   return res;
@@ -201,7 +205,8 @@ export const searchPrograms = async (req: any, res: any, next: any) => {
     }
 
     if (filters.duration) whereClause.duration = filters.duration;
-    if (filters.duration_unit) whereClause.duration_unit = filters.duration_unit;
+    if (filters.duration_unit)
+      whereClause.duration_unit = filters.duration_unit;
 
     if (filters.description_keywords) {
       whereClause.description = {
@@ -212,11 +217,11 @@ export const searchPrograms = async (req: any, res: any, next: any) => {
     const programs = await Program.findAll({ where: whereClause });
 
     if (programs.length === 0) {
-      return res.status(404).json({ message: "Backend:error_no_program_found" });
+      return res.status(404).json({ message: "error_no_program_found" });
     }
 
     res.json(programs);
   } catch (error) {
-    res.status(500).json({ message: "Backend:error_searching_programs" });
+    res.status(500).json({ message: "error_searching_programs" });
   }
 };

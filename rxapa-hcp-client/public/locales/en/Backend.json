@@ -87,6 +87,11 @@
   "error_updating_program": "Failed to update the program.",
   "error_no_program_found": "No programs found.",
   "error_searching_programs": "Server error while searching for programs.",
+  "error_program_name_required": "The program name is required.",
+  "error_description_too_long": "The description is too long (max 500 characters).",
+  "error_duration_minimum": "The duration must be at least 1 day or 1 week.",
+  "error_duration_unit": "The duration unit must be 'days' or 'weeks'.",
+  "error_invalid_image_url": "The image must be a valid URL in .jpg, .png, or .webp.",
 
   "error_creating_enrollement": "Error creating program enrollement.",
   "error_patient_data_required": "Patient data is required.",

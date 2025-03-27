@@ -22,7 +22,7 @@
   "create_program": "Create a program",
   "submit_button": "SUBMIT",
   "back_button": "Back",
-  "close_button": "Close",
+  "button_close": "Close",
   "edit_button": "Edit",
   "delete_button": "Delete",
   "name_title": "Name",
@@ -35,5 +35,9 @@
   "end_condition_type_label": "End Condition Type",
   "end_condition_value_label": "End Condition Value",
   "frequency_label": "Frequency",
-  "edit_title": "Edit"
+  "edit_title": "Edit",
+
+  "select_program_phase": "Please select a program phase",
+  "button_confirm_selection": "Confirm Selection",
+  "text_no_sessions_found": "No sessions found"
 }

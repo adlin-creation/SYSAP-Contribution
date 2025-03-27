@@ -16,6 +16,7 @@
     "last_name_label": "اللقب",
     "required_last_name_error": "اللقب مطلوب",
     "last_name_min_length_error": "يجب أن يكون اللقب على الأقل مكونًا من حرفين",
+    "enter_last_name_placeholder": "أدخل اللقب ",
     "enter_last_name": "أدخل اللقب",
     "required_email_error": "البريد الإلكتروني مطلوب",
     "invalid_email_format_error": "تنسيق البريد الإلكتروني غير صالح",
@@ -50,7 +51,16 @@
     "work_environment_label": "بيئة العمل",
     "work_environment_required": "بيئة العمل مطلوبة",
     "work_environment_min_length": "يجب أن تحتوي بيئة العمل على حرفين على الأقل",
-    "work_environment_placeholder": "اختر بيئة العمل"
+    "work_environment_placeholder": "اختر بيئة العمل",
+    "success_physician_creation": "تم إنشاء الطبيب بنجاح!",
+    "error_physician_creation": "خطأ في إنشاء الطبيب",
+    "error_updating_physician": "خطأ في تحديث الطبيب",
+    "error_generating_password": "خطأ في إنشاء كلمة المرور",
+    "success_physician_deletion": "تم حذف الطبيب بنجاح",
+    "error_physician_deletion": "خطأ في حذف الطبيب",
+    "error_loading_physicians": "خطأ في تحميل الأطباء",
+    "error_loading_patients": "خطأ في تحميل المرضى",
+    "generate_password_tooltip": "إنشاء كلمة مرور"
   },
   "Kinesiologist": {
     "name": "الاسم",
@@ -106,7 +116,13 @@
     "work_environment_label": "بيئة العمل",
     "work_environment_required": "بيئة العمل مطلوبة",
     "work_environment_min_length": "يجب أن تحتوي بيئة العمل على حرفين على الأقل",
-    "work_environment_placeholder": "اختر بيئة العمل"
+    "work_environment_placeholder": "اختر بيئة العمل",
+    "error_updating_kinesiologist": "خطأ في تحديث أخصائي الحركة ",
+    "success_kinesiologist_deletion": "تم حذف أخصائي الحركة بنجاح",
+    "error_kinesiologist_deletion": "خطأ في حذف أخصائي العلاج الطبيعي",
+    "error_loading_kinesiologists": "خطأ في تحميل أخصائيي العلاج الطبيعي",
+    "error_loading_patients": "خطأ في تحميل المرضى",
+    "generate_password_tooltip": "إنشاء كلمة مرور"
   },
   "Admins": {
     "name": "الاسم",
@@ -160,6 +176,7 @@
     "title_delete_admin_confirmation": "هل أنت متأكد أنك تريد حذف هذا المسؤول؟",
     "warning_permanent_delete": "سيتم حذف {{firstname}} {{lastname}} نهائيًا",
     "error_loading_admins": "خطأ في تحميل المسؤولين",
-    "button_retry": "إعادة المحاولة"
+    "button_retry": "إعادة المحاولة",
+    "generate_password_tooltip": "إنشاء كلمة مرور"
   }
 }

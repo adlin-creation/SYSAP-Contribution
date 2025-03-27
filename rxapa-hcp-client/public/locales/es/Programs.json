@@ -21,7 +21,7 @@
   "create_program": "Crear un programa",
   "submit_button": "ENVIAR",
   "back_button": "Atrás",
-  "close_button": "Cerrar",
+  "button_close": "Cerrar",
   "edit_button": "Editar",
   "delete_button": "Eliminar",
   "name_title": "Nombre",
@@ -34,5 +34,9 @@
   "end_condition_type_label": "Tipo de condición de fin",
   "end_condition_value_label": "Valor de la condición de fin",
   "frequency_label": "Frecuencia",
-  "edit_title": "Editar"
+  "edit_title": "Editar",
+
+  "select_program_phase": "Por favor, seleccione una fase del programa",
+  "button_confirm_selection": "Confirmar selección",
+  "text_no_sessions_found": "No se encontraron sesiones"
 }

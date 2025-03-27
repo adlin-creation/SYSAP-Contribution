@@ -10,6 +10,8 @@ import AddBloc from "./AddBloc";
 import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
+
 
 export default function SessionDetails({ sessionKey }) {
   const { t } = useTranslation();
@@ -217,3 +219,6 @@ export default function SessionDetails({ sessionKey }) {
     </Col>
   );
 }
+SessionDetails.propTypes = {
+  sessionKey: PropTypes.string.isRequired,
+};

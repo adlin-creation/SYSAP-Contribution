@@ -87,6 +87,11 @@
   "error_updating_program": "Error al actualizar el programa.",
   "error_no_program_found": "No se encontraron programas.",
   "error_searching_programs": "Error del servidor al buscar programas.",
+  "error_program_name_required": "El nombre del programa es obligatorio.",
+  "error_description_too_long": "La descripción es demasiado larga (máximo 500 caracteres).",
+  "error_duration_minimum": "La duración debe ser de al menos 1 día o 1 semana.",
+  "error_duration_unit": "La unidad de duración debe ser 'días' o 'semanas'.",
+  "error_invalid_image_url": "La imagen debe ser una URL válida en .jpg, .png o .webp.",
 
   "error_creating_enrollement": "Error al crear la inscripción al programa.",
   "error_patient_data_required": "Se requieren los datos del paciente.",

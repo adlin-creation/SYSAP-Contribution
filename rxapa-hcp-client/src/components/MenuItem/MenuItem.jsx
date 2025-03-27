@@ -2,18 +2,18 @@ import React from "react";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
+import PropTypes from "prop-types";
 
-export default function MenuItem(props, { icon }) {
+export default function MenuItem({ name, description }) {
   return (
     <div style={{ display: "flex" }}>
       <nav>
         <ListItem disablePadding>
           <ListItemButton>
-            {/* https://mui.com/material-ui/api/list-item-text/ */}
             <ListItemText
               style={{ textDecoration: "none" }}
-              primary={props.name}
-              secondary={props.descritpion}
+              primary={name}
+              secondary={description}
             />
           </ListItemButton>
         </ListItem>
@@ -21,3 +21,8 @@ export default function MenuItem(props, { icon }) {
     </div>
   );
 }
+
+MenuItem.propTypes = {
+  name: PropTypes.string.isRequired,
+  description: PropTypes.string,
+};

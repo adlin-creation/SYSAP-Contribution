@@ -41,10 +41,10 @@ export const getImage = (req: Request, res: Response) => {
  * Creates a new Exercise.
  */
 export const createExercise = async (req: Request, res: Response) => {
-  const { name, description, category, fitnessLevel } = req.body;
+  const { name, description, category, fitnessLevel, videoUrl } = req.body;
   const exerciseImageFile = req.file;
 
-  if (!name || !description || !category || !fitnessLevel) {
+  if (!name || !category || !fitnessLevel) {
     return res.status(400).json({ message: "all_fields_required" });
   }
 
@@ -56,6 +56,7 @@ export const createExercise = async (req: Request, res: Response) => {
       description,
       category,
       fitnessLevel,
+      videoUrl,
       imageUrl,
     });
 
@@ -93,7 +94,7 @@ export const createExercise = async (req: Request, res: Response) => {
  */
 export const updateExercise = async (req: Request, res: Response) => {
   const exerciseKey = req.params.exerciseKey;
-  const { name, description, category, fitnessLevel } = req.body;
+  const { name, description, category, fitnessLevel, videoUrl } = req.body;
 
   try {
     const exercise = await Exercise.findOne({ where: { key: exerciseKey } });
@@ -106,6 +107,7 @@ export const updateExercise = async (req: Request, res: Response) => {
       description: description || exercise.description,
       category: category || exercise.category,
       fitnessLevel: fitnessLevel || exercise.fitnessLevel,
+      videoUrl: videoUrl || exercise.videoUrl,
     });
 
     res.status(200).json({ message: "exercise_updated_successfully" });
@@ -118,6 +120,13 @@ export const updateExercise = async (req: Request, res: Response) => {
           message: "error_updating_exercise",
           error: error.message,
         });
+      }
+      if (error.name === "SequelizeUniqueConstraintError") {
+        res.status(409).json({ message: "exercise_already_exists" });
+      } else {
+        res
+          .status(500)
+          .json({ message: "error_updating_exercise", error: error.message });
       }
     } else {
       res.status(500).json({

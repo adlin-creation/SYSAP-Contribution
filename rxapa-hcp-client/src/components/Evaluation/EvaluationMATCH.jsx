@@ -6,6 +6,7 @@ import useToken from "../Authentication/useToken";
 import Constants from "../Utils/Constants";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
 function EvaluationMATCH({ onSubmit }) {
   const { patientId } = useParams();
@@ -485,3 +486,6 @@ function EvaluationMATCH({ onSubmit }) {
 }
 
 export default EvaluationMATCH;
+EvaluationMATCH.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};

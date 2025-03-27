@@ -29,9 +29,9 @@ export default function KinesiologistPatients() {
   if (error) {
     return (
       <div style={{ textAlign: "center", marginTop: "20px" }}>
-        <h3>Error loading patients</h3>
+        <h3>{t("Professionals:Kinesiologist:error_loading_patients")}</h3>
         <Button onClick={() => navigate("/kinesiologists")}>
-          Return to Kinesiologists
+          {t("Professionals:Kinesiologist:back_to_kinesiologists_button")}
         </Button>
       </div>
     );

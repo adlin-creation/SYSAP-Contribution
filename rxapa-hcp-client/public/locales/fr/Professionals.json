@@ -50,7 +50,16 @@
     "work_environment_label": "Environnement de travail",
     "work_environment_required": "Le milieu de travail est obligatoire",
     "work_environment_min_length": "Le milieu de travail doit contenir au moins 2 caractères",
-    "work_environment_placeholder": "Sélectionnez le milieu de travail"
+    "work_environment_placeholder": "Sélectionnez le milieu de travail",
+    "success_physician_creation": "Médecin créé avec succès !",
+    "error_physician_creation": "Erreur lors de la création du médecin",
+    "error_updating_physician": "Erreur lors de la mise à jour du médecin",
+    "error_generating_password": "Erreur lors de la génération du mot de passe",
+    "success_physician_deletion": "Médecin supprimé avec succès",
+    "error_physician_deletion": "Erreur lors de la suppression du médecin",
+    "error_loading_physicians": "Erreur de chargement des médecins",
+    "error_loading_patients": "Erreur de chargement des patients",
+    "generate_password_tooltip": "Générer un mot de passe"
   },
   "Kinesiologist": {
     "name": "Nom",
@@ -106,7 +115,13 @@
     "work_environment_label": "Environnement de travail",
     "work_environment_required": "Le milieu de travail est obligatoire",
     "work_environment_min_length": "Le milieu de travail doit contenir au moins 2 caractères",
-    "work_environment_placeholder": "Sélectionnez le milieu de travail"
+    "work_environment_placeholder": "Sélectionnez le milieu de travail",
+    "error_updating_kinesiologist": "Erreur lors de la mise à jour du Kinésiologue",
+    "success_kinesiologist_deletion": "Kinésiologue supprimé avec succès",
+    "error_kinesiologist_deletion": "Erreur lors de la suppression du Kinésiologue",
+    "error_loading_kinesiologists": "Erreur de chargement des Kinésiologues",
+    "error_loading_patients": "Erreur de chargement des patients",
+    "generate_password_tooltip": "Générer un mot de passe"
   },
   "Admins": {
     "name": "Nom",
@@ -160,6 +175,7 @@
     "title_delete_admin_confirmation": "Êtes-vous sûr de vouloir supprimer cet administrateur ?",
     "warning_permanent_delete": "Cela supprimera définitivement {{firstname}} {{lastname}}",
     "error_loading_admins": "Erreur lors du chargement des administrateurs",
-    "button_retry": "Réessayer"
+    "button_retry": "Réessayer",
+    "generate_password_tooltip": "Générer un mot de passe"
   }
 }
