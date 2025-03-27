@@ -69,7 +69,7 @@ app.use("/images", (req, res, next) => {
   }
 }));
 
-app.use(userRoutes);
+app.use("/auth",userRoutes);
 app.use(exerciseRoutes);
 app.use(blocRoutes);
 app.use(sessionRoutes);
