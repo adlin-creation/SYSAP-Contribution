@@ -1,6 +1,7 @@
 import express from "express";
 import { loginLimiter } from "../middleware/rateLimiter"; // Ajout
 import csrf from "csurf";
+import { validateResetToken } from "../middleware/validateResetToken";
 
 const router = express.Router();
 const userController = require("../controller/UserController");
@@ -17,4 +18,8 @@ router.get("/csrf-token", csrfProtection, (req, res) => {
     return res.json({ csrfToken: req.csrfToken() }); // on renvoie le token CSRF
   });
 
+// routes pour le reset de mot de passe
+router.post("/reset-password-request", userController.resetPasswordRequest);
+router.post("/reset-password", userController.resetPassword);
+router.post("/reset-password", validateResetToken, userController.resetPassword);
 export default router;
