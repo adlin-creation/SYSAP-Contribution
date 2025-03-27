@@ -245,6 +245,27 @@ function Evaluation({
     }
   };
 
+  // Fonction pour gérer l'export PDF
+  const handleExportPdf = async () => {
+    if (!exportPdf || !scores) return;
+    
+    try {
+      const date = new Date().toISOString().split("T")[0];
+      const payload = {
+        date: date,
+        ...buildPayload(formData, scores, patientId, isBalanceTestEnabled)
+      };
+      
+      await exportPdf(payload, token);
+    } catch (error) {
+      console.error("Erreur lors de l'exportation PDF:", error);
+      Modal.error({
+        title: "Erreur",
+        content: "Échec de l'exportation du PDF"
+      });
+    }
+  }
+
   const calculateSpeed = (walkingTime) => {
     const time = parseFloat(walkingTime);
     if (isNaN(time) || time <= 0) return "0.00";
@@ -302,6 +323,11 @@ function Evaluation({
         open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         footer={[
+          exportPdf && (
+            <Button key="export" onClick={handleExportPdf}>
+              Télécharger PDF
+            </Button>
+          ),
           <Button key="close" onClick={() => setIsModalVisible(false)}>
             Fermer
           </Button>,
