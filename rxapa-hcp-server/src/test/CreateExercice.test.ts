@@ -37,7 +37,7 @@ describe("createExercise", () => {
         encoding: "7bit",
         mimetype: "image/jpeg",
         size: 1024,
-        destination: "/uploads",
+        destination: "/images",
         filename: "image.jpg",
         path: "/images/image.jpg",
         buffer: Buffer.from(""),
@@ -66,7 +66,7 @@ describe("createExercise", () => {
       description: "Un exercice de force au poids du corps qui sollicite principalement les pectoraux, les triceps et les épaules.",
       category: "Force",
       fitnessLevel: "Intermédiaire",
-      imageUrl: "/uploads/image.jpg",
+      imageUrl: "/images/image.jpg",
     });
 
     await createExercise(req as Request, res as Response);
@@ -76,7 +76,7 @@ describe("createExercise", () => {
       description: "Un exercice de force au poids du corps qui sollicite principalement les pectoraux, les triceps et les épaules.",
       category: "Force",
       fitnessLevel: "Intermédiaire",
-      imageUrl: "/uploads/image.jpg",
+      imageUrl: "/images/image.jpg",
     });
 
     expect(res.status).toHaveBeenCalledWith(201);
@@ -95,7 +95,7 @@ describe("createExercise", () => {
       description: "Un exercice de force au poids du corps qui sollicite principalement les pectoraux, les triceps et les épaules.",
       category: "Force",
       fitnessLevel: "Intermédiaire",
-      imageUrl: "/uploads/image.jpg",
+      imageUrl: "/images/image.jpg",
     });
 
     expect(res.status).toHaveBeenCalledWith(409);
@@ -129,11 +129,11 @@ describe("createExercise", () => {
   });
 
   it("Should delete uploaded file if exercise creation fails", async () => {
-    req.file = { path: "/uploads/image.jpg" } as any;
+    req.file = { path: "/images/image.jpg" } as any;
     mockCreate.mockRejectedValue(new Error("DB Error"));
 
     await createExercise(req as Request, res as Response);
 
-    expect(deleteFile).toHaveBeenCalledWith("/uploads/image.jpg");
+    expect(deleteFile).toHaveBeenCalledWith("/images/image.jpg");
   });
 });

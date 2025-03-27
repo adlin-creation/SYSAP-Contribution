@@ -204,7 +204,7 @@ export const deleteExercise = async (req: Request, res: Response) => {
     await exercise.destroy();
 
     // Utilisation de l'optional chaining pour vérifier imageUrl
-    if (exercise.imageUrl?.startsWith("/uploads")) {
+    if (exercise.imageUrl?.startsWith("/images")) {
       deleteFile(exercise.imageUrl); // Nettoyer uniquement les fichiers locaux
     }
 
