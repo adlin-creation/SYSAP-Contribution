@@ -62,12 +62,17 @@ function AddCaregiver({ patient, refetchPatients, onClose }) {
                     startDate: data.programStart,
                     endDate: data.programEnd,
                 },
-                patientId: patient.id,
             };
+            console.log(payload);
 
-            await axios.post(`${Constants.SERVER_URL}/add-caregiver`, payload, {
-                headers: { Authorization: "Bearer " + token },
-            });
+            const response = await axios.post(
+                `${Constants.SERVER_URL}/add-caregiver/${patient.id}`,
+                payload,
+                {
+                    headers: { Authorization: "Bearer " + token },
+                }
+            );
+            console.log(response);
 
             message.success(t("Caregiver added successfully"));
             refetchPatients();
@@ -100,6 +105,7 @@ function AddCaregiver({ patient, refetchPatients, onClose }) {
             ]}
             width={800}
         >
+
             <Form layout="vertical">
                 <Row gutter={16}>
                     <Col span={12}>

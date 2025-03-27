@@ -5,6 +5,7 @@ import { generateCode, sendEmail } from "../util/unikpass"; // Assure-toi que le
 import * as bcrypt from "bcrypt";
 import { Patient_Caregiver } from "../model/Patient_Caregiver";
 import { Caregiver } from "../model/Caregiver";
+import { sequelize } from "../util/database";
 
 /**
  * Creates a new patient.
@@ -62,6 +63,127 @@ exports.createPatient = async (req: any, res: any, next: any) => {
   return res;
 };
 
+/**
+ * Add cargiver.
+ */
+exports.addCaregiver = async (req: any, res: any, next: any) => {
+  const patientId = req.params.id;
+
+  const existingBindedProgram = await ProgramEnrollement.findOne({
+    where: { PatientId: patientId },
+  });
+
+  const program = existingBindedProgram
+    ? existingBindedProgram.ProgramId
+    : null;
+
+
+
+  const { caregiver, programEnrollment } = req.body;
+  const { programId, startDate, endDate } = programEnrollment;
+  const { email } = caregiver;
+
+  console.log(program);
+  console.log(programId);
+
+
+  const transaction = await sequelize.transaction();
+
+  try {
+
+
+    if (program && program !== programId || !program) {
+      try {
+        await Patient.update(
+          {
+            numberOfPrograms: sequelize.literal('"numberOfPrograms" + 1')
+          },
+          {
+            where: { id: patientId },
+            transaction
+          }
+        );
+      } catch (error) {
+        console.error(error);
+        throw new Error('Error updating numberOfPrograms');
+      }
+    }
+
+    await Patient.update(
+      {
+        numberOfCaregivers: sequelize.literal('"numberOfCaregivers" + 1')
+      },
+      {
+        where: { id: patientId },
+        transaction
+      }
+    );
+
+    const createdProgramEnrollement = await ProgramEnrollement.create(
+      {
+        enrollementDate: new Date(),
+        startDate: startDate,
+        endDate: endDate,
+        programEnrollementCode: `P-${patientId}-${program ? 2 : 1}`,
+        ProgramId: programId,
+        PatientId: patientId,
+      },
+      { transaction }
+    );
+    console.log(createdProgramEnrollement);
+
+    const existingCaregiver = await Caregiver.findOne({
+      where: { email: caregiver.email },
+    });
+    if (existingCaregiver) {
+      // Annulation de la transaction et retour d'une erreur
+      await transaction.rollback();
+      return res.status(409).json({
+        message: `Existing caregiver with this email: ${caregiver.email}`,
+      });
+    }
+    const codeCaregiver = generateCode(6);
+    const unikPassHashed = await bcrypt.hash(codeCaregiver, 10);
+    sendEmail(email, "Votre code d'accès RXAPA", codeCaregiver);
+    caregiver.uniqueCode = unikPassHashed;
+
+    const createdCaregiver = await Caregiver.create(caregiver, { transaction });
+
+    console.log(createdCaregiver);
+
+
+    const createdPatientCargiver = await Patient_Caregiver.create(
+      {
+        date: new Date(),
+        ProgramEnrollementId: createdProgramEnrollement.id,
+        CaregiverId: createdCaregiver.id,
+        PatientId: patientId,
+      },
+      { transaction }
+    );
+    console.log(createdPatientCargiver);
+
+    await transaction.commit();
+
+    res.status(201).json({
+      patientId: patientId,
+      programEnrollments: createdProgramEnrollement,
+      caregiver: createdCaregiver,
+      patientCargiver: createdPatientCargiver
+    });
+  } catch (error: any) {
+    await transaction.rollback();
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    res.status(error.statusCode).json({
+      message: "Error adding cargiver",
+      error: error.message,
+    });
+  }
+  return res;
+
+};
 /**
  * Updates an existing patient.
  */

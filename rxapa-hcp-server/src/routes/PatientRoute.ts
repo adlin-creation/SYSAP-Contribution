@@ -5,6 +5,7 @@ const router = express.Router();
 const patientController = require("../controller/PatientController");
 
 router.post("/create-patient", isAuth, patientController.createPatient);
+router.post("/add-caregiver/:id", isAuth, patientController.addCaregiver);
 router.put("/update-patient/:id", isAuth, patientController.updatePatient);
 router.delete("/delete-patient/:id", isAuth, patientController.deletePatient);
 router.get("/patient/:id", isAuth, patientController.getPatient);
