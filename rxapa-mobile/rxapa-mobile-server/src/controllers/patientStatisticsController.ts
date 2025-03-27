@@ -18,7 +18,7 @@ class PatientStatisticsController {
       if (isNaN(programEnrollmentId)) {
         return res.status(400).json({
           success: false,
-          message: 'Un ID valide pour l\'enregistrement du programme est requis.',
+          message: 'error_valid_enrollment_id_required',
         });
       }
 
@@ -26,7 +26,7 @@ class PatientStatisticsController {
       if (!['day', 'week', 'all'].includes(filterType)) {
         return res.status(400).json({
           success: false,
-          message: 'filterType doit être "day", "week" ou "all".',
+          message: 'error_filter_type_must_be_day_week_all',
         });
       }
 
@@ -92,7 +92,7 @@ class PatientStatisticsController {
       if (result.rowCount === 0) {
         return res.status(404).json({
           success: false,
-          message: 'Aucune session trouvée pour cet utilisateur.',
+          message: 'error_no_session_found',
         });
       }
 
@@ -106,7 +106,7 @@ class PatientStatisticsController {
       console.error('Erreur lors de la récupération des statistiques patient:', err);
       return res.status(500).json({
         success: false,
-        message: 'Erreur interne du serveur.',
+        message: 'error_internal_server_error',
       });
     }
   }

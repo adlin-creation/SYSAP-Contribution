@@ -43,7 +43,7 @@ export default function SeanceScreen() {
       if (response.success) {
         setExercises(response.data);
       } else {
-        alert(response.message || t('Seance:error_exercise_not_found'));
+        alert(t(response.message ? `Backend:${response.message}` : 'Seance:error_exercise_not_found'));
       }
     } catch (error) {
       console.error('Erreur lors de la récupération des exercices:', error);

@@ -11,6 +11,7 @@ import en_config from '../locales/en/Configuration.json';
 import en_programme from '../locales/en/Programme.json';
 import en_progression from '../locales/en/Progression.json';
 import en_seance from '../locales/en/Seance.json';
+import en_backend from '../locales/en/Backend.json';
 
 import fr_home from '../locales/fr/Home.json'
 import fr_index from '../locales/fr/Index.json'
@@ -20,6 +21,7 @@ import fr_config from '../locales/fr/Configuration.json';
 import fr_programme from '../locales/fr/Programme.json';
 import fr_progression from '../locales/fr/Progression.json';
 import fr_seance from '../locales/fr/Seance.json';
+import fr_backend from '../locales/fr/Backend.json';
 
 import es_home from '../locales/es/Home.json'
 import es_index from '../locales/es/Index.json'
@@ -29,6 +31,7 @@ import es_config from '../locales/es/Configuration.json';
 import es_programme from '../locales/es/Programme.json';
 import es_progression from '../locales/es/Progression.json';
 import es_seance from '../locales/es/Seance.json';
+import es_backend from '../locales/es/Backend.json';
 
 import ar_home from '../locales/ar/Home.json';
 import ar_index from '../locales/ar/Index.json';
@@ -38,6 +41,7 @@ import ar_config from '../locales/ar/Configuration.json';
 import ar_programme from '../locales/ar/Programme.json';
 import ar_progression from '../locales/ar/Progression.json';
 import ar_seance from '../locales/ar/Seance.json';
+import ar_backend from '../locales/ar/Backend.json';
 
 let locales = [];
 try {
@@ -66,7 +70,8 @@ i18n
             Config: en_config,
             Programme: en_programme,
             Progression: en_progression,
-            Seance: en_seance
+            Seance: en_seance,
+            Backend: en_backend
         },
 
         fr: {
@@ -77,7 +82,8 @@ i18n
             Config: fr_config,
             Programme: fr_programme,
             Progression: fr_progression,
-            Seance: fr_seance
+            Seance: fr_seance,
+            Backend: fr_backend
         },
 
         es: {
@@ -88,7 +94,8 @@ i18n
             Config: es_config,
             Programme: es_programme,
             Progression: es_progression,
-            Seance: es_seance
+            Seance: es_seance,
+            Backend: es_backend
         },
 
         ar: {
@@ -99,7 +106,8 @@ i18n
             Config: ar_config,
             Programme: ar_programme,
             Progression: ar_progression,
-            Seance: ar_seance
+            Seance: ar_seance,
+            Backend: ar_backend
         }
     },
     lng: defaultLang,
@@ -111,7 +119,8 @@ i18n
         "Cahier",
         "Programme",
         "Progression",
-        "Seance"
+        "Seance",
+        "Backend"
     ],
     defaultNS: "Home",
     interpolation: { escapeValue: false },

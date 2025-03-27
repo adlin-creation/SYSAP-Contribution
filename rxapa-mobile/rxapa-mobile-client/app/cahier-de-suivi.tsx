@@ -83,7 +83,7 @@ export default function CahierDeSuiviScreen() {
         console.log('Session data:', response.data);
         navigation.navigate('home' as never); // Navigate to the home page
       } else {
-        Alert.alert(t('Cahier:error_error'), response.message || t('Cahier:error_recording_failed'));
+        Alert.alert(t('Cahier:error_error'), response.message ? t(`Backend:${response.message}`) : t('Cahier:error_recording_failed'));
       }
     } catch (error) {
       console.error('Erreur lors de l\'enregistrement de la session:', error);

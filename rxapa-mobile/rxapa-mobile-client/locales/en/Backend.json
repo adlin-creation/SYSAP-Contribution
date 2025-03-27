@@ -1,0 +1,26 @@
+{
+    "error_valid_enrollment_id_required": "A valid program enrollment ID is required.",
+    "error_fetching_data": "Error fetching data.",
+    "error_filter_type_must_be_day_week_all": "filterType must be \"day\", \"week\", or \"all\".",
+    "error_no_session_found_user": "No session found for this user.",
+    "error_no_session_found_id": "No session found for this ID.",
+    "error_no_session_found": "No session found.",
+    "error_program_enrollment_id_required": "ProgramEnrollementId is required.",
+    "error_internal_server_error": "Internal server error.",
+    "error_fetching_statistics": "Error fetching statistics.",
+    "error_response_not_a_json": "The server response is not in JSON format.",
+    "error_fetching_exercises": "Error fetching exercises.",
+    "error_while_fetching_exercises": "An error occurred while fetching exercises.",
+    "error_all_fields_required": "All required fields must be filled out.",
+    "error_no_exercise_found": "No exercise found for this session.",
+    "error_required_code": "Code is required.",
+    "error_invalid_code": "Invalid code.",
+    "error_recording_session_record": "Failed to record the session.",
+    "error_network_error": "Network error.",
+    "error_generic_error_occured": "An error occurred.",
+    "error_unknown_error_occured": "An unknown error occurred.",
+    "error_network_or_server_error": "Network or server error.",
+    
+    "success_session_recorded": "Session recorded successfully.",
+    "success_authentication": "Authentication successful."
+}
