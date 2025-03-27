@@ -33,5 +33,10 @@
   "required_label": "Obligatoire",
   "cancel_button": "ANNULER",
   "close_button": "Fermer",
-  "back_button": "Retourner"
+  "back_button": "Retourner",
+
+  "confirm_changes_title": "Confirmer les modifications",
+  "confirm_changes_message": "Voulez-vous vraiment enregistrer ces modifications ?",
+  "confirm_add_exercise_title": "Confirmer l'ajout de l'exercice",
+  "confirm_add_exercise_message": "Voulez-vous vraiment ajouter cet exercice à ce bloc ?"
 }
