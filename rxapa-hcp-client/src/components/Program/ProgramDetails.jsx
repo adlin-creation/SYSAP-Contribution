@@ -110,7 +110,6 @@ export default function ProgramDetails({ program }) {
         },
       })
       .then((res) => {
-        console.log("Données reçues :", res.data);
         setSessions(res.data);
       })
       .catch((err) => {
@@ -216,9 +215,8 @@ export default function ProgramDetails({ program }) {
       formData.append("image", data.image[0]);
     }
 
-    console.log(t("Selected sessions before submit:"), selectedSessions);
     axios
-      .put(`${Constants.SERVER_URL}/update-program/${program.id}`, formData, {
+      .put(`${Constants.SERVER_URL}/update-program/${program.key}`, formData, {
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "multipart/form-data",
