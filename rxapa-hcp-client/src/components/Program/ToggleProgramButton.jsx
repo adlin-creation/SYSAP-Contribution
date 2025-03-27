@@ -5,6 +5,8 @@ import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
 import { CheckOutlined, StopOutlined } from "@ant-design/icons";
 import PropTypes from "prop-types";
+import "./ProgramStyles.css";
+
 
 ToggleProgramButton.propTypes = {
   program: PropTypes.shape({
@@ -50,16 +52,7 @@ export default function ToggleProgramButton({ program, onToggle }) {
       icon={program.actif ? <StopOutlined /> : <CheckOutlined />}
       type={program.actif ? "default" : "primary"}
       danger={program.actif}
-      style={{
-        borderRadius: "8px",
-        fontWeight: "bold",
-        padding: "6px 16px",
-        backgroundColor: program.actif ? "#ffffff" : "#52c41a",
-        color: program.actif ? "#d9363e" : "#ffffff",
-        border: program.actif ? "1px solid #d9363e" : "none",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-        transition: "all 0.3s ease",
-      }}
+      className={`toggle-program-button ${program.actif ? "active" : "inactive"}`}
     >
       {program.actif ? "Désactiver" : "Activer"}
       </Button>
