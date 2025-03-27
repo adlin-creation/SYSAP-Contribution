@@ -95,6 +95,7 @@ export default function ProgramMenu() {
           isEditProgram: true,
         };
       } else {
+        refetchPrograms();
         return {
           isCreateProgram: false,
           isEditProgram: false,
