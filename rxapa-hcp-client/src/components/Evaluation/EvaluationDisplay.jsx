@@ -5,7 +5,11 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import useToken from "../Authentication/useToken";
 import Constants from "../Utils/Constants";
-import { exportMatchPdf, exportPacePdf, exportPathPdf } from "./ExportEvaluationPdf";
+import {
+  exportMatchPdf,
+  exportPacePdf,
+  exportPathPdf,
+} from "./ExportEvaluationPdf";
 
 const { Title, Text } = Typography;
 
@@ -143,21 +147,24 @@ function EvaluationDisplay() {
     if (matchPath) {
       const payload = {
         date: matchPath.createdAt.split("T")[0],
-        idPatient : patientId,
-        chairTestSupport: matchPath.chairTestSupport === "true"? "without":"with",
+        idPatient: patientId,
+        chairTestSupport:
+          matchPath.chairTestSupport === "true" ? "without" : "with",
         chairTestCount: matchPath.chairTestCount,
         balanceFeetTogether: matchPath.BalanceFeetTogether,
         balanceSemiTandem: matchPath.balanceSemiTandem,
         balanceTandem: matchPath.balanceTandem,
-        walkingTime: matchPath.vitesseDeMarche != 0? 
-          Math.round((4 / matchPath.vitesseDeMarche) * 100)/100:0,
-        scores : {
+        walkingTime:
+          matchPath.vitesseDeMarche != 0
+            ? Math.round((4 / matchPath.vitesseDeMarche) * 100) / 100
+            : 0,
+        scores: {
           cardioMusculaire: matchPath.scoreCM,
           equilibre: matchPath.scoreBalance,
           total: matchPath.scoreTotal,
-          program: programmeRecommande
-        }
-      }
+          program: programmeRecommande,
+        },
+      };
       if (evaluation.Evaluation_MATCH) await exportMatchPdf(payload, token);
       if (evaluation.Evaluation_PATH) await exportPathPdf(payload, token);
     }
@@ -166,30 +173,31 @@ function EvaluationDisplay() {
       const pace = evaluation.Evaluation_PACE;
       const payload = {
         date: pace.createdAt.split("T")[0],
-        idPatient : patientId,
-        chairTestSupport: pace.chairTestSupport === "true"? "without":"with",
+        idPatient: patientId,
+        chairTestSupport: pace.chairTestSupport === "true" ? "without" : "with",
         chairTestCount: pace.chairTestCount,
         balanceFeetTogether: pace.BalanceFeetTogether,
         balanceSemiTandem: pace.balanceSemiTandem,
         balanceTandem: pace.balanceTandem,
         balanceOneFooted: pace.balanceOneFooted,
-        frtSitting: pace.frtSitting === "true"? "sitting":"standing",
+        frtSitting: pace.frtSitting === "true" ? "sitting" : "standing",
         frtDistance: pace.frtDistance,
-        walkingTime: pace.vitesseDeMarche != 0? 
-          Math.round((4 / pace.vitesseDeMarche) * 100)/100:0,
-        scores : {
+        walkingTime:
+          pace.vitesseDeMarche != 0
+            ? Math.round((4 / pace.vitesseDeMarche) * 100) / 100
+            : 0,
+        scores: {
           cardioMusculaire: pace.scoreA,
           equilibre: pace.scoreB,
           mobilite: pace.scoreC,
           color: programmeRecommande.split(" ")[0],
           level: programmeRecommande.split(" ")[1],
-          program: programmeRecommande
-        }
-      }
+          program: programmeRecommande,
+        },
+      };
       exportPacePdf(payload, token);
     }
-  }
-
+  };
 
   // Version 2 avec toggle buttons a décommenter
   /*
@@ -226,7 +234,7 @@ function EvaluationDisplay() {
       setExpandedEvaluation(evaluationId); // Ouvrir sinon
     }
   };
-*/
+
   const renderSection = (title, content) => (
     <Col span={8}>
       <Title level={5}>{title}</Title>
@@ -240,6 +248,7 @@ function EvaluationDisplay() {
       ))}
     </Col>
   );
+  */
 
   // A commenter pour tester la version 2 (v1)
 
@@ -335,7 +344,10 @@ function EvaluationDisplay() {
           </Col>
         </Row>
         <br />
-        <Button key="export" onClick={() => handleExportPdf(evaluation, programmeRecommande)}>
+        <Button
+          key="export"
+          onClick={() => handleExportPdf(evaluation, programmeRecommande)}
+        >
           Télécharger PDF
         </Button>
       </Card>
@@ -490,13 +502,20 @@ function EvaluationDisplay() {
             </Text>
           </Col>
 
-          <Col span={6}>
+          <Col span={4}>
             <Text strong style={{ fontSize: "16px" }}>
               Type : {type}
             </Text>
           </Col>
 
-          <Col span={2} style={{ textAlign: "right" }}>
+          <Col span={4} style={{ textAlign: "right" }}>
+            <Button
+              icon={<LockOutlined />}
+              style={{ marginRight: "8px" }}
+              onClick={() => handleExportPdf(evaluation, programmeRecommande)}
+            >
+              Télécharger PDF
+            </Button>
             <Button
               icon={<PlusOutlined />}
               type="primary"
