@@ -117,6 +117,11 @@ export default function Login({ setToken }) {
               <Button type="link" onClick={register}>
                 {t("Authentication:register_button")}
               </Button>
+
+              <Button type="link" onClick={() => navigate("/set-new-password")}>
+                Mot de passe oublie
+              </Button>
+
             </div>
           </Form>
         </div>

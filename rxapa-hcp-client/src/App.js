@@ -50,6 +50,8 @@ import {
 } from "@ant-design/icons";
 import "antd/dist/reset.css";
 import "./App.css";
+import SetNewPassword from "./components/Authentication/SetNewPassword";
+import ResetPassword from "./components/Authentication/ResetPassword";
 
 const { Header, Sider, Content } = Layout;
 
@@ -237,6 +239,8 @@ function App() {
       <Content className="content">
         <Routes>
           <Route path="login" element={<Login setToken={setToken} />}></Route>
+          <Route path="/set-new-password" element={<SetNewPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </Content>
