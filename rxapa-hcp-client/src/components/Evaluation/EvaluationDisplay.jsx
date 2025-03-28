@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Card, Row, Col, Button, Empty, Spin, Typography, Result } from "antd";
-import { LeftOutlined, LockOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  LeftOutlined,
+  LockOutlined,
+  PlusOutlined,
+  MinusOutlined,
+} from "@ant-design/icons";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import useToken from "../Authentication/useToken";
@@ -234,7 +239,8 @@ function EvaluationDisplay() {
       setExpandedEvaluation(evaluationId); // Ouvrir sinon
     }
   };
-
+*/
+  // Jusqu'ici
   const renderSection = (title, content) => (
     <Col span={8}>
       <Title level={5}>{title}</Title>
@@ -248,7 +254,6 @@ function EvaluationDisplay() {
       ))}
     </Col>
   );
-  */
 
   // A commenter pour tester la version 2 (v1)
 
@@ -517,7 +522,7 @@ function EvaluationDisplay() {
               Télécharger PDF
             </Button>
             <Button
-              icon={<PlusOutlined />}
+              icon={isExpanded ? <MinusOutlined /> : <PlusOutlined />}
               type="primary"
               style={{ backgroundColor: "#1890ff" }}
               onClick={() => toggleEvaluation(evaluation.id)}
