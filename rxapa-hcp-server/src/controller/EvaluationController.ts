@@ -862,7 +862,6 @@ exports.searchPatients = async (req: Request, res: Response) => {
 };
 
 exports.getPatientEvaluations = async (req: any, res: any, next: any) => {
-  // Changement ici: utiliser id au lieu de patientId pour correspondre au paramètre dans la route
   const patientId = req.params.id; 
   console.log("getPatientEvaluations appelé avec patientId:", patientId);
 
