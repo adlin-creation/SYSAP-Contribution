@@ -10,7 +10,6 @@ import "./Auth.css";
 import PropTypes from "prop-types";
 import LanguageSwitcher from "../LanguageSwitcher/LanguageSwitcher";
 import { useTranslation } from "react-i18next";
-import SetNewPassword from "./SetNewPassword";
 
 export default function Login({ setToken }) {
   const [isSignup, setIsSignup] = useState(false);
