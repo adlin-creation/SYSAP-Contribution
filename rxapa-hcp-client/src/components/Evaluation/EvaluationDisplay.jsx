@@ -279,10 +279,27 @@ function EvaluationDisplay() {
         `Nombre de levers : ${pace.chairTestCount}`,
       ];
 
-      equilibreData = [
-        "Dernier test effectué : Unipodal",
-        `Temps (seconde) : ${pace.balanceOneFooted}`,
-      ];
+      if (pace.balanceOneFooted > 0) {
+        equilibreData = [
+          "Dernier test effectué : Unipodal",
+          `Temps : ${pace.balanceOneFooted} s`,
+        ];
+      } else if (pace.balanceTandem > 0) {
+        equilibreData = [
+          "Dernier test effectué : Tandem",
+          `Temps : ${pace.balanceTandem} s`,
+        ];
+      } else if (pace.balanceSemiTandem > 0) {
+        equilibreData = [
+          "Dernier test effectué : Semi-Tandem",
+          `Temps : ${pace.balanceSemiTandem} s`,
+        ];
+      } else {
+        equilibreData = [
+          "Dernier test effectué : Pieds joints",
+          `Temps : ${pace.BalanceFeetTogether} s`,
+        ];
+      }
 
       mobiliteData = [
         pace.frtSitting ? "Assis" : "Debout",
@@ -300,10 +317,22 @@ function EvaluationDisplay() {
         `Nombre de levers : ${path.chairTestCount}`,
       ];
 
-      equilibreData = [
-        "Dernier test effectué : Tandem",
-        `Temps (seconde) : ${path.balanceTandem}`,
-      ];
+      if (path.balanceTandem > 0) {
+        equilibreData = [
+          "Dernier test effectué : Tandem",
+          `Temps : ${path.balanceTandem} s`,
+        ];
+      } else if (path.balanceSemiTandem > 0) {
+        equilibreData = [
+          "Dernier test effectué : Semi-Tandem",
+          `Temps : ${path.balanceSemiTandem} s`,
+        ];
+      } else {
+        equilibreData = [
+          "Dernier test effectué : Pieds joints",
+          `Temps : ${path.BalanceFeetTogether} s`,
+        ];
+      }
     } else if (evaluation.Evaluation_MATCH) {
       const match = evaluation.Evaluation_MATCH;
       type = "MATCH";
@@ -316,10 +345,22 @@ function EvaluationDisplay() {
         `Nombre de levers : ${match.chairTestCount}`,
       ];
 
-      equilibreData = [
-        "Dernier test effectué : Tandem",
-        `Temps (seconde) : ${match.balanceTandem}`,
-      ];
+      if (match.balanceTandem > 0) {
+        equilibreData = [
+          "Dernier test effectué : Tandem",
+          `Temps : ${match.balanceTandem} s`,
+        ];
+      } else if (match.balanceSemiTandem > 0) {
+        equilibreData = [
+          "Dernier test effectué : Semi-Tandem",
+          `Temps : ${match.balanceSemiTandem} s`,
+        ];
+      } else {
+        equilibreData = [
+          "Dernier test effectué : Pieds joints",
+          `Temps : ${match.BalanceFeetTogether} s`,
+        ];
+      }
     }
 
     return (

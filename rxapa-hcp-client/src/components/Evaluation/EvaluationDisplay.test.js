@@ -54,6 +54,9 @@ const mockPaceEvaluation = {
     chairTestSupport: true,
     chairTestCount: 8,
     scoreTotal: 15,
+    BalanceFeetTogether: 10,
+    balanceSemiTandem: 10,
+    balanceTandem: 10,
     balanceOneFooted: 10,
     frtSitting: true,
     frtDistance: 25,
@@ -71,6 +74,8 @@ const mockPathEvaluation = {
     chairTestSupport: false,
     chairTestCount: 10,
     scoreTotal: 8,
+    BalanceFeetTogether: 8,
+    balanceSemiTandem: 8,
     balanceTandem: 8,
     vitesseDeMarche: 0.82,
   },
@@ -86,6 +91,8 @@ const mockMatchEvaluation = {
     chairTestSupport: true,
     chairTestCount: 7,
     scoreTotal: 6,
+    BalanceFeetTogether: 5,
+    balanceSemiTandem: 5,
     balanceTandem: 5,
     vitesseDeMarche: 0.6,
   },
@@ -232,7 +239,7 @@ describe("EvaluationDisplay Component", () => {
       expect(
         screen.getByText("Dernier test effectué : Unipodal")
       ).toBeInTheDocument();
-      expect(screen.getByText("Temps (seconde) : 10")).toBeInTheDocument();
+      expect(screen.getByText("Temps : 10 s")).toBeInTheDocument();
       expect(screen.getByText("Assis")).toBeInTheDocument();
       expect(screen.getByText("Distance (cm) : 25")).toBeInTheDocument();
       expect(
@@ -275,7 +282,7 @@ describe("EvaluationDisplay Component", () => {
       expect(
         screen.getByText("Dernier test effectué : Tandem")
       ).toBeInTheDocument();
-      expect(screen.getByText("Temps (seconde) : 8")).toBeInTheDocument();
+      expect(screen.getByText("Temps : 8 s")).toBeInTheDocument();
       expect(
         screen.getByText("Programme recommandé : Programme PATH 2")
       ).toBeInTheDocument();
@@ -316,7 +323,7 @@ describe("EvaluationDisplay Component", () => {
       expect(
         screen.getByText("Dernier test effectué : Tandem")
       ).toBeInTheDocument();
-      expect(screen.getByText("Temps (seconde) : 5")).toBeInTheDocument();
+      expect(screen.getByText("Temps : 5 s")).toBeInTheDocument();
       expect(
         screen.getByText("Programme recommandé : Programme MATCH 3")
       ).toBeInTheDocument();
