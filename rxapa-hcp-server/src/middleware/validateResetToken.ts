@@ -3,13 +3,15 @@ import { Professional_User } from "../model/Professional_User";
 import { Op } from "sequelize";
 
 export const validateResetToken = async (req: Request, res: Response, next: NextFunction) => {
-  const { token } = req.body;
+  // Cherche le token dans le body OU dans la query string
+  const token = req.body.token || req.query.token;
 
   if (!token) {
     return res.status(400).json({ message: "Token requis." });
   }
 
   try {
+    // Vérifie si un user possède ce resetToken + resetTokenExpiry encore valide
     const user = await Professional_User.findOne({
       where: {
         resetToken: token,
