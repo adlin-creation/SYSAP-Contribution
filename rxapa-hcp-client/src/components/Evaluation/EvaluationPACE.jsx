@@ -1,8 +1,9 @@
 import React from "react";
 import { Row, Col, Input, Radio, Form, Modal } from "antd";
 import Evaluation from "./Evaluation";
-import { useTranslation } from "react-i18next";
 import { exportPacePdf } from "./ExportEvaluationPdf";
+import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
 // Fonction d'export PDF modifiée qui gère correctement le token
 const handleExportPacePdf = async (payload, token) => {
@@ -27,7 +28,7 @@ const handleExportPacePdf = async (payload, token) => {
       content: "Échec de l'exportation du PDF PACE. Veuillez vérifier votre connexion et réessayer."
     });
   }
-};
+}
 
 function EvaluationPACE() {
   const { t } = useTranslation("Evaluations");
@@ -111,7 +112,7 @@ function EvaluationPACE() {
     const balanceScore = calculateBalanceScore(formData);
 
     // Position debout (si B ≥ 5 OU Assis = 40 cm)
-    if (isStanding && balanceScore >= 5) {
+    if (isStanding) {
       if (distance > 35) return 6;
       if (distance >= 27) return 5;
       if (distance >= 15) return 4;
@@ -167,16 +168,30 @@ function EvaluationPACE() {
     return "MARRON";
   };
 
+  const calculateSpeed = (walkingTime) => {
+    const time = parseFloat(walkingTime);
+    if (isNaN(time) || time <= 0) return "0.00";
+    return (4 / time).toFixed(2);
+  };
+
   const calculateWalkingObjective = (walkingTime) => {
-    if (!walkingTime || walkingTime <= 0) return null;
-
-    const speed = 4 / parseFloat(walkingTime);
-
+    const time = parseFloat(walkingTime);
+    
+    if (isNaN(time) || time < 0 || walkingTime === '') {
+      return null;
+    }
+    
+    if (time === 0) {
+      return 10;
+    }
+    
+    const speed = 4 / time;
+    
     if (speed < 0.4) return 10;
-    if (speed >= 0.4 && speed < 0.59) return 15;
-    if (speed >= 0.6 && speed < 0.79) return 20;
+    if (speed >= 0.4 && speed < 0.6) return 15;
+    if (speed >= 0.6 && speed < 0.8) return 20;
     if (speed >= 0.8) return 30;
-
+    
     return null;
   };
 
@@ -185,15 +200,15 @@ function EvaluationPACE() {
       idPatient: patientId,
       chairTestSupport: formData.chairTestSupport ? "with" : "without",
       chairTestCount: parseInt(formData.chairTestCount, 10),
-      balanceFeetTogether: parseInt(formData.balanceFeetTogether, 10),
+      balanceFeetTogether: parseFloat(formData.balanceFeetTogether, 10),
       balanceSemiTandem: isBalanceTestEnabled("balanceSemiTandem")
-        ? parseInt(formData.balanceSemiTandem || 0, 10)
+        ? parseFloat(formData.balanceSemiTandem || 0, 10)
         : 0,
       balanceTandem: isBalanceTestEnabled("balanceTandem")
-        ? parseInt(formData.balanceTandem || 0, 10)
+        ? parseFloat(formData.balanceTandem || 0, 10)
         : 0,
       balanceOneFooted: isBalanceTestEnabled("balanceOneFooted")
-        ? parseInt(formData.balanceOneFooted || 0, 10)
+        ? parseFloat(formData.balanceOneFooted || 0, 10)
         : 0,
       frtSitting:
         formData.frtPosition === true
@@ -204,7 +219,7 @@ function EvaluationPACE() {
       frtDistance:
         formData.frtPosition === "armNotWorking"
           ? 0
-          : parseInt(formData.frtDistance, 10),
+          : parseFloat(formData.frtDistance, 10),
 
       // walkingTime = 0 si canWalk === false
       walkingTime: formData.canWalk ? parseFloat(formData.walkingTime || 0) : 0,
@@ -215,6 +230,8 @@ function EvaluationPACE() {
         equilibre: scores.equilibre,
         mobilite: scores.mobilite,
         total: scores.total,
+        level: scores.level,
+        color: scores.frenchColor,
         program: scores.program,
       },
     };
@@ -283,7 +300,7 @@ function EvaluationPACE() {
           >
             <p>
               {t("walking_speed")} :{" "}
-              {(4 / parseFloat(formData.walkingTime)).toFixed(2)} m/s
+              {calculateSpeed(formData.walkingTime)} m/s
             </p>
             <p>
               <strong>
@@ -325,7 +342,7 @@ function EvaluationPACE() {
       // Si le patient peut marcher, on vérifie que le temps est bien renseigné
       if (!formData.walkingTime) {
         newErrors.walkingTime = t("walking_time_required");
-      } else if (isNaN(formData.walkingTime) || parseFloat(formData.walkingTime) <= 0) {
+      } else if (isNaN(formData.walkingTime) || parseFloat(formData.walkingTime) < 0) {
         newErrors.walkingTime = t("walking_time_invalid");
       }
     }
@@ -542,7 +559,7 @@ function EvaluationPACE() {
               {formData.walkingTime && !errors.walkingTime && (
                 <div style={{ marginTop: 8, color: "#666" }}>
                   {t("walking_speed")} :{" "}
-                  {(4 / parseFloat(formData.walkingTime)).toFixed(2)} m/s
+                  {calculateSpeed(formData.walkingTime)} m/s
                   <div style={{ marginTop: 4 }}>
                     <strong>
                       {t("walking_objective")} :{" "}
@@ -567,10 +584,12 @@ function EvaluationPACE() {
       renderFormFields={renderFormFields}
       buildPayload={buildPayload}
       buildModalContent={buildModalContent}
-      exportPdf={handleExportPacePdf}
       validateForm={validateForm}
+      exportPdf={handleExportPacePdf}
     />
   );
 }
-
+EvaluationPACE.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};
 export default EvaluationPACE;

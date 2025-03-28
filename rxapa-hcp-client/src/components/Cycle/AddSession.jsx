@@ -1,6 +1,7 @@
 import React from "react";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
+import PropTypes from "prop-types";
 
 export default function AddSession({
   sessionNames,
@@ -37,3 +38,9 @@ export default function AddSession({
     </div>
   );
 }
+AddSession.propTypes = {
+  sessionNames: PropTypes.array.isRequired, // liste d’options à afficher
+  setSelectedSessionName: PropTypes.func.isRequired, // fonction de callback
+  day: PropTypes.string.isRequired, // ou number selon ton code
+  label: PropTypes.string.isRequired, // texte pour le label du champ
+};

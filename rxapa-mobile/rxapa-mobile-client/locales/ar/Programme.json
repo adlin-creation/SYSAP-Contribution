@@ -1,5 +1,7 @@
 {
-    "bonjour": "صباح الخير",
-    "jour": "اليوم",
-    "ma_seance_aujourdhui": "جلسة اليوم"
+    "button_my_program_today": "جلسة اليوم",
+ 
+    "info_day": "اليوم",
+
+    "title_hello": "صباح الخير"
 }

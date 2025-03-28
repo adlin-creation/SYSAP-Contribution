@@ -17,7 +17,7 @@
   display: inline-block;
   cursor: pointer;
   color: #ffffff;
-  font-family: Arial;
+  font-family: Arial, sans-serif;
   font-size: 14px;
   font-weight: bold;
   padding: 7px 12px;
@@ -42,7 +42,7 @@
   display: inline-block;
   cursor: pointer;
   color: #ffffff;
-  font-family: Arial;
+  font-family: Arial, sans-serif;
   font-size: 13px;
   padding: 6px 16px;
   text-decoration: none;
@@ -65,6 +65,28 @@
   justify-content: space-between;
   width: 100%;
 }
+
+/* Style du boutton pour Activer/Desactiver */
+.toggle-program-button {
+  border-radius: 8px;
+  font-weight: bold;
+  padding: 6px 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.toggle-program-button.active {
+  background-color: #ffffff;
+  color: #d9363e;
+  border: 1px solid #d9363e;
+}
+
+.toggle-program-button.inactive {
+  background-color: #52c41a;
+  color: #ffffff;
+  border: none;
+}
+
 
 /* dropdownStyles */
 

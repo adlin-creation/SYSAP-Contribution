@@ -1,9 +1,9 @@
 {
-    "authentification": "Autenticación",
-    "deconnexion": "Desconexión",
-    "mon_programme": "Mi Programa",
-    "ma_seance": "Mi Sesión",
-    "ma_progression": "Mi Progreso",
-    "configuration": "Configuración",
-    "cahier_de_suivi": "Cuaderno de Seguimiento"
+    "title_authentication": "Autenticación",
+    "title_logout": "Desconexión",
+    "title_my_program": "Mi Programa",
+    "title_my_session": "Mi Sesión",
+    "title_my_progress": "Mi Progreso",
+    "title_settings": "Configuración",
+    "title_tracking_notebook": "Cuaderno de Seguimiento"
 }

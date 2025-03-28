@@ -1,8 +1,9 @@
 import React from "react";
 import { Row, Col, Input, Radio, Form } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
-import { exportMatchPdf } from "./ExportEvaluationPdf";
 import Evaluation from "./Evaluation";
+import { exportMatchPdf } from "./ExportEvaluationPdf";
+import PropTypes from "prop-types";
 
 function EvaluationMATCH() {
   const getInitialFormData = () => ({
@@ -82,11 +83,11 @@ function EvaluationMATCH() {
       idPatient: patientId,
       chairTestSupport: formData.chairTestSupport ? "with" : "without",
       chairTestCount: parseInt(formData.chairTestCount, 10),
-      balanceFeetTogether: parseInt(formData.balanceFeetTogether, 10),
+      balanceFeetTogether: parseFloat(formData.balanceFeetTogether, 10),
       balanceSemiTandem: isBalanceTestEnabled('balanceSemiTandem') ? 
-                        parseInt(formData.balanceSemiTandem || 0, 10) : 0,
+                        parseFloat(formData.balanceSemiTandem || 0, 10) : 0,
       balanceTandem: isBalanceTestEnabled('balanceTandem') ? 
-                    parseInt(formData.balanceTandem || 0, 10) : 0,
+                    parseFloat(formData.balanceTandem || 0, 10) : 0,
       walkingTime: formData.canWalk ? parseFloat(formData.walkingTime || 0) : 0,
       scores: {
         cardioMusculaire: scores.cardioMusculaire,
@@ -143,7 +144,7 @@ function EvaluationMATCH() {
           >
             <p>
               Vitesse de marche :{" "}
-              {(4 / parseFloat(formData.walkingTime)).toFixed(2)} m/s
+              {calculateSpeed(formData.walkingTime)} m/s
             </p>
             <p>
               <strong>
@@ -174,16 +175,30 @@ function EvaluationMATCH() {
     );
   };
 
+  const calculateSpeed = (walkingTime) => {
+    const time = parseFloat(walkingTime);
+    if (isNaN(time) || time <= 0) return "0.00";
+    return (4 / time).toFixed(2);
+  };
+
   const calculateWalkingObjective = (walkingTime) => {
-    if (!walkingTime || walkingTime <= 0) return null;
-
-    const speed = 4 / parseFloat(walkingTime);
-
+    const time = parseFloat(walkingTime);
+    
+    if (isNaN(time) || time < 0 || walkingTime === '') {
+      return null;
+    }
+    
+    if (time === 0) {
+      return 10;
+    }
+    
+    const speed = 4 / time;
+    
     if (speed < 0.4) return 10;
     if (speed >= 0.4 && speed < 0.6) return 15;
     if (speed >= 0.6 && speed < 0.8) return 20;
     if (speed >= 0.8) return 30;
-
+    
     return null;
   };
 
@@ -327,7 +342,7 @@ function EvaluationMATCH() {
               {formData.walkingTime && !errors.walkingTime && (
                 <div style={{ marginTop: 8, color: "#666" }}>
                   Vitesse de marche :{" "}
-                  {(4 / parseFloat(formData.walkingTime)).toFixed(2)} m/s
+                  {calculateSpeed(formData.walkingTime)} m/s
                   <div style={{ marginTop: 4 }}>
                     <strong>
                       Objectif de marche :{" "}
@@ -358,3 +373,6 @@ function EvaluationMATCH() {
 }
 
 export default EvaluationMATCH;
+EvaluationMATCH.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};

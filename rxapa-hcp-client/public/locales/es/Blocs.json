@@ -33,5 +33,10 @@
   "required_label": "Requerido",
   "cancel_button": "CANCELAR",
   "close_button": "Cerrar",
-  "back_button": "Atrás"
+  "back_button": "Atrás",
+
+  "confirm_changes_title": "Confirmar cambios",
+  "confirm_changes_message": "¿Realmente desea guardar estos cambios?",
+  "confirm_add_exercise_title": "Confirmar la adición del ejercicio",
+  "confirm_add_exercise_message": "¿Realmente desea agregar este ejercicio a este bloque?"
 }

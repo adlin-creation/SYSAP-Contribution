@@ -17,7 +17,8 @@ function Evaluation({
   renderFormFields, 
   buildPayload, 
   buildModalContent,
-  exportPdf  // Nouvelle prop pour la fonction d'exportation PDF
+  exportPdf,  // Nouvelle prop pour la fonction d'exportation PDF
+  validateForm // Prop facultative pour la validation personnalisée
 }) {
   const { patientId } = useParams();
   const navigate = useNavigate();
@@ -117,7 +118,7 @@ function Evaluation({
     }
   };
 
-  const validateForm = () => {
+  const defaultValidateForm = () => {
     const newErrors = {};
 
     // Validation commune
@@ -152,18 +153,10 @@ function Evaluation({
       }
     }
 
-    // Validation du temps de marche - logique différente pour MATCH
-    if (evaluationType === "MATCH" && formData.canWalk) {
+    if (formData.canWalk === true) {
       if (!formData.walkingTime) {
         newErrors.walkingTime = "Le temps de marche est requis";
-      } else if (isNaN(formData.walkingTime) || formData.walkingTime <= 0) {
-        newErrors.walkingTime = "Veuillez entrer un temps de marche valide";
-      }
-    } else if (evaluationType !== "MATCH") {
-      // Pour PATH et PACE, le temps de marche est toujours requis
-      if (!formData.walkingTime) {
-        newErrors.walkingTime = "Le temps de marche est requis";
-      } else if (isNaN(formData.walkingTime) || formData.walkingTime <= 0) {
+      } else if (isNaN(formData.walkingTime) || formData.walkingTime < 0) {
         newErrors.walkingTime = "Veuillez entrer un temps de marche valide";
       }
     }
@@ -172,7 +165,11 @@ function Evaluation({
   };
 
   const handleSubmit = () => {
-    const newErrors = validateForm();
+    let newErrors = defaultValidateForm();
+    
+    if (validateForm) {
+      newErrors = validateForm(formData, newErrors);
+    }
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -267,18 +264,32 @@ function Evaluation({
         content: "Échec de l'exportation du PDF"
       });
     }
+  }
+
+  const calculateSpeed = (walkingTime) => {
+    const time = parseFloat(walkingTime);
+    if (isNaN(time) || time <= 0) return "0.00";
+    return (4 / time).toFixed(2);
   };
 
   const calculateWalkingObjective = (walkingTime) => {
-    if (!walkingTime || walkingTime <= 0) return null;
-
-    const speed = 4 / parseFloat(walkingTime);
-
+    const time = parseFloat(walkingTime);
+    
+    if (isNaN(time) || time < 0 || walkingTime === '') {
+      return null;
+    }
+    
+    if (time === 0) {
+      return 10;
+    }
+    
+    const speed = 4 / time;
+    
     if (speed < 0.4) return 10;
     if (speed >= 0.4 && speed < 0.6) return 15;
     if (speed >= 0.6 && speed < 0.8) return 20;
     if (speed >= 0.8) return 30;
-
+    
     return null;
   };
 

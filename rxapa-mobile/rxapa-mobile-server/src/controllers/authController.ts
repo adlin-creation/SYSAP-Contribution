@@ -7,7 +7,7 @@ export const authenticate = async (req: Request, res: Response) => {
     const { programEnrollementCode: code } = req.body;
 
     if (!code) {
-        return res.status(400).json({ success: false, message: 'Le code est requis' });
+        return res.status(400).json({ success: false, message: 'error_required_code' });
     }
 
     try {
@@ -34,7 +34,7 @@ export const authenticate = async (req: Request, res: Response) => {
 
             return res.json({
                 success: true,
-                message: 'Authentification réussie',
+                message: 'success_authentication',
                 token: 'some-token',
                 userType: 'user',
                 data: {
@@ -45,10 +45,10 @@ export const authenticate = async (req: Request, res: Response) => {
                 }
             });
         } else {
-            return res.status(401).json({ success: false, message: 'Code invalide' });
+            return res.status(401).json({ success: false, message: 'error_invalid_code' });
         }
     } catch (err) {
         console.error('Erreur pendant l\'authentification:', err);
-        return res.status(500).json({ success: false, message: 'Erreur interne du serveur' });
+        return res.status(500).json({ success: false, message: 'error_internal_server_error' });
     }
 };

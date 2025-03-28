@@ -7,6 +7,7 @@ import "./ProgramStyles.css";
 import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
 export default function CreateProgram(props) {
   const { t } = useTranslation();
@@ -307,3 +308,6 @@ export default function CreateProgram(props) {
     </Row>
   );
 }
+CreateProgram.propTypes = {
+  refetchPrograms: PropTypes.func.isRequired,
+};

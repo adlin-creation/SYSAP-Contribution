@@ -10,7 +10,7 @@ export class ProgressionService {
       );
       const data = await response.json();
       if (!response.ok) {
-        throw new Error(data.message || 'Erreur lors de la récupération des données');
+        throw new Error(data.message || 'error_fetching_data');
       }
       return data;
     } catch (error) {
@@ -26,7 +26,7 @@ export class ProgressionService {
       );
       const data = await response.json();
       if (!response.ok) {
-        throw new Error(data.message || 'Erreur lors de la récupération des statistiques');
+        throw new Error(data.message || 'error_fetching_statistics');
       }
       return data;
     } catch (error) {
@@ -54,14 +54,14 @@ export class ProgressionService {
         const data = await response.json();
   
         if (!response.ok) {
-          throw new Error(data.message || 'Erreur lors de la récupération des données');
+          throw new Error(data.message || 'error_fetching_data');
         }
   
         return data;
       } else {
         const text = await response.text();
         console.error('Non-JSON response:', text);
-        throw new Error('La réponse du serveur n\'est pas au format JSON.');
+        throw new Error('error_response_not_a_json');
       }
     } catch (error) {
       console.error('Erreur dans fetchStatisticsByDates:', error);

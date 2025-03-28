@@ -26,25 +26,25 @@ const createSessionRecord = async (sessionData: {
       console.log('Session record created successfully:', response.data.data);
       return {
         success: true,
-        message: 'Session enregistrée avec succès',
+        message: 'success_session_recorded',
         data: response.data.data,
       };
     }
 
     return {
       success: false,
-      message: response.data.message || 'Failed to create session record',
+      message: response.data.message || 'error_recording_session_record',
     };
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.error('Axios error during session creation:', error.message);
-      return { success: false, message: 'Network error: ' + error.message };
+      return { success: false, message: 'error_network_error' + ": " + error.message };
     } else if (error instanceof Error) {
       console.error('Error during session creation:', error.message);
-      return { success: false, message: 'An error occurred: ' + error.message };
+      return { success: false, message: 'error_generic_error_occured' + ": " + error.message };
     } else {
       console.error('Unexpected error:', error);
-      return { success: false, message: 'An unknown error occurred' };
+      return { success: false, message: 'error_unknown_error_occured' };
     }
   }
 };
