@@ -38,6 +38,12 @@
   "confirm_changes_title": "Confirm Changes",
   "confirm_changes_message": "Do you really want to save these changes?",
   "confirm_add_exercise_title": "Confirm exercise addition",
-  "confirm_add_exercise_message": "Do you really want to add this exercise to this block?"
+  "confirm_add_exercise_message": "Do you really want to add this exercise to this block?",
+
+  "confirm_delete_title": "Confirm deletion",
+  "confirm_delete_message": "Do you really want to delete this exercise?",
+  "ok_button": "Delete",
+  "actions_label": "Actions",
+  "delete_exercise_error": "An error occurred while deleting the exercise."
 
 }

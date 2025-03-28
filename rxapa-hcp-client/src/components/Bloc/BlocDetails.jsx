@@ -9,9 +9,9 @@ import ExerciseTable from "./ExerciseTable";
 import AddExercise from "./AddExercise";
 import useToken from "../Authentication/useToken";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 // import ExerciseTable2 from "./ExerciseTable2";
 
-import PropTypes from "prop-types";
 
 export default function BlocDetails({ blocKey, refetchBlocs }) {
   const { t } = useTranslation();
@@ -136,6 +136,25 @@ export default function BlocDetails({ blocKey, refetchBlocs }) {
     setPendingData(null);
   };
 
+  // function to delete an exercise from a bloc
+  const handleDeleteExercise = (exerciseId) => {
+    axios
+      .delete(`${Constants.SERVER_URL}/remove-exercise-from-bloc`, {
+        data: {
+          blocId: bloc.id,
+          exerciseId: exerciseId,
+        },
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then(() => {
+        refetchBloc();
+      })
+      .catch((err) => {
+        openModal(t("Blocs:delete_exercise_error") || "Erreur de suppression", true);
+      });
+  };
 
   return (
     <Row justify="center" align="middle" style={{ minHeight: "50vh" }}>
@@ -182,7 +201,10 @@ export default function BlocDetails({ blocKey, refetchBlocs }) {
         </Form>
 
         <div>
-          <ExerciseTable exercises={bloc?.Exercise_Blocs} />
+          <ExerciseTable
+            exercises={bloc?.Exercise_Blocs}
+            onDelete={handleDeleteExercise}
+          />
           <Button
             type="primary"
             onClick={addExercise}
