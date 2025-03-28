@@ -38,5 +38,11 @@
   "confirm_changes_title": "Confirmar cambios",
   "confirm_changes_message": "¿Realmente desea guardar estos cambios?",
   "confirm_add_exercise_title": "Confirmar la adición del ejercicio",
-  "confirm_add_exercise_message": "¿Realmente desea agregar este ejercicio a este bloque?"
+  "confirm_add_exercise_message": "¿Realmente desea agregar este ejercicio a este bloque?",
+
+  "confirm_delete_title": "Confirmar eliminación",
+  "confirm_delete_message": "¿Desea realmente eliminar este ejercicio?",
+  "ok_button": "Eliminar",
+  "actions_label": "Acciones",
+  "delete_exercise_error": "Ocurrió un error al eliminar el ejercicio."
 }

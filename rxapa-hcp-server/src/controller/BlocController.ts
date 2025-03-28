@@ -247,3 +247,29 @@ exports.deleteBloc = async (req: any, res: any, next: any) => {
       .json({ message: "Failed to delete the bloc" });
   }
 };
+
+/**
+ * Deletes a specific exercise from a bloc
+ */
+
+exports.removeExerciseFromBloc = async (req: any, res: any) => {
+  const { blocId, exerciseId } = req.body;
+
+  try {
+    const result = await Exercise_Bloc.destroy({
+      where: {
+        BlocId: blocId,
+        ExerciseId: exerciseId, 
+      },
+    });
+
+    if (result > 0) {
+      res.status(200).json({ message: "Exercice supprimé du bloc avec succès." });
+    } else {
+      res.status(404).json({ message: "Aucune correspondance trouvée." });
+    }
+  } catch (error) {
+    console.error("Erreur suppression :", error);
+    res.status(500).json({ message: "Erreur serveur pendant la suppression." });
+  }
+};
