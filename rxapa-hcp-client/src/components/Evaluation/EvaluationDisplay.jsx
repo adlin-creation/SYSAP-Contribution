@@ -5,6 +5,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import useToken from "../Authentication/useToken";
 import Constants from "../Utils/Constants";
+import { exportMatchPdf, exportPacePdf, exportPathPdf } from "./ExportEvaluationPdf";
 
 const { Title, Text } = Typography;
 
@@ -133,6 +134,62 @@ function EvaluationDisplay() {
   const handleReturn = () => {
     navigate(-1);
   };
+
+  const handleExportPdf = async (evaluation, programmeRecommande) => {
+    let matchPath = null;
+    if (evaluation.Evaluation_MATCH) matchPath = evaluation.Evaluation_MATCH;
+    if (evaluation.Evaluation_PATH) matchPath = evaluation.Evaluation_PATH;
+
+    if (matchPath) {
+      const payload = {
+        date: matchPath.createdAt.split("T")[0],
+        idPatient : patientId,
+        chairTestSupport: matchPath.chairTestSupport === "true"? "without":"with",
+        chairTestCount: matchPath.chairTestCount,
+        balanceFeetTogether: matchPath.BalanceFeetTogether,
+        balanceSemiTandem: matchPath.balanceSemiTandem,
+        balanceTandem: matchPath.balanceTandem,
+        walkingTime: matchPath.vitesseDeMarche != 0? 
+          Math.round((4 / matchPath.vitesseDeMarche) * 100)/100:0,
+        scores : {
+          cardioMusculaire: matchPath.scoreCM,
+          equilibre: matchPath.scoreBalance,
+          total: matchPath.scoreTotal,
+          program: programmeRecommande
+        }
+      }
+      if (evaluation.Evaluation_MATCH) await exportMatchPdf(payload, token);
+      if (evaluation.Evaluation_PATH) await exportPathPdf(payload, token);
+    }
+
+    if (evaluation.Evaluation_PACE) {
+      const pace = evaluation.Evaluation_PACE;
+      const payload = {
+        date: pace.createdAt.split("T")[0],
+        idPatient : patientId,
+        chairTestSupport: pace.chairTestSupport === "true"? "without":"with",
+        chairTestCount: pace.chairTestCount,
+        balanceFeetTogether: pace.BalanceFeetTogether,
+        balanceSemiTandem: pace.balanceSemiTandem,
+        balanceTandem: pace.balanceTandem,
+        balanceOneFooted: pace.balanceOneFooted,
+        frtSitting: pace.frtSitting === "true"? "sitting":"standing",
+        frtDistance: pace.frtDistance,
+        walkingTime: pace.vitesseDeMarche != 0? 
+          Math.round((4 / pace.vitesseDeMarche) * 100)/100:0,
+        scores : {
+          cardioMusculaire: pace.scoreA,
+          equilibre: pace.scoreB,
+          mobilite: pace.scoreC,
+          color: programmeRecommande.split(" ")[0],
+          level: programmeRecommande.split(" ")[1],
+          program: programmeRecommande
+        }
+      }
+      exportPacePdf(payload, token);
+    }
+  }
+
 
   // Version 2 avec toggle buttons a décommenter
   /*
@@ -277,6 +334,10 @@ function EvaluationDisplay() {
             <Text strong>Vitesse de marche (m/s) : {vitesseMarche}</Text>
           </Col>
         </Row>
+        <br />
+        <Button key="export" onClick={() => handleExportPdf(evaluation, programmeRecommande)}>
+          Télécharger PDF
+        </Button>
       </Card>
     );
   };
