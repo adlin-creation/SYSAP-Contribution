@@ -5,7 +5,8 @@ CREATE TABLE "Program" (
     "description" VARCHAR(255) NOT NULL,
     "duration" INTEGER NOT NULL,
     "duration_unit" VARCHAR(10) NOT NULL CHECK ("duration_unit" IN ('days', 'weeks')),
-    "image" VARCHAR(255) NULL
+    "image" VARCHAR(255) NULL,
+    "actif" BOOLEAN NOT NULL DEFAULT TRUE
 );
 
 CREATE TABLE "ProgramPhase_Program" (
