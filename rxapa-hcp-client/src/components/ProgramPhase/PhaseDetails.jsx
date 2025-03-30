@@ -8,6 +8,7 @@ import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
 import "./Styles.css";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
 export default function PhaseDetail({ programPhase, refetchPhases }) {
   const { handleSubmit } = useForm();
@@ -253,3 +254,15 @@ export default function PhaseDetail({ programPhase, refetchPhases }) {
     </div>
   );
 }
+PhaseDetail.propTypes = {
+  refetchPhases: PropTypes.func.isRequired,
+  programPhase: PropTypes.shape({
+    key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    name: PropTypes.string.isRequired,
+    startConditionType: PropTypes.string,
+    startConditionValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    endConditionType: PropTypes.string,
+    endConditionValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    frequency: PropTypes.number,
+  }).isRequired,
+};

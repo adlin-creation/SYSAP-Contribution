@@ -25,15 +25,15 @@ export const Evaluation_PATH = sequelize.define("Evaluation_PATH", {
   },
   // Section Equilibre
   BalanceFeetTogether: {
-    type: dataTypes.INTEGER,
+    type: dataTypes.DOUBLE,
     allowNull: false,
   },
   balanceSemiTandem: {
-    type: dataTypes.INTEGER,
+    type: dataTypes.DOUBLE,
     allowNull: false,
   },
   balanceTandem: {
-    type: dataTypes.INTEGER,
+    type: dataTypes.DOUBLE,
     allowNull: false,
   },
   scoreBalance: {

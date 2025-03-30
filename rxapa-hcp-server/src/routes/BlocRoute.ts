@@ -16,4 +16,6 @@ router.put("/update-bloc/:blocKey", isAuth, blocController.updateBloc);
 
 router.delete("/delete-bloc/:blocKey", isAuth, blocController.deleteBloc);
 
+router.delete('/remove-exercise-from-bloc', blocController.removeExerciseFromBloc);
+
 export default router;

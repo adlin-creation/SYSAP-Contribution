@@ -4,6 +4,11 @@ import jwt from "jsonwebtoken"; // Importation de jsonwebtoken pour la gestion d
 import { scrypt, randomBytes, timingSafeEqual } from "crypto"; // Importation de fonctions pour le hachage des mots de passe
 import { promisify } from "util"; // Importation de promisify pour transformer scrypt en version asynchrone
 
+
+import { v4 as uuidv4 } from "uuid";
+import { sendResetEmail } from "../util/email";
+import { Op } from "sequelize";
+
 const scryptPromise = promisify(scrypt); // Permet d'utiliser `scrypt` avec `async/await`
 
 /**
@@ -154,3 +159,43 @@ export async function verify(password: string, hash: string) {
   const derivedKey = await scryptPromise(password, salt, 64); // Hachage du mot de passe entré
   return timingSafeEqual(keyBuffer, derivedKey as Buffer); // Comparaison sécurisée des h
 }
+
+
+exports.resetPasswordRequest = async (req: any, res: any) => {
+  const email = req.body.email;
+
+  const user = await Professional_User.findOne({ where: { email } });
+
+  const token = uuidv4();
+  const expiry = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
+  console.log("Requête de réinitialisation reçue pour :", email);
+
+  if (user) {
+    user.resetToken = token;
+    user.resetTokenExpiry = expiry;
+    await user.save();
+
+    const link = `${"http://localhost:3000/reset-password"}?token=${token}`;
+    await sendResetEmail(user.email, link);
+  }
+
+  // Toujours succès pour ne pas révéler l'existence ou non de l'utilisateur
+  return res.status(200).json({
+    message:
+      "Si un compte est associé à cet e-mail, vous recevrez un lien de réinitialisation.",
+  });
+};
+
+exports.resetPassword = async (req: any, res: any) => {
+  const { new_password } = req.body;
+  const user = req.user; // récupéré depuis le middleware
+
+  const hashedPassword = await hash(new_password);
+
+  user.password = hashedPassword;
+  user.resetToken = null;
+  user.resetTokenExpiry = null;
+  await user.save();
+
+  return res.status(200).json({ message: "Mot de passe réinitialisé." });
+};

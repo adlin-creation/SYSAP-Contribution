@@ -14,6 +14,7 @@ import { Col } from "react-bootstrap";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./MainMenu.css";
+import PropTypes from "prop-types";
 
 export default function MainMenu() {
   return (
@@ -78,3 +79,4 @@ export default function MainMenu() {
     </Container>
   );
 }
+MainMenu.propTypes = {};

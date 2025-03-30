@@ -8,11 +8,31 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Modal } from "antd";
 
-export default function ExerciseTable({ exercises }) {
+export default function ExerciseTable({ exercises, onDelete }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const { t } = useTranslation();
+
+  // state management and delete confirmation logic
+  const [selectedIdToDelete, setSelectedIdToDelete] = React.useState(null);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = React.useState(false);
+
+  const handleDeleteClick = (id) => {
+    setSelectedIdToDelete(id);
+    setIsDeleteConfirmOpen(true);
+  };
+
+  const confirmDelete = () => {
+    onDelete(selectedIdToDelete);
+    setIsDeleteConfirmOpen(false);
+    setSelectedIdToDelete(null);
+  };
+
   const columns = [
     { id: "name", label: t("Blocs:name_label"), minWidth: 100 },
     {
@@ -28,31 +48,37 @@ export default function ExerciseTable({ exercises }) {
     {
       id: "numberOfSeries",
       label: t("Blocs:number_of_series_label"),
-      align: "ceneter",
+      align: "center",
       minWidth: 100,
     },
     {
       id: "numberOfRepetition",
       label: t("Blocs:number_of_repetition_label"),
-      align: "ceneter",
+      align: "center",
       minWidth: 100,
     },
     {
       id: "restingInstruction",
       label: t("Blocs:resting_instruction_label"),
-      align: "ceneter",
+      align: "center",
       minWidth: 100,
     },
     {
       id: "minutes",
       label: t("Blocs:number_of_minutes_label"),
-      align: "ceneter",
+      align: "center",
       minWidth: 100,
     },
     {
       id: "required",
       label: t("Blocs:required_label"),
-      align: "ceneter",
+      align: "center",
+      minWidth: 70,
+    },
+    {
+      id: "actions",
+      label: t("Blocs:actions_label"),
+      align: "center",
       minWidth: 70,
     },
   ];
@@ -74,6 +100,7 @@ export default function ExerciseTable({ exercises }) {
     const restingInstruction = exerciseBloc.restingInstruction;
     const minutes = exerciseBloc.minutes;
     const required = exerciseBloc.required;
+    const id = exerciseBloc.Exercise.id;
     return {
       name,
       description,
@@ -83,6 +110,7 @@ export default function ExerciseTable({ exercises }) {
       restingInstruction,
       minutes,
       required,
+      id,
     };
   }
 
@@ -109,8 +137,17 @@ export default function ExerciseTable({ exercises }) {
               .map((exercise) => {
                 exercise = createRowData(exercise);
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1}>
-                    {columns.map((column) => {
+                  <TableRow hover role="checkbox" tabIndex={-1}  key={exercise.id}>
+                    {columns.map((column) => { // delete icon button in the actions column
+                      if (column.id === "actions") {
+                        return (
+                          <TableCell key={column.id} align="center">
+                            <IconButton onClick={() => handleDeleteClick(exercise.id)}>
+                              <DeleteIcon color="error" />
+                            </IconButton>
+                          </TableCell>
+                        );
+                      }
                       const value = exercise[column.id];
                       return (
                         <TableCell key={column.id} align={column.align}>
@@ -135,6 +172,22 @@ export default function ExerciseTable({ exercises }) {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
+
+      <Modal // confirmation modal for exercise deletion
+        open={isDeleteConfirmOpen}
+        onOk={confirmDelete}
+        onCancel={() => setIsDeleteConfirmOpen(false)}
+        okText={t("Blocs:ok_button")}
+        cancelText={t("Blocs:cancel_button")}
+        title={t("Blocs:confirm_delete_title")}
+      >
+        <p>{t("Blocs:confirm_delete_message")}</p>
+      </Modal>
     </Paper>
   );
 }
+ExerciseTable.propTypes = {
+  exercises: PropTypes.arrayOf(PropTypes.object).isRequired,
+  onDelete: PropTypes.func.isRequired,
+};
+

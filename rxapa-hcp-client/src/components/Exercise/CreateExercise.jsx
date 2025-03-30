@@ -17,8 +17,11 @@ export default function CreateExercise(props) {
   const { t } = useTranslation();
 
   const [selectedExerciseCategory, setSelectedExerciseCategory] = useState(null);
-  const [selectedFitnessLevel, setSelectedFitnessLevel] = useState(null); // Assurez-vous que la valeur initiale est null
+  const [selectedFitnessLevel, setSelectedFitnessLevel] = useState(null); 
   const [exerciseImage, setExerciseImage] = useState(null);
+
+  // Expression régulière pour vérifier un lien vidéo valide
+  const videoUrlRegex = /^(https?:\/\/)?(www\.)?(youtube|vimeo)\.(com|be)\/(watch\?v=|.*\/)([a-zA-Z0-9_-]{11,})$/;
 
   // Correspondance des catégories en anglais vers le français
   const categoryTranslation = {
@@ -52,52 +55,48 @@ export default function CreateExercise(props) {
   }
 
   const onSubmit = (data) => {
-    const { name, description } = data;
+    const { name, description, videoUrl } = data;
 
-    // Traduire la catégorie sélectionnée en français
-    const categoryInFrench = categoryTranslation[selectedExerciseCategory] || selectedExerciseCategory;
-    const fitnessLevelInFrench = fitnessLevelTranslation[selectedFitnessLevel] || selectedFitnessLevel;
-
-    let formData = new FormData();
-    const combinedData = {
-      name: name,
-      description: description,
-      category: categoryInFrench,  // Utilisation de la catégorie traduite en français
-      fitnessLevel: fitnessLevelInFrench,  // Utilisation du niveau de forme traduit
-      exerciseImage: exerciseImage,
-    };
-
-    console.log("Submitting Data:", combinedData);
-  
-    if (exerciseImage) {
-      formData.append("image", exerciseImage);
+    // Vérification du lien vidéo
+    if (!videoUrlRegex.test(videoUrl)) {
+      openModal(t("Exercises:invalid_video_link"), true); // Afficher un message d'erreur si le lien est invalide
+      return;
     }
-    formData.append("name", combinedData.name);
-    formData.append("description", combinedData.description);
-    formData.append("category", combinedData.category);
-    formData.append("fitnessLevel", combinedData.fitnessLevel);
 
-    axios
-      .post(`${Constants.SERVER_URL}/create-exercise`, combinedData, {
-        headers: {
-          Authorization: "Bearer " + token,
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((res) => {
-        openModal(res.data.message, false);
-        props.refetchExercises();
-      })
-      .catch((err) => {
-        const errorMessage = err.response
-          ? err.response.data.message
-          : "An error occurred";
-        openModal(errorMessage, true);
-      });
-  };
+  const categoryInFrench = categoryTranslation[selectedExerciseCategory] || selectedExerciseCategory;
+  const fitnessLevelInFrench = fitnessLevelTranslation[selectedFitnessLevel] || selectedFitnessLevel;
+
+  let formData = new FormData();
+  formData.append("name", name);
+  formData.append("description", description);
+  formData.append("category", categoryInFrench);
+  formData.append("fitnessLevel", fitnessLevelInFrench);
+  formData.append("videoUrl",videoUrl);
+
+  if (exerciseImage) {
+    formData.append("file", exerciseImage);  
+  }
+  axios
+    .post(`${Constants.SERVER_URL}/create-exercise`, formData, {
+      headers: {
+        "Authorization": "Bearer " + token,
+        "Content-Type": "multipart/form-data", 
+      },
+    })
+    .then((res) => {
+      openModal(res.data.message, false);
+      props.refetchExercises();
+    })
+    .catch((err) => {
+      const errorMessage = err.response
+        ? err.response.data.message
+        : "An error occurred";
+      openModal(errorMessage, true);
+    });
+};
+
 
   function onChangeImage(event) {
-    console.log("The image is: ", event.target.files[0]);
     const image = event.target.files[0];
     setExerciseImage(image);
   }
@@ -172,16 +171,32 @@ export default function CreateExercise(props) {
                 )}
               />
             </Form.Item>
+
+            <Form.Item label={t("Exercises:enter_exercise_video")} className="input-element">
+              <Controller
+                name="videoUrl"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <Input
+                    onChange={onChange}
+                    value={value}
+                    placeholder={t("Exercises:exercise_video")}
+                    required
+                  />
+                )}
+              />
+            </Form.Item>
   
             <Form.Item label={t("Exercises:enter_exercise_image")} className="input-element">
               <input type="file" accept="image/*" onChange={onChangeImage} />
             </Form.Item>
-  
+
             <Form.Item className="input-element">
               <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
                 {t("Exercises:submit_button")}
               </Button>
             </Form.Item>
+
           </Form>
   
           {isOpenModal && (

@@ -3,7 +3,10 @@ CREATE TABLE "Program" (
     "key" UUID DEFAULT uuid_generate_v4(),
     "name" VARCHAR(255) NOT NULL UNIQUE,
     "description" VARCHAR(255) NOT NULL,
-    "duration" INTEGER NOT NULL
+    "duration" INTEGER NOT NULL,
+    "duration_unit" VARCHAR(10) NOT NULL CHECK ("duration_unit" IN ('days', 'weeks')),
+    "image" VARCHAR(255) NULL,
+    "actif" BOOLEAN NOT NULL DEFAULT TRUE
 );
 
 CREATE TABLE "ProgramPhase_Program" (

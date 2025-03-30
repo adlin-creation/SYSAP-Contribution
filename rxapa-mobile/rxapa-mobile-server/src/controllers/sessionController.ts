@@ -11,7 +11,7 @@ class SessionController {
     const { programEnrollementId } = req.query;
 
     if (!programEnrollementId) {
-      return res.status(400).json({ success: false, message: 'ProgramEnrollementId est requis' });
+      return res.status(400).json({ success: false, message: 'error_program_enrollment_id_required' });
     }
 
     try {
@@ -27,7 +27,7 @@ class SessionController {
       const sessionResult = await dbClient.query(sessionQuery, [programEnrollementId]);
 
       if (sessionResult.rowCount === 0) {
-        return res.status(404).json({ success: false, message: 'Aucune session trouvée.' });
+        return res.status(404).json({ success: false, message: 'error_no_session_found' });
       }
 
       const sessionId = sessionResult.rows[0].id;
@@ -44,13 +44,13 @@ class SessionController {
       const exercisesResult = await dbClient.query(exercisesQuery, [sessionId]);
 
       if (exercisesResult.rowCount === 0) {
-        return res.status(404).json({ success: false, message: 'Aucun exercice trouvé pour cette session.' });
+        return res.status(404).json({ success: false, message: 'error_no_exercise_found' });
       }
 
       res.status(200).json({ success: true, data: exercisesResult.rows }); // Retourne les exercices
     } catch (error) {
       console.error('Erreur lors de la récupération des exercices :', error);
-      res.status(500).json({ success: false, message: 'Erreur du serveur.' });
+      res.status(500).json({ success: false, message: 'error_internal_server_error' });
     }
   }
 }

@@ -27,8 +27,21 @@ export default function ProgramMenu() {
   // selected program to be edited
   const [selectedProgram, setSelectedProgram] = useState(null);
 
+   // Search state
+   const [searchTerm, setSearchTerm] = useState("");
+
+    // New state variables for duration, duration unit, and description keywords
+  const [duration, setDuration] = useState("");
+  const [durationUnit, setDurationUnit] = useState("");
+  const [descriptionKeywords, setDescriptionKeywords] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(8); // Nombre de programmes par page
+
+  const durationUnits = [
+    {value: "", label: "Search by duration unit"},
+    { value: "days", label: "days" }, 
+    { value: "weeks", label: "weeks" }, 
+  ];
 
   //////////////////////////////
   // DATA QUERY FOR PROGRAMS ///
@@ -82,6 +95,7 @@ export default function ProgramMenu() {
           isEditProgram: true,
         };
       } else {
+        refetchPrograms();
         return {
           isCreateProgram: false,
           isEditProgram: false,
@@ -112,8 +126,48 @@ export default function ProgramMenu() {
       .catch((err) => openModal(err.response.data.message, true));
   };
 
+  // Fonction pour gérer le terme de recherche
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  // Fonction pour gérer la durée
+  const handleDurationChange = (e) => {
+    setDuration(e.target.value);
+  };
+
+  // Fonction pour gérer l'unité de durée
+  const handleDurationUnitChange = (value) => {
+    setDurationUnit(value);
+  };
+
+  // Fonction pour gérer les mots-clés dans la description
+  const handleDescriptionKeywordsChange = (e) => {
+    setDescriptionKeywords(e.target.value);
+  };
+
+  // Filtrer les programmes en fonction des critères
+  const filteredPrograms = programList?.filter((program) => {
+    const nameMatch = program.name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const durationMatch = duration
+      ? program.duration === parseInt(duration)
+      : true;
+    const durationUnitMatch = durationUnit
+      ? program.duration_unit === durationUnit
+      : true;
+    const descriptionMatch = descriptionKeywords
+      ? program.description
+          .toLowerCase()
+          .includes(descriptionKeywords.toLowerCase())
+      : true;
+
+    return nameMatch && durationMatch && durationUnitMatch && descriptionMatch;
+  });
+
   // Programmes pour la page actuelle
-  const paginatedPrograms = programList.slice(
+  const paginatedPrograms = filteredPrograms.slice(
     (currentPage - 1) * pageSize,
     currentPage * pageSize
   );
@@ -143,17 +197,65 @@ export default function ProgramMenu() {
       {/* display program when neither create nor edit program is clicked */}
       {!buttonState.isCreateProgram && !buttonState.isEditProgram && (
         <div>
-          {/* creates a program button */}
-          <Button
-            onClick={handleButtonState}
-            name="create-program"
-            type="primary"
-            icon={<PlusOutlined />}
-          >
-            {t("Programs:create_program_button")}
-          </Button>
+          <Row className="program-header">
+            {/* creates a program button */}
+            <Col>
+              <Button
+                onClick={handleButtonState}
+                name="create-program"
+                type="primary"
+                icon={<PlusOutlined />}
+                className="create-button"
+              >
+                {t("Programs:create_program_button")}
+              </Button>
+            </Col>
 
-          {/* Display existing programs */}
+            {/* create a search bar*/}
+            <Col>
+              <Input
+                placeholder= "Search a program"
+                value={searchTerm}
+                onChange={handleSearchChange}
+                className="search-input"
+              />
+            </Col>
+          </Row>
+
+          {/* Add more program filter */}
+          <Row
+            gutter={[16, 16]}
+            style={{ justifyContent: "center", alignItems: "center" }}
+          >
+            <Col>
+              <Input
+                placeholder="Search by duration"
+                value={duration}
+                onChange={handleDurationChange}
+                type="number"
+                className="search-input"
+              />
+            </Col>
+            <Col>
+              <Select
+                placeholder="Search by duration unit"
+                value={durationUnit}
+                onChange={handleDurationUnitChange}
+                options={durationUnits}
+                className="search-input"
+              />
+            </Col>
+            <Col>
+              <Input
+                placeholder="Search by description keywords"
+                value={descriptionKeywords}
+                onChange={handleDescriptionKeywordsChange}
+                className="search-input"
+              />
+            </Col>
+          </Row>
+
+          {/* Display filtered programs */}
           <Row gutter={[16, 16]}>
             {paginatedPrograms?.map((program) => {
               return (
@@ -163,6 +265,7 @@ export default function ProgramMenu() {
                     onSelect={handleSelectProgram}
                     program={program}
                     deleteProgram={deleteProgram}
+                    refetchPrograms={refetchPrograms}
                   />
                 </Col>
               );
@@ -173,7 +276,7 @@ export default function ProgramMenu() {
           <Pagination
             current={currentPage}
             pageSize={pageSize}
-            total={programList.length}
+            total={filteredPrograms.length}
             onChange={(page) => setCurrentPage(page)}
             showSizeChanger={false}
             style={{
@@ -203,10 +306,10 @@ export default function ProgramMenu() {
             </Button>
           </Col>
           <Col flex="auto" style={{ textAlign: "center" }}>
-            <h2 style={{ marginBottom: 0 }}>
-              {buttonState.isCreateProgram
+            <h2>
+            {buttonState.isCreateProgram
                 ? t("Programs:create_program")
-                : t("Programs:edit_title") + " " + `${selectedProgram?.name}`}
+                : `${t("Programs:edit_title")} ${selectedProgram?.name}`}
             </h2>
           </Col>
           <Col span={4} />
