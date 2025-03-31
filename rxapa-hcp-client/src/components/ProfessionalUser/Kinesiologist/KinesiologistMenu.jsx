@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import {
   PlusOutlined,
   EditOutlined,
-  DeleteOutlined,
   ArrowLeftOutlined,
   UserOutlined,
+  SearchOutlined,
 } from "@ant-design/icons";
 import {
   Button,
@@ -15,6 +15,7 @@ import {
   Col,
   Modal as AntModal,
   Empty,
+  Input,
 } from "antd";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
@@ -30,12 +31,14 @@ export default function KinesiologistMenu() {
   const [isCreateKinesiologist, setIsCreateKinesiologist] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedKinesiologist, setSelectedKinesiologist] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const { token } = useToken();
   const navigate = useNavigate();
 
   const kinesiologistUrl = `${Constants.SERVER_URL}/professional-users`;
   const {
+    //liste kine a mainupeler pour le filtrage
     data: kinesiologistList,
     isLoading,
     error,
@@ -47,7 +50,16 @@ export default function KinesiologistMenu() {
       })
       .then((res) => res.data.filter((user) => user.role === "kinesiologist"));
   });
-
+  const filteredKinesiologist = kinesiologistList?.filter((kinesiologist) => {
+    const searchLower = searchTerm.toLowerCase();
+    return (
+      kinesiologist.firstname.toLowerCase().includes(searchLower) ||
+      kinesiologist.lastname.toLowerCase().includes(searchLower) ||
+      kinesiologist.email.toLowerCase().includes(searchLower) ||
+      (kinesiologist.phoneNumber &&
+        kinesiologist.phoneNumber.includes(searchTerm))
+    );
+  });
   const columns = [
     {
       title: t("Professionals:Kinesiologist:name"),
@@ -183,17 +195,26 @@ export default function KinesiologistMenu() {
           >
             {t("Professionals:Kinesiologist:register_kenisiologist_button")}
           </Button>
+
+          <Input
+            placeholder={t("Professionals:Kinesiologist:search_placeholder")}
+            prefix={<SearchOutlined />}
+            style={{ width: 300, marginTop: 45 }}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            allowClear
+          />
+
           {kinesiologistList?.length > 0 && (
             <span>
               {t("Professionals:Kinesiologist:total_kinesiologists")}:{" "}
-              {kinesiologistList.length}
+              {filteredKinesiologist?.length || 0} / {kinesiologistList.length}
             </span>
           )}
         </div>
-
         <Table
           columns={columns}
-          dataSource={kinesiologistList}
+          dataSource={filteredKinesiologist}
           rowKey="id"
           loading={isLoading}
           locale={{
