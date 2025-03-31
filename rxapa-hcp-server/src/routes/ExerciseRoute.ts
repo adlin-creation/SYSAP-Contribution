@@ -36,4 +36,6 @@ router.put(
 
 router.get("/images/:imageName", exerciseController.getImage);
 
+router.get("/exercices/:patientId", isAuth, exerciseController.getExercisesByPatientId);
+
 export default router;

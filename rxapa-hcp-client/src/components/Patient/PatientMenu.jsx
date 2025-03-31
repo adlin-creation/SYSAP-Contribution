@@ -17,7 +17,7 @@ import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
 import CreatePatient from "./CreatePatient";
 import AddCargiver from "./AddCargiver";
-import PatientViewPage from "./PatientViewPage";
+import PatientStats from "./PatientStats";
 import PatientDetails from "./PatientDetails";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
@@ -418,7 +418,7 @@ export default function PatientMenu({ role }) {
           onClose={() => setSelectedAddCargiver(null)}
         />
       ) : (
-        <PatientViewPage patient={viewingPatient} onClose={() => setViewingPatient(null)} />
+        <PatientStats patient={viewingPatient} onClose={() => setViewingPatient(null)} />
       )
       }
 

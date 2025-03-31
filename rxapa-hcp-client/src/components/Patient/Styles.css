@@ -1,20 +1,170 @@
 .patient-data-container {
-    padding: 20px;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.session-data-container, .average-container {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.session-info, .average-summary {
+  flex: 1;
+  max-width: 300px;
+}
+
+.session-buttons {
+  margin-bottom: 16px;
+  display: flex;
+  gap: 10px;
+}
+
+.session-chart, .average-chart {
+  flex: 2;
+  max-width: 600px;
+  width: 100%;
+}
+
+/* Chart container with slider on top */
+.session-chart-container {
+  flex: 2;
+  max-width: 600px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-slider-container {
+  margin-bottom: 15px;
+}
+
+.slider-session-label {
+  text-align: center;
+  font-weight: 500;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+.slider-with-labels {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.slider-endpoint {
+  font-size: 12px;
+  color: #666;
+  white-space: nowrap;
+}
+
+.compact-slider {
+  flex: 1;
+}
+
+.recharts-responsive-container {
+  width: 100% !important;
+}
+
+.section-header {
+  margin-top: 20px;
+  border-bottom: 1px solid #e8e8e8;
+  padding-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ant-card {
+  margin-bottom: 16px;
+}
+
+.patient-name {
+  font-size: 18px;
+  text-transform: capitalize;
+}
+
+.program-data-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.program-navigation {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.program-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.session-navigation {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.session-slider-container {
+  width: 100%;
+  padding: 0 10px;
+}
+
+.slider-label {
+  text-align: center;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.slider-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+  color: #666;
+  font-size: 12px;
+}
+
+
+/* Styles pour l'avertissement de suivi et les notifications de douleur */
+.message-container {
+  margin-top: 10px;
+}
+
+.message {
+  padding: 5px 10px;
+  margin: 5px 0;
+  border-radius: 4px;
+}
+
+.warning-message {
+  background-color: #fde7e9;
+  border-left: 4px solid #d93025;
+}
+
+/* Responsive styles for smaller screens */
+@media (max-width: 768px) {
+  .session-data-container, .average-container {
+    flex-direction: column;
   }
   
-  .session-data-container, .average-data-container {
-    display: flex;
-    gap: 16px;
+  .session-info, .average-summary, .session-chart, .average-chart, .session-chart-container {
+    max-width: 100%;
+    width: 100%;
   }
   
-  .session-info, .average-info {
-    flex: 1;
+  .chart-slider-container {
+    width: 100%;
   }
   
-  .session-buttons {
-    margin-bottom: 16px;
+  .warning-badge {
+    display: block;
+    margin: 5px 0 0 0;
+    width: fit-content;
   }
-  
-  .session-chart, .average-chart {
-    flex: 1;
-  }
+}
