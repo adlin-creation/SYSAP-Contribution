@@ -29,7 +29,21 @@ export const Caregiver = sequelize.define("Caregiver", {
     unique: true,
   },
   relationship: {
-    type: dataTypes.ENUM("parent", "sibling", "friend", "other"),
+    type: dataTypes.ENUM(
+      "parent",
+      "sibling",
+      "friend",
+      "volunteer_companion",
+      "professional_caregiver",
+      "colleague",
+      "spouse",
+      "child",
+      "community_member",
+      "nephew_niece",
+      "grandchild",
+      "neighbor",
+      "other"
+    ),
     allowNull: false,
   },
   active: {
