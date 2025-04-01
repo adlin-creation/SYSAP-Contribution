@@ -4,6 +4,7 @@ import {
   EditOutlined,
   ArrowLeftOutlined,
   UserOutlined,
+  SearchOutlined,
 } from "@ant-design/icons";
 import {
   Button,
@@ -14,6 +15,7 @@ import {
   Col,
   Modal as AntModal,
   Empty,
+  Input,
 } from "antd";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
@@ -29,6 +31,7 @@ export default function DoctorMenu() {
   const [isCreateDoctor, setIsCreateDoctor] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const { token } = useToken();
   const navigate = useNavigate();
@@ -45,6 +48,16 @@ export default function DoctorMenu() {
         headers: { Authorization: "Bearer " + token },
       })
       .then((res) => res.data.filter((user) => user.role === "doctor"));
+  });
+
+  const filteredDoctors = doctorList?.filter((doctor) => {
+    const searchLower = searchTerm.toLowerCase();
+    return (
+      doctor.firstname.toLowerCase().includes(searchLower) ||
+      doctor.lastname.toLowerCase().includes(searchLower) ||
+      doctor.email.toLowerCase().includes(searchLower) ||
+      (doctor.phoneNumber && doctor.phoneNumber.includes(searchTerm))
+    );
   });
 
   const columns = [
@@ -172,6 +185,8 @@ export default function DoctorMenu() {
             marginBottom: 16,
             display: "flex",
             justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: "16px",
           }}
         >
           <Button
@@ -181,17 +196,27 @@ export default function DoctorMenu() {
           >
             {t("Professionals:Physicians:register_physician")}
           </Button>
+
+          <Input
+            placeholder={t("Professionals:Physicians:search_placeholder")}
+            prefix={<SearchOutlined />}
+            style={{ width: 300, marginTop: 45 }}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            allowClear
+          />
+
           {doctorList?.length > 0 && (
             <span>
               {t("Professionals:Physicians:total_physicians")}:{" "}
-              {doctorList.length}
+              {filteredDoctors?.length || 0} / {doctorList.length}
             </span>
           )}
         </div>
 
         <Table
           columns={columns}
-          dataSource={doctorList}
+          dataSource={filteredDoctors}
           rowKey="id"
           loading={isLoading}
           locale={{
@@ -241,7 +266,6 @@ export default function DoctorMenu() {
           <Col span={4} />
         </Row>
       )}
-
       {/* Main content */}
       {renderContent()}
     </div>

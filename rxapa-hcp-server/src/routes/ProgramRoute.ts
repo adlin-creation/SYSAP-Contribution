@@ -17,6 +17,8 @@ router.get("/program/:programKey", isAuth, programController.getProgram);
 
 router.get("/programs", isAuth, programController.getPrograms);
 
+router.get("/programs/:patientId", isAuth, programController.getProgramsByPatientId);
+
 router.get("/search", isAuth, programController.searchPrograms);
 
 router.get(
