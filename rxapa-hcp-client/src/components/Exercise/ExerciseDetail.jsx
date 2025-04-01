@@ -45,24 +45,35 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
       openModal(t("Exercises:invalid_video_link"), true);
       return;
     }
-
+  
     if (isSaveClicked) {
+      // Vérification manuelle des modifications
+      const hasChanged = Object.keys(data).some(key => 
+        currentExercise[key] !== data[key]
+      );
+  
+      if (!hasChanged) {
+        openModal(t("Exercises:no_changes_detected"), true);
+        setIsEditing(false);
+        setIsSaveClicked(false);
+        return;
+      }
+  
       setIsSubmitting(true);
-      axios
-        .put(`${Constants.SERVER_URL}/update-exercise/${currentExercise.key}`, data, {
-          headers: { Authorization: "Bearer " + token },
-        })
-        .then((res) => {
-          setCurrentExercise((prev) => ({ ...prev, ...data }));
-          refetchExercises();
-          openModal(res.data.message, false);
-          setIsSubmitting(false);
-          setIsEditing(false);
-        })
-        .catch((err) => {
-          openModal(err.response?.data?.message || t("Exercises:error"), true);
-          setIsSubmitting(false);
-        });
+      axios.put(`${Constants.SERVER_URL}/update-exercise/${currentExercise.key}`, data, {
+        headers: { Authorization: "Bearer " + token },
+      })
+      .then((res) => {
+        setCurrentExercise((prev) => ({ ...prev, ...data }));
+        refetchExercises();
+        openModal(res.data.message, false);
+        setIsSubmitting(false);
+        setIsEditing(false);
+      })
+      .catch((err) => {
+        openModal(err.response?.data?.message || t("Exercises:error"), true);
+        setIsSubmitting(false);
+      });
     }
   };
 

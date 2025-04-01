@@ -35,5 +35,6 @@
   "update_button": "Update",
   "modify": "Modify",
   "save": "Save",
-  "invalid_video_link": "Please enter a valid link"
+  "invalid_video_link": "Please enter a valid link",
+  "no_changes_detected": "No changes have been made"
 }
