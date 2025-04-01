@@ -52,8 +52,8 @@ export default function FilterExercise({ updateSelectedValues }) {
             >
               <Option value="ALL">{t("Exercises:all")}</Option>
               <Option value="Aérobique">{t("Exercises:aerobic")}</Option>
-              <Option value="Endurance">{t("Exercises:strength")}</Option>
-              <Option value="Force">{t("Exercises:endurance")}</Option>
+              <Option value="Endurance">{t("Exercises:endurance")}</Option>
+              <Option value="Force">{t("Exercises:strength")}</Option>
               <Option value="Flexibilité">{t("Exercises:flexibility")}</Option>
               <Option value="Équilibre">{t("Exercises:balance")}</Option>
             </Select>

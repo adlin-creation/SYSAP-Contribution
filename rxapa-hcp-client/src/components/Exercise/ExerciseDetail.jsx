@@ -16,13 +16,15 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
   const { token } = useToken();
 
   const [currentExercise, setCurrentExercise] = React.useState(exercise);
-
   const [isEditing, setIsEditing] = React.useState(false);
   const [isOpenModal, setIsOpenModal] = React.useState(false);
   const [isErrorMessage, setIsErrorMessage] = React.useState(false);
   const [message, setMessage] = React.useState("");
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isSaveClicked, setIsSaveClicked] = React.useState(false);
+
+  // Regex pour validation URL vidéo
+  const videoUrlRegex = /^(https?:\/\/)?(www\.)?(youtube|vimeo)\.(com|be)\/(watch\?v=|.*\/)([a-zA-zA-Z0-9_-]{11,})$/;
 
   function openModal(message, isError) {
     setMessage(message);
@@ -38,23 +40,40 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
   }
 
   const onSubmit = (data) => {
+    // Validation du lien vidéo
+    if (data.videoUrl && !videoUrlRegex.test(data.videoUrl)) {
+      openModal(t("Exercises:invalid_video_link"), true);
+      return;
+    }
+  
     if (isSaveClicked) {
+      // Vérification manuelle des modifications
+      const hasChanged = Object.keys(data).some(key => 
+        currentExercise[key] !== data[key]
+      );
+  
+      if (!hasChanged) {
+        openModal(t("Exercises:no_changes_detected"), true);
+        setIsEditing(false);
+        setIsSaveClicked(false);
+        return;
+      }
+  
       setIsSubmitting(true);
-      axios
-        .put(`${Constants.SERVER_URL}/update-exercise/${currentExercise.key}`, data, {
-          headers: { Authorization: "Bearer " + token },
-        })
-        .then((res) => {
-          setCurrentExercise((prev) => ({ ...prev, ...data }));
-          refetchExercises();
-          openModal(res.data.message, false);
-          setIsSubmitting(false);
-          setIsEditing(false);
-        })
-        .catch((err) => {
-          openModal(err.response?.data?.message || t("Exercises:error"), true);
-          setIsSubmitting(false);
-        });
+      axios.put(`${Constants.SERVER_URL}/update-exercise/${currentExercise.key}`, data, {
+        headers: { Authorization: "Bearer " + token },
+      })
+      .then((res) => {
+        setCurrentExercise((prev) => ({ ...prev, ...data }));
+        refetchExercises();
+        openModal(res.data.message, false);
+        setIsSubmitting(false);
+        setIsEditing(false);
+      })
+      .catch((err) => {
+        openModal(err.response?.data?.message || t("Exercises:error"), true);
+        setIsSubmitting(false);
+      });
     }
   };
 
@@ -69,14 +88,11 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
 
   return (
     <div className="exercise-detail-container">
-      {/* Titre de l'exercice */}
       <Typography.Title level={1} className="exercise-title">
         {currentExercise.name}
       </Typography.Title>
 
-      {/* Conteneur principal pour la vidéo et les informations */}
       <Row gutter={40} style={{ width: "100%" }}>
-        {/* Colonne pour la vidéo */}
         <Col span={12} className="video-container">
           {currentExercise.videoUrl && (
             <div className="video-wrapper">
@@ -91,10 +107,8 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
           )}
         </Col>
 
-        {/* Colonne pour les informations */}
         <Col span={12} className="info-container">
           <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
-            {/* Nom de l'exercice */}
             <Form.Item
               label={t("Exercises:exercise_name")}
               style={{ fontWeight: "bold" }}
@@ -109,7 +123,6 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
               />
             </Form.Item>
 
-            {/* Catégorie de l'exercice */}
             <Form.Item
               label={t("Exercises:category_placeholder")}
               style={{ fontWeight: "bold" }}
@@ -141,7 +154,6 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
               />
             </Form.Item>
 
-            {/* Niveau de fitness */}
             <Form.Item
               label={t("Exercises:fitness_level_placeholder")}
               style={{ fontWeight: "bold" }}
@@ -171,7 +183,6 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
               />
             </Form.Item>
 
-            {/* Description de l'exercice */}
             <Form.Item
               label={t("Exercises:exercise_description")}
               style={{ fontWeight: "bold" }}
@@ -186,7 +197,6 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
               />
             </Form.Item>
 
-            {/* URL de la vidéo */}
             <Form.Item
               label={t("Exercises:exercise_video")}
               style={{ fontWeight: "bold" }}
@@ -201,7 +211,6 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
               />
             </Form.Item>
 
-            {/* Boutons d'édition et de sauvegarde */}
             <Form.Item>
               {!isEditing ? (
                 <Button type="primary" onClick={startEditing}>
@@ -221,7 +230,6 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
             </Form.Item>
           </Form>
 
-          {/* Modal pour les messages de feedback */}
           {isOpenModal && (
             <Modal
               title={t("Feedback")}
