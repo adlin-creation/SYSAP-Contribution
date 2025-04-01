@@ -35,5 +35,6 @@
   "update_button": "Mettre à jour",
   "modify": "Modifier",
   "save": "Sauvegarder",
-  "invalid_video_link": "Veuillez entrer un lien de vidéo valide"
+  "invalid_video_link": "Veuillez entrer un lien de vidéo valide",
+  "no_changes_detected": "Aucun changement n'a été effectué"
 }

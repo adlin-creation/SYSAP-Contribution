@@ -1,6 +1,10 @@
 import { Exercise } from "../model/Exercise";
 import { ExerciseVersion } from "../model/ExerciseVersion";
 import { Variant } from "../model/Variant";
+import { SessionRecord } from "../model/SessionRecord";
+import { Bloc_Session } from "../model/Bloc_Session";
+import { Exercise_Bloc } from "../model/Exercise_Bloc";
+import { ProgramEnrollement } from "../model/ProgramEnrollement";
 import fs from "fs";
 import path from "path";
 import { Request, Response } from "express";
@@ -251,5 +255,68 @@ export const deleteExercise = async (req: Request, res: Response) => {
     } else {
       handleError(res, error, "Erreur inconnue lors de la suppression de l'exercice.");
     }
+  }
+};
+
+exports.getExercisesByPatientId = async (req: any, res:any) => {
+  const patientId = req.params.patientId;
+  
+  try {
+    //Get all programEnrollment for this patient
+    const programEnrollment = await ProgramEnrollement.findAll({
+      where: { PatientId: patientId}
+    });
+
+    // Extract programEnrollment Ids
+    const programEnrollementIds = programEnrollment.map((data: typeof ProgramEnrollement) => data.id);
+
+    // Get all session records for this patient
+    const sessionRecords = await SessionRecord.findAll({
+      where: { ProgramEnrollementId: programEnrollementIds }
+    });
+    
+    // Extract session IDs
+    const sessionIds = sessionRecords.map((record: typeof SessionRecord) => record.id);
+    
+    // No sessions found for this patient
+    if (sessionIds.length === 0) {
+      return res.status(200).json([]);
+    }
+    
+    // Find all bloc-session relationships for these sessions
+    const blocSessions = await Bloc_Session.findAll({
+      where: { SessionId: sessionIds }
+    });
+    
+    // Extract bloc IDs
+    const blocIds = blocSessions.map((bs: typeof Bloc_Session) => bs.BlocId);
+    
+    // No blocs found for these sessions
+    if (blocIds.length === 0) {
+      return res.status(200).json([]);
+    }
+    
+    // Find all exercise-bloc relationships for these blocs
+    const exerciseBlocs = await Exercise_Bloc.findAll({
+      where: { BlocId: blocIds }
+    });
+    
+    // Extract exercise IDs
+    const exerciseIds = exerciseBlocs.map((eb: typeof exerciseBlocs) => eb.ExerciseId);
+    
+    // No exercises found for these blocs
+    if (exerciseIds.length === 0) {
+      return res.status(200).json([]);
+    }
+    
+    // Get all exercises for these exercise IDs
+    const exercises = await Exercise.findAll({
+      where: { id: exerciseIds }
+    });
+    
+    res.status(200).json(exercises);
+  } catch (error) {
+    console.error('Error fetching exercises by patient ID:', error);
+    // Log more details about the error
   }
 };

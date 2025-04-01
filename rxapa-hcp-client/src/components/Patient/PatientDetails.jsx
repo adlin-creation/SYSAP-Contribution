@@ -42,6 +42,7 @@ function PatientDetails({ patient, onClose, refetchPatients }) {
       setValue("birthday", patient.birthday ? dayjs(patient.birthday) : null);
       setValue("weight", patient.weight);
       setValue("weightUnit", patient.weightUnit);
+      setValue("otherinfo", patient.otherinfo);
     }
   }, [patient, setValue]);
 
@@ -343,6 +344,21 @@ function PatientDetails({ patient, onClose, refetchPatients }) {
                 />
               </Form.Item>
             </Col>
+            <Col span={12}>
+              <Form.Item label={t("Patients:additionnal_information")}>
+                <Controller
+                  name="otherinfo"
+                  control={control}
+                  render={({ field }) => (
+                    <Input.TextArea
+                      {...field}
+                      placeholder={t("Patients:additionnal_information_input")}
+                      rows={4}
+                    />
+                  )}
+                />
+              </Form.Item>
+            </Col>
           </Row>
 
           {/* Caregivers */}
@@ -475,6 +491,33 @@ function PatientDetails({ patient, onClose, refetchPatients }) {
                             </Select.Option>
                             <Select.Option value="friend">
                               {t("Patients:relation_friend")}
+                            </Select.Option>
+                            <Select.Option value="volunteer_companion">
+                              {t("Patients:relation_volunteer_companion")}
+                            </Select.Option>
+                            <Select.Option value="professional_caregiver">
+                              {t("Patients:relation_professional_caregiver")}
+                            </Select.Option>
+                            <Select.Option value="colleague">
+                              {t("Patients:relation_colleague")}
+                            </Select.Option>
+                            <Select.Option value="spouse">
+                              {t("Patients:relation_spouse")}
+                            </Select.Option>
+                            <Select.Option value="child">
+                              {t("Patients:relation_child")}
+                            </Select.Option>
+                            <Select.Option value="community_member">
+                              {t("Patients:relation_community_member")}
+                            </Select.Option>
+                            <Select.Option value="nephew_niece">
+                              {t("Patients:relation_nephew_niece")}
+                            </Select.Option>
+                            <Select.Option value="grandchild">
+                              {t("Patients:relation_grandchild")}
+                            </Select.Option>
+                            <Select.Option value="neighbor">
+                              {t("Patients:relation_neighbor")}
                             </Select.Option>
                             <Select.Option value="other">
                               {t("Patients:relation_other")}

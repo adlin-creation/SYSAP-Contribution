@@ -35,5 +35,6 @@
   "update_button": "Actualizar",
   "modify": "",
   "save": "",
-  "invalid_video_link": ""
+  "invalid_video_link": "",
+  "no_changes_detected": ""
 }

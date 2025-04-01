@@ -7,6 +7,7 @@ import { Variant } from "../model/Variant";
 import { ProgramPhase_Program } from "../model/ProgramPhase_Program";
 import { validateProgram } from "../middleware/validateProgram";
 import { ProgramSession } from '../model/ProgramSession';
+import { ProgramEnrollement } from "../model/ProgramEnrollement";
 import fs from "fs";
 import { Op } from "sequelize";
 
@@ -603,3 +604,22 @@ exports.toggleProgramActivation = async (req: any, res: any) => {
     res.status(500).json({ message: "Erreur lors de l’activation/désactivation." });
   }
 };
+
+exports.getProgramsByPatientId = async (req: any, res: any) => {
+  const patientId = req.params.patientId;
+  
+  // First, get all enrollments for this patient
+  const patientEnrollments = await ProgramEnrollement.findAll({
+    where: { PatientId: patientId }
+  });
+  
+  // Extract program IDs from enrollments
+  const programIds = patientEnrollments.map((enrollment: typeof ProgramEnrollement) => enrollment.ProgramId);
+  
+  // Then get the programs that match these IDs
+  const patientPrograms = await Program.findAll({
+    where: { id: programIds }
+  });
+  
+  return res.json(patientPrograms);
+}

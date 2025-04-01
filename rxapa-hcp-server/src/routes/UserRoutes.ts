@@ -19,7 +19,7 @@ router.get("/csrf-token", csrfProtection, (req, res) => {
   });
 
 // routes pour le reset de mot de passe
-router.post("/reset-password-request", userController.resetPasswordRequest);
+router.post("/set-password", userController.resetPasswordRequest);
 router.post("/reset-password", validateResetToken, userController.resetPassword);
 
 export default router;

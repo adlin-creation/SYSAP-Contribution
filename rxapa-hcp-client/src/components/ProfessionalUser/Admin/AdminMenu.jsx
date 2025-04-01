@@ -4,6 +4,7 @@ import {
   EditOutlined,
   DeleteOutlined,
   ArrowLeftOutlined,
+  SearchOutlined,
 } from "@ant-design/icons";
 import {
   Button,
@@ -14,6 +15,7 @@ import {
   Col,
   Modal as AntModal,
   Empty,
+  Input,
 } from "antd";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
@@ -27,11 +29,13 @@ export default function AdminMenu() {
   const [isCreateAdmin, setIsCreateAdmin] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedAdmin, setSelectedAdmin] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const { token } = useToken();
 
   const adminUrl = `${Constants.SERVER_URL}/professional-users`;
   const {
+    //liste des amin a manipuler pour le filtrgae
     data: adminList,
     isLoading,
     error,
@@ -43,7 +47,15 @@ export default function AdminMenu() {
       })
       .then((res) => res.data.filter((user) => user.role === "admin"));
   });
-
+  const filteredAdmin = adminList?.filter((admin) => {
+    const searchLower = searchTerm.toLowerCase();
+    return (
+      admin.firstname.toLowerCase().includes(searchLower) ||
+      admin.lastname.toLowerCase().includes(searchLower) ||
+      admin.email.toLowerCase().includes(searchLower) ||
+      (admin.phoneNumber && admin.phoneNumber.includes(searchTerm))
+    );
+  });
   const columns = [
     {
       title: t("Professionals:Admins:name"),
@@ -174,16 +186,25 @@ export default function AdminMenu() {
           >
             {t("Professionals:Admins:register_admin_button")}
           </Button>
+          <Input
+            placeholder={t("Professionals:Admins:search_placeholder")}
+            prefix={<SearchOutlined />}
+            style={{ width: 300, marginTop: 45 }}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            allowClear
+          />
           {adminList?.length > 0 && (
             <span>
-              {t("Professionals:Admins:total_admins")}: {adminList.length}
+              {t("Professionals:Admins:total_admins")}:
+              {filteredAdmin?.length || 0} / {adminList.length}
             </span>
           )}
         </div>
 
         <Table
           columns={columns}
-          dataSource={adminList}
+          dataSource={filteredAdmin}
           rowKey="id"
           loading={isLoading}
           locale={{

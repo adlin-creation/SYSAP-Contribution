@@ -69,8 +69,6 @@ app.use("/images", (req, res, next) => {
   }
 }));
 
-
-app.use(userRoutes);
 app.use("/images", (req, res, next) => {
   res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -84,15 +82,15 @@ app.use("/images", (req, res, next) => {
   }
 }));
 
-app.use("/auth",userRoutes);
+app.use(userRoutes);
+app.use(patientRoutes);
 app.use(exerciseRoutes);
 app.use(blocRoutes);
 app.use(sessionRoutes);
 app.use(cycleRoutes);
 app.use(programPhaseRoutes);
-app.use(programRoutes);
 app.use(programEnrollementRoutes);
-app.use(patientRoutes);
+app.use(programRoutes);
 app.use(patientCaregiverRoutes);
 app.use(caregiverRoutes);
 app.use(professionalUserRoutes);

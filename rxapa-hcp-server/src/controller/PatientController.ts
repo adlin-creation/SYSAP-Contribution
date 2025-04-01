@@ -84,32 +84,30 @@ exports.addCaregiver = async (req: any, res: any, next: any) => {
   const transaction = await sequelize.transaction();
 
   try {
-
-
-    if (program && program !== programId || !program) {
+    if ((program && program !== programId) || !program) {
       try {
         await Patient.update(
           {
-            numberOfPrograms: sequelize.literal('"numberOfPrograms" + 1')
+            numberOfPrograms: sequelize.literal('"numberOfPrograms" + 1'),
           },
           {
             where: { id: patientId },
-            transaction
+            transaction,
           }
         );
       } catch (error) {
         console.error(error);
-        throw new Error('Error updating numberOfPrograms');
+        throw new Error("Error updating numberOfPrograms");
       }
     }
 
     await Patient.update(
       {
-        numberOfCaregivers: sequelize.literal('"numberOfCaregivers" + 1')
+        numberOfCaregivers: sequelize.literal('"numberOfCaregivers" + 1'),
       },
       {
         where: { id: patientId },
-        transaction
+        transaction,
       }
     );
 
@@ -157,7 +155,7 @@ exports.addCaregiver = async (req: any, res: any, next: any) => {
       patientId: patientId,
       programEnrollments: createdProgramEnrollement,
       caregiver: createdCaregiver,
-      patientCargiver: createdPatientCargiver
+      patientCargiver: createdPatientCargiver,
     });
   } catch (error: any) {
     await transaction.rollback();
@@ -170,7 +168,6 @@ exports.addCaregiver = async (req: any, res: any, next: any) => {
     });
   }
   return res;
-
 };
 /**
  * Updates an existing patient.
@@ -229,6 +226,7 @@ exports.updatePatientWithCaregivers = async (req: any, res: any, next: any) => {
     weightUnit,
     birthday,
     caregivers,
+    otherinfo,
   } = req.body;
   try {
     const patient = await Patient.findByPk(patientId);
@@ -246,6 +244,7 @@ exports.updatePatientWithCaregivers = async (req: any, res: any, next: any) => {
     patient.weightUnit = weightUnit;
     patient.birthday = birthday;
     patient.numberOfCaregivers = numberOfCaregivers;
+    patient.otherinfo = otherinfo;
     await patient.save();
 
     if (caregivers) {
