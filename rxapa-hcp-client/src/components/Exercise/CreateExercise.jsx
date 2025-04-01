@@ -19,6 +19,7 @@ export default function CreateExercise(props) {
   const [selectedExerciseCategory, setSelectedExerciseCategory] = useState(null);
   const [selectedFitnessLevel, setSelectedFitnessLevel] = useState(null); 
   const [exerciseImage, setExerciseImage] = useState(null);
+  const [exerciseStatus, setExerciseStatus] = useState("active");
 
   // Expression régulière pour vérifier un lien vidéo valide
   const videoUrlRegex = /^(https?:\/\/)?(www\.)?(youtube|vimeo)\.(com|be)\/(watch\?v=|.*\/)([a-zA-Z0-9_-]{11,})$/;
@@ -72,6 +73,7 @@ export default function CreateExercise(props) {
   formData.append("category", categoryInFrench);
   formData.append("fitnessLevel", fitnessLevelInFrench);
   formData.append("videoUrl",videoUrl);
+  formData.append("status", exerciseStatus);
 
   if (exerciseImage) {
     formData.append("file", exerciseImage);  
