@@ -28,7 +28,7 @@ function EvaluationDisplay() {
   const navigate = useNavigate();
   const { patientId } = useParams(); // Récupère l'ID du patient depuis l'URL
   // version 2 a décommenter
-  const [expandedEvaluation, setExpandedEvaluation] = useState(null); // ID de l'évaluation déployée
+  const [expandedEvaluations, setExpandedEvaluations] = useState(new Set()); // Pour déplier plusieurs evaluations en meme temps
 
   useEffect(() => {
     fetchData();
@@ -205,7 +205,7 @@ function EvaluationDisplay() {
   };
 
   // Version 2 avec toggle buttons a décommenter
-  /*
+
   const formatDate = (dateString) => {
     if (!dateString) return "";
     const date = new Date(dateString);
@@ -233,13 +233,17 @@ function EvaluationDisplay() {
   };
 
   const toggleEvaluation = (evaluationId) => {
-    if (expandedEvaluation === evaluationId) {
-      setExpandedEvaluation(null); // Fermer si déjà ouvert
-    } else {
-      setExpandedEvaluation(evaluationId); // Ouvrir sinon
-    }
+    setExpandedEvaluations((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(evaluationId)) {
+        newSet.delete(evaluationId);
+      } else {
+        newSet.add(evaluationId);
+      }
+      return newSet;
+    });
   };
-*/
+
   // Jusqu'ici
   const renderSection = (title, content) => (
     <Col span={8}>
@@ -256,7 +260,7 @@ function EvaluationDisplay() {
   );
 
   // A commenter pour tester la version 2 (v1)
-
+  /*
   const renderEvaluation = (evaluation, index) => {
     // Déterminer le type d'évaluation et extraire les données
     let type = "Inconnu";
@@ -451,11 +455,11 @@ function EvaluationDisplay() {
       </Card>
     </div>
   );
-
+*/
   // jusqu'ici (v1)**
 
   // version 2 a décommenter
-  /*
+
   const renderEvaluation = (evaluation, index) => {
     // Déterminer le type d'évaluation et extraire les données
     let type = "Inconnu";
@@ -478,10 +482,27 @@ function EvaluationDisplay() {
         count: pace.chairTestCount || 0,
       };
 
-      equilibreData = {
-        test: "Unipodal",
-        time: pace.balanceOneFooted || 0,
-      };
+      if (pace.balanceOneFooted > 0) {
+        equilibreData = {
+          test: "Unipodal",
+          time: pace.balanceOneFooted,
+        };
+      } else if (pace.balanceTandem > 0) {
+        equilibreData = {
+          test: "Tandem",
+          time: pace.balanceTandem,
+        };
+      } else if (pace.balanceSemiTandem > 0) {
+        equilibreData = {
+          test: "Semi-Tandem",
+          time: pace.balanceSemiTandem,
+        };
+      } else {
+        equilibreData = {
+          test: "Pieds joints",
+          time: pace.BalanceFeetTogether || 0,
+        };
+      }
 
       mobiliteData = {
         position: pace.frtSitting ? "Assis" : "Debout",
@@ -499,10 +520,22 @@ function EvaluationDisplay() {
         count: path.chairTestCount || 0,
       };
 
-      equilibreData = {
-        test: "Tandem",
-        time: path.balanceTandem || 0,
-      };
+      if (path.balanceTandem > 0) {
+        equilibreData = {
+          test: "Tandem",
+          time: path.balanceTandem,
+        };
+      } else if (path.balanceSemiTandem > 0) {
+        equilibreData = {
+          test: "Semi-Tandem",
+          time: path.balanceSemiTandem,
+        };
+      } else {
+        equilibreData = {
+          test: "Pieds joints",
+          time: path.BalanceFeetTogether || 0,
+        };
+      }
     } else if (evaluation.Evaluation_MATCH) {
       const match = evaluation.Evaluation_MATCH;
       type = "MATCH";
@@ -515,13 +548,25 @@ function EvaluationDisplay() {
         count: match.chairTestCount || 0,
       };
 
-      equilibreData = {
-        test: "Tandem",
-        time: match.balanceTandem || 0,
-      };
+      if (match.balanceTandem > 0) {
+        equilibreData = {
+          test: "Tandem",
+          time: match.balanceTandem,
+        };
+      } else if (match.balanceSemiTandem > 0) {
+        equilibreData = {
+          test: "Semi-Tandem",
+          time: match.balanceSemiTandem,
+        };
+      } else {
+        equilibreData = {
+          test: "Pieds joints",
+          time: match.BalanceFeetTogether || 0,
+        };
+      }
     }
 
-    const isExpanded = expandedEvaluation === evaluation.id;
+    const isExpanded = expandedEvaluations.has(evaluation.id);
     const evaluationNumber = evaluations.length - index;
 
     return (
@@ -662,7 +707,6 @@ function EvaluationDisplay() {
       </Card>
     </div>
   );
-  */
 }
 
 export default EvaluationDisplay;
