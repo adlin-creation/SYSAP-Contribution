@@ -120,6 +120,7 @@ export const updateExercise = async (req: Request, res: Response) => {
       category: category || exercise.category,
       fitnessLevel: fitnessLevel || exercise.fitnessLevel,
       videoUrl: videoUrl || exercise.videoUrl,
+      status: req.body.status ?? exercise.status,
     });
 
     res.status(200).json({ message: "Exercice mis à jour avec succès." });

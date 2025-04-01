@@ -19,6 +19,7 @@ export default function CreateExercise(props) {
   const [selectedExerciseCategory, setSelectedExerciseCategory] = useState(null);
   const [selectedFitnessLevel, setSelectedFitnessLevel] = useState(null); 
   const [exerciseImage, setExerciseImage] = useState(null);
+  const [exerciseStatus, setExerciseStatus] = useState("active");
 
   // Expression régulière pour vérifier un lien vidéo valide
   const videoUrlRegex = /^(https?:\/\/)?(www\.)?(youtube|vimeo)\.(com|be)\/(watch\?v=|.*\/)([a-zA-Z0-9_-]{11,})$/;
@@ -72,6 +73,7 @@ export default function CreateExercise(props) {
   formData.append("category", categoryInFrench);
   formData.append("fitnessLevel", fitnessLevelInFrench);
   formData.append("videoUrl",videoUrl);
+  formData.append("status", exerciseStatus);
 
   if (exerciseImage) {
     formData.append("file", exerciseImage);  
@@ -171,7 +173,17 @@ export default function CreateExercise(props) {
                 )}
               />
             </Form.Item>
-
+            <Form.Item label={t("Exercises:exercise_status")} className="input-element">
+  <Select
+    value={exerciseStatus}
+    onChange={(value) => setExerciseStatus(value)}
+    placeholder={t("Exercises:select_status")}
+    style={{ width: "100%" }}
+  >
+    <Select.Option value="active">{t("Exercises:active")}</Select.Option>
+    <Select.Option value="inactive">{t("Exercises:inactive")}</Select.Option>
+  </Select>
+</Form.Item>
             <Form.Item label={t("Exercises:enter_exercise_video")} className="input-element">
               <Controller
                 name="videoUrl"

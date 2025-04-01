@@ -36,5 +36,9 @@
   "modify": "",
   "save": "",
   "invalid_video_link": "",
-  "no_changes_detected": ""
+  "no_changes_detected": "",
+  "exercise_status": "Estado del ejercicio",
+  "select_status": "Seleccionar estado",
+  "active": "Activo",
+  "inactive": "Inactivo"
 }

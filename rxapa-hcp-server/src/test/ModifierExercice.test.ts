@@ -97,7 +97,21 @@ describe("updateExercise", () => {
       videoUrl: mockExercise.videoUrl
     });
   });
+  it("should update only the status when provided", async () => {
+    req.body = { status: "inactive" };
 
+    await updateExercise(req, res);
+
+    expect(mockExercise.update).toHaveBeenCalledWith({
+      name: mockExercise.name,
+      description: mockExercise.description,
+      category: mockExercise.category,
+      fitnessLevel: mockExercise.fitnessLevel,
+      videoUrl: mockExercise.videoUrl,
+      status: "inactive"
+    });
+  });
+  
   it("should return 409 when exercise name already exists", async () => {
     const error = new UniqueConstraintError({ message: "Duplicate name" });
     mockExercise.update.mockRejectedValue(error);

@@ -36,5 +36,9 @@
   "modify": "",
   "save": "",
   "invalid_video_link": "",
-  "no_changes_detected":""
+  "no_changes_detected":"",
+    "exercise_status": "حالة التمرين",
+    "select_status": "اختر الحالة",
+    "active": "نشط",
+    "inactive": "غير نشط"
 }
