@@ -27,8 +27,8 @@ let isDBConnected = false;
 // export const sequelize = new Sequelize(process.env.DATABASE_URL, {
 //   logging: false,
 // });
+
 /**
- *
  *
  * Creates new sequelize instance, which is used to create data
  * models.
