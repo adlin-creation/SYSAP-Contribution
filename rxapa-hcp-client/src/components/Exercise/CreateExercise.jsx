@@ -171,7 +171,17 @@ export default function CreateExercise(props) {
                 )}
               />
             </Form.Item>
-
+            <Form.Item label={t("Exercises:exercise_status")} className="input-element">
+  <Select
+    value={exerciseStatus}
+    onChange={(value) => setExerciseStatus(value)}
+    placeholder={t("Exercises:select_status")}
+    style={{ width: "100%" }}
+  >
+    <Select.Option value="active">{t("Exercises:active")}</Select.Option>
+    <Select.Option value="inactive">{t("Exercises:inactive")}</Select.Option>
+  </Select>
+</Form.Item>
             <Form.Item label={t("Exercises:enter_exercise_video")} className="input-element">
               <Controller
                 name="videoUrl"
