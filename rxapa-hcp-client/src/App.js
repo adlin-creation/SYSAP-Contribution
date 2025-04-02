@@ -27,6 +27,8 @@ import EvaluationPACE from "./components/Evaluation/EvaluationPACE";
 import EvaluationMATCH from "./components/Evaluation/EvaluationMATCH";
 import EvaluationPATH from "./components/Evaluation/EvaluationPATH";
 import EvaluationSearch from "./components/Evaluation/EvaluationSearch";
+import CalendarCreationUI from "./components/Calendrier/CalendarCreationUI";
+
 import useToken from "./components/Authentication/useToken"; // Import du hook personnalisé
 import Constants from "./components/Utils/Constants";
 import LanguageSwitcher from "./components/LanguageSwitcher/LanguageSwitcher";
@@ -76,6 +78,12 @@ function App() {
         label: <Link to="/">{t("App:dashboard")}</Link>,
       },
       {
+        key: "/calendar",
+        icon: <CalendarOutlined />,
+        label: <Link to="/calendar">{t("App:calendar")}</Link>,
+      },
+      
+      {
         key: "/exercises",
         icon: <AppstoreOutlined />,
         label: <Link to="/exercises">{t("App:exercises")}</Link>,
@@ -105,6 +113,7 @@ function App() {
         icon: <SettingOutlined />,
         label: <Link to="/programs">{t("App:programs")}</Link>,
       },
+      
       {
         key: "/patients",
         icon: <UserOutlined />,
@@ -288,6 +297,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />}></Route>
             <Route path="exercises" element={<ExerciseMenu />}></Route>
+            <Route path="calendar" element={<CalendarCreationUI />} />
             <Route path="blocs" element={<BlocMenu />}></Route>
             <Route path="sessions" element={<SessionMenu />}></Route>
             <Route path="cycles" element={<CycleMenu />}></Route>
