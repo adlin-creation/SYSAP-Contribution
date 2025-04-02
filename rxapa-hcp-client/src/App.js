@@ -31,6 +31,7 @@ import useToken from "./components/Authentication/useToken"; // Import du hook p
 import Constants from "./components/Utils/Constants";
 import LanguageSwitcher from "./components/LanguageSwitcher/LanguageSwitcher";
 import { useTranslation } from "react-i18next";
+import PatientViewPage from "./components/Patient/PatientViewPage";
 
 import { Layout, Menu, Button, Avatar, Dropdown } from "antd";
 import {
@@ -301,6 +302,10 @@ function App() {
             <Route
               path="doctor-patients/:id"
               element={<DoctorPatients />}
+            ></Route>
+            <Route
+              path="patients/:id" 
+              element={<PatientViewPage />}
             ></Route>
             <Route
               path="kinesiologists"
