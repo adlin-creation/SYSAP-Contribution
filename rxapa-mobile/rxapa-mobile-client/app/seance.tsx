@@ -35,7 +35,7 @@ export default function SeanceScreen() {
       setLoading(true);
       const programEnrollementId = await AsyncStorage.getItem('programEnrollementId');
       if (!programEnrollementId) {
-        alert(t('Seance:err_id_programme'));
+        alert(t('Seance:error_invalid_enrollment_code'));
         return;
       }
 
@@ -43,11 +43,11 @@ export default function SeanceScreen() {
       if (response.success) {
         setExercises(response.data);
       } else {
-        alert(response.message || t('Seance:err_aucun_exercice'));
+        alert(t(response.message ? `Backend:${response.message}` : 'Seance:error_exercise_not_found'));
       }
     } catch (error) {
       console.error('Erreur lors de la récupération des exercices:', error);
-      alert(t('Seance:err_recuperation_exercices'));
+      alert(t('Seance:error_fetching_exercises'));
     } finally {
       setLoading(false);
     }
@@ -69,16 +69,16 @@ export default function SeanceScreen() {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#1565C0" />
-        <Text>{t('Seance:chargement_exercices')}</Text>
+        <Text>{t('Seance:title_loading_exercises')}</Text>
       </View>
     );
   }
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.header}>{t('Seance:liste_exercices')}</Text>
+      <Text style={styles.header}>{t('Seance:title_exercise_list')}</Text>
       {exercises.length === 0 ? (
-        <Text style={styles.noExerciseText}>{t('Seance:aucun_exercice')}</Text>
+        <Text style={styles.noExerciseText}>{t('Seance:title_no_exercise')}</Text>
       ) : (
         exercises.map((exercise, index) => (
           <View

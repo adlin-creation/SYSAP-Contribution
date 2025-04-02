@@ -1,0 +1,26 @@
+{
+    "error_valid_enrollment_id_required": "مطلوب معرف تسجيل صالح للبرنامج.",
+    "error_fetching_data": "حدث خطأ أثناء جلب البيانات.",
+    "error_filter_type_must_be_day_week_all": "يجب أن يكون filterType إما \"day\" أو \"week\" أو \"all\".",
+    "error_no_session_found_user": "لم يتم العثور على جلسة لهذا المستخدم.",
+    "error_no_session_found_id": "لم يتم العثور على جلسة لهذا المعرف.",
+    "error_no_session_found": "لم يتم العثور على جلسة.",
+    "error_program_enrollment_id_required": "مطلوب معرف برنامج التسجيل.",
+    "error_internal_server_error": "خطأ في الخادم الداخلي.",
+    "error_fetching_statistics": "حدث خطأ أثناء جلب الإحصائيات.",
+    "error_response_not_a_json": "الاستجابة من الخادم ليست بتنسيق JSON.",
+    "error_fetching_exercises": "حدث خطأ أثناء جلب التمارين.",
+    "error_while_fetching_exercises": "حدث خطأ أثناء جلب التمارين.",
+    "error_all_fields_required": "يجب ملء جميع الحقول المطلوبة.",
+    "error_no_exercise_found": "لم يتم العثور على تمارين لهذه الجلسة.",
+    "error_required_code": "مطلوب الكود.",
+    "error_invalid_code": "الكود غير صالح.",
+    "error_recording_session_record": "فشل في تسجيل الجلسة.",
+    "error_network_error": "خطأ في الشبكة.",
+    "error_generic_error_occured": "حدث خطأ.",
+    "error_unknown_error_occured": "حدث خطأ غير معروف.",
+    "error_network_or_server_error": "خطأ في الشبكة أو الخادم.",
+    
+    "success_session_recorded": "تم تسجيل الجلسة بنجاح.",
+    "success_authentication": "تمت المصادقة بنجاح."
+}

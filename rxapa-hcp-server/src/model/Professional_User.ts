@@ -39,6 +39,14 @@ const Professional_User = sequelize.define('Professional_User', {
     type: dataTypes.BOOLEAN,
     defaultValue: true,
   },
+  resetToken: {
+    type: dataTypes.STRING,
+    allowNull: true,
+  },
+  resetTokenExpiry: {
+    type: dataTypes.DATE,
+    allowNull: true,
+  },
 }, {
   modelName: 'Professional_User',
 });

@@ -2,7 +2,6 @@ import { Caregiver } from "../model/Caregiver";
 import { Patient_Caregiver } from "../model/Patient_Caregiver";
 import { ProgramEnrollement } from "../model/ProgramEnrollement";
 import { Patient } from "../model/Patient";
-import * as bcrypt from "bcrypt";
 import { sequelize } from "../util/database"; // Ajout de l'import de l'instance sequelize
 
 /**
@@ -79,16 +78,20 @@ export const deleteCaregiver = async (req: any, res: any, next: any) => {
     // Trouver la relation Patient-Caregiver
     const patient_Caregiver = await Patient_Caregiver.findOne({
       where: {
-        CaregiverId: caregiver.id
-      }
+        CaregiverId: caregiver.id,
+      },
     });
 
     if (!patient_Caregiver) {
-      return res.status(404).json({ message: "Patient-Caregiver relation not found" });
+      return res
+        .status(404)
+        .json({ message: "Patient-Caregiver relation not found" });
     }
 
     // Trouver l'enregistrement de programme
-    const program_Enrollement = await ProgramEnrollement.findByPk(patient_Caregiver.ProgramEnrollementId);
+    const program_Enrollement = await ProgramEnrollement.findByPk(
+      patient_Caregiver.ProgramEnrollementId
+    );
     if (!program_Enrollement) {
       return res.status(404).json({ message: "Program Enrollement not found" });
     }
@@ -102,22 +105,23 @@ export const deleteCaregiver = async (req: any, res: any, next: any) => {
     // Trouver tous les enregistrements de programmes du patient
     const programs_Enrollements_patient = await ProgramEnrollement.findAll({
       where: {
-        PatientId: patient.id
-      }
+        PatientId: patient.id,
+      },
     });
 
     const occurrences = programs_Enrollements_patient.reduce(
       (acc: number, program: { dataValues: { ProgramId: string } }) => {
-        return program.dataValues.ProgramId === program_Enrollement.ProgramId ? acc + 1 : acc;
+        return program.dataValues.ProgramId === program_Enrollement.ProgramId
+          ? acc + 1
+          : acc;
       },
       0 // Accumulateur initialisé à 0
     );
 
-
-    if (occurrences === 1  ) {
+    if (occurrences === 1) {
       patient.numberOfPrograms -= 1;
     }
-    
+
     // Toujours décrémenter le nombre de soignants
     patient.numberOfCaregivers -= 1;
 
@@ -148,7 +152,6 @@ export const deleteCaregiver = async (req: any, res: any, next: any) => {
     res.status(500).json({ message: "Error processing request" });
   }
 };
-
 
 /**
  * Returns a specific caregiver based on their ID.
@@ -231,6 +234,64 @@ exports.getPatientsByCaregiver = async (req: any, res: any, next: any) => {
     }
     res.status(error.statusCode).json({
       message: "Error loading patients for caregiver from the database",
+      error: error.message,
+    });
+  }
+  return res;
+};
+
+/**
+ * Returns all caregivers associated with a specific patient.
+ */
+exports.getCaregiversByPatient = async (req: any, res: any, next: any) => {
+  const patientId = req.params.id;
+  try {
+    const programEnrollements = await ProgramEnrollement.findAll({
+      where: { PatientId: patientId },
+    });
+    if (!programEnrollements.length) {
+      return res.status(200).json({
+        message: "No program enrollements found for this patient",
+        caregivers: [],
+      });
+    }
+    let patientCaregiving: (typeof Patient_Caregiver)[] = [];
+    for (const element of programEnrollements) {
+      patientCaregiving = patientCaregiving.concat(
+        await Patient_Caregiver.findAll({
+          where: { ProgramEnrollementId: element.id },
+        })
+      );
+    }
+
+    if (!patientCaregiving.length) {
+      return res.status(200).json({
+        message: "No Patient_caregiver found for this patient",
+        caregivers: [],
+      });
+    }
+    let caregivers: (typeof Caregiver)[] = [];
+    for (const element of patientCaregiving) {
+      caregivers = caregivers.concat(
+        await Caregiver.findAll({
+          where: { id: element.CaregiverId },
+        })
+      );
+    }
+
+    if (!caregivers.length) {
+      return res.status(200).json({
+        message: "No caregivers found for this patient",
+        caregivers: [],
+      });
+    }
+    res.status(200).json(caregivers);
+  } catch (error: any) {
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    res.status(error.statusCode).json({
+      message: "Error loading caregivers for patient from the database",
       error: error.message,
     });
   }

@@ -27,10 +27,12 @@ import { Kinesiologist } from "./Kinesiologist";
 
 import { Follow_Patient } from "./Follow_Patient";
 import { Diagnostic } from "./Diagnostic";
-import { ProgramSession } from './ProgramSession'; 
+import { ProgramSession } from "./ProgramSession";
 
 import { Evaluation } from "./Evaluation";
 import { Evaluation_PACE } from "./Evaluation_PACE";
+import { Evaluation_PATH } from "./Evaluation_PATH";
+import { Evaluation_MATCH } from "./Evaluation_MATCH";
 
 export function createAssociations() {
   /**
@@ -97,6 +99,27 @@ export function createAssociations() {
     onDelete: "CASCADE",
   });
 
+  // Evaluation PATH
+  // Evaluation <> Evaluation_PATH (One-to-One)
+  Evaluation_PATH.belongsTo(Evaluation, {
+    foreignKey: "idPATH",
+    onDelete: "CASCADE",
+  });
+  Evaluation.hasOne(Evaluation_PATH, {
+    foreignKey: "idPATH",
+    onDelete: "CASCADE",
+  });
+
+  // Evaluation MATCH
+  // Evaluation <> Evaluation_MATCH (One-to-One)
+  Evaluation_MATCH.belongsTo(Evaluation, {
+    foreignKey: "idMATCH",
+    onDelete: "CASCADE",
+  });
+  Evaluation.hasOne(Evaluation_MATCH, {
+    foreignKey: "idMATCH",
+    onDelete: "CASCADE",
+  });
 
   Bloc.hasMany(Exercise_Bloc, {
     onDelete: "RESTRICT",
@@ -251,7 +274,7 @@ export function createAssociations() {
   });
 
   // new association for ExerciseVersion and Variant
-  
+
   ExerciseVersion.hasMany(Variant, {
     onDelete: "RESTRICT",
     foreignKey: {
@@ -308,85 +331,85 @@ export function createAssociations() {
    * Creates one-to-one association between Professional_User and Admin
    */
   Professional_User.hasOne(Admin, {
-    foreignKey: 'idAdmin',
+    foreignKey: "idAdmin",
   });
   Admin.belongsTo(Professional_User, {
-    foreignKey: 'idAdmin',
+    foreignKey: "idAdmin",
   });
 
   /**
    * Creates one-to-one association between Professional_User and Doctor
    */
   Professional_User.hasOne(Doctor, {
-    foreignKey: 'idDoctor',
+    foreignKey: "idDoctor",
   });
   Doctor.belongsTo(Professional_User, {
-    foreignKey: 'idDoctor',
+    foreignKey: "idDoctor",
   });
 
   /**
    * Creates one-to-one association between Professional_User and Kinesiologist
    */
   Professional_User.hasOne(Kinesiologist, {
-    foreignKey: 'idKinesiologist',
+    foreignKey: "idKinesiologist",
   });
   Kinesiologist.belongsTo(Professional_User, {
-    foreignKey: 'idKinesiologist',
+    foreignKey: "idKinesiologist",
   });
 
   /**
    * Creates one-to-many association between Kinesiologist and Follow_Patient
    */
   Kinesiologist.hasMany(Follow_Patient, {
-    foreignKey: 'KinesiologistId',
-    onDelete: 'RESTRICT',
+    foreignKey: "KinesiologistId",
+    onDelete: "RESTRICT",
   });
   Follow_Patient.belongsTo(Kinesiologist, {
-    foreignKey: 'KinesiologistId',
+    foreignKey: "KinesiologistId",
   });
 
   /**
    * Creates one-to-many association between Doctor and Follow_Patient
    */
   Doctor.hasMany(Follow_Patient, {
-    foreignKey: 'DoctorId',
-    onDelete: 'RESTRICT',
+    foreignKey: "DoctorId",
+    onDelete: "RESTRICT",
   });
   Follow_Patient.belongsTo(Doctor, {
-    foreignKey: 'DoctorId',
+    foreignKey: "DoctorId",
   });
 
   /**
    * Creates one-to-many association between Program_Enrollement and Follow_Patient
    */
   ProgramEnrollement.hasMany(Follow_Patient, {
-    foreignKey: 'ProgramEnrollementId',
-    onDelete: 'RESTRICT',
+    foreignKey: "ProgramEnrollementId",
+    onDelete: "RESTRICT",
   });
   Follow_Patient.belongsTo(ProgramEnrollement, {
-    foreignKey: 'ProgramEnrollementId',
+    foreignKey: "ProgramEnrollementId",
   });
 
   /**
    * Creates one-to-many association between Doctor and Diagnostic
    */
   Doctor.hasMany(Diagnostic, {
-    foreignKey: 'DoctorId',
-    onDelete: 'RESTRICT',
+    foreignKey: "DoctorId",
+    onDelete: "RESTRICT",
   });
   Diagnostic.belongsTo(Doctor, {
-    foreignKey: 'DoctorId',
+    foreignKey: "DoctorId",
   });
 
   /**
    * Creates one-to-many association between Patient and Diagnostic
    */
   Patient.hasMany(Diagnostic, {
-    foreignKey: 'PatientId',
-    onDelete: 'RESTRICT',
+    foreignKey: "PatientId",
+    onDelete: "RESTRICT",
   });
   Diagnostic.belongsTo(Patient, {
-    foreignKey: 'PatientId',
+    foreignKey: "PatientId",
   });
 
   /**
@@ -424,7 +447,7 @@ export function createAssociations() {
 
   /**
    * Creates many-to-many association between Program and Session
-  */
+   */
 
   Program.belongsToMany(Session, {
     through: ProgramSession,
@@ -438,5 +461,4 @@ export function createAssociations() {
     otherKey: "programId",
     onDelete: "CASCADE",
   });
-
 }

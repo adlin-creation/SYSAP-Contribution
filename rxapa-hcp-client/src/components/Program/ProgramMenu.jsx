@@ -95,6 +95,7 @@ export default function ProgramMenu() {
           isEditProgram: true,
         };
       } else {
+        refetchPrograms();
         return {
           isCreateProgram: false,
           isEditProgram: false,
@@ -264,6 +265,7 @@ export default function ProgramMenu() {
                     onSelect={handleSelectProgram}
                     program={program}
                     deleteProgram={deleteProgram}
+                    refetchPrograms={refetchPrograms}
                   />
                 </Col>
               );

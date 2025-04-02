@@ -25,6 +25,9 @@ export const Exercise = sequelize.define("Exercise", {
   imageUrl: {
     type: dataTypes.STRING,
   },
+  videoUrl: {
+    type: dataTypes.STRING,
+  },
   category: {
     type: dataTypes.ENUM("Aérobique", "Endurance", "Force", "Flexibilité", "Équilibre"),
     allowNull: false,

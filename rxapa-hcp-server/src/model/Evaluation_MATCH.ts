@@ -2,7 +2,7 @@ import { sequelize, dataTypes } from "../util/database";
 import { Evaluation } from "./Evaluation";
 
 export const Evaluation_MATCH = sequelize.define("Evaluation_MATCH", {
-  idPATH: {
+  idMATCH: {
     type: dataTypes.INTEGER,
     primaryKey: true,
     references: {
@@ -25,15 +25,15 @@ export const Evaluation_MATCH = sequelize.define("Evaluation_MATCH", {
   },
   // Section Equilibre
   BalanceFeetTogether: {
-    type: dataTypes.INTEGER,
+    type: dataTypes.DOUBLE,
     allowNull: false,
   },
   balanceSemiTandem: {
-    type: dataTypes.INTEGER,
+    type: dataTypes.DOUBLE,
     allowNull: false,
   },
   balanceTandem: {
-    type: dataTypes.INTEGER,
+    type: dataTypes.DOUBLE,
     allowNull: false,
   },
   scoreBalance: {

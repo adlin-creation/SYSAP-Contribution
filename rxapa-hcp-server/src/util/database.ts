@@ -27,8 +27,8 @@ let isDBConnected = false;
 // export const sequelize = new Sequelize(process.env.DATABASE_URL, {
 //   logging: false,
 // });
+
 /**
- *
  *
  * Creates new sequelize instance, which is used to create data
  * models.
@@ -59,7 +59,7 @@ export async function initDatabase() {
      * .sync({ alter: true }) - This checks what is the current state of the table in the database (which columns it has, what are their data types, etc),
      * and then performs the necessary changes in the table to make it match the model.
      */
-    await sequelize.sync();
+    await sequelize.sync({ alter: true });
     console.log("CONNECTED TO THE DATABASE");
     isDBConnected = true;
   } catch (error) {

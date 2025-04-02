@@ -1,0 +1,26 @@
+{
+    "error_valid_enrollment_id_required": "Un ID valide pour l'enregistrement du programme est requis.",
+    "error_fetching_data": "Erreur lors de la récupération des données",
+    "error_filter_type_must_be_day_week_all": "filterType doit être \"day\", \"week\" ou \"all\".",
+    "error_no_session_found_user": "Aucune session trouvée pour cet utilisateur.",
+    "error_no_session_found_id": "Aucune session trouvée pour cet ID.",
+    "error_no_session_found": "Aucune session trouvée.", 
+    "error_program_enrollment_id_required": "ProgramEnrollementId est requis",
+    "error_internal_server_error": "Erreur interne du serveur.",
+    "error_fetching_statistics": "Erreur lors de la récupération des statistiques",
+    "error_response_not_a_json": "La réponse du serveur n'est pas au format JSON.",
+    "error_fetching_exercises": "Erreur lors de la récupération des exercices.",
+    "error_while_fetching_exercises": "Une erreur est survenue lors de la récupération des exercices.",
+    "error_all_fields_required": "Tous les champs obligatoires doivent être renseignés",
+    "error_no_exercise_found": "Aucun exercice trouvé pour cette session.",
+    "error_required_code": "Le code est requis",
+    "error_invalid_code": "Code invalide",
+    "error_recording_session_record": "Échec dans l'enregistrement de la séance",
+    "error_network_error": "Erreur réseau",
+    "error_generic_error_occured": "Une erreur est survenue",
+    "error_unknown_error_occured": "Une erreur inconnue est survenue",
+    "error_network_or_server_error": "Erreur réseau ou serveur",
+    
+    "success_session_recorded": "Session enregistrée avec succès",
+    "success_authentication": "Authentification réussie"
+}

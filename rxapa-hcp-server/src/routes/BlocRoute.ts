@@ -12,8 +12,12 @@ router.get("/bloc/:blocKey", isAuth, blocController.getBloc);
 
 router.get("/blocs", isAuth, blocController.getBlocs);
 
+router.get("/blocs/:patientId", isAuth, blocController.getBlocsByPatientId);
+
 router.put("/update-bloc/:blocKey", isAuth, blocController.updateBloc);
 
 router.delete("/delete-bloc/:blocKey", isAuth, blocController.deleteBloc);
+
+router.delete('/remove-exercise-from-bloc', blocController.removeExerciseFromBloc);
 
 export default router;

@@ -20,11 +20,11 @@ const authenticate = async (code: string) => {
       await AsyncStorage.setItem('programEnrollementId', programEnrollementId.toString());
       return response.data;
     } else {
-      return { success: false, message: 'Code invalide' };
+      return { success: false, message: 'error_invalid_code' };
     }
   } catch (error) {
     console.error('Error during authentication:', error);
-    return { success: false, message: 'Erreur réseau ou serveur' };
+    return { success: false, message: 'error_network_or_server_error' };
   }
 };
 

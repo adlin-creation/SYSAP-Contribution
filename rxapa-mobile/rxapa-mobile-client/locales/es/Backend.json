@@ -1,0 +1,26 @@
+{
+    "error_valid_enrollment_id_required": "Se requiere un ID de inscripción válido para el programa.",
+    "error_fetching_data": "Error al recuperar los datos.",
+    "error_filter_type_must_be_day_week_all": "filterType debe ser \"day\", \"week\" o \"all\".",
+    "error_no_session_found_user": "No se encontró ninguna sesión para este usuario.",
+    "error_no_session_found_id": "No se encontró ninguna sesión para este ID.",
+    "error_no_session_found": "No se encontró ninguna sesión.", 
+    "error_program_enrollment_id_required": "Se requiere ProgramEnrollementId.",
+    "error_internal_server_error": "Error interno del servidor.",
+    "error_fetching_statistics": "Error al recuperar las estadísticas.",
+    "error_response_not_a_json": "La respuesta del servidor no está en formato JSON.",
+    "error_fetching_exercises": "Error al recuperar los ejercicios.",
+    "error_while_fetching_exercises": "Se produjo un error al recuperar los ejercicios.",
+    "error_all_fields_required": "Todos los campos obligatorios deben ser completados.",
+    "error_no_exercise_found": "No se encontró ningún ejercicio para esta sesión.",
+    "error_required_code": "Se requiere el código.",
+    "error_invalid_code": "Código inválido.",
+    "error_recording_session_record": "Error al registrar la sesión.",
+    "error_network_error": "Error de red.",
+    "error_generic_error_occured": "Ocurrió un error.",
+    "error_unknown_error_occured": "Ocurrió un error desconocido.",
+    "error_network_or_server_error": "Error de red o servidor.",
+
+    "success_session_recorded": "Sesión registrada con éxito.",
+    "success_authentication": "Autenticación exitosa."
+}
