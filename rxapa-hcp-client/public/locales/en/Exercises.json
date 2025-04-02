@@ -36,5 +36,9 @@
   "modify": "Modify",
   "save": "Save",
   "invalid_video_link": "Please enter a valid link",
-  "no_changes_detected": "No changes have been made"
+  "no_changes_detected": "No changes have been made",
+  "exercise_status": "Exercise Status",
+  "select_status": "Select status",
+  "active": "Active",
+  "inactive": "Inactive"
 }

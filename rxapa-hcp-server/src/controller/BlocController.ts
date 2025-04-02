@@ -6,6 +6,7 @@ import { SessionRecord } from "../model/SessionRecord";
 import { Session } from "../model/Session";
 import { Bloc_Session } from "../model/Bloc_Session";
 import { ProgramEnrollement } from "../model/ProgramEnrollement";
+import { BlocHistory } from "../model/BlocHistory";
 
 /**
  * This function creates an @type {Bloc}
@@ -197,17 +198,40 @@ exports.updateBloc = async (req: any, res: any, next: any) => {
     res.json({ message: "Error: Can't find the bloc" });
     return res;
   }
+  // save changes in BlocHistory 
+  const changes = [];
+
+  if (bloc.name !== blocName) {
+    changes.push({
+      blocId: bloc.id,
+      field: "name",
+      oldValue: bloc.name,
+      newValue: blocName,
+    });
+  }
+
+  if (bloc.description !== description) {
+    changes.push({
+      blocId: bloc.id,
+      field: "description",
+      oldValue: bloc.description,
+      newValue: description,
+    });
+  }
 
   /**
    * @todo validate the input values
    */
-
   // Use sequelize (Database Framework) to update the bloc
   try {
     await bloc.update({
       name: blocName || bloc.name,
       description: description || bloc.description,
     });
+
+    for (const change of changes){
+      await BlocHistory.create(change);
+    }
 
     res.status(200).json({ message: `The bloc has been updated` });
     // Otherwise, the action was not successful. Hence, let the user know that
@@ -256,7 +280,6 @@ exports.deleteBloc = async (req: any, res: any, next: any) => {
 /**
  * Deletes a specific exercise from a bloc
  */
-
 exports.removeExerciseFromBloc = async (req: any, res: any) => {
   const { blocId, exerciseId } = req.body;
 
@@ -269,13 +292,13 @@ exports.removeExerciseFromBloc = async (req: any, res: any) => {
     });
 
     if (result > 0) {
-      res.status(200).json({ message: "Exercice supprimé du bloc avec succès." });
+      res.status(200).json({ message: "Exercise successfully removed from the block." });
     } else {
-      res.status(404).json({ message: "Aucune correspondance trouvée." });
+      res.status(404).json({ message: "No matching entry found." });
     }
   } catch (error) {
-    console.error("Erreur suppression :", error);
-    res.status(500).json({ message: "Erreur serveur pendant la suppression." });
+    console.error("Deletion error:", error);
+    res.status(500).json({ message: "Server error occurred during deletion." });
   }
 };
 
