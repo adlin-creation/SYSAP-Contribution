@@ -16,22 +16,22 @@ import { useQuery } from "@tanstack/react-query";
 import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
 import CreatePatient from "./CreatePatient";
-import AddCargiver from "./AddCargiver";
-import PatientStats from "./PatientStats";
+import PatientViewPage from "./PatientData";
 import PatientDetails from "./PatientDetails";
+import { useNavigate } from "react-router-dom"
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
 
 export default function PatientMenu({ role }) {
-  const [viewingPatient, setViewingPatient] = useState(null);
+  //const [viewingPatient, setViewingPatient] = useState(null);
   const { t } = useTranslation();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isErrorMessage, setIsErrorMessage] = useState(false);
   const [message, setMessage] = useState("");
   const [isCreatePatient, setIsCreatePatient] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState(null);
-  const [selectedAddCargiver, setSelectedAddCargiver] = useState(null);
 
 
   const { token } = useToken();
@@ -51,7 +51,9 @@ export default function PatientMenu({ role }) {
 
   // Fonction principale pour gérer la recuperation en cascade jusqu'aux aides soignants
   const handleGetCaregivers = async (patient) => {
+    console.log(patient);
     try {
+
       const response = await axios.get(`${Constants.SERVER_URL}/patientDetails/${patient.id}`, {
         headers: { Authorization: "Bearer " + token },
       });
@@ -68,7 +70,7 @@ export default function PatientMenu({ role }) {
     const modal = AntModal.info({
       title: (
         <div style={{ fontSize: "18px", fontWeight: "bold" }}>
-          Liste des aides soignants
+          Liste des soignants
         </div>
       ), content: caregivers.length ? (
         <Row gutter={[16, 16]}>
@@ -104,28 +106,8 @@ export default function PatientMenu({ role }) {
       ) : <p>{t("Aucune aide soignante disponible")}</p>,
       onOk() { },
       width: "80%",
-      footer: (_, { OkBtn }) => (
-        <>
-          {caregivers.length < 2 && (
-            <Button
-              type="primary"
-              onClick={() => {
-                modal.destroy();
-                handleAddCargiver(patient)
-              }}
-            >
-              {t("Ajouter un aide  soignant")}
-            </Button>
-          )}
-          <OkBtn />
-        </>
-      ),
     });
   };
-
-  const handleAddCargiver = (patient) => {
-    setSelectedAddCargiver(patient);
-  }
 
   const deleteCaregiver = (id, patient, modal) => {
     AntModal.confirm({
@@ -235,8 +217,27 @@ export default function PatientMenu({ role }) {
     {
       title: t("Patients:name"),
       key: "name",
-      render: (_, record) => `${record.firstname || ''} ${record.lastname || ''}`,
+      render: (_, record) => (
+        <Link to={`/patients/${record.id}`}>
+          {record.firstname} {record.lastname}
+        </Link>
+      ),
     },
+    {
+      title: t("Patients:actions"),
+      key: "actions",
+      render: (_, record) => (
+        <Space size="middle">
+          {/* Instead of handleView, just link to /patients/ID */}
+          <Link to={`/patients/${record.id}`}>
+            <EyeOutlined /> {t("Patients:view_statistic_button")}
+          </Link>
+          {/* keep Edit and Delete if you want */}
+          <Button type="link" onClick={() => handleEdit(record)}> ... </Button>
+          <Button type="link" onClick={() => handleDelete(record)}> ... </Button>
+        </Space>
+      ),
+    },    
     {
       title: t("Patients:email"),
       dataIndex: "email",
@@ -276,10 +277,7 @@ export default function PatientMenu({ role }) {
       key: "actions",
       render: (_, record) => (
         <Space size="middle">
-          <Button type="link" onClick={() => handleView(record)}
-            style={{ display: role === 'admin' ? 'none' : 'inline-block' }}>
-            <EyeOutlined /> {t("Patients:view_statistic_button")}
-          </Button>
+         
           <Button type="link" onClick={() => handleEdit(record)}
             style={{ display: role === 'admin' ? 'none' : 'inline-block' }}
           >
@@ -298,9 +296,9 @@ export default function PatientMenu({ role }) {
   const handleEdit = (patient) => {
     setSelectedPatient(patient);
   };
-  const handleView = (patient) => {
-    setViewingPatient(patient);
-  };
+  //const handleView = (patient) => {
+  //  setViewingPatient(patient);
+  //};
 
   const showCaregiverWarning = () => {
     AntModal.warning({
@@ -352,15 +350,13 @@ export default function PatientMenu({ role }) {
 
   return (
     <div>
-      {/* Affiche le bouton Back et le titre si on est en mode création, édition ou vue détaillée */}
-      {(isCreatePatient || selectedPatient || viewingPatient || selectedAddCargiver) && (
+      {(isCreatePatient || selectedPatient) && (
         <Row align="middle" justify="space-between" style={{ marginBottom: "20px" }}>
           <Col>
             <Button
               onClick={() => {
                 setIsCreatePatient(false);
                 setSelectedPatient(null);
-                setViewingPatient(null);
               }}
               type="primary"
               icon={<ArrowLeftOutlined />}
@@ -372,17 +368,14 @@ export default function PatientMenu({ role }) {
             <h2 style={{ marginBottom: 0 }}>
               {isCreatePatient
                 ? t("Patients:register_new_patient")
-                : selectedPatient
-                  ? t("Patients:edit_patient_details")
-                  : t("Patients:view_patient_details")}
+                : t("Patients:edit_patient_details")}
             </h2>
           </Col>
           <Col span={4} />
         </Row>
       )}
-
-
-      {!isCreatePatient && !selectedPatient && !viewingPatient && !selectedAddCargiver ? (
+  
+      {!isCreatePatient && !selectedPatient ? (
         <>
           <div style={{ marginBottom: 16 }}>
             <Button
@@ -394,7 +387,7 @@ export default function PatientMenu({ role }) {
               {t("Patients:register_patient")}
             </Button>
           </div>
-
+  
           <Table
             columns={columns}
             dataSource={patientList}
@@ -403,25 +396,19 @@ export default function PatientMenu({ role }) {
           />
         </>
       ) : isCreatePatient ? (
-        <CreatePatient refetchPatients={refetchPatients} onClose={() => setIsCreatePatient(false)} />
-      ) : selectedPatient ? (
+        <CreatePatient
+          refetchPatients={refetchPatients}
+          onClose={() => setIsCreatePatient(false)}
+        />
+      ) : (
         <PatientDetails
           patient={selectedPatient}
           onClose={() => setSelectedPatient(null)}
           refetchPatients={refetchPatients}
           openModal={openModal}
         />
-      ) : selectedAddCargiver ? (
-        <AddCargiver
-          patient={selectedAddCargiver}
-          refetchPatients={refetchPatients}
-          onClose={() => setSelectedAddCargiver(null)}
-        />
-      ) : (
-        <PatientStats patient={viewingPatient} onClose={() => setViewingPatient(null)} />
-      )
-      }
-
+      )}
+  
       {isOpenModal && (
         <AntModal
           open={isOpenModal}
@@ -436,9 +423,9 @@ export default function PatientMenu({ role }) {
           <p>{message}</p>
         </AntModal>
       )}
-
     </div>
   );
+  
 }
 PatientMenu.propTypes = {
   role: PropTypes.string.isRequired,
