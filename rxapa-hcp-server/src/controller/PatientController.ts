@@ -208,6 +208,28 @@ exports.updatePatient = async (req: any, res: any, next: any) => {
   return res;
 };
 
+exports.createPatientSession = async (req: any, res: any) => {
+  const { id } = req.params;
+  const { date, difficultyLevel, painLevel, accomplishedExercice } = req.body;
+
+  try {
+    const session = await SessionRecord.create({
+      PatientId: id,
+      date,
+      difficultyLevel,
+      painLevel,
+      accomplishedExercice,
+    });
+
+    res.status(201).json(session);
+  } catch (error) {
+    console.error("Error creating session:", error);
+    res.status(500).json({ message: "Failed to create session" });
+  }
+};
+
+
+
 /**
  * Update an existing patient who has one or more caregivers.
  */
