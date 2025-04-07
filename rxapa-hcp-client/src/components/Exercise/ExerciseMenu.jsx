@@ -13,7 +13,7 @@ import FilterExercise from "./FilterExercise";
 import { useTranslation } from "react-i18next";
 
 export default function ExerciseMenu() {
-  const { t } = useTranslation();
+  const { t } = useTranslation("Exercises");
   const [buttonState, setButtonState] = useState({
     isCreateExercise: false,
     isLearnMore: false,
@@ -50,15 +50,15 @@ export default function ExerciseMenu() {
         return res.data;
       })
       .catch((err) => {
-        openModal(err.response.data.message, true);
+        openModal(t(`Backend:${err.response.data.message}`), true);
       });
   });
 
   if (isExerciseLoading) {
-    return <h1>{t("Exercises:exercise_loading")}</h1>;
+    return <h1>{t("title_exercise_loading")}</h1>;
   }
   if (isExerciseLoadingError) {
-    return <h1>{t("Exercises:exercise_loading_error")}</h1>;
+    return <h1>{t("error_exercise_loading")}</h1>;
   }
 
   function openModal(message, isError) {
@@ -116,10 +116,13 @@ export default function ExerciseMenu() {
       })
       .then((res) => {
         refetchExercises();
-        openModal(res.data.message, false);
+        openModal(t(`Backend:${res.data.message}`), false);
       })
       .catch((err) => {
-        openModal(err.response.data.message, true);
+        openModal(
+          t(`Backend:${err.response?.data?.message}`) || t("error_unknown"),
+          true
+        );
       });
   };
 
@@ -127,7 +130,8 @@ export default function ExerciseMenu() {
     if (!status) return "";
     const lower = status.toLowerCase();
     if (["actif", "active"].includes(lower)) return "active";
-    if (["inactif", "inactive", "désactivé", "desactiver"].includes(lower)) return "inactive";
+    if (["inactif", "inactive", "désactivé", "desactiver"].includes(lower))
+      return "inactive";
     return status;
   };
   const filteredExercises = exerciseList?.filter((exercise) => {
@@ -145,19 +149,20 @@ export default function ExerciseMenu() {
       return false;
     }
 
-
     if (
       attributes.status !== "ALL" &&
       normalizeStatus(attributes.status) !== normalizeStatus(exercise.status)
     ) {
       return false;
     }
-    console.log(exerciseList.map(ex => ex.status));
+    console.log(exerciseList.map((ex) => ex.status));
 
     if (attributes.searchTerm) {
       const searchTermLower = attributes.searchTerm.toLowerCase();
       const nameMatch = exercise.name.toLowerCase().includes(searchTermLower);
-      const descriptionMatch = exercise.description.toLowerCase().includes(searchTermLower);
+      const descriptionMatch = exercise.description
+        .toLowerCase()
+        .includes(searchTermLower);
 
       if (!nameMatch && !descriptionMatch) {
         return false;
@@ -181,7 +186,7 @@ export default function ExerciseMenu() {
                 type="primary"
                 icon={<PlusOutlined />}
               >
-                {t("Exercises:create_exercise")}
+                {t("button_create_exercise")}
               </Button>
             </Col>
           </Row>
@@ -205,7 +210,7 @@ export default function ExerciseMenu() {
           type="primary"
           icon={<ArrowLeftOutlined />}
         >
-          {t("Exercises:back_button")}
+          {t("button_back")}
         </Button>
       )}
 

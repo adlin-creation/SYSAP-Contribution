@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types"; 
+import PropTypes from "prop-types";
 import { Row, Col, Select, Input } from "antd";
 import { useTranslation } from "react-i18next";
 import { SearchOutlined } from "@ant-design/icons";
@@ -7,7 +7,7 @@ import { SearchOutlined } from "@ant-design/icons";
 const { Option } = Select;
 
 export default function FilterExercise({ updateSelectedValues }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("Exercises");
   const [selectedFitnessLevel, setSelectedFitnessLevel] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -39,7 +39,7 @@ export default function FilterExercise({ updateSelectedValues }) {
         <Col span={8}>
           <div className="filter-item">
             <Input
-              placeholder={t("Exercises:search_placeholder")}
+              placeholder={t("placeholder_search")}
               value={searchTerm}
               onChange={handleSearchChange}
               allowClear
@@ -53,15 +53,15 @@ export default function FilterExercise({ updateSelectedValues }) {
               value={selectedCategory}
               onChange={handleCategoryChange}
               className="select-wide"
-              placeholder={t("Exercises:category_placeholder")}
+              placeholder={t("placeholder_category")}
               allowClear
             >
-              <Option value="ALL">{t("Exercises:all")}</Option>
-              <Option value="Aérobique">{t("Exercises:aerobic")}</Option>
-              <Option value="Endurance">{t("Exercises:endurance")}</Option>
-              <Option value="Force">{t("Exercises:strength")}</Option>
-              <Option value="Flexibilité">{t("Exercises:flexibility")}</Option>
-              <Option value="Équilibre">{t("Exercises:balance")}</Option>
+              <Option value="ALL">{t("option_all")}</Option>
+              <Option value="Aérobique">{t("option_aerobic")}</Option>
+              <Option value="Endurance">{t("option_endurance")}</Option>
+              <Option value="Force">{t("option_strength")}</Option>
+              <Option value="Flexibilité">{t("option_flexibility")}</Option>
+              <Option value="Équilibre">{t("option_balance")}</Option>
             </Select>
           </div>
         </Col>
@@ -71,13 +71,13 @@ export default function FilterExercise({ updateSelectedValues }) {
               value={selectedFitnessLevel}
               onChange={handleFitnessLevelChange}
               className="select-wide"
-              placeholder={t("Exercises:fitness_level_placeholder")}
+              placeholder={t("fitness_level_placeholder")}
               allowClear
             >
-              <Option value="ALL">{t("Exercises:all")}</Option>
-              <Option value="Facile">{t("Exercises:easy")}</Option>
-              <Option value="Intermédiaire">{t("Exercises:intermediate")}</Option>
-              <Option value="Avancé">{t("Exercises:advanced")}</Option>
+              <Option value="ALL">{t("option_all")}</Option>
+              <Option value="Facile">{t("option_easy")}</Option>
+              <Option value="Intermédiaire">{t("option_intermediate")}</Option>
+              <Option value="Avancé">{t("option_advanced")}</Option>
             </Select>
           </div>
         </Col>
@@ -86,13 +86,13 @@ export default function FilterExercise({ updateSelectedValues }) {
             <Select
               value={selectedStatus}
               onChange={handleStatusChange}
-              placeholder={t("Exercises:select_status")}
+              placeholder={t("placeholder_exercise_status")}
               allowClear
               className="select-wide"
             >
-              <Option value="ALL">{t("Exercises:all")}</Option>
-              <Option value="active">{t("Exercises:active")}</Option>
-              <Option value="inactive">{t("Exercises:inactive")}</Option>
+              <Option value="ALL">{t("all")}</Option>
+              <Option value="active">{t("option_active")}</Option>
+              <Option value="inactive">{t("option_inactive")}</Option>
             </Select>
           </div>
         </Col>

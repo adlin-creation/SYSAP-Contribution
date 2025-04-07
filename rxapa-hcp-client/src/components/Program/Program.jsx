@@ -8,9 +8,14 @@ import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 import ToggleProgramButton from "../Program/ToggleProgramButton";
 
-
-export default function Program({ onClick, onSelect, program, deleteProgram, refetchPrograms }) {
-  const { t } = useTranslation();
+export default function Program({
+  onClick,
+  onSelect,
+  program,
+  deleteProgram,
+  refetchPrograms,
+}) {
+  const { t } = useTranslation("Programs");
   return (
     <div className="program">
       <List style={{ textAlign: "center" }}>
@@ -21,16 +26,15 @@ export default function Program({ onClick, onSelect, program, deleteProgram, ref
         />
 
         <h3>
-          {t("Programs:name_title")}: {program.name}
+          {t("title_name")}: {program.name}
         </h3>
         <br />
         <h5>
-          {t("Programs:description_title")}: {program.description}
+          {t("title_description")}: {program.description}
         </h5>
         <br />
         <h5>
-          {t("Programs:duration_title")}: {program.duration}{" "}
-          {program.duration_unit}
+          {t("title_duration")}: {program.duration} {program.duration_unit}
         </h5>
 
         <div className="espace-boutton">
@@ -44,7 +48,7 @@ export default function Program({ onClick, onSelect, program, deleteProgram, ref
             name="edit-program"
             type="primary"
           >
-            {t("Programs:edit_button")}
+            {t("button_edit")}
           </Button>
           <Button
             onClick={() => {
@@ -56,11 +60,10 @@ export default function Program({ onClick, onSelect, program, deleteProgram, ref
             danger
             icon={<DeleteOutlined />}
           >
-            {t("Programs:delete_button")}
+            {t("button_delete")}
           </Button>
 
           <ToggleProgramButton program={program} onToggle={refetchPrograms} />
-
         </div>
       </List>
     </div>
@@ -82,4 +85,3 @@ Program.propTypes = {
     actif: PropTypes.bool.isRequired, // aussi nécessaire pour le bouton Activer/Désactiver
   }).isRequired,
 };
-

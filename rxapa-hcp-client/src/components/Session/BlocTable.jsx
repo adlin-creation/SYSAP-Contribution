@@ -13,18 +13,18 @@ import PropTypes from "prop-types";
 export default function BlocTable({ blocs }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const { t } = useTranslation();
+  const { t } = useTranslation("Sessions");
   const columns = [
-    { id: "name", label: t("Sessions:name_label"), minWidth: 100 },
+    { id: "name", label: t("label_name"), minWidth: 100 },
     {
       id: "description",
-      label: t("Sessions:description_label"),
+      label: t("label_description"),
       minWidth: 100,
     },
-    { id: "dayTime", label: t("Sessions:day_time_label"), minWidth: 70 },
+    { id: "dayTime", label: t("label_day_time"), minWidth: 70 },
     {
       id: "isRequired",
-      label: t("Sessions:required_label"),
+      label: t("label_required"),
       align: "ceneter",
       minWidth: 70,
     },

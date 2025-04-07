@@ -41,7 +41,7 @@ describe("Middleware isAuth", () => {
 
     expect(mockRes.status).toHaveBeenCalledWith(401);
     expect(mockRes.json).toHaveBeenCalledWith({
-      message: "Authentification requise",
+      message: "error_authentification_required",
     });
     expect(mockNext).not.toHaveBeenCalled();
   });
@@ -53,7 +53,7 @@ describe("Middleware isAuth", () => {
 
     expect(mockRes.status).toHaveBeenCalledWith(401);
     expect(mockRes.json).toHaveBeenCalledWith({
-      message: "Authentification requise",
+      message: "error_authentification_required",
     });
     expect(mockNext).not.toHaveBeenCalled();
   });
@@ -68,7 +68,7 @@ describe("Middleware isAuth", () => {
 
     expect(mockRes.status).toHaveBeenCalledWith(401);
     expect(mockRes.json).toHaveBeenCalledWith({
-      message: "Token invalide ou expiré",
+      message: "error_invalid_token",
     });
     expect(mockNext).not.toHaveBeenCalled();
   });
@@ -76,7 +76,9 @@ describe("Middleware isAuth", () => {
   it("Retourne 401 si l'utilisateur n'est pas trouvé en BDD", async () => {
     mockReq.headers = { authorization: "Bearer validToken" };
     // On simule un payload decodé
-    (jwt.verify as jest.Mock).mockReturnValue({ email: "not_found@example.com" });
+    (jwt.verify as jest.Mock).mockReturnValue({
+      email: "not_found@example.com",
+    });
 
     // findOne renvoie null => pas d'utilisateur
     (Professional_User.findOne as jest.Mock).mockResolvedValue(null);
@@ -85,18 +87,25 @@ describe("Middleware isAuth", () => {
 
     expect(mockRes.status).toHaveBeenCalledWith(401);
     expect(mockRes.json).toHaveBeenCalledWith({
-      message: "Utilisateur introuvable",
+      message: "error_user_not_found",
     });
     expect(mockNext).not.toHaveBeenCalled();
   });
 
   // On fait un test paramétré pour différents rôles
-  const rolesToTest = ["admin", "doctor", "kinesiologist", "superadmin"] as const;
+  const rolesToTest = [
+    "admin",
+    "doctor",
+    "kinesiologist",
+    "superadmin",
+  ] as const;
 
   rolesToTest.forEach((role) => {
     it(`Passe au next() si un utilisateur est trouvé en BDD avec le rôle "${role}"`, async () => {
       mockReq.headers = { authorization: "Bearer validToken" };
-      (jwt.verify as jest.Mock).mockReturnValue({ email: `${role}@example.com` });
+      (jwt.verify as jest.Mock).mockReturnValue({
+        email: `${role}@example.com`,
+      });
 
       // Simulation du user trouvé avec un certain rôle
       (Professional_User.findOne as jest.Mock).mockResolvedValue({

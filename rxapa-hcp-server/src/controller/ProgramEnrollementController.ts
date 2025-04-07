@@ -34,7 +34,7 @@ exports.createProgramEnrollement = async (req: any, res: any, next: any) => {
     }
     res
       .status(error.statusCode)
-      .json({ message: "Error creating program enrollement" });
+      .json({ message: "error_creating_enrollement" });
   }
   return res;
 };
@@ -53,16 +53,16 @@ export const createPatientWithCaregivers = async (
   try {
     // Validation des données patient
     if (!patientData) {
-      throw new Error("Patient data is required");
+      throw new Error("error_patient_data_required");
     }
 
     // Validation des caregivers
     if (!caregivers || !Array.isArray(caregivers) || caregivers.length === 0) {
-      throw new Error("At least one caregiver is required");
+      throw new Error("error_at_least_one_caregiver_required");
     }
 
     if (caregivers.length > 2) {
-      throw new Error("Maximum 2 caregivers allowed per patient");
+      throw new Error("error_maximum_caregivers_exceeded");
     }
 
     const caregiverTriplets = caregivers.map((caregiver) => [
@@ -81,7 +81,7 @@ export const createPatientWithCaregivers = async (
     });
     if (existingUser) {
       return res.status(409).json({
-        message: `existing patient with this email: ${patientData.email}`,
+        message: `error_existing_patient_email: ${patientData.email}`,
       });
     }
 
@@ -126,7 +126,7 @@ export const createPatientWithCaregivers = async (
         // Annulation de la transaction et retour d'une erreur
         await transaction.rollback();
         return res.status(409).json({
-          message: `Existing caregiver with this email: ${caregiver.email}`,
+          message: `error_existing_caregiver_email: ${caregiver.email}`,
         });
       }
       //générer et envoyer un code d'accès pour les proches aidants
@@ -177,7 +177,7 @@ export const createPatientWithCaregivers = async (
       error.statusCode = 500;
     }
     res.status(error.statusCode).json({
-      message: "Error creating patient with caregivers",
+      message: "error_creating_patient_with_caregivers",
       error: error.message,
     });
   }
@@ -334,7 +334,7 @@ exports.updateProgramEnrollement = async (req: any, res: any, next: any) => {
   try {
     const programEnrollement = await ProgramEnrollement.findByPk(enrollementId);
     if (!programEnrollement) {
-      return res.status(404).json({ message: "Program enrollement not found" });
+      return res.status(404).json({ message: "error_enrollement_not_found" });
     }
     programEnrollement.enrollementDate = enrollementDate;
     programEnrollement.startDate = startDate;
@@ -350,7 +350,7 @@ exports.updateProgramEnrollement = async (req: any, res: any, next: any) => {
     }
     res
       .status(error.statusCode)
-      .json({ message: "Error updating program enrollement" });
+      .json({ message: "error_updating_enrollement" });
   }
   return res;
 };
@@ -363,17 +363,17 @@ exports.deleteProgramEnrollement = async (req: any, res: any, next: any) => {
   try {
     const programEnrollement = await ProgramEnrollement.findByPk(enrollementId);
     if (!programEnrollement) {
-      return res.status(404).json({ message: "Program enrollement not found" });
+      return res.status(404).json({ message: "error_enrollement_not_found" });
     }
     await programEnrollement.destroy();
-    res.status(200).json({ message: "Program enrollement deleted" });
+    res.status(200).json({ message: "success_enrollement_deleted" });
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
     res
       .status(error.statusCode)
-      .json({ message: "Error deleting program enrollement" });
+      .json({ message: "error_deleting_enrollement" });
   }
   return res;
 };
@@ -386,16 +386,14 @@ exports.getProgramEnrollement = async (req: any, res: any, next: any) => {
   try {
     const programEnrollement = await ProgramEnrollement.findByPk(enrollementId);
     if (!programEnrollement) {
-      return res.status(404).json({ message: "Program enrollement not found" });
+      return res.status(404).json({ message: "error_enrollement_not_found" });
     }
     res.status(200).json(programEnrollement);
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res
-      .status(error.statusCode)
-      .json({ message: "Error loading program enrollement from the database" });
+    res.status(error.statusCode).json({ message: "error_loading_enrollement" });
   }
   return res;
 };
@@ -412,7 +410,7 @@ exports.getProgramEnrollements = async (req: any, res: any, next: any) => {
       error.statusCode = 500;
     }
     res.status(error.statusCode).json({
-      message: "Error loading program enrollements from the database",
+      message: "error_loading_enrollements",
     });
   }
   return res;

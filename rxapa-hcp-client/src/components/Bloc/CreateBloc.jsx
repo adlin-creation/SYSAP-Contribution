@@ -7,10 +7,11 @@ import "./Styles.css";
 import axios from "axios";
 import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
+import i18n from "i18next";
 import { useTranslation } from "react-i18next";
 
 export default function CreateBloc(props) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("Blocs");
   const { handleSubmit, control } = useForm();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isErrorMessage, setIsErrorMessage] = useState(false);
@@ -43,16 +44,18 @@ export default function CreateBloc(props) {
       .post(`${Constants.SERVER_URL}/create-bloc`, data, {
         headers: {
           Authorization: "Bearer " + token,
+          "Accept-Language": i18n.language,
         },
       })
       .then((res) => {
-        openModal(res.data.message, false);
+        console.log("Server Response:", res.data.message);
+        openModal(t(`Backend:${res.data.message}`), false);
         // update the list of blocs
         props.refetchBlocs();
       })
       .catch((err) => {
         //const errorMessage = err.response ? err.response.data.message : "An error occurred";
-        openModal(err.response.data.message, true);
+        openModal(t(`Backend:${err.response.data.message}`), true);
       });
   };
 
@@ -60,7 +63,7 @@ export default function CreateBloc(props) {
     <Row justify="center" align="middle" style={{ minHeight: "50vh" }}>
       <Col span={12}>
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
-          <Form.Item label={t("Blocs:enter_bloc_name")}>
+          <Form.Item label={t("label_bloc_name")}>
             <Controller
               name={"name"}
               control={control}
@@ -68,14 +71,14 @@ export default function CreateBloc(props) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder={t("Blocs:bloc_name")}
+                  placeholder={t("placeholder_bloc_name")}
                   required
                 />
               )}
             />
           </Form.Item>
 
-          <Form.Item label={t("Blocs:enter_bloc_description")}>
+          <Form.Item label={t("label_bloc_description")}>
             <Controller
               name={"description"}
               control={control}
@@ -83,7 +86,7 @@ export default function CreateBloc(props) {
                 <Input.TextArea
                   onChange={onChange}
                   value={value}
-                  placeholder={t("Blocs:exercise_description")}
+                  placeholder={t("placeholder_bloc_description")}
                   required
                 />
               )}
@@ -92,7 +95,7 @@ export default function CreateBloc(props) {
 
           <Form.Item>
             <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
-              {t("Blocs:submit_button")}
+              {t("button_submit")}
             </Button>
           </Form.Item>
         </Form>
@@ -102,7 +105,7 @@ export default function CreateBloc(props) {
             onCancel={closeModal}
             footer={[
               <Button key="close" onClick={closeModal}>
-                {t("Blocs:close_button")}
+                {t("button_close")}
               </Button>,
             ]}
           >

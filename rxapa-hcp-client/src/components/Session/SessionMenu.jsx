@@ -12,7 +12,8 @@ import useToken from "../Authentication/useToken";
 import { useTranslation } from "react-i18next";
 
 export default function SessionList(props) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("Sessions");
+
   // tracks the state of two buttons: create a session and edit a day session
   const [buttonState, setButtonState] = useState({
     isCreateSession: false,
@@ -56,10 +57,10 @@ export default function SessionList(props) {
   /// SESSION QUERY VALIDATIONS ///
   /////////////////////////////////////
   if (isSessionLoading) {
-    return <h1>{t("Sessions:sessions_loading")}</h1>;
+    return <h1>{t("title_sessions_loading")}</h1>;
   }
   if (isSessionLoadingError) {
-    return <h1>{t("Sessions:sessions_loading_error_msg")}</h1>;
+    return <h1>{t("title_sessions_loading_error")}</h1>;
   }
 
   /**
@@ -121,9 +122,11 @@ export default function SessionList(props) {
       })
       .then((res) => {
         refetchSessions();
-        openModal(res.data.message, false);
+        openModal(t(`Backend:${res.data.message}`), false);
       })
-      .catch((err) => openModal(err.response.data.message, true));
+      .catch((err) =>
+        openModal(t(`Backend:${err.response.data.message}`), true)
+      );
   };
 
   return (
@@ -138,7 +141,7 @@ export default function SessionList(props) {
             type="primary"
             icon={<PlusOutlined />}
           >
-            {t("Sessions:create_session")}
+            {t("button_create_session")}
           </Button>
 
           {/* Display exisitng sessions */}
@@ -166,22 +169,22 @@ export default function SessionList(props) {
           type="primary"
           icon={<ArrowLeftOutlined />}
         >
-          {t("Sessions:back_button")}
+          {t("button_back")}
         </Button>
       )}
 
       {/* show create session input elements when create day session is clicked */}
       {buttonState.isCreateSession && (
         <div>
-          <h3>{t("Sessions:session_details_title")}</h3>
+          <h3>{t("title_session_details")}</h3>
           <CreateSession refetchSessions={refetchSessions} />
         </div>
       )}
 
       {/* shows day session details when edit day session is clicked */}
       {buttonState.isEditSession && (
-        <SessionDetails 
-          sessionKey={selectedSession.key} 
+        <SessionDetails
+          sessionKey={selectedSession.key}
           refetchSessions={refetchSessions}
         />
       )}

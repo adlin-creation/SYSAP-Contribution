@@ -6,7 +6,7 @@ import useToken from "../Authentication/useToken";
 import { CheckOutlined, StopOutlined } from "@ant-design/icons";
 import PropTypes from "prop-types";
 import "./ProgramStyles.css";
-
+import { useTranslation } from "react-i18next";
 
 ToggleProgramButton.propTypes = {
   program: PropTypes.shape({
@@ -18,7 +18,7 @@ ToggleProgramButton.propTypes = {
 
 export default function ToggleProgramButton({ program, onToggle }) {
   const { token } = useToken();
-
+  const { t } = useTranslation("Programs");
   const toggleProgram = async () => {
     try {
       const res = await axios.patch(
@@ -30,10 +30,12 @@ export default function ToggleProgramButton({ program, onToggle }) {
           },
         }
       );
-      message.success(res.data.message);
+      message.success(t(`Backend:${res.data.message}`));
       onToggle(); // pour recharger la liste si nécessaire
     } catch (err) {
-      message.error(err?.response?.data?.message || "Erreur serveur");
+      message.error(
+        t(`Backend:${err?.response?.data?.message}`) || t("error_server")
+      );
     }
   };
 
@@ -41,27 +43,23 @@ export default function ToggleProgramButton({ program, onToggle }) {
     <Popconfirm
       title={
         program.actif
-          ? "Voulez-vous désactiver ce programme ?"
-          : "Voulez-vous activer ce programme ?"
+          ? t("title_deactivate_program")
+          : t("title_activate_program")
       }
       onConfirm={toggleProgram}
-      okText="Oui"
-      cancelText="Annuler"
+      okText={t("button_yes")}
+      cancelText={t("button_cancel")}
     >
       <Button
-      icon={program.actif ? <StopOutlined /> : <CheckOutlined />}
-      type={program.actif ? "default" : "primary"}
-      danger={program.actif}
-      className={`toggle-program-button ${program.actif ? "active" : "inactive"}`}
-    >
-      {program.actif ? "Désactiver" : "Activer"}
+        icon={program.actif ? <StopOutlined /> : <CheckOutlined />}
+        type={program.actif ? "default" : "primary"}
+        danger={program.actif}
+        className={`toggle-program-button ${
+          program.actif ? "active" : "inactive"
+        }`}
+      >
+        {program.actif ? t("button_disable") : t("button_enable")}
       </Button>
-
     </Popconfirm>
   );
 }
-
-
-
-
-

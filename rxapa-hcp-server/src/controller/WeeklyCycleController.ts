@@ -18,11 +18,11 @@ exports.setIsSessionFlexible = async (req: any, res: any, next: any) => {
       error.statusCode = 500;
     }
     res.status(error.statusCode);
-    res.json({ message: `Can't find the weekly cycle` });
+    res.json({ message: "cycle_not_found" });
   }
   if (cycle == null) {
     res.status(500);
-    res.json({ message: `The weekly cycle doesn't exist` });
+    res.json({ message: "cycle_weekly_non_existant" });
     return res;
   }
 
@@ -30,13 +30,13 @@ exports.setIsSessionFlexible = async (req: any, res: any, next: any) => {
     await cycle.update({
       isSessionsFlexible: isSessionsFlexible,
     });
-    res.status(200).json({ message: "Updated the weekly cycle" });
+    res.status(200).json({ message: "cycle_updated" });
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
     res.status(error.statusCode);
-    res.json({ message: `Can't update the weekly cycle` });
+    res.json({ message: "cycle_not_updatable" });
   }
 };
 
@@ -70,7 +70,7 @@ exports.createCycle = async (req: any, res: any, next: any) => {
       isSessionsFlexible: false,
     });
 
-    res.status(201).json({ message: "Successfullly created a weekly cycle" });
+    res.status(201).json({ message: "cycle_created_success" });
     // Otherwise, the action was not successful. Hence, let the user know that
     // his request was unsuccessful.
   } catch (error: any) {
@@ -80,14 +80,13 @@ exports.createCycle = async (req: any, res: any, next: any) => {
     res.status(error.statusCode);
     if (error.name == "SequelizeUniqueConstraintError") {
       res.json({
-        messageTitle: "A weekly cycle with the same name already exists.",
-        message: "Please modify the name of the session and then submit again.",
+        messageTitle: "cycle_error_same_name",
+        message: "msg_alert_session_name_modification",
       });
     } else {
       res.json({
-        messageTitle: "Failed to create a weekly cycle",
-        message:
-          "Please contact the developer with a brief description of how this error can be reproduced.",
+        messageTitle: "cycle_failed_creation",
+        message:"contact_developer_message"
       });
     }
   }
@@ -124,11 +123,11 @@ exports.addSession = async (req: any, res: any, next: any) => {
       error.statusCode = 500;
     }
     res.status(error.statusCode);
-    res.json({ message: `Can't find the weekly cycle` });
+    res.json({ message: "cycle_weekly_not_found" });
   }
   if (cycle == null) {
     res.status(500);
-    res.json({ message: `The weekly cycle doesn't exist` });
+    res.json({ message: "cycle_weekly_non_existant" });
     return res;
   }
 
@@ -144,7 +143,7 @@ exports.addSession = async (req: any, res: any, next: any) => {
       }
       return res
         .status(error.statusCode)
-        .json({ message: "Failed to create day session for Day One" });
+        .json({ message: "day_one_session_failed" });
     }
   } else {
     try {
@@ -155,7 +154,7 @@ exports.addSession = async (req: any, res: any, next: any) => {
       }
       return res
         .status(error.statusCode)
-        .json({ message: "Failed to remove day session for Day One" });
+        .json({ message: "day_one_session_delete_failed" });
     }
   }
 
@@ -170,7 +169,7 @@ exports.addSession = async (req: any, res: any, next: any) => {
       }
       return res
         .status(error.statusCode)
-        .json({ message: "Failed to create day session for Day Two" });
+        .json({ message: "day_two_session_failed" });
     }
   } else {
     try {
@@ -181,7 +180,7 @@ exports.addSession = async (req: any, res: any, next: any) => {
       }
       return res
         .status(error.statusCode)
-        .json({ message: "Failed to remove day session for Day Two" });
+        .json({ message: "day_two_session_delete_failed" });
     }
   }
 
@@ -196,7 +195,7 @@ exports.addSession = async (req: any, res: any, next: any) => {
       }
       return res
         .status(error.statusCode)
-        .json({ message: "Failed to create day session for Day Three" });
+        .json({ message: "day_three_session_failed" });
     }
   } else {
     try {
@@ -207,7 +206,7 @@ exports.addSession = async (req: any, res: any, next: any) => {
       }
       return res
         .status(error.statusCode)
-        .json({ message: "Failed to remove day session for Day Three" });
+        .json({ message: "day_three_session_delete_failed" });
     }
   }
 
@@ -222,7 +221,7 @@ exports.addSession = async (req: any, res: any, next: any) => {
       }
       return res
         .status(error.statusCode)
-        .json({ message: "Failed to create day session for Day Four" });
+        .json({ message: "day_four_session_failed" });
     }
   } else {
     try {
@@ -233,7 +232,7 @@ exports.addSession = async (req: any, res: any, next: any) => {
       }
       return res
         .status(error.statusCode)
-        .json({ message: "Failed to remove day session for Day Four" });
+        .json({ message: "day_four_session_delete_failed" });
     }
   }
 
@@ -248,7 +247,7 @@ exports.addSession = async (req: any, res: any, next: any) => {
       }
       return res
         .status(error.statusCode)
-        .json({ message: "Failed to create day session for Day Five" });
+        .json({ message: "day_five_session_failed" });
     }
   } else {
     try {
@@ -259,7 +258,7 @@ exports.addSession = async (req: any, res: any, next: any) => {
       }
       return res
         .status(error.statusCode)
-        .json({ message: "Failed to remove day session for Day Five" });
+        .json({ message: "day_five_session_delete_failed" });
     }
   }
 
@@ -274,7 +273,7 @@ exports.addSession = async (req: any, res: any, next: any) => {
       }
       return res
         .status(error.statusCode)
-        .json({ message: "Failed to create day session for Day Six" });
+        .json({ message: "day_six_session_failed" });
     }
   } else {
     try {
@@ -285,7 +284,7 @@ exports.addSession = async (req: any, res: any, next: any) => {
       }
       return res
         .status(error.statusCode)
-        .json({ message: "Failed to remove day session for Day Six" });
+        .json({ message: "day_six_session_delete_failed" });
     }
   }
 
@@ -300,7 +299,7 @@ exports.addSession = async (req: any, res: any, next: any) => {
       }
       return res
         .status(error.statusCode)
-        .json({ message: "Failed to create day session for Day Seven" });
+        .json({ message: "day_seven_session_failed" });
     }
   } else {
     try {
@@ -311,7 +310,7 @@ exports.addSession = async (req: any, res: any, next: any) => {
       }
       return res
         .status(error.statusCode)
-        .json({ message: "Failed to remove day session for Day Seven" });
+        .json({ message: "day_seven_session_delete_failed" });
     }
   }
 
@@ -326,10 +325,10 @@ exports.addSession = async (req: any, res: any, next: any) => {
       error.statusCode = 500;
     }
     res.status(error.statusCode);
-    res.json({ message: `Can't update the weekly cycle` });
+    res.json({ message: "not_updatable_weekly_cycle" });
   }
 
-  return res.status(200).json({ message: "Updated the weekly cycle" });
+  return res.status(200).json({ message: "weekly_cycle_updated" });
 };
 
 /**
@@ -346,11 +345,11 @@ async function createSessionDay(sessionName: any, cycle: any, weekDay: any) {
       where: { name: sessionName },
     });
   } catch (error: any) {
-    throw new Error("Can't find the session");
+    throw new Error("cant_find_session");
   }
 
   if (session == null) {
-    throw new Error(`The session doesn't exist`);
+    throw new Error(`session_non_existent`);
   }
 
   // remove referenced day sessions, if any exists.
@@ -388,7 +387,7 @@ async function removeReferencedSessionDays(cycle: any, weekDay: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    throw new Error("Failed to load session days");
+    throw new Error("loadng_session_day_failed");
   }
 
   for (let sessionDay of sessionDays) {
@@ -435,7 +434,7 @@ exports.getCycle = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.json({ message: "Error loading the weekly cycle" });
+    res.json({ message: "error_loading_weekly_cycle" });
   }
 };
 
@@ -461,7 +460,7 @@ exports.getCycles = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.json({ message: "Error loading weekly cycles" });
+    res.json({ message: "error_loading_all_weekly_cycle" });
   }
   return res;
 };
@@ -484,20 +483,20 @@ exports.deleteCycle = async (req: any, res: any, next: any) => {
     }
     return res
       .status(error.statusCode)
-      .json({ message: "The cycle doen't exist in the database" });
+      .json({ message: "cycle_non_existant_database" });
   }
   try {
     await cycle.destroy();
     return res
       .status(200)
-      .json({ message: "Successfully deleted the weekly cycle" });
+      .json({ message: "succes_weekly_cycle_deleted" });
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
     return res
       .status(error.statusCode)
-      .json({ message: "Failed to delete the weekly cycle" });
+      .json({ message: "failed_weekly_cycle_delete" });
   }
 };
 
@@ -521,7 +520,7 @@ exports.updateCycle = async (req: any, res: any, next: any) => {
     }
     res
       .status(error.statusCode)
-      .json({ message: `Error: Can't find the weekly cycle` });
+      .json({ message: "error_weekly_cycle_not_found" });
     return res;
   }
 
@@ -536,7 +535,7 @@ exports.updateCycle = async (req: any, res: any, next: any) => {
       description: description,
     });
 
-    res.status(200).json({ message: `The cycle has been updated` });
+    res.status(200).json({ message: "specific_cycle_updated" });
     // Otherwise, the action was not successful. Hence, let the user know that
     // his request was unsuccessful.
   } catch (error: any) {
@@ -546,7 +545,7 @@ exports.updateCycle = async (req: any, res: any, next: any) => {
 
     res
       .status(error.statusCode)
-      .json({ message: `Failed to update the cycle` });
+      .json({ message: "failed_update_cycle" });
   }
 };
 
@@ -564,7 +563,7 @@ exports.getSessions = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.json({ message: "Error, can't the find weekly cycle in the database" });
+    res.json({ message: "error_weekly_cycle_not_found_database" });
 
     return res;
   }
@@ -578,7 +577,7 @@ exports.getSessions = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.json({ message: "Failed to load sessions" });
+    res.json({ message: "failed_loading_session" });
   }
   return res;
 };

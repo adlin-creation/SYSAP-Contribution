@@ -12,7 +12,7 @@ export default function KinesiologistPatients() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { token } = useToken();
-  const { t } = useTranslation();
+  const { t } = useTranslation("Professionals");
 
   const {
     data: patients,
@@ -29,9 +29,9 @@ export default function KinesiologistPatients() {
   if (error) {
     return (
       <div style={{ textAlign: "center", marginTop: "20px" }}>
-        <h3>Error loading patients</h3>
+        <h3>{t("Kinesiologist.error_loading_patients")}</h3>
         <Button onClick={() => navigate("/kinesiologists")}>
-          Return to Kinesiologists
+          {t("Kinesiologist.back_to_kinesiologists_button")}
         </Button>
       </div>
     );
@@ -39,22 +39,22 @@ export default function KinesiologistPatients() {
 
   const columns = [
     {
-      title: t("Patients:name"),
+      title: t("Patients:title_name"),
       key: "name",
       render: (_, record) => `${record.firstname} ${record.lastname}`,
     },
     {
-      title: t("Patients:email"),
+      title: t("Patients:title_email"),
       dataIndex: "email",
       key: "email",
     },
     {
-      title: t("Patients:phone"),
+      title: t("Patients:title_phone"),
       dataIndex: "phoneNumber",
       key: "phoneNumber",
     },
     {
-      title: t("Patients:birthday"),
+      title: t("Patients:title_birthday"),
       dataIndex: "birthDate",
       key: "birthDate",
       render: (date) => new Date(date).toLocaleDateString(),
@@ -75,13 +75,11 @@ export default function KinesiologistPatients() {
             type="primary"
             icon={<ArrowLeftOutlined />}
           >
-            {t("Professionals:Kinesiologist:back_to_kinesiologists_button")}
+            {t("Kinesiologist.button_back_to_kinesiologists")}
           </Button>
         </Col>
         <Col span={16} style={{ textAlign: "center" }}>
-          <h2>
-            {t("Professionals:Kinesiologist:kinesiologist_patients_title")}
-          </h2>
+          <h2>{t("Kinesiologist.title_kinesiologist_patients")}</h2>
         </Col>
         <Col span={4} />
       </Row>

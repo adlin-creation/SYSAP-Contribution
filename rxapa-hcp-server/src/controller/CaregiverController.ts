@@ -14,9 +14,7 @@ exports.createCaregiver = async (req: any, res: any, next: any) => {
     const existingUser = await Caregiver.findOne({ where: { email } });
 
     if (existingUser) {
-      return res
-        .status(409)
-        .json({ message: "existing caregiver with this email." });
+      return res.status(409).json({ message: "error_caregiver_existing_mail" });
     }
     const newCaregiver = await Caregiver.create({
       firstname,
@@ -30,7 +28,7 @@ exports.createCaregiver = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({ message: "Error creating caregiver" });
+    res.status(error.statusCode).json({ message: "error_caregiver_creating" });
   }
   return res;
 };
@@ -44,7 +42,7 @@ exports.updateCaregiver = async (req: any, res: any, next: any) => {
   try {
     const caregiver = await Caregiver.findByPk(caregiverId);
     if (!caregiver) {
-      return res.status(404).json({ message: "Caregiver not found" });
+      return res.status(404).json({ message: "error_caregiver_not_found" });
     }
     caregiver.firstname = firstname;
     caregiver.lastname = lastname;
@@ -57,7 +55,7 @@ exports.updateCaregiver = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({ message: "Error updating caregiver" });
+    res.status(error.statusCode).json({ message: "error_caregiver_updating" });
   }
   return res;
 };
@@ -72,7 +70,7 @@ export const deleteCaregiver = async (req: any, res: any, next: any) => {
     // Trouver le soignant
     const caregiver = await Caregiver.findByPk(caregiverId);
     if (!caregiver) {
-      return res.status(404).json({ message: "Caregiver not found" });
+      return res.status(404).json({ message: "error_caregiver_not_found" });
     }
 
     // Trouver la relation Patient-Caregiver
@@ -85,7 +83,7 @@ export const deleteCaregiver = async (req: any, res: any, next: any) => {
     if (!patient_Caregiver) {
       return res
         .status(404)
-        .json({ message: "Patient-Caregiver relation not found" });
+        .json({ message: "error_caregiver_relation_not_found" });
     }
 
     // Trouver l'enregistrement de programme
@@ -93,13 +91,15 @@ export const deleteCaregiver = async (req: any, res: any, next: any) => {
       patient_Caregiver.ProgramEnrollementId
     );
     if (!program_Enrollement) {
-      return res.status(404).json({ message: "Program Enrollement not found" });
+      return res
+        .status(404)
+        .json({ message: "error_program_enrollement_not_found" });
     }
 
     // Trouver le patient associé
     const patient = await Patient.findByPk(program_Enrollement.PatientId);
     if (!patient) {
-      return res.status(404).json({ message: "Patient not found" });
+      return res.status(404).json({ message: "patient_not_found" });
     }
 
     // Trouver tous les enregistrements de programmes du patient
@@ -140,16 +140,16 @@ export const deleteCaregiver = async (req: any, res: any, next: any) => {
       // Commit de la transaction si tout se passe bien
       await transaction.commit();
 
-      res.status(200).json({ message: "Caregiver deleted" });
+      res.status(200).json({ message: "success_caregiver_deleted" });
     } catch (error) {
       // Rollback en cas d'erreur
       await transaction.rollback();
       console.error("Transaction failed:", error);
-      res.status(500).json({ message: "Error deleting caregiver" });
+      res.status(500).json({ message: "error_caregiver_deleting" });
     }
   } catch (error) {
     console.error("Unexpected error:", error);
-    res.status(500).json({ message: "Error processing request" });
+    res.status(500).json({ message: "error_request_processing" });
   }
 };
 
@@ -161,16 +161,14 @@ exports.getCaregiver = async (req: any, res: any, next: any) => {
   try {
     const caregiver = await Caregiver.findByPk(caregiverId);
     if (!caregiver) {
-      return res.status(404).json({ message: "Caregiver not found" });
+      return res.status(404).json({ message: "error_caregiver_not_found" });
     }
     res.status(200).json(caregiver);
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res
-      .status(error.statusCode)
-      .json({ message: "Error loading caregiver from the database" });
+    res.status(error.statusCode).json({ message: "error_caregiver_loading" });
   }
   return res;
 };
@@ -186,9 +184,7 @@ exports.getCaregivers = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res
-      .status(error.statusCode)
-      .json({ message: "Error loading caregivers from the database" });
+    res.status(error.statusCode).json({ message: "error_caregiver_loading" });
   }
   return res;
 };
@@ -201,7 +197,7 @@ exports.getPatientsByCaregiver = async (req: any, res: any, next: any) => {
   try {
     const caregiver = await Caregiver.findByPk(caregiverId);
     if (!caregiver) {
-      return res.status(404).json({ message: "Caregiver not found" });
+      return res.status(404).json({ message: "error_caregiver_not_found" });
     }
 
     const patients = await Patient.findAll({
@@ -222,7 +218,7 @@ exports.getPatientsByCaregiver = async (req: any, res: any, next: any) => {
 
     if (!patients.length) {
       return res.status(200).json({
-        message: "No patients found for this caregiver",
+        message: "error_caregiver_not_found",
         patients: [],
       });
     }
@@ -233,7 +229,7 @@ exports.getPatientsByCaregiver = async (req: any, res: any, next: any) => {
       error.statusCode = 500;
     }
     res.status(error.statusCode).json({
-      message: "Error loading patients for caregiver from the database",
+      message: "error_caregiver_loading_patient",
       error: error.message,
     });
   }
@@ -251,7 +247,7 @@ exports.getCaregiversByPatient = async (req: any, res: any, next: any) => {
     });
     if (!programEnrollements.length) {
       return res.status(200).json({
-        message: "No program enrollements found for this patient",
+        message: "error_patient_program_enrollement_not_found",
         caregivers: [],
       });
     }
@@ -266,7 +262,7 @@ exports.getCaregiversByPatient = async (req: any, res: any, next: any) => {
 
     if (!patientCaregiving.length) {
       return res.status(200).json({
-        message: "No Patient_caregiver found for this patient",
+        message: "error_patient_caregiver_not_found",
         caregivers: [],
       });
     }
@@ -281,7 +277,7 @@ exports.getCaregiversByPatient = async (req: any, res: any, next: any) => {
 
     if (!caregivers.length) {
       return res.status(200).json({
-        message: "No caregivers found for this patient",
+        message: "no_caregivers_found",
         caregivers: [],
       });
     }
@@ -291,7 +287,7 @@ exports.getCaregiversByPatient = async (req: any, res: any, next: any) => {
       error.statusCode = 500;
     }
     res.status(error.statusCode).json({
-      message: "Error loading caregivers for patient from the database",
+      message: "error_caregiver_loading",
       error: error.message,
     });
   }

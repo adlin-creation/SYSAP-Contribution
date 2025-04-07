@@ -26,7 +26,7 @@ function EvaluationSearch() {
   const handleSearch = async () => {
     if (!searchTerm.trim()) {
       // Vérifie si l'entrée est vide
-      message.warning("Veuillez entrer un nom.");
+      message.warning(t("warn_missing_name_warning"));
       return;
     }
 
@@ -51,21 +51,21 @@ function EvaluationSearch() {
       });
 
       if (!response.ok) {
-        throw new Error("Erreur lors de la récupération des patients");
+        throw new Error(t("error_getting_patients"));
       }
 
       const data = await response.json();
       console.log("Données reçues:", data); // Debug : afficher la réponse de l'API
 
       if (!data || (Array.isArray(data) && data.length === 0)) {
-        setErrorMessage("Aucun patient trouvé."); // Message si aucun résultat
+        setErrorMessage(t("error_no_patients")); // Message si aucun résultat
       } else {
         // Si l'API retourne un seul objet patient, on le convertit en tableau
         setPatients(Array.isArray(data) ? data : [data]);
       }
     } catch (error) {
       console.error(" Erreur lors de la recherche:", error);
-      setErrorMessage("Erreur lors de la recherche. Veuillez réessayer.");
+      setErrorMessage(t("error_search"));
     } finally {
       setLoading(false); // Arrêter le chargement une fois la requête terminée
     }
@@ -85,22 +85,22 @@ function EvaluationSearch() {
    */
   const columns = [
     {
-      title: t("table_column_lastname"),
+      title: t("title_table_column_lastname"),
       dataIndex: "lastname",
       key: "lastname",
     },
     {
-      title: t("table_column_firstname"),
+      title: t("title_table_column_firstname"),
       dataIndex: "firstname",
       key: "firstname",
     },
     {
-      title: t("table_column_birthday"),
+      title: t("title_table_column_birthday"),
       dataIndex: "birthday",
       key: "Birthday",
     },
     {
-      title: "Actions",
+      title: t("title_actions"),
       key: "actions",
       render: (_, patient) => (
         <div
@@ -119,7 +119,7 @@ function EvaluationSearch() {
               }
               disabled={!patient.id}
             >
-              Évaluation PACE
+              {t("button_pace")}
             </Button>
             <Button
               type="primary"
@@ -128,7 +128,7 @@ function EvaluationSearch() {
               }
               disabled={!patient.id}
             >
-              Évaluation PATH
+              {t("button_path")}
             </Button>
             <Button
               type="primary"
@@ -137,7 +137,7 @@ function EvaluationSearch() {
               }
               disabled={!patient.id}
             >
-              Évaluation MATCH
+              {t("button_match")}
             </Button>
           </div>
 
@@ -145,7 +145,7 @@ function EvaluationSearch() {
             type="primary"
             onClick={() => navigateToEvaluations(patient.id)}
           >
-            Afficher évaluations
+            {t("button_show_evaluations")}
           </Button>
         </div>
       ),
@@ -161,7 +161,7 @@ function EvaluationSearch() {
             {/* Champs de recherche */}
             <div style={{ flex: 1, marginRight: "8px" }}>
               <Input
-                placeholder={t("search_placeholder")}
+                placeholder={t("placeholder_search")}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onPressEnter={handleSearch}

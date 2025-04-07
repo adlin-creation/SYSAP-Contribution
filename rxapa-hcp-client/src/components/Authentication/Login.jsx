@@ -12,6 +12,7 @@ import LanguageSwitcher from "../LanguageSwitcher/LanguageSwitcher";
 import { useTranslation } from "react-i18next";
 
 export default function Login({ setToken }) {
+  const { t } = useTranslation("Authentication");
   const [isSignup, setIsSignup] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isErrorMessage, setIsErrorMessage] = useState(false);
@@ -19,7 +20,6 @@ export default function Login({ setToken }) {
   const navigate = useNavigate();
 
   const { handleSubmit, control } = useForm();
-  const { t } = useTranslation();
   function register() {
     setIsSignup(true);
   }
@@ -34,7 +34,7 @@ export default function Login({ setToken }) {
         navigate("/", { state: { role: res.data.role } });
       })
       .catch((err) => {
-        openModal(err.response.data.message, true);
+        openModal(t(`Backend:${err.response.data.message}`), true);
       });
   };
 
@@ -62,18 +62,19 @@ export default function Login({ setToken }) {
             {/* Juste un espace vide pour centrer Login et mettre à gauche l'icone de langue*/}
             <Col span={8}></Col>{" "}
             <Col span={8} style={{ textAlign: "center" }}>
-              <h2>{t("Authentication:login_title")}</h2>
+              <h2>{t("title_login")}</h2>
             </Col>
             <Col span={8} style={{ textAlign: "center" }}>
               <LanguageSwitcher
                 iconStyle={{ color: "#3b0062" }}
                 iconClassName="login-language-icon"
+                labelColor={{ color: "#3b0062" }}
               />
             </Col>
           </Row>
           <Form onFinish={handleSubmit(onSubmit)}>
             <div className="input-element">
-              <h5>{t("Authentication:email_title")}</h5>
+              <h5>{t("title_email")}</h5>
               <Controller
                 name={"email"}
                 control={control}
@@ -81,7 +82,7 @@ export default function Login({ setToken }) {
                   <Input
                     onChange={onChange}
                     value={value}
-                    placeholder={t("Authentication:email_placeholder")}
+                    placeholder={t("placeholder_email")}
                     type="email"
                     required
                   />
@@ -90,7 +91,7 @@ export default function Login({ setToken }) {
             </div>
 
             <div className="input-element">
-              <h5>{t("Authentication:password_title")}</h5>
+              <h5>{t("title_password")}</h5>
               <Controller
                 name={"password"}
                 control={control}
@@ -98,7 +99,7 @@ export default function Login({ setToken }) {
                   <Input.Password
                     onChange={onChange}
                     value={value}
-                    placeholder={t("Authentication:password_placeholder")}
+                    placeholder={t("placeholder_password")}
                     required
                   />
                 )}
@@ -111,17 +112,16 @@ export default function Login({ setToken }) {
                 htmlType="submit"
                 icon={<CheckOutlined />} // Utilisation de l'icône de antd
               >
-                {t("Authentication:login_button")}
+                {t("button_login")}
               </Button>
 
               <Button type="link" onClick={register}>
-                {t("Authentication:register_button")}
+                {t("button_register")}
               </Button>
 
               <Button type="link" onClick={() => navigate("/set-new-password")}>
-                Mot de passe oublie
+                {t("button_password_forgotten")}
               </Button>
-
             </div>
           </Form>
         </div>
@@ -130,7 +130,7 @@ export default function Login({ setToken }) {
           onCancel={closeModal}
           footer={[
             <Button key="close" onClick={closeModal}>
-              Close
+              {t("button_close")}
             </Button>,
           ]}
         >

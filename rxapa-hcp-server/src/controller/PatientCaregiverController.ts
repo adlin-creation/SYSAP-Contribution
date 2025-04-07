@@ -11,11 +11,9 @@ exports.createPatientCaregiver = async (req: any, res: any, next: any) => {
       where: { ProgramEnrollementId },
     });
     if (programCaregivers.length >= 2) {
-      return res
-        .status(400)
-        .json({
-          message: "A program enrollement can have a maximum of 2 caregivers",
-        });
+      return res.status(400).json({
+        message: "program_enrollment_max_caregivers",
+      });
     }
     const newPatientCaregiver = await Patient_Caregiver.create({
       date,
@@ -30,7 +28,7 @@ exports.createPatientCaregiver = async (req: any, res: any, next: any) => {
     }
     res
       .status(error.statusCode)
-      .json({ message: "Error creating patient-caregiver association" });
+      .json({ message: "error_creating_patient_caregiver_association" });
   }
   return res;
 };
@@ -48,7 +46,7 @@ exports.updatePatientCaregiver = async (req: any, res: any, next: any) => {
     if (!patientCaregiver) {
       return res
         .status(404)
-        .json({ message: "Patient-caregiver association not found" });
+        .json({ message: "patient_caregiver_association_not_found" });
     }
     patientCaregiver.date = date;
     patientCaregiver.ProgramEnrollementId = ProgramEnrollementId;
@@ -61,7 +59,7 @@ exports.updatePatientCaregiver = async (req: any, res: any, next: any) => {
     }
     res
       .status(error.statusCode)
-      .json({ message: "Error updating patient-caregiver association" });
+      .json({ message: "error_updating_patient_caregiver_association" });
   }
   return res;
 };
@@ -78,17 +76,17 @@ exports.deletePatientCaregiver = async (req: any, res: any, next: any) => {
     if (!patientCaregiver) {
       return res
         .status(404)
-        .json({ message: "Patient-caregiver association not found" });
+        .json({ message: "patient_caregiver_association_not_found" });
     }
     await patientCaregiver.destroy();
-    res.status(200).json({ message: "Patient-caregiver association deleted" });
+    res.status(200).json({ message: "patient_caregiver_association_deleted" });
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
     res
       .status(error.statusCode)
-      .json({ message: "Error deleting patient-caregiver association" });
+      .json({ message: "error_deleting_patient_caregiver_association" });
   }
   return res;
 };
@@ -105,19 +103,16 @@ exports.getPatientCaregiver = async (req: any, res: any, next: any) => {
     if (!patientCaregiver) {
       return res
         .status(404)
-        .json({ message: "Patient-caregiver association not found" });
+        .json({ message: "patient_caregiver_association_not_found" });
     }
     res.status(200).json(patientCaregiver);
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res
-      .status(error.statusCode)
-      .json({
-        message:
-          "Error loading patient-caregiver association from the database",
-      });
+    res.status(error.statusCode).json({
+      message: "error_loading_patient_caregiver_association",
+    });
   }
   return res;
 };
@@ -133,12 +128,9 @@ exports.getPatientCaregivers = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res
-      .status(error.statusCode)
-      .json({
-        message:
-          "Error loading patient-caregiver associations from the database",
-      });
+    res.status(error.statusCode).json({
+      message: "error_loading_patient_caregiver_association",
+    });
   }
   return res;
 };

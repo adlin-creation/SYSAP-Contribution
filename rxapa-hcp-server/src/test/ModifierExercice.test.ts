@@ -18,19 +18,19 @@ describe("updateExercise", () => {
       category: "strength",
       fitnessLevel: "beginner",
       videoUrl: "https://www.youtube.com/watch?v=valid",
-      update: jest.fn().mockResolvedValue(true)
+      update: jest.fn().mockResolvedValue(true),
     };
 
     (Exercise.findOne as jest.Mock).mockResolvedValue(mockExercise);
-    
+
     req = {
       params: { exerciseKey: "ex123" },
-      body: {}
+      body: {},
     } as unknown as Request;
 
     res = {
       status: jest.fn().mockReturnThis(),
-      json: jest.fn()
+      json: jest.fn(),
     } as unknown as Response;
   });
 
@@ -45,7 +45,7 @@ describe("updateExercise", () => {
       category: "endurance",
       fitnessLevel: "intermediate",
       videoUrl: "https://www.youtube.com/watch?v=newvalid",
-      status: "active"
+      status: "active",
     };
 
     await updateExercise(req, res);
@@ -53,7 +53,7 @@ describe("updateExercise", () => {
     expect(mockExercise.update).toHaveBeenCalledWith(req.body);
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({
-      message: "Exercice mis à jour avec succès."
+      message: "exercise_updated_successfully",
     });
   });
 
@@ -67,7 +67,7 @@ describe("updateExercise", () => {
       description: mockExercise.description,
       category: mockExercise.category,
       fitnessLevel: "advanced",
-      videoUrl: mockExercise.videoUrl
+      videoUrl: mockExercise.videoUrl,
     });
   });
 
@@ -81,7 +81,7 @@ describe("updateExercise", () => {
       description: mockExercise.description,
       category: "endurance",
       fitnessLevel: mockExercise.fitnessLevel,
-      videoUrl: mockExercise.videoUrl
+      videoUrl: mockExercise.videoUrl,
     });
   });
 
@@ -95,7 +95,7 @@ describe("updateExercise", () => {
       description: "test",
       category: mockExercise.category,
       fitnessLevel: mockExercise.fitnessLevel,
-      videoUrl: mockExercise.videoUrl
+      videoUrl: mockExercise.videoUrl,
     });
   });
   it("should update only the status when provided", async () => {
@@ -109,10 +109,10 @@ describe("updateExercise", () => {
       category: mockExercise.category,
       fitnessLevel: mockExercise.fitnessLevel,
       videoUrl: mockExercise.videoUrl,
-      status: "inactive"
+      status: "inactive",
     });
   });
-  
+
   it("should return 409 when exercise name already exists", async () => {
     const error = new UniqueConstraintError({ message: "Duplicate name" });
     mockExercise.update.mockRejectedValue(error);
@@ -123,7 +123,7 @@ describe("updateExercise", () => {
 
     expect(res.status).toHaveBeenCalledWith(409);
     expect(res.json).toHaveBeenCalledWith({
-      message: "Un exercice avec ce nom existe déjà !"
+      message: "exercise_already_exists",
     });
   });
 
@@ -137,8 +137,8 @@ describe("updateExercise", () => {
 
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({
-      message: "Erreur lors de la mise à jour de l'exercice.",
-      error: "Erreur DB"
+      message: "error_updating_exercise",
+      error: "Erreur DB",
     });
   });
 });

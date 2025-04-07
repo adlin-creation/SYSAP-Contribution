@@ -44,13 +44,12 @@ exports.createProgramPhase = async (req: any, res: any, next: any) => {
       await addCycle(cycleName, name, frequency);
     } catch (error: any) {
       res.status(500).json({
-        messageTitle: "Failed to add the cycle to the new program phase",
-        message:
-          "Please contact the developer with a brief description of how this error can be reproduced.",
+        messageTitle: "error_adding_cycles",
+        message: "error_adding_cycles_generic",
       });
     }
 
-    res.status(201).json({ message: "Successfullly created a program phase" });
+    res.status(201).json({ message: "success_phase_created" });
     // Otherwise, the action was not successful. Hence, let the user know that
     // his request was unsuccessful.
   } catch (error: any) {
@@ -60,14 +59,13 @@ exports.createProgramPhase = async (req: any, res: any, next: any) => {
     res.status(error.statusCode);
     if (error.name == "SequelizeUniqueConstraintError") {
       res.json({
-        messageTitle: "A program phase with the same name already exists.",
-        message: "Please modify the name of the session and then submit again.",
+        messageTitle: "error_phase_exists",
+        message: "error_creating_phase",
       });
     } else {
       res.json({
-        messageTitle: "Failed to create a program phase",
-        message:
-          "Please contact the developer with a brief description of how this error can be reproduced.",
+        messageTitle: "error_creating_phase",
+        message: "error_adding_cycle_generic",
       });
     }
   }
@@ -101,16 +99,14 @@ exports.updateProgramPhase = async (req: any, res: any, next: any) => {
 
     // Check that the program phase exists.
     if (programPhase == null) {
-      res.status(500).json({ message: "The program phase does not exist." });
+      res.status(500).json({ message: "error_phases_not_found" });
       return res;
     }
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res
-      .status(error.statusCode)
-      .json({ message: "Can't find the program phase in the database." });
+    res.status(error.statusCode).json({ message: "error_loading_phase" });
 
     return res;
   }
@@ -133,15 +129,13 @@ exports.updateProgramPhase = async (req: any, res: any, next: any) => {
       endConditionValue: endConditionValue || programPhase.endConditionValue,
       frequency: frequency || programPhase.frequency,
     });
-    res.status(200).json({ message: "Successfully updated the program phase" });
+    res.status(200).json({ message: "success_phase_updated" });
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
 
-    res
-      .status(error.statusCode)
-      .json({ message: "Failed to update the program phase" });
+    res.status(error.statusCode).json({ message: "error_updating_phase" });
   }
 
   return res;
@@ -176,7 +170,7 @@ exports.addCycle = async (req: any, res: any, next: any) => {
       error.statusCode = 500;
     }
     res.status(error.statusCode);
-    res.json({ message: `Can't find ${cycleName}` });
+    res.json({ message: "error_loading_cycle" });
   }
 
   // Get the porgram phase that will reference the weekly cycle
@@ -190,13 +184,13 @@ exports.addCycle = async (req: any, res: any, next: any) => {
       error.statusCode = 500;
     }
     res.status(error.statusCode);
-    res.json({ message: `Can't find ${phaseName}` });
+    res.json({ message: "error_loading_phase" });
     return res;
   }
 
   if (phase == null) {
     res.status(500);
-    res.json({ message: `${phaseName} doesn't exist` });
+    res.json({ message: "error_phase_not_found" });
     return res;
   }
 
@@ -213,14 +207,14 @@ exports.addCycle = async (req: any, res: any, next: any) => {
     });
     res.status(201);
     res.json({
-      message: `Successfully added ${cycleName} to ${phaseName} session`,
+      message: "success_cycle_added",
     });
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
     res.status(error.statusCode);
-    res.json({ message: "Failed to add the weekly cycle" });
+    res.json({ message: "error_adding_cycle" });
     return res;
   }
 };
@@ -254,7 +248,7 @@ exports.getProgramPhase = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.json({ message: "Error loading the program phase" });
+    res.json({ message: "error_loading_phase" });
   }
 };
 
@@ -280,7 +274,7 @@ exports.getProgramPhases = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.json({ message: "Error loading program phases" });
+    res.json({ message: "error_loading_phases" });
   }
   return res;
 };
@@ -341,19 +335,17 @@ exports.deleteProgramPhase = async (req: any, res: any) => {
     }
     return res
       .status(error.statusCode)
-      .json({ message: "The program phase doesn't exist in the database" });
+      .json({ message: "error_phase_not_found" });
   }
   try {
     await phase.destroy();
-    return res
-      .status(200)
-      .json({ message: "Successfully deleted the program phase" });
+    return res.status(200).json({ message: "success_phase_deleted" });
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
     return res
       .status(error.statusCode)
-      .json({ message: "Failed to delete the program phase" });
+      .json({ message: "error_deleting_phase" });
   }
 };

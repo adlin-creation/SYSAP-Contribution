@@ -10,8 +10,7 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import BlocDetails from "./BlocDetails";
 import useToken from "../Authentication/useToken";
-import { t } from "i18next";
-
+import { useTranslation } from "react-i18next";
 export default function BlocMenu() {
   // tracks the state of two buttons: create a bloc and edit a bloc
   const [buttonState, setButtonState] = useState({
@@ -26,7 +25,7 @@ export default function BlocMenu() {
   const [message, setMessage] = useState("");
 
   const { token } = useToken();
-
+  const { t } = useTranslation("Blocs");
   ///////////////////////////////
   // DATA QUERY FOR BLOCS ///
   ///////////////////////////////
@@ -108,9 +107,11 @@ export default function BlocMenu() {
       })
       .then((res) => {
         refetchBlocs();
-        openModal(res.data.message, false); // Pass false as it's a success
+        openModal(t(`Backend:${res.data.message}`), false); // Pass false as it's a success
       })
-      .catch((err) => openModal(err.response.data.message, true)); // Pass true as it's an error
+      .catch((err) =>
+        openModal(t(`Backend:${err.response.data.message}`), true)
+      ); // Pass true as it's an error
   };
 
   return (
@@ -124,7 +125,7 @@ export default function BlocMenu() {
             icon={<PlusOutlined />}
             onClick={() => handleButtonState("create-bloc")}
           >
-            {t("Blocs:create_bloc")}
+            {t("button_create_bloc")}
           </Button>
 
           {/* Display exisitng blocs */}
@@ -158,14 +159,14 @@ export default function BlocMenu() {
               icon={<ArrowLeftOutlined />}
               onClick={handleButtonState}
             >
-              {t("Blocs:back_button")}
+              {t("button_back")}
             </Button>
           </Col>
           <Col>
             <h2>
               {buttonState.isCreateBloc
-                ? t("Blocs:create_new_bloc")
-                : t("Blocs:edit_bloc")}
+                ? t("title_create_new_bloc")
+                : t("title_edit_bloc")}
             </h2>
           </Col>
           <Col span={4} />
@@ -189,7 +190,7 @@ export default function BlocMenu() {
         onCancel={closeModal}
         footer={[
           <Button key="close" onClick={closeModal}>
-            Close
+            {t("button_close")}
           </Button>,
         ]}
       >

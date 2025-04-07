@@ -12,7 +12,7 @@ import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 
 export default function CycleDetails({ cycle, refetchCycles }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("Cycles");
   const { handleSubmit, control } = useForm();
   const [isAddSession, setIsAddSession] = useState(false);
   const { token } = useToken();
@@ -64,17 +64,17 @@ export default function CycleDetails({ cycle, refetchCycles }) {
   /// QUERY VALIDATIONS          ///
   //////////////////////////////////
   if (isAllSessionsLoading) {
-    return <h1>{t("Cycles:sessions_loading_title")}</h1>;
+    return <h1>{t("title_sessions_loading")}</h1>;
   }
   if (isAllSessionLoadingError) {
-    return <h1>{t("Cycles:sessions_loading_error_msg")}</h1>;
+    return <h1>{t("title_error_sessions_loading")}</h1>;
   }
 
   if (isCycleSessionsLoading) {
-    return <h1>{t("Cycles:cycle_sessions_loading_title")}</h1>;
+    return <h1>{t("title_cycle_sessions_loading")}</h1>;
   }
   if (isCycleSessionsLoadingError) {
-    return <h1>{t("Cycles:cycle_sessions_loading_error_msg")}</h1>;
+    return <h1>{t("title_error_cycle_sessions_loading")}</h1>;
   }
 
   function addSession() {
@@ -94,9 +94,11 @@ export default function CycleDetails({ cycle, refetchCycles }) {
       })
       .then((res) => {
         refetchCycles();
-        openModal(res.data.message, false);
+        openModal(t(`Backend:${res.data.message}`), false);
       })
-      .catch((err) => openModal(err.response.data.message, true));
+      .catch((err) =>
+        openModal(t(`Backend:${err.response.data.message}`), true)
+      );
   };
 
   /**
@@ -123,7 +125,7 @@ export default function CycleDetails({ cycle, refetchCycles }) {
     <Row justify="center" align="middle" style={{ minHeight: "50vh" }}>
       <Col span={12}>
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
-          <Form.Item label={t("Cycles:enter_cycle_name")}>
+          <Form.Item label={t("label_cycle_name")}>
             <Controller
               name="name"
               control={control}
@@ -131,14 +133,14 @@ export default function CycleDetails({ cycle, refetchCycles }) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder={t("Cycles:update_cycle_name")}
+                  placeholder={t("placeholder_update_cycle_name")}
                   required
                 />
               )}
             />
           </Form.Item>
 
-          <Form.Item label={t("Cycles:enter_cycle_description")}>
+          <Form.Item label={t("label_cycle_description")}>
             <Controller
               name="description"
               control={control}
@@ -146,7 +148,7 @@ export default function CycleDetails({ cycle, refetchCycles }) {
                 <Input.TextArea
                   onChange={onChange}
                   value={value}
-                  placeholder={t("Cycles:update_cycle_description")}
+                  placeholder={t("placeholder_update_cycle_description")}
                   rows={4}
                   required
                 />
@@ -156,7 +158,7 @@ export default function CycleDetails({ cycle, refetchCycles }) {
 
           <Form.Item>
             <Button type="primary" htmlType="submit" icon={<CheckOutlined />}>
-              {t("Cycles:update_button")}
+              {t("button_update")}
             </Button>
           </Form.Item>
         </Form>
@@ -169,7 +171,7 @@ export default function CycleDetails({ cycle, refetchCycles }) {
             icon={<PlusOutlined />}
             className="session-add-button"
           >
-            {t("Cycles:add_session_button")}
+            {t("button_add_session")}
           </Button>
         </div>
 
@@ -189,7 +191,7 @@ export default function CycleDetails({ cycle, refetchCycles }) {
             onCancel={closeModal}
             footer={[
               <Button key="close" onClick={closeModal}>
-                {t("close")}
+                {t("button_close")}
               </Button>,
             ]}
           >

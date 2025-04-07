@@ -12,7 +12,7 @@ import useToken from "../Authentication/useToken";
 import { useTranslation } from "react-i18next";
 
 export default function CycleMenu() {
-  const { t } = useTranslation();
+  const { t } = useTranslation("Cycles");
   // tracks the state of two buttons: create a cycle and edit a cycle
   const [buttonState, setButtonState] = useState({
     isCreateCycle: false,
@@ -113,9 +113,11 @@ export default function CycleMenu() {
       })
       .then((res) => {
         refetchCycles();
-        openModal(res.data.message, false);
+        openModal(t(`Backend:${res.data.message}`), false);
       })
-      .catch((err) => openModal(err.response.data.message, true));
+      .catch((err) =>
+        openModal(t(`Backend:${err.response.data.message}`), true)
+      );
   };
 
   return (
@@ -130,7 +132,7 @@ export default function CycleMenu() {
             type="primary"
             icon={<PlusOutlined />}
           >
-            {t("Cycles:create_cycle_button")}
+            {t("button_create_cycle")}
           </Button>
 
           {/* Display exisitng cycles */}
@@ -165,14 +167,14 @@ export default function CycleMenu() {
               type="primary"
               icon={<ArrowLeftOutlined />}
             >
-              {t("Cycles:back_button")}
+              {t("button_back")}
             </Button>
           </Col>
           <Col flex="auto" style={{ textAlign: "center" }}>
             <h2 style={{ marginBottom: 0 }}>
               {buttonState.isCreateCycle
-                ? t("Cycles:create_new_cycle")
-                : `Edit ${selectedCycle?.name}`}
+                ? t("title_create_new_cycle")
+                : `${t("title_edit")}${selectedCycle?.name}`}
             </h2>
           </Col>
           <Col span={4} />
@@ -197,7 +199,7 @@ export default function CycleMenu() {
           onCancel={closeModal}
           footer={[
             <Button key="close" onClick={closeModal}>
-              {t("close")}
+              {t("button_close")}
             </Button>,
           ]}
           style={{
