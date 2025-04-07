@@ -129,7 +129,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
         <Col span={12} className="info-container">
           <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
             <Form.Item
-              label={t("label_exercise_name")}
+              label={t("placeholder_exercise_name")}
               style={{ fontWeight: "bold" }}
             >
               <Controller
@@ -143,7 +143,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
             </Form.Item>
 
             <Form.Item
-              label={t("placeholder_exercise_name")}
+              label={t("placeholder_exercise_category")}
               style={{ fontWeight: "bold" }}
             >
               <Controller
@@ -174,7 +174,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
             </Form.Item>
 
             <Form.Item
-              label={t("placeholder_fitness_level")}
+              label={t("fitness_level_placeholder")}
               style={{ fontWeight: "bold" }}
             >
               <Controller
@@ -203,7 +203,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
             </Form.Item>
 
             <Form.Item
-              label={t("label_exercise_description")}
+              label={t("placeholder_exercise_description")}
               style={{ fontWeight: "bold" }}
             >
               <Controller
@@ -222,7 +222,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
             </Form.Item>
 
             <Form.Item
-              label={t("label_exercise_video")}
+              label={t("placeholder_exercise_video")}
               style={{ fontWeight: "bold" }}
             >
               <Controller
@@ -236,7 +236,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
             </Form.Item>
 
             <Form.Item
-              label={t("Exercises:exercise_status")}
+              label={t("placeholder_exercise_status")}
               style={{ fontWeight: "bold" }}
             >
               <Select
