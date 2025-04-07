@@ -30,6 +30,7 @@ export default function ExerciseMenu() {
     fitnessLevel: "ALL",
     category: "ALL",
     ageRange: "ALL",
+    status: "ALL",
   });
 
   const exerciseUrl = `${Constants.SERVER_URL}/exercises`;
@@ -122,56 +123,68 @@ export default function ExerciseMenu() {
       });
   };
 
-// Ajoute la condition pour la recherche dans la description
-const filteredExercises = exerciseList?.filter((exercise) => {
-  // Filtrage basé sur le niveau de fitness
-  if (
-    attributes.fitnessLevel !== "ALL" &&
-    attributes.fitnessLevel !== exercise.fitnessLevel
-  ) {
-    return false;
-  }
-
-  // Filtrage basé sur la catégorie
-  if (
-    attributes.category !== "ALL" &&
-    attributes.category !== exercise.category
-  ) {
-    return false;
-  }
-
-  // Filtrage basé sur la recherche
-  if (attributes.searchTerm) {
-    // Recherche dans le nom et la description de l'exercice
-    const searchTermLower = attributes.searchTerm.toLowerCase();
-    const nameMatch = exercise.name.toLowerCase().includes(searchTermLower);
-    const descriptionMatch = exercise.description.toLowerCase().includes(searchTermLower);
-
-    // Si la recherche ne correspond ni au nom ni à la description, on le filtre
-    if (!nameMatch && !descriptionMatch) {
+  const normalizeStatus = (status) => {
+    if (!status) return "";
+    const lower = status.toLowerCase();
+    if (["actif", "active"].includes(lower)) return "active";
+    if (["inactif", "inactive", "désactivé", "desactiver"].includes(lower)) return "inactive";
+    return status;
+  };
+  const filteredExercises = exerciseList?.filter((exercise) => {
+    if (
+      attributes.fitnessLevel !== "ALL" &&
+      attributes.fitnessLevel !== exercise.fitnessLevel
+    ) {
       return false;
     }
-  }
 
-  return true;
-});
+    if (
+      attributes.category !== "ALL" &&
+      attributes.category !== exercise.category
+    ) {
+      return false;
+    }
 
-  
+
+    if (
+      attributes.status !== "ALL" &&
+      normalizeStatus(attributes.status) !== normalizeStatus(exercise.status)
+    ) {
+      return false;
+    }
+    console.log(exerciseList.map(ex => ex.status));
+
+    if (attributes.searchTerm) {
+      const searchTermLower = attributes.searchTerm.toLowerCase();
+      const nameMatch = exercise.name.toLowerCase().includes(searchTermLower);
+      const descriptionMatch = exercise.description.toLowerCase().includes(searchTermLower);
+
+      if (!nameMatch && !descriptionMatch) {
+        return false;
+      }
+    }
+
+    return true;
+  });
 
   return (
     <div>
       {!buttonState.isCreateExercise && !buttonState.isLearnMore && (
         <div>
-          <div className="filter-button-container">
-            <FilterExercise updateSelectedValues={updateSelectedValues} />
-            <Button
-              onClick={() => handleButtonState("create-exercise")}
-              type="primary"
-              icon={<PlusOutlined />}
-            >
-              {t("Exercises:create_exercise")}
-            </Button>
-          </div>
+          <Row className="filter-button-row" gutter={[16, 16]} align="bottom">
+            <Col flex="auto">
+              <FilterExercise updateSelectedValues={updateSelectedValues} />
+            </Col>
+            <Col>
+              <Button
+                onClick={() => handleButtonState("create-exercise")}
+                type="primary"
+                icon={<PlusOutlined />}
+              >
+                {t("Exercises:create_exercise")}
+              </Button>
+            </Col>
+          </Row>
           <div className="exercise-container">
             {filteredExercises?.map((exercise) => (
               <Exercise

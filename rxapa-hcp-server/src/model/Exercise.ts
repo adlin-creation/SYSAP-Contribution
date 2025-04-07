@@ -40,4 +40,9 @@ export const Exercise = sequelize.define("Exercise", {
     ),
     allowNull: false,
   },
+  status: {
+    type: dataTypes.ENUM("active", "inactive"),
+    allowNull: false,
+    defaultValue: "active"
+  },
 });

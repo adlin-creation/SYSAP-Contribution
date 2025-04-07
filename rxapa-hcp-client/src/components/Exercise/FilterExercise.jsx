@@ -11,6 +11,7 @@ export default function FilterExercise({ updateSelectedValues }) {
   const [selectedFitnessLevel, setSelectedFitnessLevel] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState(null);
 
   const handleCategoryChange = (newValue) => {
     setSelectedCategory(newValue);
@@ -25,6 +26,11 @@ export default function FilterExercise({ updateSelectedValues }) {
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
     updateSelectedValues(e.target.value, "searchTerm"); // Envoie le mot-clé au parent
+  };
+
+  const handleStatusChange = (newValue) => {
+    setSelectedStatus(newValue);
+    updateSelectedValues(newValue || "ALL", "status");
   };
 
   return (
@@ -72,6 +78,21 @@ export default function FilterExercise({ updateSelectedValues }) {
               <Option value="Facile">{t("Exercises:easy")}</Option>
               <Option value="Intermédiaire">{t("Exercises:intermediate")}</Option>
               <Option value="Avancé">{t("Exercises:advanced")}</Option>
+            </Select>
+          </div>
+        </Col>
+        <Col span={8}>
+          <div className="filter-item">
+            <Select
+              value={selectedStatus}
+              onChange={handleStatusChange}
+              placeholder={t("Exercises:select_status")}
+              allowClear
+              className="select-wide"
+            >
+              <Option value="ALL">{t("Exercises:all")}</Option>
+              <Option value="active">{t("Exercises:active")}</Option>
+              <Option value="inactive">{t("Exercises:inactive")}</Option>
             </Select>
           </div>
         </Col>

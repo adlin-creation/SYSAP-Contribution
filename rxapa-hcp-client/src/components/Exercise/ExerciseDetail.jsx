@@ -22,6 +22,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
   const [message, setMessage] = React.useState("");
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isSaveClicked, setIsSaveClicked] = React.useState(false);
+  const [exerciseStatus, setExerciseStatus] = React.useState(exercise.status || "active");
 
   // Regex pour validation URL vidéo
   const videoUrlRegex = /^(https?:\/\/)?(www\.)?(youtube|vimeo)\.(com|be)\/(watch\?v=|.*\/)([a-zA-zA-Z0-9_-]{11,})$/;
@@ -48,9 +49,8 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
   
     if (isSaveClicked) {
       // Vérification manuelle des modifications
-      const hasChanged = Object.keys(data).some(key => 
-        currentExercise[key] !== data[key]
-      );
+      const hasChanged = Object.keys(data).some(key => currentExercise[key] !== data[key]) 
+        || (currentExercise.status || "active") !== exerciseStatus;
   
       if (!hasChanged) {
         openModal(t("Exercises:no_changes_detected"), true);
@@ -60,11 +60,13 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
       }
   
       setIsSubmitting(true);
-      axios.put(`${Constants.SERVER_URL}/update-exercise/${currentExercise.key}`, data, {
+      const payload = { ...data, status: exerciseStatus };
+
+      axios.put(`${Constants.SERVER_URL}/update-exercise/${currentExercise.key}`, payload, {
         headers: { Authorization: "Bearer " + token },
       })
       .then((res) => {
-        setCurrentExercise((prev) => ({ ...prev, ...data }));
+        setCurrentExercise((prev) => ({ ...prev, ...data, status: exerciseStatus || "active" }));
         refetchExercises();
         openModal(res.data.message, false);
         setIsSubmitting(false);
@@ -84,6 +86,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
     setValue("category", currentExercise.category);
     setValue("fitnessLevel", currentExercise.fitnessLevel);
     setValue("videoUrl", currentExercise.videoUrl);
+    setExerciseStatus(currentExercise.status || "active");
   };
 
   return (
@@ -211,6 +214,21 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
               />
             </Form.Item>
 
+            <Form.Item
+              label={t("Exercises:exercise_status")}
+              style={{ fontWeight: "bold" }}
+            >
+              <Select
+                value={exerciseStatus}
+                onChange={(value) => setExerciseStatus(value)}
+                disabled={!isEditing}
+                style={{ width: "100%" }}
+              >
+                <Select.Option value="active">{t("Exercises:active")}</Select.Option>
+                <Select.Option value="inactive">{t("Exercises:inactive")}</Select.Option>
+              </Select>
+            </Form.Item>
+
             <Form.Item>
               {!isEditing ? (
                 <Button type="primary" onClick={startEditing}>
@@ -258,6 +276,7 @@ ExerciseDetail.propTypes = {
     category: PropTypes.string.isRequired,
     fitnessLevel: PropTypes.string.isRequired,
     videoUrl: PropTypes.string.isRequired,
+    status: PropTypes.string,
   }).isRequired,
   refetchExercises: PropTypes.func.isRequired,
 };

@@ -81,6 +81,7 @@ export const createExercise = async (req: Request, res: Response) => {
       fitnessLevel,
       videoUrl,
       imageUrl,
+      status: req.body.status || "active"
     });
 
     // Return success response
