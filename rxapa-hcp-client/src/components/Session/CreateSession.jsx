@@ -20,11 +20,11 @@ const FRENCH_DAYS = [
   { value: "jeudi", label: "Jeudi" },
   { value: "vendredi", label: "Vendredi" },
   { value: "samedi", label: "Samedi" },
-  { value: "dimanche", label: "Dimanche" }
+  { value: "dimanche", label: "Dimanche" },
 ];
 
 export default function CreateSession(props) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("Sessions");
   const { handleSubmit, control } = useForm();
   const [isAddBloc, setIsAddBloc] = useState(false);
   const [createdSession, setCreatedSession] = useState(null);
@@ -61,7 +61,9 @@ export default function CreateSession(props) {
   const onSubmit = (data) => {
     const updatedData = {
       ...data,
-      description: data.dayOfWeek ? `[${data.dayOfWeek}] ${data.description || ''}` : data.description,
+      description: data.dayOfWeek
+        ? `[${data.dayOfWeek}] ${data.description || ""}`
+        : data.description,
     };
 
     axios
@@ -74,9 +76,11 @@ export default function CreateSession(props) {
         // Reload the day session to include the new day session
         props.refetchSessions();
         setCreatedSession(res.data.session);
-        openModal(res.data.message, false);
+        openModal(t(`Backend:${res.data.message}`), false);
       })
-      .catch((err) => openModal(err.response.data.message, true));
+      .catch((err) =>
+        openModal(t(`Backend:${err.response.data.message}`), true)
+      );
   };
 
   function addBloc() {
@@ -87,10 +91,10 @@ export default function CreateSession(props) {
   /// QUERY VALIDATIONS          ///
   //////////////////////////////////
   if (isBlockListLoading) {
-    return <h1>{t("Sessions:blocs_list_load")}</h1>;
+    return <h1>{t("title_blocs_list_load")}</h1>;
   }
   if (isBlockListLoadingError) {
-    return <h1>{t("Sessions:blocs_list_loading_error")}</h1>;
+    return <h1>{t("title_blocs_list_loading_error")}</h1>;
   }
 
   /**
@@ -116,7 +120,7 @@ export default function CreateSession(props) {
       <Row>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="input-element">
-            <h5>{t("Sessions:enter_day_session")}</h5>
+            <h5>{t("enter_day_session")}</h5>
             <Controller
               name={"name"}
               control={control}
@@ -124,7 +128,7 @@ export default function CreateSession(props) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder={t("Sessions:day_session_name")}
+                  placeholder={t("placeholder_day_session_name")}
                   required
                 />
               )}
@@ -132,7 +136,7 @@ export default function CreateSession(props) {
           </div>
 
           <div className="input-element">
-            <h5>Jour de la semaine</h5>
+            <h5>{t("title_day_of_week")}</h5>
             <Controller
               name="dayOfWeek"
               control={control}
@@ -140,7 +144,7 @@ export default function CreateSession(props) {
                 <Select
                   onChange={onChange}
                   value={value}
-                  style={{ width: '100%' }}
+                  style={{ width: "100%" }}
                   options={FRENCH_DAYS}
                   required
                 />
@@ -149,7 +153,7 @@ export default function CreateSession(props) {
           </div>
 
           <div className="input-element">
-            <h5>{t("Sessions:enter_day_session_description")}</h5>
+            <h5>{t("enter_day_session_description")}</h5>
             <Controller
               name={"description"}
               control={control}
@@ -157,7 +161,7 @@ export default function CreateSession(props) {
                 <Input.TextArea
                   onChange={onChange}
                   value={value}
-                  placeholder={t("Sessions:day_session_description")}
+                  placeholder={t("title_day_session_description")}
                   required
                 />
               )}
@@ -165,7 +169,7 @@ export default function CreateSession(props) {
           </div>
 
           <div className="input-element">
-            <h5>{t("Sessions:enter_constraints_day_session")}</h5>
+            <h5>{t("title_constraints_day_session")}</h5>
             <Controller
               name={"constraints"}
               control={control}
@@ -173,7 +177,7 @@ export default function CreateSession(props) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder={t("Sessions:day_session_constraints")}
+                  placeholder={t("placeholder_day_session_constraints")}
                   required
                 />
               )}
@@ -182,7 +186,7 @@ export default function CreateSession(props) {
 
           <div className="input-element">
             <AppButton
-              displayText={t("Sessions:submit_button")}
+              displayText={t("button_submit")}
               variant={"contained"}
               endIcon={<SendOutlined />}
               type={"submit"}
@@ -194,7 +198,7 @@ export default function CreateSession(props) {
           <BlocTable blocs={[]} />
           <AppButton
             onClick={addBloc}
-            displayText={t("Sessions:add_bloc_button")}
+            displayText={t("button_add_bloc")}
             variant={"contained"}
             endIcon={<PlusOutlined />}
             type={"button"}

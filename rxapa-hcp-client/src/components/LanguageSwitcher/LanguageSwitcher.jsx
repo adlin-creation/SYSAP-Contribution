@@ -1,12 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Menu, MenuItem, IconButton } from "@mui/material";
+import { Menu, MenuItem, IconButton, Typography } from "@mui/material";
 import LanguageIcon from "@mui/icons-material/Language";
 import Flag from "react-world-flags";
-import PropTypes from "prop-types"; 
-const LanguageSwitcher = ({ iconStyle, iconClassName, ...props }) => {
+import PropTypes from "prop-types";
+const LanguageSwitcher = ({
+  iconStyle,
+  iconClassName,
+  labelColor = "white",
+  ...props
+}) => {
   const { i18n } = useTranslation();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [currentLanguage, setCurrentLanguage] = useState(i18n.language);
+
+  useEffect(() => {
+    setCurrentLanguage(i18n.language);
+  }, [i18n.language]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -20,6 +30,21 @@ const LanguageSwitcher = ({ iconStyle, iconClassName, ...props }) => {
     setAnchorEl(null);
   };
 
+  const getLanguageLabel = (lang) => {
+    switch (lang) {
+      case "fr":
+        return "Français";
+      case "en":
+        return "English";
+      case "ar":
+        return "عربي";
+      case "es":
+        return "Español";
+      default:
+        return "Français";
+    }
+  };
+
   return (
     <>
       {/* Icône de langue pour ouvrir le menu */}
@@ -29,6 +54,12 @@ const LanguageSwitcher = ({ iconStyle, iconClassName, ...props }) => {
         {...props}
       >
         <LanguageIcon style={iconStyle} className={iconClassName} />
+        <Typography
+          variant="body2"
+          style={{ marginLeft: 8, color: labelColor }}
+        >
+          {getLanguageLabel(currentLanguage)}
+        </Typography>
       </IconButton>
 
       {/* Menu déroulant avec les langues */}
@@ -76,7 +107,8 @@ const LanguageSwitcher = ({ iconStyle, iconClassName, ...props }) => {
   );
 };
 LanguageSwitcher.propTypes = {
-  iconStyle: PropTypes.object,      // ou PropTypes.shape({...}) 
+  iconStyle: PropTypes.object, // ou PropTypes.shape({...})
   iconClassName: PropTypes.string,
+  labelColor: PropTypes.string,
 };
 export default LanguageSwitcher;

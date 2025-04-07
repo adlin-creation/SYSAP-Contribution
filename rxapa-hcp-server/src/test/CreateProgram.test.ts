@@ -1,9 +1,8 @@
-const ProgramController = require ("../controller/ProgramController");
+const ProgramController = require("../controller/ProgramController");
 import { Program } from "../model/Program";
 import { ProgramSession } from "../model/ProgramSession";
 import { expect, jest } from "@jest/globals";
 import { Request, Response } from "express";
-
 
 // Mock des modèles Sequelize pour éviter les accès à la base de données
 jest.mock("../model/Program", () => ({
@@ -34,7 +33,8 @@ describe("createProgram", () => {
         description: "A test program",
         duration: 30,
         duration_unit: "days",
-        imageUrl: "https://i.pinimg.com/originals/bb/35/0a/bb350a6272df756b915ee37691fdcdc0.png",
+        imageUrl:
+          "https://i.pinimg.com/originals/bb/35/0a/bb350a6272df756b915ee37691fdcdc0.png",
         sessions: [1, 2], // Vérifie que des sessions existent bien
       },
     };
@@ -50,7 +50,7 @@ describe("createProgram", () => {
 
   afterEach(() => {
     jest.clearAllMocks();
-    jest.resetModules(); 
+    jest.resetModules();
   });
 
   // Test de création réussie
@@ -62,7 +62,8 @@ describe("createProgram", () => {
       description: "A test program",
       duration: 30,
       duration_unit: "days",
-      image: "https://i.pinimg.com/originals/bb/35/0a/bb350a6272df756b915ee37691fdcdc0.png",
+      image:
+        "https://i.pinimg.com/originals/bb/35/0a/bb350a6272df756b915ee37691fdcdc0.png",
     });
 
     mockSessionCreate.mockResolvedValue({ programId: 1, sessionId: 1 });
@@ -73,20 +74,21 @@ describe("createProgram", () => {
 
     const programHandler = ProgramController.createProgram[1];
     await programHandler(req as Request, res as Response, jest.fn());
-    
+
     expect(mockCreate).toHaveBeenCalledWith({
       name: "My Program",
       description: "A test program",
       duration: 30,
       duration_unit: "days",
-      image: "https://i.pinimg.com/originals/bb/35/0a/bb350a6272df756b915ee37691fdcdc0.png",
+      image:
+        "https://i.pinimg.com/originals/bb/35/0a/bb350a6272df756b915ee37691fdcdc0.png",
     });
 
     expect(mockSessionCreate).toHaveBeenCalledTimes(req.body.sessions.length); // Vérifie que toutes les sessions sont créées
 
     expect(res.status).toHaveBeenCalledWith(201);
     expect(res.json).toHaveBeenCalledWith({
-      message: "Exercise program created",
+      message: "success_program_created",
     });
   });
 
@@ -99,53 +101,52 @@ describe("createProgram", () => {
 
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({
-      message: "Failed to create an exercise program"
+      message: "error_program_creation_failed",
     });
   });
 
   // Test d'erreur si des champs sont manquants
- // Test : nom manquant
+  // Test : nom manquant
   it("Should return 400 if name is missing", async () => {
     req.body.name = "";
     const validateHandler = ProgramController.createProgram[0];
     await validateHandler(req as Request, res as Response, jest.fn());
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({
-      message: "Le nom du programme est requis.",
+      message: "error_program_name_required",
     });
   });
 
-// Test : description manquante
+  // Test : description manquante
   it("Should return 400 if description is missing", async () => {
     req.body.description = "";
     const validateHandler = ProgramController.createProgram[0];
     await validateHandler(req as Request, res as Response, jest.fn());
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({
-      message: "La description est trop longue (max 500 caractères).",
+      message: "error_description_too_long",
     });
   });
 
-    // Test : durée 0
-    it("Should return 400 if duration is 0", async () => {
-        req.body.duration = 0;
-        const validateHandler = ProgramController.createProgram[0];
-        await validateHandler(req as Request, res as Response, jest.fn());
-        expect(res.status).toHaveBeenCalledWith(400);
-        expect(res.json).toHaveBeenCalledWith({
-        message: "La durée doit être d'au moins 1 jour ou 1 semaine.",
-        });
+  // Test : durée 0
+  it("Should return 400 if duration is 0", async () => {
+    req.body.duration = 0;
+    const validateHandler = ProgramController.createProgram[0];
+    await validateHandler(req as Request, res as Response, jest.fn());
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      message: "error_duration_minimum",
     });
+  });
 
-    // Test : mauvaise unité de durée
-    it("Should return 400 if duration_unit is invalid", async () => {
+  // Test : mauvaise unité de durée
+  it("Should return 400 if duration_unit is invalid", async () => {
     req.body.duration_unit = "month";
     const validateHandler = ProgramController.createProgram[0];
     await validateHandler(req as Request, res as Response, jest.fn());
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({
-        message: "L'unité de durée doit être 'days' ou 'weeks'.",
+      message: "error_duration_unit",
     });
-    });
-    
+  });
 });

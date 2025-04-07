@@ -2,7 +2,11 @@ import { Request, Response, NextFunction } from "express";
 import { Professional_User } from "../model/Professional_User";
 import { Op } from "sequelize";
 
-export const validateResetToken = async (req: Request, res: Response, next: NextFunction) => {
+export const validateResetToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   // Cherche le token dans le body OU dans la query string
   const token = req.body.token || req.query.token;
 
@@ -27,6 +31,8 @@ export const validateResetToken = async (req: Request, res: Response, next: Next
     (req as any).user = user;
     next();
   } catch (err) {
-    return res.status(500).json({ message: "Erreur lors de la validation du token." });
+    return res
+      .status(500)
+      .json({ message: "Erreur lors de la validation du token." });
   }
 };

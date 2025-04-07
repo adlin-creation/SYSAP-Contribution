@@ -5,7 +5,6 @@ import { expect, jest } from "@jest/globals";
 import { Request, Response } from "express";
 import { Op } from "sequelize";
 
-
 jest.mock("../model/Program", () => ({
   Program: {
     findAll: jest.fn(),
@@ -66,12 +65,15 @@ describe("searchPrograms", () => {
     expect(res.json).toHaveBeenCalledWith(mockPrograms);
   });
 
-
   it("Should search by only duration_unit", async () => {
     req.query = { duration_unit: "days" };
     mockFindAllPrograms.mockResolvedValue([{ id: 4 }]);
 
-    await programController.searchPrograms(req as Request, res as Response, jest.fn());
+    await programController.searchPrograms(
+      req as Request,
+      res as Response,
+      jest.fn()
+    );
     expect(mockFindAllPrograms).toHaveBeenCalledWith({
       where: { duration_unit: "days" },
     });
@@ -82,7 +84,11 @@ describe("searchPrograms", () => {
     req.query = { description_keywords: "relax" };
     mockFindAllPrograms.mockResolvedValue([{ id: 5 }]);
 
-    await programController.searchPrograms(req as Request, res as Response, jest.fn());
+    await programController.searchPrograms(
+      req as Request,
+      res as Response,
+      jest.fn()
+    );
     expect(mockFindAllPrograms).toHaveBeenCalledWith({
       where: { description: { [Op.iLike]: "%relax%" } },
     });
@@ -93,21 +99,31 @@ describe("searchPrograms", () => {
     req.query = { name: "NonExistent" };
     mockFindAllPrograms.mockResolvedValue([]);
 
-    await programController.searchPrograms(req as Request, res as Response, jest.fn());
+    await programController.searchPrograms(
+      req as Request,
+      res as Response,
+      jest.fn()
+    );
 
     expect(res.status).toHaveBeenCalledWith(404);
-    expect(res.json).toHaveBeenCalledWith({ message: "Aucun programme trouvé" });
+    expect(res.json).toHaveBeenCalledWith({
+      message: "error_no_program_found",
+    });
   });
 
   it("Should return 500 on internal server error", async () => {
     jest.spyOn(console, "error").mockImplementation(() => {});
     mockFindAllPrograms.mockRejectedValue(new Error("DB ERROR"));
 
-    await programController.searchPrograms(req as Request, res as Response, jest.fn());
+    await programController.searchPrograms(
+      req as Request,
+      res as Response,
+      jest.fn()
+    );
 
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({
-      message: "Erreur serveur lors de la recherche des programmes",
+      message: "error_searching_programs",
     });
 
     jest.restoreAllMocks();

@@ -8,33 +8,27 @@ export const validateProgram = (
   const { name, description, duration, duration_unit, image } = req.body;
 
   if (!name || name.trim() === "") {
-    return res.status(400).json({ message: "Le nom du programme est requis." });
+    return res.status(400).json({ message: "error_program_name_required" });
   }
 
   if (!description || description.length > 500) {
-    return res
-      .status(400)
-      .json({ message: "La description est trop longue (max 500 caractères)." });
+    return res.status(400).json({
+      message: "error_description_too_long",
+    });
   }
 
   if (!duration || duration < 1) {
-    return res
-      .status(400)
-      .json({ message: "La durée doit être d'au moins 1 jour ou 1 semaine." });
+    return res.status(400).json({ message: "error_duration_minimum" });
   }
 
   if (duration_unit !== "days" && duration_unit !== "weeks") {
-    return res
-      .status(400)
-      .json({ message: "L'unité de durée doit être 'days' ou 'weeks'." });
+    return res.status(400).json({ message: "error_duration_unit" });
   }
 
   if (image && !/^https?:\/\/.+\.(jpg|jpeg|png|webp)$/.test(image)) {
-    return res
-      .status(400)
-      .json({
-        message: "L'image doit être une URL valide en .jpg, .png ou .webp.",
-      });
+    return res.status(400).json({
+      message: "error_invalid_image_url",
+    });
   }
 
   next();

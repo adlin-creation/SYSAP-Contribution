@@ -12,10 +12,10 @@ import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 
 export default function ProgramDetails({ program }) {
-  const { handleSubmit, control,reset } = useForm();
+  const { handleSubmit, control, reset } = useForm();
   const [isAddProgramPhase, setIsAddProgramPhase] = useState(false);
   const { token } = useToken();
-  const { t } = useTranslation();
+  const { t } = useTranslation("Programs");
 
   // feedback message hooks
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -113,7 +113,7 @@ export default function ProgramDetails({ program }) {
         setSessions(res.data);
       })
       .catch((err) => {
-        openModal(err.res.data.message, true);
+        openModal(t(`Backend:${err.res.data.message}`), true);
       });
   }, [token]);
 
@@ -172,17 +172,17 @@ export default function ProgramDetails({ program }) {
   /// QUERY VALIDATIONS          ///
   //////////////////////////////////
   if (isProgramPhasesLoading) {
-    return <h1>{t("Programs:loading_program_phases")}</h1>;
+    return <h1>{t("title_loading_program_phases")}</h1>;
   }
   if (isProgramPhasesLoadingError) {
-    return <h1>{t("Programs:error_loading_program_phases")}</h1>;
+    return <h1>{t("error_loading_program_phases")}</h1>;
   }
 
   if (isAllProgramPhasesLoading) {
-    return <h1>{t("Programs:loading_all_phases")}</h1>;
+    return <h1>{t("title_loading_all_phases")}</h1>;
   }
   if (isAllProgramPhasesLoadingError) {
-    return <h1>{t("Programs:error_loading_all_phases")}</h1>;
+    return <h1>{t("error_loading_all_phases")}</h1>;
   }
 
   function addProgramPhase() {
@@ -223,14 +223,14 @@ export default function ProgramDetails({ program }) {
         },
       })
       .then((res) => {
-        openModal(res.data.message, false);
+        openModal(t(`Backend:${res.data.message}`), false);
         reset();
       })
       .catch((err) => {
         console.error("Error response:", err);
 
         const errorMessage =
-          err.response?.data?.message || "An unknown error occurred.";
+          t(`Backend:${err.response?.data?.message}`) || t("error_unknown");
         openModal(errorMessage, true);
       });
   };
@@ -259,7 +259,7 @@ export default function ProgramDetails({ program }) {
     <Row justify="center" align="middle" style={{ minHeight: "50vh" }}>
       <Col span={12}>
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
-          <Form.Item label={t("Programs:enter_program_name")}>
+          <Form.Item label={t("label_program_name")}>
             <Controller
               name="name"
               control={control}
@@ -267,14 +267,14 @@ export default function ProgramDetails({ program }) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder={t("Programs:program_name_placeholder")}
+                  placeholder={t("placeholder_program_name")}
                   required
                 />
               )}
             />
           </Form.Item>
 
-          <Form.Item label={t("Programs:enter_program_description")}>
+          <Form.Item label={t("label_program_description")}>
             <Controller
               name="description"
               control={control}
@@ -282,7 +282,7 @@ export default function ProgramDetails({ program }) {
                 <Input.TextArea
                   onChange={onChange}
                   value={value}
-                  placeholder={t("Programs:program_description_placeholder")}
+                  placeholder={t("placeholder_program_description")}
                   rows={4}
                   required
                 />
@@ -290,7 +290,7 @@ export default function ProgramDetails({ program }) {
             />
           </Form.Item>
 
-          <Form.Item label={t("Programs:enter_program_duration")}>
+          <Form.Item label={t("label_program_duration")}>
             <Controller
               name="duration"
               control={control}
@@ -298,7 +298,7 @@ export default function ProgramDetails({ program }) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder={t("Programs:program_duration_placeholder")}
+                  placeholder={t("placeholder_program_duration")}
                   min="1"
                   type="number"
                   required
@@ -307,7 +307,7 @@ export default function ProgramDetails({ program }) {
             />
           </Form.Item>
 
-          <Form.Item label= "Please select the unit of the duration">
+          <Form.Item label={t("label_duration_unit")}>
             <Controller
               name="duration_unit"
               control={control}
@@ -320,7 +320,7 @@ export default function ProgramDetails({ program }) {
             />
           </Form.Item>
 
-          <Form.Item label= "Upload the image of the program:">
+          <Form.Item label={t("label_program_image")}>
             <Controller
               name="image"
               control={control}
@@ -338,10 +338,8 @@ export default function ProgramDetails({ program }) {
                         "image/webp",
                       ];
                       if (!allowedFormats.includes(file.type)) {
-                        alert(
-                          "Invalid file format. Please upload a .jpg, .png,.jpeg, or .webp file."
-                        );
-                        e.target.value = ""; 
+                        alert(t("alert_file_format"));
+                        e.target.value = "";
                         return;
                       }
                       onChange(file);
@@ -355,14 +353,14 @@ export default function ProgramDetails({ program }) {
           </Form.Item>
 
           {/* Sélection des séances */}
-          <Form.Item label= "Select sessions for the program:">
+          <Form.Item label={t("label_session_selection")}>
             <Button
               name="sessions"
               type="primary"
               icon={<PlusOutlined />}
               onClick={() => setDropdownVisible(!isDropdownVisible)}
             >
-              Select Sessions
+              {t("button_select_sessions")}
             </Button>
 
             {isDropdownVisible && (
@@ -402,15 +400,15 @@ export default function ProgramDetails({ program }) {
                   className="confirm-button"
                   onClick={() => setDropdownVisible(false)}
                 >
-                  Confirm Selection
+                  {t("button_confirm_selection")}
                 </Button>
               </div>
             )}
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" icon={<SendOutlined  />}>
-              {t("Programs:update_button")}
+            <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
+              {t("button_update")}
             </Button>
           </Form.Item>
         </Form>
@@ -423,7 +421,7 @@ export default function ProgramDetails({ program }) {
             icon={<PlusOutlined />}
             className="program-add-button"
           >
-            {t("Programs:add_program_phase")}
+            {t("button_add_program_phase")}
           </Button>
         </div>
 
@@ -441,7 +439,7 @@ export default function ProgramDetails({ program }) {
             onCancel={closeModal}
             footer={[
               <Button key="close" onClick={closeModal}>
-                Close
+                {t("button_close")}
               </Button>,
             ]}
           >

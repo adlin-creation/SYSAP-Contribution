@@ -19,11 +19,11 @@ describe("getExercises", () => {
     req = {};
     res = {
       statusCode: 500,
-      json: jest.fn() as jest.MockedFunction<Response['json']>,
+      json: jest.fn() as jest.MockedFunction<Response["json"]>,
       status: jest.fn((code: number) => {
         (res as any).statusCode = code;
         return res;
-      }) as jest.MockedFunction<Response['status']>,
+      }) as jest.MockedFunction<Response["status"]>,
     };
   });
 
@@ -33,8 +33,20 @@ describe("getExercises", () => {
 
   it("Should return a list of exercises successfully", async () => {
     const mockExercises = [
-      { id: 1, name: "Push-up", category: "Force", fitnessLevel: "Intermediare", status: "active" },
-      { id: 2, name: "Pull-up", category: "Force", fitnessLevel: "Avancé", status: "active" },
+      {
+        id: 1,
+        name: "Push-up",
+        category: "Force",
+        fitnessLevel: "Intermediare",
+        status: "active",
+      },
+      {
+        id: 2,
+        name: "Pull-up",
+        category: "Force",
+        fitnessLevel: "Avancé",
+        status: "active",
+      },
     ];
 
     Exercise.findAll.mockResolvedValue(mockExercises);
@@ -55,7 +67,7 @@ describe("getExercises", () => {
     expect(Exercise.findAll).toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({
-      message: "Erreur lors du chargement des exercices.",
+      message: "error_loading_exercises",
       error: errorMessage,
     });
   });

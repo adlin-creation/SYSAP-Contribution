@@ -12,9 +12,8 @@ import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 // import ExerciseTable2 from "./ExerciseTable2";
 
-
 export default function BlocDetails({ blocKey, refetchBlocs }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("Blocs");
   const { handleSubmit, control } = useForm();
   const [isAddExercise, setIsAddExercise] = useState(false);
   const { token } = useToken();
@@ -22,11 +21,6 @@ export default function BlocDetails({ blocKey, refetchBlocs }) {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isErrorMessage, setIsErrorMessage] = useState(false);
   const [message, setMessage] = useState("");
-
-  // State to manage confirmation modal before saving
-  const [pendingData, setPendingData] = useState(null);
-  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-
 
   function addExercise() {
     setIsAddExercise(true);
@@ -94,17 +88,17 @@ export default function BlocDetails({ blocKey, refetchBlocs }) {
   /// QUERY VALIDATIONS          ///
   //////////////////////////////////
   if (isBlocLoading) {
-    return <h1>Bloc Loading...</h1>;
+    return <h1>{t("title_bloc_loading")}</h1>;
   }
   if (isBlocLoadingError) {
-    return <h1>Sorry, an error occurred while loading the bloc</h1>;
+    return <h1>{t("title_error_loading_bloc")}</h1>;
   }
 
   if (isExerciseLoading) {
-    return <h1>Exercises Loading...</h1>;
+    return <h1>{t("title_exercises_loading")}</h1>;
   }
   if (isExerciseLoadingError) {
-    return <h1>Sorry, an error occurred while loading exercises</h1>;
+    return <h1>{t("title_error_loading_exercises")}</h1>;
   }
 
   /**
@@ -119,21 +113,11 @@ export default function BlocDetails({ blocKey, refetchBlocs }) {
       })
       .then((res) => {
         refetchBlocs();
-        openModal(res.data.message, false);
+        openModal(t(`Backend:${res.data.message}`), false);
       })
-      .catch((err) => openModal(err.response.data.message, true));
-  };
-
-  // Function to validate before saving updates
-  const handleValidationBeforeSubmit = (data) => {
-    setPendingData(data);
-    setIsConfirmModalOpen(true);
-  };
-
-  const confirmUpdate = () => {
-    onSubmit(pendingData);
-    setIsConfirmModalOpen(false);
-    setPendingData(null);
+      .catch((err) =>
+        openModal(t(`Backend:${err.response.data.message}`), true)
+      );
   };
 
   // function to delete an exercise from a bloc
@@ -152,15 +136,15 @@ export default function BlocDetails({ blocKey, refetchBlocs }) {
         refetchBloc();
       })
       .catch((err) => {
-        openModal(t("Blocs:delete_exercise_error") || "Erreur de suppression", true);
+        openModal(t("error_delete_exercises") || t("error_delete"), true);
       });
   };
 
   return (
     <Row justify="center" align="middle" style={{ minHeight: "50vh" }}>
       <Col span={12}>
-        <Form layout="vertical" onFinish={handleSubmit(handleValidationBeforeSubmit)}>
-          <Form.Item label={t("Blocs:new_bloc_name")}>
+        <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
+          <Form.Item label={t("label_new_bloc_name")}>
             <Controller
               name="name"
               control={control}
@@ -169,14 +153,14 @@ export default function BlocDetails({ blocKey, refetchBlocs }) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder={t("Blocs:enter_new_bloc_name")}
+                  placeholder={t("placeholder_new_bloc_name")}
                   allowClear
                 />
               )}
             />
           </Form.Item>
 
-          <Form.Item label={t("Blocs:new_description_label")}>
+          <Form.Item label={t("label_new_description")}>
             <Controller
               name="description"
               control={control}
@@ -185,7 +169,7 @@ export default function BlocDetails({ blocKey, refetchBlocs }) {
                 <Input.TextArea
                   onChange={onChange}
                   value={value}
-                  placeholder={t("Blocs:enter_new_description_placeholder")}
+                  placeholder={t("placeholder_new_description")}
                   allowClear
                   rows={4}
                 />
@@ -195,7 +179,7 @@ export default function BlocDetails({ blocKey, refetchBlocs }) {
 
           <Form.Item>
             <Button type="primary" htmlType="submit" icon={<CheckOutlined />}>
-              {t("Blocs:update_button")}
+              {t("button_update")}
             </Button>
           </Form.Item>
         </Form>
@@ -211,7 +195,7 @@ export default function BlocDetails({ blocKey, refetchBlocs }) {
             icon={<PlusOutlined />}
             style={{ marginTop: "16px" }}
           >
-            {t("Blocs:add_exercise_button")}
+            {t("button_add_exercise")}
           </Button>
         </div>
 
@@ -234,25 +218,6 @@ export default function BlocDetails({ blocKey, refetchBlocs }) {
             <p style={{ color: isErrorMessage ? "red" : "green" }}>{message}</p>
           </Modal>
         )}
-
-        <Modal // Confirmation modal before saving bloc changes
-          title={t("Blocs:confirm_changes_title")}
-          open={isConfirmModalOpen}
-          onOk={confirmUpdate}
-          onCancel={() => setIsConfirmModalOpen(false)}
-          cancelText={t("Blocs:cancel_button")}
-        >
-          <p>{t("Blocs:confirm_changes_message")}</p>
-          <ul>
-            <li>
-              <strong>{t("Blocs:name_label")}:</strong> {pendingData?.name}
-            </li>
-            <li>
-              <strong>{t("Blocs:description_label")}:</strong> {pendingData?.description}
-            </li>
-          </ul>
-        </Modal>
-
       </Col>
     </Row>
   );

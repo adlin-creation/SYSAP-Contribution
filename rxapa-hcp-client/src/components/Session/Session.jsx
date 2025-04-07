@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 
 export default function Session({ onClick, onSelect, session, deleteSession }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("Sessions");
   const [isOpenModal, setIsOpenModal] = useState(false);
 
   function openModal() {
@@ -22,23 +22,27 @@ export default function Session({ onClick, onSelect, session, deleteSession }) {
   }
 
   // Extract day and clean description
-  const match = session.description?.match(/^\[(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)\] (.*)$/);
+  const match = session.description?.match(
+    /^\[(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)\] (.*)$/
+  );
   const day = match ? match[1] : null;
   const cleanDescription = match ? match[2] : session.description;
 
   return (
     <div className="day-session">
       <List style={{ textAlign: "center" }}>
-        <h5>Nom</h5>
+        <h5>{t("title_session_name")}</h5>
         <div>{session.name}</div>
-        
-        <h5>Description</h5>
+
+        <h5>{t("title_session_description")}</h5>
         <div>{cleanDescription}</div>
-        
-        <h5>Jour de la semaine</h5>
-        <div>{day ? day.charAt(0).toUpperCase() + day.slice(1) : "Non spécifié"}</div>
-        
-        <h5>Contraintes</h5>
+
+        <h5>{t("title_day_of_week")}</h5>
+        <div>
+          {day ? day.charAt(0).toUpperCase() + day.slice(1) : "Non spécifié"}
+        </div>
+
+        <h5>{t("title_session_constraints")}</h5>
         <div>{session.constraints}</div>
 
         <div>
@@ -50,7 +54,7 @@ export default function Session({ onClick, onSelect, session, deleteSession }) {
               onClick(event);
             }}
             name={"edit-session"}
-            displayText={t("Sessions:edit_button")}
+            displayText={t("button_edit")}
             variant={"contained"}
             type={"button"}
             size={"medium"}
@@ -60,7 +64,7 @@ export default function Session({ onClick, onSelect, session, deleteSession }) {
               // calls parent function to delete the cycle
               deleteSession(session);
             }}
-            displayText={t("Sessions:delete_button")}
+            displayText={t("button_delete")}
             variant={"contained"}
             type={"button"}
             color={"error"}

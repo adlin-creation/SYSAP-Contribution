@@ -12,6 +12,7 @@ import ClearSharpIcon from "@mui/icons-material/ClearSharp";
 import Constants from "../Utils/Constants";
 import useToken from "../Authentication/useToken";
 import Modal from "../Modal/Modal";
+import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 
 let blocNames = [];
@@ -46,7 +47,7 @@ export default function AddBloc({
   blocNames = blocList?.map((bloc) => bloc.name);
 
   const { handleSubmit } = useForm();
-
+  const { t } = useTranslation("Sessions");
   /**
    * API function call when the submit to add a bloc is clicked.
    * @param {*} data  - contains start parameter values to add a bloc
@@ -66,9 +67,11 @@ export default function AddBloc({
       })
       .then((res) => {
         refetchSession();
-        openModal(res.data.message, false);
+        openModal(t(`Backend:${res.data.message}`), false);
       })
-      .catch((err) => openModal(err.response.data.message, true));
+      .catch((err) =>
+        openModal(t(`Backend:${err.response.data.message}`), true)
+      );
   };
 
   /**
@@ -95,7 +98,7 @@ export default function AddBloc({
     <div>
       {/* Dropdown menu to select an exercise to be used in the day session */}
       <div className="input-element">
-        <h5>Please select a bloc</h5>
+        <h5>{t("title_select_a_bloc")}</h5>
 
         <Autocomplete
           value={selectedBlocName}
@@ -109,13 +112,13 @@ export default function AddBloc({
           options={blocNames}
           // sx={{ width: 300 }}
           renderInput={(params) => (
-            <TextField {...params} label="Select a bloc" />
+            <TextField {...params} label={t("label_select_a_bloc")} />
           )}
         />
       </div>
 
       <div className="input-element">
-        <h5>Please select day time</h5>
+        <h5>{t("title_select_day_time")}</h5>
 
         <Autocomplete
           // className="input-element"
@@ -136,7 +139,10 @@ export default function AddBloc({
           ]}
           // sx={{ width: 400 }}
           renderInput={(params) => (
-            <TextField {...params} label="Select Start Condition Type" />
+            <TextField
+              {...params}
+              label={t("label_select_start_condition_type")}
+            />
           )}
         />
       </div>

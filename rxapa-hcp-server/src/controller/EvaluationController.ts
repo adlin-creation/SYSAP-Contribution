@@ -38,7 +38,8 @@ exports.createPaceEvaluation = async (req: any, res: any, next: any) => {
     if (!program) {
       await t.rollback();
       return res.status(404).json({
-        message: "Programme " + scores.program + " introuvable",
+        message: "program_not_found",
+        params: { program: scores.program },
         error: `Programme '${scores.program}' introuvable`,
       });
     }
@@ -92,7 +93,7 @@ exports.createPaceEvaluation = async (req: any, res: any, next: any) => {
       error.statusCode = 500;
     }
     res.status(error.statusCode).json({
-      message: "Error creating evaluation",
+      message: "error_creating_evaluation",
       errorDetails: error.toString(),
       stack: error.stack,
     });
@@ -126,7 +127,8 @@ exports.createMatchEvaluation = async (req: any, res: any, next: any) => {
     if (!program) {
       await t.rollback();
       return res.status(404).json({
-        message: "Programme " + scores.program + " introuvable",
+        message: "program_not_found",
+        params: { program: scores.program },
         error: `Programme '${scores.program}' introuvable`,
       });
     }
@@ -182,7 +184,7 @@ exports.createMatchEvaluation = async (req: any, res: any, next: any) => {
       error.statusCode = 500;
     }
     res.status(error.statusCode).json({
-      message: "Error creating MATCH evaluation",
+      message: "error_creating_match_evaluation",
       errorDetails: error.toString(),
       stack: error.stack,
     });
@@ -216,7 +218,8 @@ exports.createPathEvaluation = async (req: any, res: any, next: any) => {
     if (!program) {
       await t.rollback();
       return res.status(404).json({
-        message: "Programme " + scores.program + " introuvable",
+        message: "program_not_found",
+        params: { program: scores.program },
         error: `Programme '${scores.program}' introuvable`,
       });
     }
@@ -264,7 +267,7 @@ exports.createPathEvaluation = async (req: any, res: any, next: any) => {
       error.statusCode = 500;
     }
     res.status(error.statusCode).json({
-      message: "Error creating PATH evaluation",
+      message: "error_creating_path_evaluation",
       errorDetails: error.toString(),
       stack: error.stack,
     });
@@ -293,13 +296,13 @@ exports.updatePaceEvaluation = async (req: any, res: any, next: any) => {
     const evaluation = await Evaluation.findByPk(evaluationId);
     if (!evaluation) {
       await t.rollback();
-      return res.status(404).json({ message: "Evaluation not found" });
+      return res.status(404).json({ message: "evaluation_not_found" });
     }
 
     const paceEvaluation = await Evaluation_PACE.findByPk(evaluationId);
     if (!paceEvaluation) {
       await t.rollback();
-      return res.status(404).json({ message: "PACE evaluation not found" });
+      return res.status(404).json({ message: "pace_evaluation_not_found" });
     }
 
     const vitesse = walkingTime ? 4 / parseFloat(walkingTime) : 0;
@@ -334,7 +337,7 @@ exports.updatePaceEvaluation = async (req: any, res: any, next: any) => {
       evaluation,
       paceEvaluation,
       scores,
-      message: "PACE evaluation updated successfully",
+      message: "success_pace_evaluation_updated",
     });
   } catch (error: any) {
     await t.rollback();
@@ -345,7 +348,7 @@ exports.updatePaceEvaluation = async (req: any, res: any, next: any) => {
     }
 
     res.status(error.statusCode).json({
-      message: "Error updating evaluation",
+      message: "error_updating_evaluation",
       errorDetails: error.toString(),
       stack: error.stack,
     });
@@ -371,7 +374,7 @@ exports.updateMatchEvaluation = async (req: any, res: any, next: any) => {
     const evaluation = await Evaluation.findByPk(evaluationId);
     if (!evaluation) {
       await t.rollback();
-      return res.status(404).json({ message: "Evaluation not found" });
+      return res.status(404).json({ message: "evaluation_not_found" });
     }
 
     const pathEvaluation = await Evaluation_MATCH.findOne({
@@ -380,7 +383,7 @@ exports.updateMatchEvaluation = async (req: any, res: any, next: any) => {
 
     if (!pathEvaluation) {
       await t.rollback();
-      return res.status(404).json({ message: "MATCH evaluation not found" });
+      return res.status(404).json({ message: "match_evaluation_not_found" });
     }
 
     // Mettre à jour le programme si nécessaire
@@ -393,7 +396,8 @@ exports.updateMatchEvaluation = async (req: any, res: any, next: any) => {
       if (!program) {
         await t.rollback();
         return res.status(404).json({
-          message: "Programme " + scores.program + " introuvable",
+          message: "program_not_found",
+          params: { program: scores.program },
         });
       }
 
@@ -431,7 +435,7 @@ exports.updateMatchEvaluation = async (req: any, res: any, next: any) => {
       evaluation,
       pathEvaluation,
       scores,
-      message: "MATCH evaluation updated successfully",
+      message: "match_evaluation_updated_successfully",
     });
   } catch (error: any) {
     await t.rollback();
@@ -442,7 +446,7 @@ exports.updateMatchEvaluation = async (req: any, res: any, next: any) => {
     }
 
     res.status(error.statusCode).json({
-      message: "Error updating MATCH evaluation",
+      message: "error_updating_match_evaluation",
       errorDetails: error.toString(),
       stack: error.stack,
     });
@@ -469,7 +473,7 @@ exports.updatePathEvaluation = async (req: any, res: any, next: any) => {
     const evaluation = await Evaluation.findByPk(evaluationId);
     if (!evaluation) {
       await t.rollback();
-      return res.status(404).json({ message: "Evaluation not found" });
+      return res.status(404).json({ message: "evaluation_not_found" });
     }
 
     // Vérifier si l'évaluation PATH existe
@@ -479,7 +483,7 @@ exports.updatePathEvaluation = async (req: any, res: any, next: any) => {
 
     if (!pathEvaluation) {
       await t.rollback();
-      return res.status(404).json({ message: "PATH evaluation not found" });
+      return res.status(404).json({ message: "path_evaluation_not_found" });
     }
 
     // Mettre à jour le programme si nécessaire
@@ -492,7 +496,8 @@ exports.updatePathEvaluation = async (req: any, res: any, next: any) => {
       if (!program) {
         await t.rollback();
         return res.status(404).json({
-          message: "Programme " + scores.program + " introuvable",
+          message: "program_not_found",
+          params: { program: scores.program },
         });
       }
 
@@ -532,7 +537,7 @@ exports.updatePathEvaluation = async (req: any, res: any, next: any) => {
       evaluation,
       pathEvaluation,
       scores,
-      message: "PATH evaluation updated successfully",
+      message: "path_evaluation_updated_successfully",
     });
   } catch (error: any) {
     await t.rollback();
@@ -543,7 +548,7 @@ exports.updatePathEvaluation = async (req: any, res: any, next: any) => {
     }
 
     res.status(error.statusCode).json({
-      message: "Error updating PATH evaluation",
+      message: "error_updating_path_evaluation",
       errorDetails: error.toString(),
       stack: error.stack,
     });
@@ -568,16 +573,14 @@ exports.getPaceEvaluation = async (req: any, res: any, next: any) => {
     });
 
     if (!evaluation) {
-      return res.status(404).json({ message: "Evaluation not found" });
+      return res.status(404).json({ message: "evaluation_not_found" });
     }
     res.status(200).json(evaluation);
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res
-      .status(error.statusCode)
-      .json({ message: "Error loading evaluation from the database" });
+    res.status(error.statusCode).json({ message: "error_loading_evaluation" });
   }
   return res;
 };
@@ -596,16 +599,14 @@ exports.getMatchEvaluation = async (req: any, res: any, next: any) => {
     });
 
     if (!evaluation) {
-      return res.status(404).json({ message: "Evaluation not found" });
+      return res.status(404).json({ message: "evaluation_not_found" });
     }
     res.status(200).json(evaluation);
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res
-      .status(error.statusCode)
-      .json({ message: "Error loading evaluation from the database" });
+    res.status(error.statusCode).json({ message: "error_loading_evaluation" });
   }
   return res;
 };
@@ -627,16 +628,14 @@ exports.getPathEvaluation = async (req: any, res: any, next: any) => {
     });
 
     if (!evaluation) {
-      return res.status(404).json({ message: "Evaluation not found" });
+      return res.status(404).json({ message: "evaluation_not_found" });
     }
     res.status(200).json(evaluation);
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res
-      .status(error.statusCode)
-      .json({ message: "Error loading evaluation from the database" });
+    res.status(error.statusCode).json({ message: "error_loading_evaluation" });
   }
   return res;
 };
@@ -659,9 +658,7 @@ exports.getPaceEvaluations = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res
-      .status(error.statusCode)
-      .json({ message: "Error loading evaluations from the database" });
+    res.status(error.statusCode).json({ message: "error_loading_evaluation" });
   }
   return res;
 };
@@ -681,9 +678,7 @@ exports.getMatchEvaluations = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res
-      .status(error.statusCode)
-      .json({ message: "Error loading evaluations from the database" });
+    res.status(error.statusCode).json({ message: "error_loading_evaluation" });
   }
   return res;
 };
@@ -706,9 +701,7 @@ exports.getPathEvaluations = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res
-      .status(error.statusCode)
-      .json({ message: "Error loading evaluations from the database" });
+    res.status(error.statusCode).json({ message: "error_loading_evaluation" });
   }
   return res;
 };
@@ -723,7 +716,7 @@ exports.deletePaceEvaluation = async (req: any, res: any, next: any) => {
   try {
     const evaluation = await Evaluation.findByPk(evaluationId);
     if (!evaluation) {
-      return res.status(404).json({ message: "Evaluation not found" });
+      return res.status(404).json({ message: "evaluation_not_found" });
     }
 
     await Evaluation_PACE.destroy({
@@ -734,13 +727,13 @@ exports.deletePaceEvaluation = async (req: any, res: any, next: any) => {
     await evaluation.destroy({ transaction: t });
     await t.commit();
 
-    res.status(200).json({ message: "Evaluation deleted" });
+    res.status(200).json({ message: "evaluation_deleted" });
   } catch (error: any) {
     await t.rollback();
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({ message: "Error deleting evaluation" });
+    res.status(error.statusCode).json({ message: "error_deleting_evaluation" });
   }
   return res;
 };
@@ -752,7 +745,7 @@ exports.deleteMatchEvaluation = async (req: any, res: any, next: any) => {
   try {
     const evaluation = await Evaluation.findByPk(evaluationId);
     if (!evaluation) {
-      return res.status(404).json({ message: "Evaluation not found" });
+      return res.status(404).json({ message: "evaluation_not_found" });
     }
 
     await Evaluation_MATCH.destroy({
@@ -763,13 +756,13 @@ exports.deleteMatchEvaluation = async (req: any, res: any, next: any) => {
     await evaluation.destroy({ transaction: t });
     await t.commit();
 
-    res.status(200).json({ message: "Evaluation deleted" });
+    res.status(200).json({ message: "evaluation_deleted" });
   } catch (error: any) {
     await t.rollback();
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({ message: "Error deleting evaluation" });
+    res.status(error.statusCode).json({ message: "error_deleting_evaluation" });
   }
   return res;
 };
@@ -784,7 +777,7 @@ exports.deletePathEvaluation = async (req: any, res: any, next: any) => {
   try {
     const evaluation = await Evaluation.findByPk(evaluationId);
     if (!evaluation) {
-      return res.status(404).json({ message: "Evaluation not found" });
+      return res.status(404).json({ message: "evaluation_not_found" });
     }
 
     await Evaluation_PATH.destroy({
@@ -795,13 +788,13 @@ exports.deletePathEvaluation = async (req: any, res: any, next: any) => {
     await evaluation.destroy({ transaction: t });
     await t.commit();
 
-    res.status(200).json({ message: "Evaluation deleted" });
+    res.status(200).json({ message: "evaluation_deleted" });
   } catch (error: any) {
     await t.rollback();
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({ message: "Error deleting evaluation" });
+    res.status(error.statusCode).json({ message: "error_deleting_evaluation" });
   }
   return res;
 };
@@ -809,8 +802,7 @@ exports.deletePathEvaluation = async (req: any, res: any, next: any) => {
 exports.searchPatients = async (req: Request, res: Response) => {
   try {
     const { term } = req.query;
-    if (!term)
-      return res.status(400).json({ message: "Terme de recherche requis" });
+    if (!term) return res.status(400).json({ message: "search_term_required" });
 
     // Nettoyage et séparation des termes
     const searchTerms = term.toString().trim().split(/\s+/);
@@ -857,12 +849,12 @@ exports.searchPatients = async (req: Request, res: Response) => {
     res.status(200).json(patients);
   } catch (error) {
     console.error("Erreur recherche:", error);
-    res.status(500).json({ message: "Échec de la recherche" });
+    res.status(500).json({ message: "search_failed" });
   }
 };
 
 exports.getPatientEvaluations = async (req: any, res: any, next: any) => {
-  const patientId = req.params.id; 
+  const patientId = req.params.id;
   console.log("getPatientEvaluations appelé avec patientId:", patientId);
 
   try {
@@ -893,8 +885,11 @@ exports.getPatientEvaluations = async (req: any, res: any, next: any) => {
       console.log("Aucune évaluation trouvée pour le patient:", patientId);
       return res.status(200).json([]);
     }
-    
-    console.log(`${evaluations.length} évaluations trouvées pour le patient:`, patientId);
+
+    console.log(
+      `${evaluations.length} évaluations trouvées pour le patient:`,
+      patientId
+    );
     return res.status(200).json(evaluations);
   } catch (error: any) {
     console.error(
@@ -905,8 +900,7 @@ exports.getPatientEvaluations = async (req: any, res: any, next: any) => {
       error.statusCode = 500;
     }
     return res.status(error.statusCode).json({
-      message:
-        "Erreur lors du chargement des évaluations depuis la base de données",
+      message: "error_loading_evaluation",
       error: error.message,
     });
   }

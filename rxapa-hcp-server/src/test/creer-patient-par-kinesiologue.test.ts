@@ -289,7 +289,6 @@ describe("createPatientWithCaregivers", () => {
 
     // 6. verifier l'appel du nodemailer
     expect(sendEmail).toHaveBeenCalledTimes(3);
-
   });
 
   it("should return 409 if the patient already exists", async () => {
@@ -312,7 +311,7 @@ describe("createPatientWithCaregivers", () => {
     });
     expect(res.statusCode).toBe(409);
     expect(res.json).toHaveBeenCalledWith({
-      message: `existing patient with this email: ${req.body.patientData.email}`,
+      message: `error_existing_patient_email: ${req.body.patientData.email}`,
     });
   });
 
@@ -337,7 +336,7 @@ describe("createPatientWithCaregivers", () => {
     });
     expect(res.statusCode).toBe(409);
     expect(res.json).toHaveBeenCalledWith({
-      message: `Existing caregiver with this email: ${req.body.caregivers[0].email}`,
+      message: `error_existing_caregiver_email: ${req.body.caregivers[0].email}`,
     });
   });
 
@@ -363,7 +362,7 @@ describe("createPatientWithCaregivers", () => {
     expect(res.statusCode).toBe(500);
     expect(res.json).toHaveBeenCalledWith({
       error: "Patient creation failed",
-      message: "Error creating patient with caregivers",
+      message: "error_creating_patient_with_caregivers",
     });
   });
 });

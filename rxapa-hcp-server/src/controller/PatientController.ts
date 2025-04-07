@@ -33,9 +33,7 @@ exports.createPatient = async (req: any, res: any, next: any) => {
   try {
     const existingUser = await Patient.findOne({ where: { email } });
     if (existingUser) {
-      return res
-        .status(409)
-        .json({ message: "existing patient with this email." });
+      return res.status(409).json({ message: "error_existing_patient_email" });
     }
 
     const newPatient = await Patient.create({
@@ -52,13 +50,13 @@ exports.createPatient = async (req: any, res: any, next: any) => {
       weightUnit,
       unikPassHashed,
     });
-    await sendEmail(email, "Votre code d'accès RXAPA", code); // Envoie le code d'accès par e-mail
+    await sendEmail(email, "email_subject_access_code", code); // Envoie le code d'accès par e-mail
     res.status(201).json(newPatient);
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({ message: "Error creating patient" });
+    res.status(error.statusCode).json({ message: "error_creating_patient" });
   }
   return res;
 };
@@ -97,7 +95,7 @@ exports.addCaregiver = async (req: any, res: any, next: any) => {
         );
       } catch (error) {
         console.error(error);
-        throw new Error("Error updating numberOfPrograms");
+        throw new Error("error_updating_number_of_programs");
       }
     }
 
@@ -129,12 +127,13 @@ exports.addCaregiver = async (req: any, res: any, next: any) => {
     if (existingCaregiver) {
       await transaction.rollback();
       return res.status(409).json({
-        message: `Existing caregiver with this email: ${caregiver.email}`,
+        key: "error_existing_caregiver_email",
+        params: { mail: caregiver.email },
       });
     }
     const codeCaregiver = generateCode(6);
     const unikPassHashed = await bcrypt.hash(codeCaregiver, 10);
-    sendEmail(email, "Votre code d'accès RXAPA", codeCaregiver);
+    sendEmail(email, "email_subject_access_code", codeCaregiver);
     caregiver.uniqueCode = unikPassHashed;
 
     const createdCaregiver = await Caregiver.create(caregiver, { transaction });
@@ -163,7 +162,7 @@ exports.addCaregiver = async (req: any, res: any, next: any) => {
       error.statusCode = 500;
     }
     res.status(error.statusCode).json({
-      message: "Error adding cargiver",
+      message: "error_adding_caregiver",
       error: error.message,
     });
   }
@@ -187,7 +186,7 @@ exports.updatePatient = async (req: any, res: any, next: any) => {
   try {
     const patient = await Patient.findByPk(patientId);
     if (!patient) {
-      return res.status(404).json({ message: "Patient not found" });
+      return res.status(404).json({ message: "patient_not_found" });
     }
     patient.firstname = firstname;
     patient.lastname = lastname;
@@ -203,7 +202,7 @@ exports.updatePatient = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({ message: "Error updating patient" });
+    res.status(error.statusCode).json({ message: "error_updating_patient" });
   }
   return res;
 };
@@ -231,7 +230,7 @@ exports.updatePatientWithCaregivers = async (req: any, res: any, next: any) => {
   try {
     const patient = await Patient.findByPk(patientId);
     if (!patient) {
-      return res.status(404).json({ message: "Patient not found" });
+      return res.status(404).json({ message: "patient_not_found" });
     }
     patient.firstname = firstname;
     patient.lastname = lastname;
@@ -265,7 +264,7 @@ exports.updatePatientWithCaregivers = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({ message: "Error updating patient" });
+    res.status(error.statusCode).json({ message: "error_updating_patient" });
   }
   return res;
 };
@@ -278,15 +277,15 @@ exports.deletePatient = async (req: any, res: any, next: any) => {
   try {
     const patient = await Patient.findByPk(patientId);
     if (!patient) {
-      return res.status(404).json({ message: "Patient not found" });
+      return res.status(404).json({ message: "patient_not_found" });
     }
     await patient.destroy();
-    res.status(200).json({ message: "Patient deleted" });
+    res.status(200).json({ message: "patient_deleted" });
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.status(error.statusCode).json({ message: "Error deleting patient" });
+    res.status(error.statusCode).json({ message: "error_deleting_patient" });
   }
   return res;
 };
@@ -299,16 +298,14 @@ exports.getPatient = async (req: any, res: any, next: any) => {
   try {
     const patient = await Patient.findByPk(patientId);
     if (!patient) {
-      return res.status(404).json({ message: "Patient not found" });
+      return res.status(404).json({ message: "patient_not_found" });
     }
     res.status(200).json(patient);
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res
-      .status(error.statusCode)
-      .json({ message: "Error loading patient from the database" });
+    res.status(error.statusCode).json({ message: "error_loading_patient" });
   }
   return res;
 };
@@ -324,9 +321,7 @@ exports.getPatients = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res
-      .status(error.statusCode)
-      .json({ message: "Error loading patients from the database" });
+    res.status(error.statusCode).json({ message: "error_loading_patient" });
   }
   return res;
 };
@@ -354,7 +349,7 @@ exports.getPatientSessions = async (req: any, res: any, next: any) => {
     res.status(200).json(sessions);
   } catch (error) {
     console.error("Error fetching patient sessions:", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "internal_server_error" });
   }
 };
 
@@ -363,7 +358,7 @@ exports.getPatientDetails = async (req: any, res: any, next: any) => {
     const patientId = req.params.id;
 
     if (!patientId) {
-      return res.status(400).json({ message: "Patient ID is required" });
+      return res.status(400).json({ message: "patient_id_required" });
     }
 
     const programEnrollements = await ProgramEnrollement.findAll({
@@ -389,9 +384,7 @@ exports.getPatientDetails = async (req: any, res: any, next: any) => {
     );
 
     if (!PatientCaregivers.length) {
-      return res
-        .status(404)
-        .json({ message: "No caregivers found for this patient" });
+      return res.status(404).json({ message: "no_caregivers_found" });
     }
 
     // Extraction des IDs des soignants
@@ -404,7 +397,7 @@ exports.getPatientDetails = async (req: any, res: any, next: any) => {
     });
 
     if (!caregivers.length) {
-      return res.status(404).json({ message: "No caregivers details found" });
+      return res.status(404).json({ message: "no_caregiver_details_found" });
     }
 
     // Retourner les données sous forme de JSON
@@ -415,6 +408,6 @@ exports.getPatientDetails = async (req: any, res: any, next: any) => {
     });
   } catch (error) {
     console.error("Error fetching patient details:", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "internal_server_error" });
   }
 };

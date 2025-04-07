@@ -20,11 +20,11 @@ const FRENCH_DAYS = [
   { value: "jeudi", label: "Jeudi" },
   { value: "vendredi", label: "Vendredi" },
   { value: "samedi", label: "Samedi" },
-  { value: "dimanche", label: "Dimanche" }
+  { value: "dimanche", label: "Dimanche" },
 ];
 
 export default function SessionDetails({ sessionKey, refetchSessions }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("Sessions");
   const { handleSubmit, control } = useForm();
   const [isAddBloc, setIsAddBloc] = useState(false);
   const [modificationHistory, setModificationHistory] = useState(() => {
@@ -90,17 +90,17 @@ export default function SessionDetails({ sessionKey, refetchSessions }) {
   /// QUERY VALIDATIONS          ///
   //////////////////////////////////
   if (isBlockListLoading) {
-    return <h1>{t("Sessions:blocs_list_load")}</h1>;
+    return <h1>{t("title_blocs_list_load")}</h1>;
   }
   if (isBlockListLoadingError) {
-    return <h1>{t("Sessions:blocs_list_loading_error")}</h1>;
+    return <h1>{t("title_blocs_list_loading_error")}</h1>;
   }
 
   if (isSessionLoading) {
-    return <h1>{t("Sessions:sessions_loading")}</h1>;
+    return <h1>{t("title_sessions_loading")}</h1>;
   }
   if (isSessionLoadingError) {
-    return <h1>{t("Sessions:sessions_loading_error_msg")}</h1>;
+    return <h1>{t("title_sessions_loading_error")}</h1>;
   }
 
   /**
@@ -126,40 +126,57 @@ export default function SessionDetails({ sessionKey, refetchSessions }) {
 
   const onSubmit = (data) => {
     // Extract current day from session description
-    const dayMatch = session.description?.match(/^\[(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)\]/);
-    const currentDay = dayMatch ? dayMatch[1] : '';
+    const dayMatch = session.description?.match(
+      /^\[(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)\]/
+    );
+    const currentDay = dayMatch ? dayMatch[1] : "";
 
     // Save current state for history
     const historyEntry = {
       date: new Date().toLocaleString(),
       previousName: session.name,
-      previousDescription: session.description?.replace(/^\[(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)\]\s*/, '') || '',
+      previousDescription:
+        session.description?.replace(
+          /^\[(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)\]\s*/,
+          ""
+        ) || "",
       previousConstraints: session.constraints,
-      previousDay: currentDay
+      previousDay: currentDay,
     };
 
     const updatedData = {
       ...data,
-      description: data.dayOfWeek ? `[${data.dayOfWeek}] ${data.description}` : data.description
+      description: data.dayOfWeek
+        ? `[${data.dayOfWeek}] ${data.description}`
+        : data.description,
     };
 
     axios
-      .put(`${Constants.SERVER_URL}/update-session/` + sessionKey, updatedData, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      })
+      .put(
+        `${Constants.SERVER_URL}/update-session/` + sessionKey,
+        updatedData,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
       .then((res) => {
         // Update history in state and localStorage
         const newHistory = [historyEntry, ...modificationHistory];
         setModificationHistory(newHistory);
-        localStorage.setItem(`session_history_${sessionKey}`, JSON.stringify(newHistory));
-        
-        openModal(res.data.message, false);
+        localStorage.setItem(
+          `session_history_${sessionKey}`,
+          JSON.stringify(newHistory)
+        );
+
+        openModal(t(`Backend:${res.data.message}`), false);
         refetchSession();
         refetchSessions();
       })
-      .catch((err) => openModal(err.response.data.message, true));
+      .catch((err) =>
+        openModal(t(`Backend:${err.response.data.message}`), true)
+      );
   };
 
   return (
@@ -167,13 +184,13 @@ export default function SessionDetails({ sessionKey, refetchSessions }) {
       <Row>
         <div className="input-element">
           <h4>
-            Modifier {session.name}
+            {t("edit")} {session.name}
           </h4>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="input-element">
-            <h5>Nom</h5>
+            <h5>{t("title_session_name")}</h5>
             <Controller
               name="name"
               control={control}
@@ -182,23 +199,27 @@ export default function SessionDetails({ sessionKey, refetchSessions }) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder="Nom de la session"
+                  placeholder={t("placeholder_update_session")}
                 />
               )}
             />
           </div>
 
           <div className="input-element">
-            <h5>Jour de la semaine</h5>
+            <h5>{t("title_day_of_week")}</h5>
             <Controller
               name="dayOfWeek"
               control={control}
-              defaultValue={session.description?.match(/^\[(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)\]/)?.[1] || ''}
+              defaultValue={
+                session.description?.match(
+                  /^\[(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)\]/
+                )?.[1] || ""
+              }
               render={({ field: { onChange, value } }) => (
                 <Select
                   onChange={onChange}
                   value={value}
-                  style={{ width: '100%' }}
+                  style={{ width: "100%" }}
                   options={FRENCH_DAYS}
                 />
               )}
@@ -206,16 +227,21 @@ export default function SessionDetails({ sessionKey, refetchSessions }) {
           </div>
 
           <div className="input-element">
-            <h5>Description</h5>
+            <h5>{t("title_session_description")}</h5>
             <Controller
               name="description"
               control={control}
-              defaultValue={session.description?.replace(/^\[(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)\]\s*/, '') || ''}
+              defaultValue={
+                session.description?.replace(
+                  /^\[(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)\]\s*/,
+                  ""
+                ) || ""
+              }
               render={({ field: { onChange, value } }) => (
                 <Input.TextArea
                   onChange={onChange}
                   value={value}
-                  placeholder="Description de la session"
+                  placeholder={t("title_day_session_description")}
                   rows={4}
                 />
               )}
@@ -223,7 +249,7 @@ export default function SessionDetails({ sessionKey, refetchSessions }) {
           </div>
 
           <div className="input-element">
-            <h5>Contraintes</h5>
+            <h5>{"title_session_constraints"}</h5>
             <Controller
               name="constraints"
               control={control}
@@ -232,7 +258,7 @@ export default function SessionDetails({ sessionKey, refetchSessions }) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder="Contraintes de la session"
+                  placeholder={t("placeholder_day_session_constraints")}
                 />
               )}
             />
@@ -241,7 +267,7 @@ export default function SessionDetails({ sessionKey, refetchSessions }) {
           <div className="input-element">
             <AppButton
               onClick={updateSession}
-              displayText="METTRE À JOUR"
+              displayText={t("button_update")}
               variant="contained"
               endIcon={<CheckOutlined />}
               type="submit"
@@ -253,7 +279,7 @@ export default function SessionDetails({ sessionKey, refetchSessions }) {
           <BlocTable blocs={session?.Bloc_Sessions} />
           <AppButton
             onClick={addBloc}
-            displayText="AJOUTER UN BLOC"
+            displayText={t("button_add_bloc")}
             variant="contained"
             endIcon={<PlusOutlined />}
             type="button"

@@ -27,10 +27,11 @@ describe("createExercise", () => {
     req = {
       body: {
         name: "Push-up",
-        description: "Un exercice de force au poids du corps qui sollicite principalement les pectoraux, les triceps et les épaules.",
+        description:
+          "Un exercice de force au poids du corps qui sollicite principalement les pectoraux, les triceps et les épaules.",
         category: "Force",
         fitnessLevel: "Intermédiaire",
-        videoUrl: "https://www.youtube.com/watch?v=8CE4ijWlQ18"
+        videoUrl: "https://www.youtube.com/watch?v=8CE4ijWlQ18",
       },
       file: {
         fieldname: "exerciseImage",
@@ -48,11 +49,11 @@ describe("createExercise", () => {
 
     res = {
       statusCode: 500,
-      json: jest.fn() as jest.MockedFunction<Response['json']>,
+      json: jest.fn() as jest.MockedFunction<Response["json"]>,
       status: jest.fn((code: number) => {
         (res as any).statusCode = code;
         return res;
-      }) as jest.MockedFunction<Response['status']>,
+      }) as jest.MockedFunction<Response["status"]>,
     };
   });
 
@@ -65,7 +66,8 @@ describe("createExercise", () => {
       id: 1,
       key: "550e8400-e29b-41d4-a716-446655440000",
       name: "Push-up",
-      description: "Un exercice de force au poids du corps qui sollicite principalement les pectoraux, les triceps et les épaules.",
+      description:
+        "Un exercice de force au poids du corps qui sollicite principalement les pectoraux, les triceps et les épaules.",
       category: "Force",
       fitnessLevel: "Intermédiaire",
       videoUrl: "https://www.youtube.com/watch?v=8CE4ijWlQ18",
@@ -77,7 +79,8 @@ describe("createExercise", () => {
 
     expect(mockCreate).toHaveBeenCalledWith({
       name: "Push-up",
-      description: "Un exercice de force au poids du corps qui sollicite principalement les pectoraux, les triceps et les épaules.",
+      description:
+        "Un exercice de force au poids du corps qui sollicite principalement les pectoraux, les triceps et les épaules.",
       category: "Force",
       fitnessLevel: "Intermédiaire",
       videoUrl: "https://www.youtube.com/watch?v=8CE4ijWlQ18",
@@ -87,19 +90,22 @@ describe("createExercise", () => {
 
     expect(res.status).toHaveBeenCalledWith(201);
     expect(res.json).toHaveBeenCalledWith({
-      message: "Exercice créé avec succès.",
+      message: "exercise_created_successfully",
       imageUrl: "/images/image.jpg",
     });
   });
 
   it("Should return 409 if the exercise already exists", async () => {
-    mockCreate.mockRejectedValue(new UniqueConstraintError({ message: "Duplicate entry", errors: [] }));
+    mockCreate.mockRejectedValue(
+      new UniqueConstraintError({ message: "Duplicate entry", errors: [] })
+    );
 
     await createExercise(req as Request, res as Response);
 
     expect(mockCreate).toHaveBeenCalledWith({
       name: "Push-up",
-      description: "Un exercice de force au poids du corps qui sollicite principalement les pectoraux, les triceps et les épaules.",
+      description:
+        "Un exercice de force au poids du corps qui sollicite principalement les pectoraux, les triceps et les épaules.",
       category: "Force",
       fitnessLevel: "Intermédiaire",
       videoUrl: "https://www.youtube.com/watch?v=8CE4ijWlQ18",
@@ -109,7 +115,7 @@ describe("createExercise", () => {
 
     expect(res.status).toHaveBeenCalledWith(409);
     expect(res.json).toHaveBeenCalledWith({
-      message: "Un exercice avec ce nom existe déjà !",
+      message: "exercise_already_exists",
     });
   });
 
@@ -120,7 +126,7 @@ describe("createExercise", () => {
 
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({
-      message: "Tous les champs obligatoires doivent être remplis !",
+      message: "all_fields_required",
     });
   });
 
@@ -132,7 +138,7 @@ describe("createExercise", () => {
 
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({
-      message: "Erreur lors de la création de l'exercice.",
+      message: "error_creating_exercise",
       error: errorMessage,
     });
   });

@@ -26,7 +26,7 @@ export default function AddSessions({
   cycle,
   allSessions,
 }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("Cycles");
   const [selectedSessionNames, setSelectedSessionNames] = useState({
     sessionName1: "",
     sessionName2: "",
@@ -80,9 +80,11 @@ export default function AddSessions({
       .then((res) => {
         // setIsAddSession(false);
         refetchSessions();
-        openModal(res.data.message, false);
+        openModal(t(`Backend:${res.data.message}`), false);
       })
-      .catch((err) => openModal(err.response.data.message, true));
+      .catch((err) =>
+        openModal(t(`Backend:${err.response.data.message}`), true)
+      );
   };
 
   function cancelAddSession() {
@@ -122,7 +124,7 @@ export default function AddSessions({
     <div>
       {/* Dropdown menu to select a day session to be used in the program phase */}
       <div className="input-element">
-        <h5>Please select or update Sessions</h5>
+        <h5>{t("title_select_update_sessions")}</h5>
       </div>
 
       {/* Day 1 session */}
@@ -131,7 +133,7 @@ export default function AddSessions({
         setSelectedSessionName={setSelectedSessionName}
         sessionDayName={getSessionName("DAY_ONE")}
         day={"sessionName1"}
-        label={"Select a session for day one"}
+        label={t("label_select_session_day_one")}
       />
 
       {/* Day 2 session */}
@@ -140,7 +142,7 @@ export default function AddSessions({
         setSelectedSessionName={setSelectedSessionName}
         sessionDayName={getSessionName("DAY_TWO")}
         day={"sessionName2"}
-        label={"Select a session for day two"}
+        label={t("label_select_session_day_two")}
       />
 
       {/* Day 3 session */}
@@ -149,7 +151,7 @@ export default function AddSessions({
         setSelectedSessionName={setSelectedSessionName}
         sessionDayName={getSessionName("DAY_THREE")}
         day={"sessionName3"}
-        label={"Select a session for day three"}
+        label={t("label_select_session_day_three")}
       />
 
       {/* Day 4 session */}
@@ -158,7 +160,7 @@ export default function AddSessions({
         setSelectedSessionName={setSelectedSessionName}
         sessionDayName={getSessionName("DAY_FOUR")}
         day={"sessionName4"}
-        label={"Select a session for day four"}
+        label={t("label_select_session_day_four")}
       />
 
       {/* Day 5 session */}
@@ -167,7 +169,7 @@ export default function AddSessions({
         setSelectedSessionName={setSelectedSessionName}
         sessionDayName={getSessionName("DAY_FIVE")}
         day={"sessionName5"}
-        label={"Select a session for day five"}
+        label={t("label_select_session_day_five")}
       />
 
       {/* Day 6 session */}
@@ -176,7 +178,7 @@ export default function AddSessions({
         setSelectedSessionName={setSelectedSessionName}
         sessionDayName={getSessionName("DAY_SIX")}
         day={"sessionName6"}
-        label={"Select a session for day six"}
+        label={t("label_select_session_day_six")}
       />
 
       {/* Day 7 session */}
@@ -185,7 +187,7 @@ export default function AddSessions({
         setSelectedSessionName={setSelectedSessionName}
         sessionDayName={getSessionName("DAY_SEVEN")}
         day={"sessionName7"}
-        label={"Select a session for day seven"}
+        label={t("label_select_session_day_seven")}
       />
 
       <form
@@ -204,18 +206,18 @@ export default function AddSessions({
                 size={"large"}
               />
             }
-            label="Flexible"
+            label={t("label_flexible")}
             labelPlacement="end"
           />
           {"  "}
           <AppButton
-            displayText={"SUBMIT"}
+            displayText={t("button_submit")}
             variant={"contained"}
             endIcon={<SendIcon />}
             type={"submit"}
           />
           <AppButton
-            displayText={"CLOSE"}
+            displayText={t("button_close")}
             variant={"contained"}
             endIcon={<ClearSharpIcon />}
             color={"secondary"}

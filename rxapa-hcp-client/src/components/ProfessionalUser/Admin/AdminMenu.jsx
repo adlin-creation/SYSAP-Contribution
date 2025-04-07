@@ -23,9 +23,10 @@ import Constants from "../../Utils/Constants";
 import useToken from "../../Authentication/useToken";
 import CreateAdmin from "./CreateAdmin";
 import AdminDetails from "./AdminDetails";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 export default function AdminMenu() {
+  const { t } = useTranslation("Professionals");
   const [isCreateAdmin, setIsCreateAdmin] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedAdmin, setSelectedAdmin] = useState(null);
@@ -58,42 +59,40 @@ export default function AdminMenu() {
   });
   const columns = [
     {
-      title: t("Professionals:Admins:name"),
+      title: t("Admins.title_name"),
       key: "name",
       render: (_, record) => `${record.firstname} ${record.lastname}`,
     },
     {
-      title: t("Professionals:Admins:email"),
+      title: t("Admins.title_email"),
       dataIndex: "email",
       key: "email",
     },
     {
-      title: t("Professionals:Admins:phone"),
+      title: t("Admins.title_phone"),
       dataIndex: "phoneNumber",
       key: "phoneNumber",
     },
     {
-      title: t("Professionals:Admins:status"),
+      title: t("Admins.title_status"),
       key: "active",
       dataIndex: "active",
       render: (active) => (
         <Tag color={active ? "green" : "red"}>
-          {active
-            ? t("Professionals:Admins:active_status")
-            : t("Professionals:Admins:inactive_status")}
+          {active ? t("Admins.active_status") : t("Admins.inactive_status")}
         </Tag>
       ),
     },
     {
-      title: t("Professionals:Admins:actions"),
+      title: t("Admins.title_actions"),
       key: "actions",
       render: (_, record) => (
         <Space size="middle">
           <Button type="link" onClick={() => handleEdit(record)}>
-            <EditOutlined /> {t("Professionals:Admins:edit_button")}
+            <EditOutlined /> {t("Admins.button_edit")}
           </Button>
           <Button type="link" danger onClick={() => handleDelete(record)}>
-            <DeleteOutlined /> {t("Professionals:Admins:delete_button")}
+            <DeleteOutlined /> {t("Admins.button_delete")}
           </Button>
         </Space>
       ),
@@ -107,11 +106,14 @@ export default function AdminMenu() {
 
   const handleDelete = (admin) => {
     AntModal.confirm({
-      title: "Are you sure you want to delete this admin?",
-      content: `This will permanently delete ${admin.firstname} ${admin.lastname}`,
-      okText: "Yes",
+      title: t("Admins.title_delete_admin_confirmation"),
+      content: t("Admins.warning_permanent_delete", {
+        firstname: admin.firstname,
+        lastname: admin.lastname,
+      }),
+      okText: t("Admins.button_yes"),
       okType: "danger",
-      cancelText: "No",
+      cancelText: t("Admins.button_no"),
       onOk() {
         axios
           .delete(
@@ -122,11 +124,12 @@ export default function AdminMenu() {
           )
           .then(() => {
             refetchAdmins();
-            openModal("Admin successfully deleted", false);
+            openModal(t("Admins.success_admin_deletion"), false);
           })
           .catch((err) =>
             openModal(
-              err.response?.data?.message || "Error deleting admin",
+              t(`Backend:${err.response?.data?.message}`) ||
+                t("Admins.error_admin_deletion"),
               true
             )
           );
@@ -137,7 +140,7 @@ export default function AdminMenu() {
   const openModal = (message, isError) => {
     AntModal[isError ? "error" : "success"]({
       content: message,
-      okText: "Close",
+      okText: t("Admins.button_close"),
       centered: true,
     });
   };
@@ -164,8 +167,10 @@ export default function AdminMenu() {
     if (error) {
       return (
         <div style={{ textAlign: "center", marginTop: "20px" }}>
-          <h3>Error loading admins</h3>
-          <Button onClick={() => refetchAdmins()}>Retry</Button>
+          <h3>{t("Admins.error_loading_admins")}</h3>
+          <Button onClick={() => refetchAdmins()}>
+            {t("Admins.button_retry")}
+          </Button>
         </div>
       );
     }
@@ -184,10 +189,10 @@ export default function AdminMenu() {
             icon={<PlusOutlined />}
             onClick={() => setIsCreateAdmin(true)}
           >
-            {t("Professionals:Admins:register_admin_button")}
+            {t("Admins.button_register_admin")}
           </Button>
           <Input
-            placeholder={t("Professionals:Admins:search_placeholder")}
+            placeholder={t("Admins.placeholder_search")}
             prefix={<SearchOutlined />}
             style={{ width: 300, marginTop: 45 }}
             value={searchTerm}
@@ -196,8 +201,8 @@ export default function AdminMenu() {
           />
           {adminList?.length > 0 && (
             <span>
-              {t("Professionals:Admins:total_admins")}:
-              {filteredAdmin?.length || 0} / {adminList.length}
+              {t("Admins.span_total_admins")}:{filteredAdmin?.length || 0} /{" "}
+              {adminList.length}
             </span>
           )}
         </div>
@@ -213,9 +218,9 @@ export default function AdminMenu() {
           pagination={{
             pageSize: 10,
             showTotal: (total, range) =>
-              `${range[0]}-${range[1]} ${t(
-                "Professionals:Admins:of"
-              )} ${total} ${t("Professionals:Admins:admins")}`,
+              `${range[0]}-${range[1]} ${t("Admins.of")} ${total} ${t(
+                "Admins.admins"
+              )}`,
           }}
         />
       </>
@@ -241,14 +246,14 @@ export default function AdminMenu() {
               type="primary"
               icon={<ArrowLeftOutlined />}
             >
-              {t("Professionals:Admins:back_button")}
+              {t("Admins.button_back")}
             </Button>
           </Col>
           <Col flex="auto" style={{ textAlign: "center" }}>
             <h2 style={{ marginBottom: 0 }}>
               {isCreateAdmin
-                ? t("Professionals:Admins:register_new_admin")
-                : t("Professionals:Admins:edit_Admin_title")}
+                ? t("Admins.title_register_new_admin")
+                : t("Admins.title_edit_Admin")}
             </h2>
           </Col>
           <Col span={4} />

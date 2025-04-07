@@ -11,7 +11,7 @@ import ReactPlayer from "react-player";
 import "./Styles.css";
 
 export default function ExerciseDetail({ exercise, refetchExercises }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("Exercises");
   const { handleSubmit, control, setValue } = useForm();
   const { token } = useToken();
 
@@ -22,10 +22,13 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
   const [message, setMessage] = React.useState("");
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isSaveClicked, setIsSaveClicked] = React.useState(false);
-  const [exerciseStatus, setExerciseStatus] = React.useState(exercise.status || "active");
+  const [exerciseStatus, setExerciseStatus] = React.useState(
+    exercise.status || "active"
+  );
 
   // Regex pour validation URL vidéo
-  const videoUrlRegex = /^(https?:\/\/)?(www\.)?(youtube|vimeo)\.(com|be)\/(watch\?v=|.*\/)([a-zA-zA-Z0-9_-]{11,})$/;
+  const videoUrlRegex =
+    /^(https?:\/\/)?(www\.)?(youtube|vimeo)\.(com|be)\/(watch\?v=|.*\/)([a-zA-zA-Z0-9_-]{11,})$/;
 
   function openModal(message, isError) {
     setMessage(message);
@@ -43,39 +46,52 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
   const onSubmit = (data) => {
     // Validation du lien vidéo
     if (data.videoUrl && !videoUrlRegex.test(data.videoUrl)) {
-      openModal(t("Exercises:invalid_video_link"), true);
+      openModal(t("invalid_video_link"), true);
       return;
     }
-  
+
     if (isSaveClicked) {
       // Vérification manuelle des modifications
-      const hasChanged = Object.keys(data).some(key => currentExercise[key] !== data[key]) 
-        || (currentExercise.status || "active") !== exerciseStatus;
-  
+      const hasChanged =
+        Object.keys(data).some((key) => currentExercise[key] !== data[key]) ||
+        (currentExercise.status || "active") !== exerciseStatus;
+
       if (!hasChanged) {
-        openModal(t("Exercises:no_changes_detected"), true);
+        openModal(t("error_no_changes_detected"), true);
         setIsEditing(false);
         setIsSaveClicked(false);
         return;
       }
-  
+
       setIsSubmitting(true);
       const payload = { ...data, status: exerciseStatus };
 
-      axios.put(`${Constants.SERVER_URL}/update-exercise/${currentExercise.key}`, payload, {
-        headers: { Authorization: "Bearer " + token },
-      })
-      .then((res) => {
-        setCurrentExercise((prev) => ({ ...prev, ...data, status: exerciseStatus || "active" }));
-        refetchExercises();
-        openModal(res.data.message, false);
-        setIsSubmitting(false);
-        setIsEditing(false);
-      })
-      .catch((err) => {
-        openModal(err.response?.data?.message || t("Exercises:error"), true);
-        setIsSubmitting(false);
-      });
+      axios
+        .put(
+          `${Constants.SERVER_URL}/update-exercise/${currentExercise.key}`,
+          payload,
+          {
+            headers: { Authorization: "Bearer " + token },
+          }
+        )
+        .then((res) => {
+          setCurrentExercise((prev) => ({
+            ...prev,
+            ...data,
+            status: exerciseStatus || "active",
+          }));
+          refetchExercises();
+          openModal(res.data.message, false);
+          setIsSubmitting(false);
+          setIsEditing(false);
+        })
+        .catch((err) => {
+          openModal(
+            t(`Backend:${err.response?.data?.message}`) || t("error_unknown"),
+            true
+          );
+          setIsSubmitting(false);
+        });
     }
   };
 
@@ -113,7 +129,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
         <Col span={12} className="info-container">
           <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
             <Form.Item
-              label={t("Exercises:exercise_name")}
+              label={t("label_exercise_name")}
               style={{ fontWeight: "bold" }}
             >
               <Controller
@@ -127,7 +143,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
             </Form.Item>
 
             <Form.Item
-              label={t("Exercises:category_placeholder")}
+              label={t("placeholder_exercise_name")}
               style={{ fontWeight: "bold" }}
             >
               <Controller
@@ -142,11 +158,11 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
                     disabled={!isEditing}
                   >
                     {[
-                      t("Exercises:aerobic"),
-                      t("Exercises:strength"),
-                      t("Exercises:endurance"),
-                      t("Exercises:flexibility"),
-                      t("Exercises:balance"),
+                      t("option_aerobic"),
+                      t("option_strength"),
+                      t("option_endurance"),
+                      t("option_flexibility"),
+                      t("option_balance"),
                     ].map((category) => (
                       <Select.Option key={category} value={category}>
                         {category}
@@ -158,7 +174,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
             </Form.Item>
 
             <Form.Item
-              label={t("Exercises:fitness_level_placeholder")}
+              label={t("placeholder_fitness_level")}
               style={{ fontWeight: "bold" }}
             >
               <Controller
@@ -173,9 +189,9 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
                     disabled={!isEditing}
                   >
                     {[
-                      t("Exercises:easy"),
-                      t("Exercises:intermediate"),
-                      t("Exercises:advanced"),
+                      t("option_easy"),
+                      t("option_intermediate"),
+                      t("option_advanced"),
                     ].map((level) => (
                       <Select.Option key={level} value={level}>
                         {level}
@@ -187,7 +203,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
             </Form.Item>
 
             <Form.Item
-              label={t("Exercises:exercise_description")}
+              label={t("label_exercise_description")}
               style={{ fontWeight: "bold" }}
             >
               <Controller
@@ -195,13 +211,18 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
                 control={control}
                 defaultValue={currentExercise.description}
                 render={({ field }) => (
-                  <Input.TextArea {...field} rows={4} required disabled={!isEditing} />
+                  <Input.TextArea
+                    {...field}
+                    rows={4}
+                    required
+                    disabled={!isEditing}
+                  />
                 )}
               />
             </Form.Item>
 
             <Form.Item
-              label={t("Exercises:exercise_video")}
+              label={t("label_exercise_video")}
               style={{ fontWeight: "bold" }}
             >
               <Controller
@@ -224,15 +245,19 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
                 disabled={!isEditing}
                 style={{ width: "100%" }}
               >
-                <Select.Option value="active">{t("Exercises:active")}</Select.Option>
-                <Select.Option value="inactive">{t("Exercises:inactive")}</Select.Option>
+                <Select.Option value="active">
+                  {t("option_active")}
+                </Select.Option>
+                <Select.Option value="inactive">
+                  {t("option_inactive")}
+                </Select.Option>
               </Select>
             </Form.Item>
 
             <Form.Item>
               {!isEditing ? (
                 <Button type="primary" onClick={startEditing}>
-                  {t("Exercises:modify")}
+                  {t("button_modify")}
                 </Button>
               ) : (
                 <Button
@@ -242,7 +267,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
                   loading={isSubmitting}
                   onClick={() => setIsSaveClicked(true)}
                 >
-                  {t("Exercises:save")}
+                  {t("button_save")}
                 </Button>
               )}
             </Form.Item>
@@ -255,11 +280,13 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
               onCancel={closeModal}
               footer={[
                 <Button key="close" onClick={closeModal}>
-                  {t("Close")}
+                  {t("button_close")}
                 </Button>,
               ]}
             >
-              <p style={{ color: isErrorMessage ? "red" : "green" }}>{message}</p>
+              <p style={{ color: isErrorMessage ? "red" : "green" }}>
+                {message}
+              </p>
             </Modal>
           )}
         </Col>

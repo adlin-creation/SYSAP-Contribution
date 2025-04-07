@@ -17,7 +17,6 @@ import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 import { Modal as AntdModal } from "antd";
 
-
 let exerciseNames = [];
 
 export default function AddExercise({
@@ -26,6 +25,7 @@ export default function AddExercise({
   bloc,
   allExercises,
 }) {
+  const { t } = useTranslation("Blocs");
   const [isExerciseRequired, setIsExerciseRequired] = useState(false);
   const [selectedExerciseName, setSelectedExerciseName] = useState(null);
   const [displayedExerciseName, setDisplayedExerciseName] = useState("");
@@ -33,7 +33,6 @@ export default function AddExercise({
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isErrorMessage, setIsErrorMessage] = useState(false);
   const [message, setMessage] = useState("");
-  const { t } = useTranslation();
 
   // Validation before submitting the exercise
   const [pendingExerciseData, setPendingExerciseData] = useState(null);
@@ -62,7 +61,8 @@ export default function AddExercise({
 
   // Intermediate function to validate before submission
   const handleValidationBeforeSubmit = (data) => {
-    const { numberOfSeries, numberOfRepetition, restingInstruction, minutes } = data;
+    const { numberOfSeries, numberOfRepetition, restingInstruction, minutes } =
+      data;
 
     const combinedData = {
       numberOfSeries: Number(numberOfSeries),
@@ -82,7 +82,6 @@ export default function AddExercise({
     setIsConfirmModalOpen(false);
     setPendingExerciseData(null);
   };
-
 
   // data contains rank and number of series
   const onSubmit = (data) => {
@@ -105,9 +104,11 @@ export default function AddExercise({
       })
       .then((res) => {
         refetchBloc();
-        openModal(res.data.message, false);
+        openModal(t(`Backend:${res.data.message}`), false);
       })
-      .catch((err) => openModal(err.response.data.message, true));
+      .catch((err) =>
+        openModal(t(`Backend:${err.response.data.message}`), true)
+      );
   };
 
   /**
@@ -181,7 +182,7 @@ export default function AddExercise({
       ></FilterExercise>
       {/* Dropdown menu to select an exercise to be used in the bloc */}
       <div className="input-element">
-        <h5>{t("Blocs:please_select_exercise")}</h5>
+        <h5>{t("title_select_exercise")}</h5>
 
         <Autocomplete
           value={selectedExerciseName}
@@ -194,13 +195,15 @@ export default function AddExercise({
           }}
           options={exerciseNames}
           // sx={{ width: 300 }}
-          renderInput={(params) => <TextField {...params} label="Exercises" />}
+          renderInput={(params) => (
+            <TextField {...params} label={t("title_exercises")} />
+          )}
         />
       </div>
 
       <form onSubmit={handleSubmit(handleValidationBeforeSubmit)}>
         <div className="input-element">
-          <h5>{t("Blocs:please_enter_number_of_series")}</h5>
+          <h5>{t("title_number_of_series")}</h5>
           <Controller
             name={"numberOfSeries"}
             control={control}
@@ -209,7 +212,7 @@ export default function AddExercise({
                 onChange={onChange}
                 value={value}
                 type="number"
-                label={t("Blocs:number_of_series_label")}
+                label={t("label_number_of_series")}
                 variant="outlined"
                 color="secondary"
                 fullWidth
@@ -220,7 +223,7 @@ export default function AddExercise({
         </div>
 
         <div className="input-element">
-          <h5>{t("Blocs:please_enter_number_of_repetitions")}</h5>
+          <h5>{t("title_number_of_repetitions")}</h5>
           <Controller
             name={"numberOfRepetition"}
             control={control}
@@ -229,7 +232,7 @@ export default function AddExercise({
                 onChange={onChange}
                 value={value}
                 type="number"
-                label={t("Blocs:number_of_repetitions_label")}
+                label={t("label_number_of_repetitions")}
                 variant="outlined"
                 color="secondary"
                 fullWidth
@@ -240,7 +243,7 @@ export default function AddExercise({
         </div>
 
         <div className="input-element">
-          <h5>{t("Blocs:please_enter_number_of_minutes")}</h5>
+          <h5>{t("title_number_of_minutes")}</h5>
           <Controller
             name={"minutes"}
             control={control}
@@ -249,7 +252,7 @@ export default function AddExercise({
                 onChange={onChange}
                 value={value}
                 type="number"
-                label={t("Blocs:number_of_minutes_label")}
+                label={t("label_number_of_minutes")}
                 variant="outlined"
                 color="secondary"
                 fullWidth
@@ -260,7 +263,7 @@ export default function AddExercise({
         </div>
 
         <div className="input-element">
-          <h5>{t("Blocs:describe_resting_instruction")}</h5>
+          <h5>{t("title_describe_resting_instruction")}</h5>
           <Controller
             name={"restingInstruction"}
             control={control}
@@ -269,7 +272,7 @@ export default function AddExercise({
                 onChange={onChange}
                 value={value}
                 type="string"
-                label={t("Blocs:describe_resting_instruction_label")}
+                label={t("label_describe_resting_instruction")}
                 variant="outlined"
                 color="secondary"
                 fullWidth
@@ -290,13 +293,13 @@ export default function AddExercise({
                 size={"large"}
               />
             }
-            label={t("Blocs:required_label")}
+            label={t("label_required")}
             labelPlacement="end"
           />
         </div>
         <div className="input-element">
           <AppButton
-            displayText={t("Blocs:cancel_button")}
+            displayText={t("cancel_button")}
             variant={"contained"}
             endIcon={<ClearSharpIcon />}
             color={"secondary"}
@@ -305,7 +308,7 @@ export default function AddExercise({
           />
 
           <AppButton
-            displayText={t("Blocs:submit_button")}
+            displayText={t("button_submit")}
             variant={"contained"}
             endIcon={<SendIcon />}
             type={"submit"}
@@ -319,26 +322,40 @@ export default function AddExercise({
           isErrorMessage={isErrorMessage}
         />
       )}
-      
+
       <AntdModal // Confirmation modal before submitting the exercise
-        title={t("Blocs:confirm_add_exercise_title")}
+        title={t("title_confirm_add_exercise")}
         open={isConfirmModalOpen}
         onOk={confirmExerciseSubmission}
         onCancel={() => setIsConfirmModalOpen(false)}
-        cancelText={t("Blocs:cancel_button")}
+        cancelText={t("button_cancel")}
       >
-        <p>{t("Blocs:confirm_add_exercise_message")}</p>
+        <p>{t("text_confirm_add_exercise")}</p>
         <ul>
-          <li><strong>{t("Blocs:name_label")}:</strong> {pendingExerciseData?.exerciseName}</li>
-          <li><strong>{t("Blocs:number_of_series_label")}:</strong> {pendingExerciseData?.numberOfSeries}</li>
-          <li><strong>{t("Blocs:number_of_repetitions_label")}:</strong> {pendingExerciseData?.numberOfRepetition}</li>
-          <li><strong>{t("Blocs:number_of_minutes_label")}:</strong> {pendingExerciseData?.minutes}</li>
-          <li><strong>{t("Blocs:resting_instruction_label")}:</strong> {pendingExerciseData?.restingInstruction}</li>
+          <li>
+            <strong>{t("label_bloc_name")}:</strong>{" "}
+            {pendingExerciseData?.exerciseName}
+          </li>
+          <li>
+            <strong>{t("title_number_of_series")}:</strong>{" "}
+            {pendingExerciseData?.numberOfSeries}
+          </li>
+          <li>
+            <strong>{t("title_number_of_repetitions")}:</strong>{" "}
+            {pendingExerciseData?.numberOfRepetition}
+          </li>
+          <li>
+            <strong>{t("title_number_of_minutes")}:</strong>{" "}
+            {pendingExerciseData?.minutes}
+          </li>
+          <li>
+            <strong>{t("label_resting_instructionl")}:</strong>{" "}
+            {pendingExerciseData?.restingInstruction}
+          </li>
         </ul>
       </AntdModal>
     </div>
   );
-  
 }
 AddExercise.propTypes = {
   setIsAddExercise: PropTypes.func.isRequired,

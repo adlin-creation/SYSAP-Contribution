@@ -109,21 +109,21 @@ describe("EvaluationController", () => {
         name: "PACE",
         evaluationModel: Evaluation_PACE,
         idField: "idPACE",
-        errorMsg: "Error creating evaluation",
+        errorMsg: "error_creating_evaluation",
       },
       {
         method: createMatchEvaluation,
         name: "MATCH",
         evaluationModel: Evaluation_MATCH,
         idField: "idPATH",
-        errorMsg: "Error creating MATCH evaluation",
+        errorMsg: "error_creating_match_evaluation",
       },
       {
         method: createPathEvaluation,
         name: "PATH",
         evaluationModel: Evaluation_PATH,
         idField: "idPATH",
-        errorMsg: "Error creating PATH evaluation",
+        errorMsg: "error_creating_path_evaluation",
       },
     ];
 
@@ -178,7 +178,7 @@ describe("EvaluationController", () => {
         expect(mockRes.status).toHaveBeenCalledWith(404);
         expect(mockRes.json).toHaveBeenCalledWith(
           expect.objectContaining({
-            message: expect.stringContaining("Programme"),
+            message: expect.stringContaining("program_not_found"),
             error: expect.any(String),
           })
         );
@@ -316,7 +316,7 @@ describe("EvaluationController", () => {
 
         expect(mockRes.status).toHaveBeenCalledWith(404);
         expect(mockRes.json).toHaveBeenCalledWith({
-          message: "Evaluation not found",
+          message: "evaluation_not_found",
         });
       });
 
@@ -330,7 +330,7 @@ describe("EvaluationController", () => {
 
         expect(mockRes.status).toHaveBeenCalledWith(500);
         expect(mockRes.json).toHaveBeenCalledWith({
-          message: "Error loading evaluation from the database",
+          message: "error_loading_evaluation",
         });
       });
     }
@@ -363,7 +363,7 @@ describe("EvaluationController", () => {
 
         expect(mockRes.status).toHaveBeenCalledWith(500);
         expect(mockRes.json).toHaveBeenCalledWith({
-          message: "Error loading evaluations from the database",
+          message: "error_loading_evaluation",
         });
       });
     }
@@ -422,27 +422,27 @@ describe("EvaluationController", () => {
         method: updatePaceEvaluation,
         name: "PACE",
         findMethod: jest.spyOn(Evaluation_PACE, "findByPk"),
-        notFoundMsg: "PACE evaluation not found",
-        successMsg: "PACE evaluation updated successfully",
-        errorMsg: "Error updating evaluation",
+        notFoundMsg: "pace_evaluation_not_found",
+        successMsg: "success_pace_evaluation_updated",
+        errorMsg: "error_updating_evaluation",
         responseKey: "paceEvaluation",
       },
       {
         method: updateMatchEvaluation,
         name: "MATCH",
         findMethod: jest.spyOn(Evaluation_MATCH, "findOne"),
-        notFoundMsg: "MATCH evaluation not found",
-        successMsg: "MATCH evaluation updated successfully",
-        errorMsg: "Error updating MATCH evaluation",
+        notFoundMsg: "match_evaluation_not_found",
+        successMsg: "match_evaluation_updated_successfully",
+        errorMsg: "error_updating_match_evaluation",
         responseKey: "pathEvaluation",
       },
       {
         method: updatePathEvaluation,
         name: "PATH",
         findMethod: jest.spyOn(Evaluation_PATH, "findOne"),
-        notFoundMsg: "PATH evaluation not found",
-        successMsg: "PATH evaluation updated successfully",
-        errorMsg: "Error updating PATH evaluation",
+        notFoundMsg: "path_evaluation_not_found",
+        successMsg: "path_evaluation_updated_successfully",
+        errorMsg: "error_updating_path_evaluation",
         responseKey: "pathEvaluation",
       },
     ];
@@ -510,7 +510,7 @@ describe("EvaluationController", () => {
         expect(mockTransaction.rollback).toHaveBeenCalled();
         expect(mockRes.status).toHaveBeenCalledWith(404);
         expect(mockRes.json).toHaveBeenCalledWith({
-          message: "Evaluation not found",
+          message: "evaluation_not_found",
         });
       });
 
@@ -618,7 +618,10 @@ describe("EvaluationController", () => {
         expect(mockTransaction.rollback).toHaveBeenCalled();
         expect(mockRes.status).toHaveBeenCalledWith(404);
         expect(mockRes.json).toHaveBeenCalledWith({
-          message: expect.stringContaining("Programme"),
+          message: "program_not_found",
+          params: {
+            program: "PROGRAMME INEXISTANT",
+          },
         });
       });
     }
@@ -666,7 +669,7 @@ describe("EvaluationController", () => {
         expect(mockTransaction.commit).toHaveBeenCalled();
         expect(mockRes.status).toHaveBeenCalledWith(200);
         expect(mockRes.json).toHaveBeenCalledWith({
-          message: "Evaluation deleted",
+          message: "evaluation_deleted",
         });
       });
 
@@ -679,7 +682,7 @@ describe("EvaluationController", () => {
 
         expect(mockRes.status).toHaveBeenCalledWith(404);
         expect(mockRes.json).toHaveBeenCalledWith({
-          message: "Evaluation not found",
+          message: "evaluation_not_found",
         });
       });
 
@@ -701,7 +704,7 @@ describe("EvaluationController", () => {
         expect(mockTransaction.rollback).toHaveBeenCalled();
         expect(mockRes.status).toHaveBeenCalledWith(500);
         expect(mockRes.json).toHaveBeenCalledWith({
-          message: "Error deleting evaluation",
+          message: "error_deleting_evaluation",
         });
       });
     }
@@ -730,7 +733,7 @@ describe("EvaluationController", () => {
       expect(mockTransaction.rollback).toHaveBeenCalled();
       expect(mockRes.status).toHaveBeenCalledWith(500);
       expect(mockRes.json).toHaveBeenCalledWith({
-        message: "Error deleting evaluation",
+        message: "error_deleting_evaluation",
       });
     });
   });
@@ -759,7 +762,7 @@ describe("EvaluationController", () => {
 
       expect(mockRes.status).toHaveBeenCalledWith(400);
       expect(mockRes.json).toHaveBeenCalledWith({
-        message: "Terme de recherche requis",
+        message: "search_term_required",
       });
     });
 
@@ -831,7 +834,7 @@ describe("EvaluationController", () => {
 
       expect(mockRes.status).toHaveBeenCalledWith(500);
       expect(mockRes.json).toHaveBeenCalledWith({
-        message: "Échec de la recherche",
+        message: "search_failed",
       });
     });
   });
@@ -839,31 +842,37 @@ describe("EvaluationController", () => {
     const setupGetPatientEvaluationsTest = (id = "1") => {
       mockReq.params = { id };
     };
-  
+
     it("should retrieve all evaluations for a specific patient", async () => {
       setupGetPatientEvaluationsTest();
-  
+
       const mockEvaluations = [
-        { 
-          id: 1, 
+        {
+          id: 1,
           idPatient: 1,
           Evaluation_PACE: { idPACE: 1 },
           Program: { name: "MARRON IV" },
-          createdAt: new Date() 
+          createdAt: new Date(),
         },
-        { 
-          id: 2, 
+        {
+          id: 2,
           idPatient: 1,
           Evaluation_PATH: { idPATH: 2 },
           Program: { name: "MARRON IV" },
-          createdAt: new Date() 
-        }
+          createdAt: new Date(),
+        },
       ];
-  
-      jest.spyOn(Evaluation, "findAll").mockResolvedValue(mockEvaluations as any);
-  
-      await getPatientEvaluations(mockReq as Request, mockRes as Response, mockNext);
-  
+
+      jest
+        .spyOn(Evaluation, "findAll")
+        .mockResolvedValue(mockEvaluations as any);
+
+      await getPatientEvaluations(
+        mockReq as Request,
+        mockRes as Response,
+        mockNext
+      );
+
       expect(Evaluation.findAll).toHaveBeenCalledWith({
         where: { idPatient: "1" },
         include: [
@@ -886,34 +895,42 @@ describe("EvaluationController", () => {
         ],
         order: [["createdAt", "DESC"]],
       });
-  
+
       expect(mockRes.status).toHaveBeenCalledWith(200);
       expect(mockRes.json).toHaveBeenCalledWith(mockEvaluations);
     });
-  
+
     it("should return an empty array when no evaluations are found for the patient", async () => {
       setupGetPatientEvaluationsTest("999");
-  
+
       jest.spyOn(Evaluation, "findAll").mockResolvedValue([]);
-  
-      await getPatientEvaluations(mockReq as Request, mockRes as Response, mockNext);
-  
+
+      await getPatientEvaluations(
+        mockReq as Request,
+        mockRes as Response,
+        mockNext
+      );
+
       expect(mockRes.status).toHaveBeenCalledWith(200);
       expect(mockRes.json).toHaveBeenCalledWith([]);
     });
-  
+
     it("should handle database errors when retrieving patient evaluations", async () => {
       setupGetPatientEvaluationsTest();
-  
+
       const dbError = new Error("Database error for patient evaluations");
       jest.spyOn(Evaluation, "findAll").mockRejectedValue(dbError);
-  
-      await getPatientEvaluations(mockReq as Request, mockRes as Response, mockNext);
-  
+
+      await getPatientEvaluations(
+        mockReq as Request,
+        mockRes as Response,
+        mockNext
+      );
+
       expect(mockRes.status).toHaveBeenCalledWith(500);
       expect(mockRes.json).toHaveBeenCalledWith({
-        message: "Erreur lors du chargement des évaluations depuis la base de données",
-        error: "Database error for patient evaluations"
+        message: "error_loading_evaluation",
+        error: "Database error for patient evaluations",
       });
     });
   });

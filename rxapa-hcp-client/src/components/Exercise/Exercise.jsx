@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types"; 
+import PropTypes from "prop-types";
 import { Card } from "antd";
 import Constants from "../Utils/Constants";
 import { useTranslation } from "react-i18next";
@@ -8,9 +8,11 @@ import "./Styles.css";
 const { Meta } = Card;
 
 export default function Exercise({ exercise, onClick, onSelect }) {
-  const { t } = useTranslation();
-  
-  const imageUrl = exercise.imageUrl ? `${Constants.SERVER_URL}${exercise.imageUrl}` : null;
+  const { t } = useTranslation("Exercises");
+
+  const imageUrl = exercise.imageUrl
+    ? `${Constants.SERVER_URL}${exercise.imageUrl}`
+    : null;
 
   const { name, fitnessLevel, category } = exercise;
 
@@ -19,11 +21,7 @@ export default function Exercise({ exercise, onClick, onSelect }) {
     onSelect(exercise);
   };
   return (
-    <Card
-      hoverable
-      className="exercise-card"
-      onClick={handleCardClick}
-    >
+    <Card hoverable className="exercise-card" onClick={handleCardClick}>
       <div
         className="exercise-background"
         style={{ backgroundImage: imageUrl ? `url(${imageUrl})` : "none" }}
@@ -35,7 +33,6 @@ export default function Exercise({ exercise, onClick, onSelect }) {
   );
 }
 
-
 Exercise.propTypes = {
   exercise: PropTypes.shape({
     imageUrl: PropTypes.string,
@@ -46,4 +43,3 @@ Exercise.propTypes = {
   onClick: PropTypes.func.isRequired,
   onSelect: PropTypes.func.isRequired,
 };
-

@@ -6,7 +6,7 @@ import { ProgramPhase } from "../model/ProgramPhase";
 import { Variant } from "../model/Variant";
 import { ProgramPhase_Program } from "../model/ProgramPhase_Program";
 import { validateProgram } from "../middleware/validateProgram";
-import { ProgramSession } from '../model/ProgramSession';
+import { ProgramSession } from "../model/ProgramSession";
 import { ProgramEnrollement } from "../model/ProgramEnrollement";
 import fs from "fs";
 import { Op } from "sequelize";
@@ -25,9 +25,9 @@ import { Op } from "sequelize";
  *
  * @author Hyacinth Ali
  */
-exports.createProgram = [ 
-    validateProgram, 
-    async (req: any, res: any, next: any) => {
+exports.createProgram = [
+  validateProgram,
+  async (req: any, res: any, next: any) => {
     // Extract the required attribute values to create an Exercise
     const name = req.body.name;
     const description = req.body.description;
@@ -36,16 +36,14 @@ exports.createProgram = [
     const imageUrl = req.body.imageUrl;
     const sessions = req.body;
 
-
     try {
-
       const rawSessions = req.body.sessions;
 
       // Vérification que les sessions sont bien dans un format tableau
       const sessions = Array.isArray(rawSessions) ? rawSessions : [];
 
       if (!sessions.length) {
-        return res.status(400).json({ message: "No valide session given" });
+        return res.status(400).json({ message: "error_no_valid_session" });
       }
 
       let imagePath = "";
@@ -55,16 +53,14 @@ exports.createProgram = [
       } else if (imageUrl) {
         imagePath = imageUrl; // Si l'utilisateur a fourni un lien
       } else {
-        return res
-        .status(400)
-        .json({ message: "No given image" });
+        return res.status(400).json({ message: "error_no_image_provided" });
       }
 
       const program = await Program.create({
         name: name,
         description: description,
         duration: duration,
-        duration_unit : duration_unit,
+        duration_unit: duration_unit,
         image: imagePath,
       });
 
@@ -79,14 +75,14 @@ exports.createProgram = [
         }
       }
 
-      res.status(201).json({ message: "Exercise program created" });
+      res.status(201).json({ message: "success_program_created" });
     } catch (error: any) {
       if (!error.statusCode) {
         error.statusCode = 500;
       }
       return res
         .status(error.statusCode)
-        .json({ message: "Failed to create an exercise program" });
+        .json({ message: "error_program_creation_failed" });
     }
     return res;
   },
@@ -103,9 +99,7 @@ exports.getPrograms = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res
-      .status(error.statusCode)
-      .json({ message: "Error loading programs from the database" });
+    res.status(error.statusCode).json({ message: "error_loading_programs" });
   }
   return res;
 };
@@ -124,9 +118,7 @@ exports.getProgramPhases = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res
-      .status(error.statusCode)
-      .json({ message: "Error, can't the find program in the database" });
+    res.status(error.statusCode).json({ message: "error_loading_programs" });
 
     return res;
   }
@@ -151,7 +143,7 @@ exports.getProgramPhases = async (req: any, res: any, next: any) => {
     }
     res
       .status(error.statusCode)
-      .json({ message: "Failed to load program phases" });
+      .json({ message: "error_loading_program_phases" });
   }
   return res;
 };
@@ -181,7 +173,7 @@ exports.getProgram = async (req: any, res: any, next: any) => {
       error.statusCode = 500;
     }
     res.status(error.statusCode);
-    res.json({ message: "Error loading a program from the database" });
+    res.json({ message: "error_loading_programs" });
     return res;
   }
 };
@@ -218,9 +210,7 @@ exports.addProgramPhase = async (req: any, res: any, next: any) => {
       error.statusCode = 500;
     }
 
-    res
-      .status(error.statusCode)
-      .json({ message: "Can't find the program in the database." });
+    res.status(error.statusCode).json({ message: "error_loading_programs" });
 
     return res;
   }
@@ -235,9 +225,7 @@ exports.addProgramPhase = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res
-      .status(error.statusCode)
-      .json({ message: "Can't find the selected phase" });
+    res.status(error.statusCode).json({ message: "error_loading_phase" });
 
     return res;
   }
@@ -254,7 +242,7 @@ exports.addProgramPhase = async (req: any, res: any, next: any) => {
       rank: rank,
     });
 
-    res.status(201).json({ message: "Added a program phase to the program" });
+    res.status(201).json({ message: "success_added_phase_to_program" });
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
@@ -262,7 +250,7 @@ exports.addProgramPhase = async (req: any, res: any, next: any) => {
 
     res
       .status(error.statusCode)
-      .json({ message: "Failed to add a program phase to a program" });
+      .json({ message: "error_to_add_phase_to_program" });
   }
 
   return res;
@@ -283,7 +271,7 @@ exports.deleteProgram = async (req: any, res: any) => {
     });
     // Check that the programe exists
     if (program == null) {
-      res.status(500).json({ message: "The program does not exist." });
+      res.status(500).json({ message: "error_program_not_found" });
       return res;
     }
   } catch (error: any) {
@@ -292,20 +280,20 @@ exports.deleteProgram = async (req: any, res: any) => {
     }
     return res
       .status(error.statusCode)
-      .json({ message: "Failed to retrieve program to be deleted" });
+      .json({ message: "error_to_retrieve_program_to_be_deleted" });
   }
 
   // Delete the program.
   try {
     await program.destroy();
-    res.status(200).json({ message: "Program Deleted Successfully" });
+    res.status(200).json({ message: "success_program_deleted" });
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
     return res
       .status(error.statusCode)
-      .json({ message: "Unable to delete the program." });
+      .json({ message: "error_deleting_program" });
   }
 };
 
@@ -354,11 +342,12 @@ exports.updateProgram = [
       // Trouver le programme par sa clé unique
       program = await Program.findOne({ where: { key: programKey } });
       if (!program) {
-        return res.status(404).json({ message: "Program not found" });
+        return res
+          .status(404)
+          .json({ message: "program_not_found", program: program.name });
       }
-
     } catch (error: any) {
-      return res.status(500).json({ message: "Error: Can't find the program" });
+      return res.status(500).json({ message: "error_searching_programs" });
     }
 
     try {
@@ -371,7 +360,7 @@ exports.updateProgram = [
       );
 
       if (!filteredSessions.length) {
-        return res.status(400).json({ message: "No valid session given" });
+        return res.status(400).json({ message: "error_no_valid_session" });
       }
 
       let imagePath = "";
@@ -379,7 +368,7 @@ exports.updateProgram = [
       if (req.file) {
         imagePath = `/images/${req.file.filename}`;
       } else {
-        return res.status(400).json({ message: "No image provided" });
+        return res.status(400).json({ message: "error_no_image_provided" });
       }
 
       // Mise à jour des informations du programme
@@ -400,8 +389,10 @@ exports.updateProgram = [
       // Mettre à jour les sessions existantes
       if (filteredSessions && filteredSessions.length > 0) {
         if (!program?.id) {
-          console.error("Program ID is undefined");
-          return res.status(400).json({ message: "Program ID is undefined" });
+          console.error("error_program_id_undefined");
+          return res
+            .status(400)
+            .json({ message: "error_program_id_undefined" });
         }
 
         try {
@@ -450,14 +441,14 @@ exports.updateProgram = [
           }
         } catch (error) {
           console.error("Error updating sessions:", error);
-          return res.status(500).json({ message: "Internal server error" });
+          return res.status(500).json({ message: "internal_server_error" });
         }
       }
 
-      res.status(200).json({ message: "The program has been updated" });
+      res.status(200).json({ message: "success_program_updated" });
     } catch (error: any) {
       console.error(error);
-      return res.status(500).json({ message: "Failed to update the program" });
+      return res.status(500).json({ message: "error_updating_program" });
     }
     return res;
   },
@@ -479,9 +470,7 @@ exports.getSessionsByProgram = async (req: any, res: any, next: any) => {
 
     res.json(sessions.map((ps: { sessionId: number }) => ps.sessionId));
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Erreur lors de la récupération des sessions." });
+    res.status(500).json({ message: "error_retrieving_sessions" });
   }
 };
 
@@ -502,13 +491,13 @@ exports.getProgramDetails = async (req: any, res: any, next: any) => {
     });
 
     if (!program) {
-      return res.status(404).json({ message: "Programme non trouvé" });
+      return res.status(404).json({ message: "error_no_program_found" });
     }
 
     res.json(program);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Erreur serveur" });
+    res.status(500).json({ message: "internal_server_error" });
   }
 };
 
@@ -542,7 +531,7 @@ export const searchPrograms = async (req: any, res: any, next: any) => {
       };
     }
 
-    // Recherche par durée et unité de durée 
+    // Recherche par durée et unité de durée
     if (filters.duration && filters.duration_unit) {
       whereClause.duration = filters.duration;
       whereClause.duration_unit = filters.duration_unit;
@@ -572,16 +561,14 @@ export const searchPrograms = async (req: any, res: any, next: any) => {
 
     // Si aucun programme n'est trouvé
     if (programs.length === 0) {
-      return res.status(404).json({ message: "Aucun programme trouvé" });
+      return res.status(404).json({ message: "error_no_program_found" });
     }
 
     // Retourner les programmes trouvés
     res.json(programs);
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({ message: "Erreur serveur lors de la recherche des programmes" });
+    res.status(500).json({ message: "error_searching_programs" });
   }
 };
 
@@ -593,33 +580,35 @@ exports.toggleProgramActivation = async (req: any, res: any) => {
     const program = await Program.findOne({ where: { key: programKey } });
 
     if (!program) {
-      return res.status(404).json({ message: "Programme introuvable." });
+      return res.status(404).json({ message: "error_no_program_found" });
     }
 
     await program.update({ actif });
 
-    const action = actif ? "activé" : "désactivé";
-    res.status(200).json({ message: `Le programme a été ${action}.` });
+    const action = actif ? "enabled" : "disabled";
+    res.status(200).json({ message: `program_action.${action}` });
   } catch (error: any) {
-    res.status(500).json({ message: "Erreur lors de l’activation/désactivation." });
+    res.status(500).json({ message: "error_program_enable_disable" });
   }
 };
 
 exports.getProgramsByPatientId = async (req: any, res: any) => {
   const patientId = req.params.patientId;
-  
+
   // First, get all enrollments for this patient
   const patientEnrollments = await ProgramEnrollement.findAll({
-    where: { PatientId: patientId }
+    where: { PatientId: patientId },
   });
-  
+
   // Extract program IDs from enrollments
-  const programIds = patientEnrollments.map((enrollment: typeof ProgramEnrollement) => enrollment.ProgramId);
-  
+  const programIds = patientEnrollments.map(
+    (enrollment: typeof ProgramEnrollement) => enrollment.ProgramId
+  );
+
   // Then get the programs that match these IDs
   const patientPrograms = await Program.findAll({
-    where: { id: programIds }
+    where: { id: programIds },
   });
-  
+
   return res.json(patientPrograms);
-}
+};

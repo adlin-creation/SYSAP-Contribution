@@ -1,7 +1,7 @@
 import { Exercise_Bloc } from "../model/Exercise_Bloc";
 import { Exercise } from "../model/Exercise";
 import { Bloc } from "../model/Bloc";
-import { Patient } from "../model/Patient"
+import { Patient } from "../model/Patient";
 import { SessionRecord } from "../model/SessionRecord";
 import { Session } from "../model/Session";
 import { Bloc_Session } from "../model/Bloc_Session";
@@ -35,7 +35,7 @@ exports.createBloc = async (req: any, res: any, next: any) => {
       description: description,
     });
 
-    res.status(201).json({ message: "Successfuly created a Bloc" });
+    res.status(201).json({ message: "bloc_creation_success" });
     // Otherwise, the action was not successful. Hence, let the user know that
     // his request was unsuccessful.
   } catch (error: any) {
@@ -46,14 +46,13 @@ exports.createBloc = async (req: any, res: any, next: any) => {
 
     if (error.name == "SequelizeUniqueConstraintError") {
       res.json({
-        messageTitle: "A bloc with the same name already exists.",
-        message: "Please modify the name of the bloc and then submit again.",
+        messageTitle: "same_name_bloc_message",
+        message: "modify_bloc_name_message",
       });
     } else {
       res.json({
-        messageTitle: "Failed to create a Bloc",
-        message:
-          "Please contact the developer with a brief description of how this error can be reproduced.",
+        messageTitle: "bloc_creation_failure_message",
+        message: "contact_developer_message",
       });
     }
   }
@@ -87,7 +86,7 @@ exports.addExercise = async (req: any, res: any, next: any) => {
   try {
     exercise = await Exercise.findOne({ where: { name: exerciseName } });
   } catch (error) {
-    res.json({ message: "Can't find the exercise ", exerciseName });
+    res.json({ message: "cannot_find_exercise_message", exerciseName });
   }
 
   // Get the bloc
@@ -97,7 +96,7 @@ exports.addExercise = async (req: any, res: any, next: any) => {
       where: { key: blocKey },
     });
   } catch (error) {
-    res.json({ message: "Can't find the bloc" });
+    res.json({ message: "cannot_find_bloc_message" });
   }
 
   const rank = (await bloc.countExercise_Blocs()) + 1;
@@ -112,16 +111,15 @@ exports.addExercise = async (req: any, res: any, next: any) => {
       restingInstruction: restingInstruction,
       minutes: minutes,
     });
-    res
-      .status(201)
-      .json({ message: "Successfully added the exercise to a bloc" });
+    res.status(201).json({ message: "exercise_adding_success_message" });
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
     res.status(error.statusCode);
     res.json({
-      message: `Failed to add the ${exerciseName} exercise to a bloc`,
+      message: "exercise_add_fail",
+      exerciseName: exerciseName,
     });
     return res;
   }
@@ -138,7 +136,7 @@ exports.getBlocs = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.json({ message: "Error loading the blocs from the database" });
+    res.json({ message: "database_bloc_loading_error" });
   }
   return res;
 };
@@ -168,7 +166,7 @@ exports.getBloc = async (req: any, res: any, next: any) => {
       error.statusCode = 500;
     }
     res.status(error.statusCode);
-    res.json({ message: "Error loading a bloc from the database" });
+    res.json({ message: "database_bloc_loading_error" });
   }
 };
 
@@ -190,15 +188,15 @@ exports.updateBloc = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.json({ message: "Error: Can't find the bloc" });
+    res.json({ message: "cannot_find_bloc_message" });
     return res;
   }
 
   if (bloc == null) {
-    res.json({ message: "Error: Can't find the bloc" });
+    res.json({ message: "cannot_find_bloc_message" });
     return res;
   }
-  // save changes in BlocHistory 
+  // save changes in BlocHistory
   const changes = [];
 
   if (bloc.name !== blocName) {
@@ -229,7 +227,7 @@ exports.updateBloc = async (req: any, res: any, next: any) => {
       description: description || bloc.description,
     });
 
-    for (const change of changes){
+    for (const change of changes) {
       await BlocHistory.create(change);
     }
 
@@ -240,7 +238,7 @@ exports.updateBloc = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    res.json({ message: "Failed to update the " + { blocName } });
+    res.json({ message: "bloc_update_fail", blocName: blocName });
   }
 };
 
@@ -260,20 +258,18 @@ exports.deleteBloc = async (req: any, res: any, next: any) => {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    return res
-      .status(error.statusCode)
-      .json({ message: "The bloc doesn't exist in the database" });
+    return res.status(error.statusCode).json({ message: "bloc_not_found" });
   }
   try {
     await bloc.destroy();
-    return res.status(200).json({ message: "Successfully deleted the bloc" });
+    return res.status(200).json({ message: "bloc_deleted_successfully" });
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
     return res
       .status(error.statusCode)
-      .json({ message: "Failed to delete the bloc" });
+      .json({ message: "bloc_deletion_failed" });
   }
 };
 
@@ -287,12 +283,14 @@ exports.removeExerciseFromBloc = async (req: any, res: any) => {
     const result = await Exercise_Bloc.destroy({
       where: {
         BlocId: blocId,
-        ExerciseId: exerciseId, 
+        ExerciseId: exerciseId,
       },
     });
 
     if (result > 0) {
-      res.status(200).json({ message: "Exercise successfully removed from the block." });
+      res
+        .status(200)
+        .json({ message: "Exercise successfully removed from the block." });
     } else {
       res.status(404).json({ message: "No matching entry found." });
     }
@@ -302,56 +300,59 @@ exports.removeExerciseFromBloc = async (req: any, res: any) => {
   }
 };
 
-
 /*
   Retrieve all the blocs related to the patient Id
 */
 exports.getBlocsByPatientId = async (req: any, res: any) => {
   const patientId = req.params.patientId;
-  
+
   try {
     //Get all programEnrollment for this patient
     const programEnrollment = await ProgramEnrollement.findAll({
-      where: { PatientId: patientId}
+      where: { PatientId: patientId },
     });
 
     // Extract programEnrollment Ids
-    const programEnrollementIds = programEnrollment.map((data: typeof ProgramEnrollement) => data.id);
+    const programEnrollementIds = programEnrollment.map(
+      (data: typeof ProgramEnrollement) => data.id
+    );
 
     // Get all session records for this patient
     const sessionRecords = await SessionRecord.findAll({
-      where: { ProgramEnrollementId: programEnrollementIds }
+      where: { ProgramEnrollementId: programEnrollementIds },
     });
-    
+
     // Extract session IDs
-    const sessionIds = sessionRecords.map((record: typeof SessionRecord) => record.id);
-    
+    const sessionIds = sessionRecords.map(
+      (record: typeof SessionRecord) => record.id
+    );
+
     // No sessions found for this patient
     if (sessionIds.length === 0) {
       return res.status(200).json([]);
     }
-    
+
     // Find all bloc-session relationships for these sessions
     const blocSessions = await Bloc_Session.findAll({
-      where: { SessionId: sessionIds }
+      where: { SessionId: sessionIds },
     });
-    
+
     // Extract bloc IDs
     const blocIds = blocSessions.map((bs: typeof Bloc_Session) => bs.BlocId);
-    
+
     // No blocs found for these sessions
     if (blocIds.length === 0) {
       return res.status(200).json([]);
     }
-    
+
     // Get all blocs for these bloc IDs
     const blocs = await Bloc.findAll({
-      where: { id: blocIds }
+      where: { id: blocIds },
     });
-    
+
     res.status(200).json(blocs);
   } catch (error) {
-    console.error('Error fetching blocs by patient ID:', error);
-    res.status(500).json({ message: 'Failed to fetch blocs' });
+    console.error("Error fetching blocs by patient ID:", error);
+    res.status(500).json({ message: "Failed to fetch blocs" });
   }
 };

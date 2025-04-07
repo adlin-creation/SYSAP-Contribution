@@ -58,7 +58,7 @@ import ResetPassword from "./components/Authentication/ResetPassword";
 const { Header, Sider, Content } = Layout;
 
 function App() {
-  const { t, i18n } = useTranslation(); // la fonction qu'on doit appliquer a la traduction
+  const { t, i18n } = useTranslation("App"); // la fonction qu'on doit appliquer a la traduction
   const location = useLocation();
   const navigate = useNavigate();
   const { token, setToken } = useToken(); // Utilisation du hook personnalisé pour gérer le token
@@ -75,74 +75,76 @@ function App() {
       {
         key: "/",
         icon: <HomeOutlined />,
-        label: <Link to="/">{t("App:dashboard")}</Link>,
+        label: <Link to="/">{t("label_dashboard")}</Link>,
       },
       {
         key: "/calendar",
         icon: <CalendarOutlined />,
-        label: <Link to="/calendar">{t("App:calendar")}</Link>,
+        label: <Link to="/calendar">{t("label_calendar")}</Link>,
       },
-      
+
       {
         key: "/exercises",
         icon: <AppstoreOutlined />,
-        label: <Link to="/exercises">{t("App:exercises")}</Link>,
+        label: <Link to="/exercises">{t("label_exercises")}</Link>,
       },
       {
         key: "/blocs",
         icon: <BlockOutlined />,
-        label: <Link to="/blocs">{t("App:blocs")}</Link>,
+        label: <Link to="/blocs">{t("label_blocs")}</Link>,
       },
       {
         key: "/sessions",
         icon: <CalendarOutlined />,
-        label: <Link to="/sessions">{t("App:sessions")}</Link>,
+        label: <Link to="/sessions">{t("label_sessions")}</Link>,
       },
       {
         key: "/cycles",
         icon: <ClusterOutlined />,
-        label: <Link to="/cycles">{t("App:cycles")}</Link>,
+        label: <Link to="/cycles">{t("label_cycles")}</Link>,
       },
       {
         key: "/phases",
         icon: <PartitionOutlined />,
-        label: <Link to="/phases">{t("App:phases")}</Link>,
+        label: <Link to="/phases">{t("label_phases")}</Link>,
       },
       {
         key: "/programs",
         icon: <SettingOutlined />,
-        label: <Link to="/programs">{t("App:programs")}</Link>,
+        label: <Link to="/programs">{t("label_programs")}</Link>,
       },
-      
+
       {
         key: "/patients",
         icon: <UserOutlined />,
-        label: <Link to="/patients">{t("App:patients")}</Link>,
+        label: <Link to="/patients">{t("label_patients")}</Link>,
       },
       {
         key: "/evaluations",
         icon: <FormOutlined />,
-        label: <Link to="/evaluations">Évaluation</Link>,
+        label: <Link to="/evaluations">{t("label_evaluation")}</Link>,
       },
       {
         key: "healthcare-professional",
         icon: <UsergroupAddOutlined />,
-        label: t("App:professionals"),
+        label: t("label_professionals"),
         children: [
           {
             key: "/doctors",
             icon: <MedicineBoxOutlined />,
-            label: <Link to="/doctors">{t("App:physicians")}</Link>,
+            label: <Link to="/doctors">{t("label_physicians")}</Link>,
           },
           {
             key: "/kinesiologists",
             icon: <HeartOutlined />,
-            label: <Link to="/kinesiologists">{t("App:kinesiologists")}</Link>,
+            label: (
+              <Link to="/kinesiologists">{t("label_kinesiologists")}</Link>
+            ),
           },
           {
             key: "/admins",
             icon: <UserOutlined />,
-            label: <Link to="/admins">{t("App:admins")}</Link>,
+            label: <Link to="/admins">{t("label_admins")}</Link>,
           },
         ],
       },
@@ -181,7 +183,11 @@ function App() {
               };
             }
 
-            if (location.state.role !== "kinesiologist" && location.state.role !== "admin" && item.key === "/evaluations") {
+            if (
+              location.state.role !== "kinesiologist" &&
+              location.state.role !== "admin" &&
+              item.key === "/evaluations"
+            ) {
               return null;
             }
 
@@ -229,15 +235,15 @@ function App() {
   const userMenuItems = [
     {
       key: "1",
-      label: <Link to="/profile">{t("App:profile")}</Link>,
+      label: <Link to="/profile">{t("label_profile")}</Link>,
     },
     {
       key: "2",
-      label: <Link to="/settings">{t("App:settings")}</Link>,
+      label: <Link to="/settings">{t("label_settings")}</Link>,
     },
     {
       key: "3",
-      label: t("App:logout"),
+      label: t("label_logout"),
       onClick: handleLogout, // Ajoutez cette ligne pour la déconnexion
     },
   ];
@@ -324,7 +330,9 @@ function App() {
             <Route
               path="evaluations"
               element={
-                <Suspense fallback={<div>Loading evaluations...</div>}>
+                <Suspense
+                  fallback={<div>{t("title_loading_evaluations")}</div>}
+                >
                   <EvaluationSearch />
                 </Suspense>
               }
@@ -332,7 +340,9 @@ function App() {
             <Route
               path="evaluation-pace/:patientId"
               element={
-                <Suspense fallback={<div>Loading evaluation...</div>}>
+                <Suspense
+                  fallback={<div>{t("title_loading_evaluations")}</div>}
+                >
                   <EvaluationPACE />
                 </Suspense>
               }
@@ -340,26 +350,32 @@ function App() {
             <Route
               path="evaluation-match/:patientId"
               element={
-                <Suspense fallback={<div>Loading evaluation...</div>}>
+                <Suspense
+                  fallback={<div>{t("title_loading_evaluations")}</div>}
+                >
                   <EvaluationMATCH />
                 </Suspense>
               }
             ></Route>
-            <Route 
-              path="evaluation-path/:patientId" 
+            <Route
+              path="evaluation-path/:patientId"
               element={
-                <Suspense fallback={<div>Loading evaluation...</div>}>
+                <Suspense
+                  fallback={<div>{t("title_loading_evaluations")}</div>}
+                >
                   <EvaluationPATH />
                 </Suspense>
               }
             ></Route>
             <Route
-            path="evaluations/patient/:patientId"
-            element={
-              <Suspense fallback={<div>Loading evaluations...</div>}>
-                <EvaluationDisplay />
-              </Suspense>
-            }
+              path="evaluations/patient/:patientId"
+              element={
+                <Suspense
+                  fallback={<div>{t("title_loading_evaluations")}</div>}
+                >
+                  <EvaluationDisplay />
+                </Suspense>
+              }
             ></Route>
             <Route
               path="*"

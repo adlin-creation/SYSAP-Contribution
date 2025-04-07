@@ -10,7 +10,7 @@ import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 
 export default function CreateCycle(props) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("Cycles");
   const { handleSubmit, control } = useForm();
   const { token } = useToken();
 
@@ -29,9 +29,11 @@ export default function CreateCycle(props) {
       .then((res) => {
         // Reload the list of cycles to include the new cycle
         props.refetchCycles();
-        openModal(res.data.message, false);
+        openModal(t(`Backend:${res.data.message}`), false);
       })
-      .catch((err) => openModal(err.response.data.message, true));
+      .catch((err) =>
+        openModal(t(`Backend:${err.response.data.message}`), true)
+      );
   };
 
   /**
@@ -58,7 +60,7 @@ export default function CreateCycle(props) {
     <Row justify="center" align="middle" style={{ minHeight: "50vh" }}>
       <Col span={12}>
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
-          <Form.Item label={t("Cycles:enter_cycle_name")}>
+          <Form.Item label={t("label_cycle_name")}>
             <Controller
               name="cycleName"
               control={control}
@@ -66,14 +68,14 @@ export default function CreateCycle(props) {
                 <Input
                   onChange={onChange}
                   value={value}
-                  placeholder={t("Cycles:weekly_cycle_name_placeholder")}
+                  placeholder={t("placeholder_weekly_cycle_name")}
                   required
                 />
               )}
             />
           </Form.Item>
 
-          <Form.Item label={t("Cycles:cycle_description_label")}>
+          <Form.Item label={t("label_cycle_description")}>
             <Controller
               name="cycleDescription"
               control={control}
@@ -81,7 +83,7 @@ export default function CreateCycle(props) {
                 <Input.TextArea
                   onChange={onChange}
                   value={value}
-                  placeholder={t("Cycles:weekly_cycle_description_placeholder")}
+                  placeholder={t("placeholder_weekly_cycle_description")}
                   rows={4}
                   required
                 />
@@ -91,7 +93,7 @@ export default function CreateCycle(props) {
 
           <Form.Item>
             <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
-              {t("Cycles:submit_button")}
+              {t("button_submit")}
             </Button>
           </Form.Item>
         </Form>
@@ -101,7 +103,7 @@ export default function CreateCycle(props) {
             onCancel={closeModal}
             footer={[
               <Button key="close" onClick={closeModal}>
-                {t("Cycles:close_button")}
+                {t("button_close")}
               </Button>,
             ]}
           >

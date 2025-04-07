@@ -5,21 +5,23 @@ import axios from "axios";
 import useToken from "../Authentication/useToken";
 import Constants from "../Utils/Constants";
 import { InfoCircleOutlined } from "@ant-design/icons";
+import { useTranslation } from "react-i18next";
 
 /**
  * Classe abstraite pour les composants d'évaluation
  * Cette classe contient les fonctionnalités communes aux évaluations MATCH, PACE et PATH
  */
-function Evaluation({ 
-  evaluationType, 
-  getInitialFormData, 
-  calculateScores, 
-  renderFormFields, 
-  buildPayload, 
+function Evaluation({
+  evaluationType,
+  getInitialFormData,
+  calculateScores,
+  renderFormFields,
+  buildPayload,
   buildModalContent,
-  exportPdf,  // Nouvelle prop pour la fonction d'exportation PDF
-  validateForm // Prop facultative pour la validation personnalisée
+  exportPdf, // Nouvelle prop pour la fonction d'exportation PDF
+  validateForm, // Prop facultative pour la validation personnalisée
 }) {
+  const { t } = useTranslation("Evaluations");
   const { patientId } = useParams();
   const navigate = useNavigate();
   const [formData, setFormData] = useState(getInitialFormData());
@@ -28,20 +30,19 @@ function Evaluation({
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState(null);
   const [scores, setScores] = useState(null);
-
   // Fonction pour déterminer si un test d'équilibre doit être activé
   const isBalanceTestEnabled = (testName) => {
     // Définir le seuil selon le type d'évaluation
     const threshold = evaluationType === "PATH" ? 5 : 10;
-    
+
     switch (testName) {
-      case 'balanceFeetTogether':
+      case "balanceFeetTogether":
         return true; // Toujours activé
-      case 'balanceSemiTandem':
+      case "balanceSemiTandem":
         return parseFloat(formData.balanceFeetTogether || 0) >= threshold;
-      case 'balanceTandem':
+      case "balanceTandem":
         return parseFloat(formData.balanceSemiTandem || 0) >= threshold;
-      case 'balanceOneFooted':
+      case "balanceOneFooted":
         return parseFloat(formData.balanceTandem || 0) >= threshold;
       default:
         return false;
@@ -50,9 +51,9 @@ function Evaluation({
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    
+
     setFormData((prev) => {
-      if (name === 'balanceFeetTogether') {
+      if (name === "balanceFeetTogether") {
         // Si pieds joints < 10 ou vide, réinitialiser les tests suivants
         if (value === "" || parseFloat(value) < 10) {
           const updatedForm = {
@@ -61,15 +62,15 @@ function Evaluation({
             balanceSemiTandem: "",
             balanceTandem: "",
           };
-          
+
           // Seulement pour PACE qui a un test d'équilibre supplémentaire
-          if ('balanceOneFooted' in prev) {
+          if ("balanceOneFooted" in prev) {
             updatedForm.balanceOneFooted = "";
           }
-          
+
           return updatedForm;
         }
-      } else if (name === 'balanceSemiTandem') {
+      } else if (name === "balanceSemiTandem") {
         // Si semi-tandem < 10 ou vide, réinitialiser les tests suivants
         if (value === "" || parseFloat(value) < 10) {
           const updatedForm = {
@@ -77,15 +78,15 @@ function Evaluation({
             [name]: value,
             balanceTandem: "",
           };
-          
+
           // Seulement pour PACE
-          if ('balanceOneFooted' in prev) {
+          if ("balanceOneFooted" in prev) {
             updatedForm.balanceOneFooted = "";
           }
-          
+
           return updatedForm;
         }
-      } else if (name === 'balanceTandem' && 'balanceOneFooted' in prev) {
+      } else if (name === "balanceTandem" && "balanceOneFooted" in prev) {
         // Uniquement pour PACE - si tandem < 10, réinitialiser one-footed
         if (value === "" || parseFloat(value) < 10) {
           return {
@@ -102,7 +103,7 @@ function Evaluation({
           frtDistance: "",
         };
       }
-      
+
       return {
         ...prev,
         [name]: value,
@@ -123,41 +124,54 @@ function Evaluation({
 
     // Validation commune
     if (!formData.chairTestCount) {
-      newErrors.chairTestCount = "Le nombre de levers est requis";
+      newErrors.chairTestCount = t("error_stand_required");
     } else if (isNaN(formData.chairTestCount) || formData.chairTestCount < 0) {
-      newErrors.chairTestCount = "Veuillez entrer un nombre valide";
+      newErrors.chairTestCount = t("error_stand_invalid");
     }
 
     // Valider seulement le test d'équilibre "pieds joints", qui est toujours obligatoire
     if (!formData.balanceFeetTogether) {
-      newErrors.balanceFeetTogether = "Le temps est requis";
-    } else if (isNaN(formData.balanceFeetTogether) || formData.balanceFeetTogether < 0) {
-      newErrors.balanceFeetTogether = "Veuillez entrer un temps valide";
+      newErrors.balanceFeetTogether = t("error_time_required");
+    } else if (
+      isNaN(formData.balanceFeetTogether) ||
+      formData.balanceFeetTogether < 0
+    ) {
+      newErrors.balanceFeetTogether = t("error_time_invalid");
     }
-    
+
     // Valider les autres tests d'équilibre s'ils contiennent des valeurs
-    const balanceTests = ['balanceSemiTandem', 'balanceTandem', 'balanceOneFooted'];
-    balanceTests.forEach(test => {
-      if (formData[test] !== undefined && formData[test] && 
-          (isNaN(formData[test]) || formData[test] < 0)) {
-        newErrors[test] = "Veuillez entrer un temps valide";
+    const balanceTests = [
+      "balanceSemiTandem",
+      "balanceTandem",
+      "balanceOneFooted",
+    ];
+    balanceTests.forEach((test) => {
+      if (
+        formData[test] !== undefined &&
+        formData[test] &&
+        (isNaN(formData[test]) || formData[test] < 0)
+      ) {
+        newErrors[test] = t("error_time_invalid");
       }
     });
 
     // Validation spécifique à PACE pour FRT
-    if (formData.frtPosition !== undefined && formData.frtPosition !== "armNotWorking") {
+    if (
+      formData.frtPosition !== undefined &&
+      formData.frtPosition !== "armNotWorking"
+    ) {
       if (!formData.frtDistance) {
-        newErrors.frtDistance = "La distance est requise";
+        newErrors.frtDistance = t("error_distance_required");
       } else if (isNaN(formData.frtDistance) || formData.frtDistance < 0) {
-        newErrors.frtDistance = "Veuillez entrer une distance valide";
+        newErrors.frtDistance = t("error_invalid_distance");
       }
     }
 
     if (formData.canWalk === true) {
       if (!formData.walkingTime) {
-        newErrors.walkingTime = "Le temps de marche est requis";
+        newErrors.walkingTime = t("error_walk_time_required");
       } else if (isNaN(formData.walkingTime) || formData.walkingTime < 0) {
-        newErrors.walkingTime = "Veuillez entrer un temps de marche valide";
+        newErrors.walkingTime = t("error_walk_time_invalid");
       }
     }
 
@@ -166,7 +180,7 @@ function Evaluation({
 
   const handleSubmit = () => {
     let newErrors = defaultValidateForm();
-    
+
     if (validateForm) {
       newErrors = validateForm(formData, newErrors);
     }
@@ -179,25 +193,31 @@ function Evaluation({
     // Calculer les scores en utilisant la fonction fournie par la classe fille
     const calculatedScores = calculateScores(formData, isBalanceTestEnabled);
     setScores(calculatedScores);
-    
+
     // Construire le contenu de la modale en utilisant la fonction fournie par la classe fille
     setModalMessage(buildModalContent(calculatedScores, formData));
-    
+
     setIsModalVisible(true);
   };
 
   const handleConfirm = async () => {
     // Calculer les scores à nouveau si nécessaire, ou utiliser ceux déjà calculés
-    const currentScores = scores || calculateScores(formData, isBalanceTestEnabled);
-    
+    const currentScores =
+      scores || calculateScores(formData, isBalanceTestEnabled);
+
     // Construire le payload en utilisant la fonction fournie par la classe fille
-    const payload = buildPayload(formData, currentScores, patientId, isBalanceTestEnabled);
+    const payload = buildPayload(
+      formData,
+      currentScores,
+      patientId,
+      isBalanceTestEnabled
+    );
 
     if (!payload) {
       console.error("Aucune donnée à envoyer");
       return;
     }
-    
+
     const endpoint = `/create-${evaluationType.toLowerCase()}-evaluation`;
 
     try {
@@ -219,12 +239,12 @@ function Evaluation({
 
       // Afficher un message de succès
       Modal.success({
-        title: "Succès",
-        content: "Évaluation enregistrée avec succès",
+        title: t("success_title"),
+        content: t("success_message"),
         onOk: () => {
           // Rediriger vers la page des évaluations après confirmation
-          navigate('/evaluations');
-        }
+          navigate("/evaluations");
+        },
       });
     } catch (error) {
       console.error("Erreur détaillée :", {
@@ -235,12 +255,14 @@ function Evaluation({
       });
 
       Modal.error({
-        title: "Erreur",
+        title: t("error_title"),
         content:
-          error.response?.data?.message ||
+          t(`Backend:${error.response?.data?.message}`, {
+            program: error.response?.data?.program,
+          }) ||
           error.response?.data ||
-          error.message ||
-          "Échec de l'enregistrement des données",
+          t(`Backend:${error.message}`) ||
+          t("error_save_assessment"),
       });
     }
   };
@@ -248,23 +270,23 @@ function Evaluation({
   // Fonction pour gérer l'export PDF
   const handleExportPdf = async () => {
     if (!exportPdf || !scores) return;
-    
+
     try {
       const date = new Date().toISOString().split("T")[0];
       const payload = {
         date: date,
-        ...buildPayload(formData, scores, patientId, isBalanceTestEnabled)
+        ...buildPayload(formData, scores, patientId, isBalanceTestEnabled),
       };
-      
+
       await exportPdf(payload, token);
     } catch (error) {
       console.error("Erreur lors de l'exportation PDF:", error);
       Modal.error({
-        title: "Erreur",
-        content: "Échec de l'exportation du PDF"
+        title: t("error_title"),
+        content: t("error_pdf_export"),
       });
     }
-  }
+  };
 
   const calculateSpeed = (walkingTime) => {
     const time = parseFloat(walkingTime);
@@ -274,27 +296,27 @@ function Evaluation({
 
   const calculateWalkingObjective = (walkingTime) => {
     const time = parseFloat(walkingTime);
-    
-    if (isNaN(time) || time < 0 || walkingTime === '') {
+
+    if (isNaN(time) || time < 0 || walkingTime === "") {
       return null;
     }
-    
+
     if (time === 0) {
       return 10;
     }
-    
+
     const speed = 4 / time;
-    
+
     if (speed < 0.4) return 10;
     if (speed >= 0.4 && speed < 0.6) return 15;
     if (speed >= 0.6 && speed < 0.8) return 20;
     if (speed >= 0.8) return 30;
-    
+
     return null;
   };
 
   const onClose = () => {
-    navigate('/evaluations');
+    navigate("/evaluations");
   };
 
   return (
@@ -306,33 +328,39 @@ function Evaluation({
           initialValues={formData}
         >
           {/* Rendu des champs de formulaire spécifiques à chaque évaluation */}
-          {renderFormFields(formData, handleChange, errors, isBalanceTestEnabled, calculateWalkingObjective)}
+          {renderFormFields(
+            formData,
+            handleChange,
+            errors,
+            isBalanceTestEnabled,
+            calculateWalkingObjective
+          )}
 
           <Form.Item>
             <Button onClick={() => onClose()} style={{ marginRight: 8 }}>
-              Annuler
+              {t("button_cancel")}
             </Button>
             <Button type="primary" htmlType="submit">
-              Soumettre
+              {t("button_submit")}
             </Button>
           </Form.Item>
         </Form>
       </Col>
       <Modal
-        title="Résultats"
+        title={t("title_result")}
         open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         footer={[
           exportPdf && (
             <Button key="export" onClick={handleExportPdf}>
-              Télécharger PDF
+              {t("button_download_pdf")}
             </Button>
           ),
           <Button key="close" onClick={() => setIsModalVisible(false)}>
-            Fermer
+            {t("button_close")}
           </Button>,
           <Button key="submit" type="primary" onClick={handleConfirm}>
-            Confirmer
+            {t("button_confirm")}
           </Button>,
         ]}
       >

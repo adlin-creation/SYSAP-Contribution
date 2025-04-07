@@ -6,7 +6,7 @@ import image from "../../images/cycle.webp";
 import { useTranslation } from "react-i18next";
 
 export default function Cycle({ onClick, onSelect, cycle, deleteCycle }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("Cycles");
   return (
     <Card
       hoverable
@@ -31,7 +31,7 @@ export default function Cycle({ onClick, onSelect, cycle, deleteCycle }) {
           }}
           type="primary"
         >
-          {t("Cycles:edit_button")}
+          {t("button_edit")}
         </Button>
         <Button
           onClick={() => {
@@ -43,7 +43,7 @@ export default function Cycle({ onClick, onSelect, cycle, deleteCycle }) {
           icon={<DeleteOutlined />}
           style={{ marginLeft: 8 }}
         >
-          {t("Cycles:delete_button")}
+          {t("button_delete")}
         </Button>
       </div>
     </Card>

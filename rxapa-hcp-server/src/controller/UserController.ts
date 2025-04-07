@@ -4,7 +4,6 @@ import jwt from "jsonwebtoken"; // Importation de jsonwebtoken pour la gestion d
 import { scrypt, randomBytes, timingSafeEqual } from "crypto"; // Importation de fonctions pour le hachage des mots de passe
 import { promisify } from "util"; // Importation de promisify pour transformer scrypt en version asynchrone
 
-
 import { v4 as uuidv4 } from "uuid";
 import { sendResetEmail } from "../util/email";
 import { Op } from "sequelize";
@@ -30,7 +29,7 @@ exports.signup = async (req: any, res: any) => {
 
   // Vérification si le mot de passe et la confirmation sont identiques
   if (!isEqualPassword) {
-    return res.status(500).json({ message: "Please confirm your password" });
+    return res.status(500).json({ message: "confirm_password" });
   }
 
   let user;
@@ -39,9 +38,7 @@ exports.signup = async (req: any, res: any) => {
     // Vérifier si l'utilisateur existe déjà dans la base de données
     user = await Professional_User.findOne({ where: { email: email } });
     if (user) {
-      return res
-        .status(500)
-        .json({ message: "A user with the email already exist" });
+      return res.status(500).json({ message: "user_email_exist" });
     }
   } catch (error) {
     console.log(error);
@@ -59,14 +56,12 @@ exports.signup = async (req: any, res: any) => {
       password: hashedPassword, // Stockage du mot de passe haché
     });
 
-    return res.status(200).json({ message: "Successfully signed up" }); // Succès de l'inscription
+    return res.status(200).json({ message: "sign_up_success" }); // Succès de l'inscription
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-    return res
-      .status(error.statusCode)
-      .json({ message: "Failed to signup the new user" }); // Échec de l'inscription
+    return res.status(error.statusCode).json({ message: "failed_sign_up" }); // Échec de l'inscription
   }
 };
 
@@ -81,15 +76,15 @@ exports.login = async (req: any, res: any) => {
   let user;
 
   try {
-    // Vérifier si l'utilisateur existe dans la table `User` 
+    // Vérifier si l'utilisateur existe dans la table `User`
 
     // Si l'utilisateur n'est pas trouvé, vérifier dans ProfessionalUser
-  
+
     user = await Professional_User.findOne({ where: { email: email } });
-    
+
     // Si toujours non trouvé, renvoyer une erreur
     if (!user) {
-      return res.status(401).json({ message: "The user doesn't exist" });
+      return res.status(401).json({ message: "user_non_existant" });
     }
   } catch (error: any) {
     if (!error.statusCode) {
@@ -98,7 +93,7 @@ exports.login = async (req: any, res: any) => {
 
     return res
       .status(error.statusCode)
-      .json({ message: "Failed to authenticate the user" }); // Erreur de connexion
+      .json({ message: "failed_authenticate_user" }); // Erreur de connexion
   }
 
   // Vérification du mot de passe
@@ -106,9 +101,7 @@ exports.login = async (req: any, res: any) => {
   const isEqualPassword = await verify(password, hashedPassword);
 
   if (!isEqualPassword) {
-    return res
-      .status(401)
-      .json({ message: "Please enter the correct email and password" }); // Mot de passe incorrect
+    return res.status(401).json({ message: "input_correct_email_password" }); // Mot de passe incorrect
   }
 
   // Génération du token JWT
@@ -126,7 +119,7 @@ exports.login = async (req: any, res: any) => {
     token: token, // Envoi du token au frontend
     userId: user.key, // Envoi de l'ID utilisateur
     role: user.role, // role: user.role, // Envoi du rôle utilisateur
-    message: "Successfully logged in",
+    message: "success_login",
   });
 };
 
@@ -137,7 +130,7 @@ exports.logout = (req: any, res: any) => {
   // Les tokens JWT sont basés sur l'expiration, donc on ne stocke rien côté serveur.
   // La déconnexion se fait en supprimant le token côté client.
   return res.status(200).json({
-    message: "Successfully logged out",
+    message: "sucesss_logout",
   });
 };
 
@@ -160,7 +153,6 @@ export async function verify(password: string, hash: string) {
   return timingSafeEqual(keyBuffer, derivedKey as Buffer); // Comparaison sécurisée des h
 }
 
-
 exports.resetPasswordRequest = async (req: any, res: any) => {
   const email = req.body.email;
 
@@ -181,8 +173,7 @@ exports.resetPasswordRequest = async (req: any, res: any) => {
 
   // Toujours succès pour ne pas révéler l'existence ou non de l'utilisateur
   return res.status(200).json({
-    message:
-      "Si un compte est associé à cet e-mail, vous recevrez un lien de réinitialisation.",
+    message: "success_sending_link.",
   });
 };
 
@@ -197,5 +188,5 @@ exports.resetPassword = async (req: any, res: any) => {
   user.resetTokenExpiry = null;
   await user.save();
 
-  return res.status(200).json({ message: "Mot de passe réinitialisé." });
+  return res.status(200).json({ message: "success_password_reset" });
 };

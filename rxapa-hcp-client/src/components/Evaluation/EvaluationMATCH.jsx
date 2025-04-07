@@ -4,8 +4,10 @@ import { InfoCircleOutlined } from "@ant-design/icons";
 import Evaluation from "./Evaluation";
 import { exportMatchPdf } from "./ExportEvaluationPdf";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 function EvaluationMATCH() {
+  const { t } = useTranslation("Evaluations");
   const getInitialFormData = () => ({
     // Section Cardio-musculaire
     chairTestSupport: true,
@@ -84,17 +86,19 @@ function EvaluationMATCH() {
       chairTestSupport: formData.chairTestSupport ? "with" : "without",
       chairTestCount: parseInt(formData.chairTestCount, 10),
       balanceFeetTogether: parseFloat(formData.balanceFeetTogether, 10),
-      balanceSemiTandem: isBalanceTestEnabled('balanceSemiTandem') ? 
-                        parseFloat(formData.balanceSemiTandem || 0, 10) : 0,
-      balanceTandem: isBalanceTestEnabled('balanceTandem') ? 
-                    parseFloat(formData.balanceTandem || 0, 10) : 0,
+      balanceSemiTandem: isBalanceTestEnabled("balanceSemiTandem")
+        ? parseFloat(formData.balanceSemiTandem || 0, 10)
+        : 0,
+      balanceTandem: isBalanceTestEnabled("balanceTandem")
+        ? parseFloat(formData.balanceTandem || 0, 10)
+        : 0,
       walkingTime: formData.canWalk ? parseFloat(formData.walkingTime || 0) : 0,
       scores: {
         cardioMusculaire: scores.cardioMusculaire,
         equilibre: scores.equilibre,
         total: scores.total,
         program: scores.program,
-      }
+      },
     };
   };
 
@@ -108,15 +112,21 @@ function EvaluationMATCH() {
             paddingBottom: "10px",
           }}
         >
-          Évaluation MATCH
+          {t("title_results_eval_match")}
         </h3>
 
         <div style={{ marginBottom: "15px" }}>
-          <strong>Scores individuels :</strong>
-          <p>Cardio-musculaire : {scores.cardioMusculaire}/5</p>
-          <p>Équilibre : {scores.equilibre}/4</p>
+          <strong>{t("text_individual_scores")} :</strong>
           <p>
-            <strong>SCORE TOTAL : {scores.total}/9</strong>
+            {t("text_cardio_score")} : {scores.cardioMusculaire}/5
+          </p>
+          <p>
+            {t("text_balance_score")} : {scores.equilibre}/4
+          </p>
+          <p>
+            <strong>
+              {t("text_total_score")} : {scores.total}/9
+            </strong>
           </p>
         </div>
 
@@ -129,7 +139,7 @@ function EvaluationMATCH() {
           }}
         >
           <p>
-            <strong>Programme MATCH recommandé : </strong>
+            <strong>{t("text_recommended_match_program")} : </strong>
             <span style={{ fontWeight: "bold" }}> {scores.program}</span>
           </p>
         </div>
@@ -143,13 +153,13 @@ function EvaluationMATCH() {
             }}
           >
             <p>
-              Vitesse de marche :{" "}
-              {calculateSpeed(formData.walkingTime)} m/s
+              {t("text_walk_speed")} : {calculateSpeed(formData.walkingTime)}{" "}
+              {t("text_speed_unit")}
             </p>
             <p>
               <strong>
-                Objectif de marche / jour :{" "}
-                {calculateWalkingObjective(formData.walkingTime)} minutes
+                {t("text_daily_walking_goal")} :{" "}
+                {calculateWalkingObjective(formData.walkingTime)} {t("minutes")}
               </strong>
             </p>
           </div>
@@ -164,10 +174,7 @@ function EvaluationMATCH() {
             }}
           >
             <p>
-              <strong>
-                Capacité de marche à travailler (Objectif à réévaluer au cours
-                du séjour)
-              </strong>
+              <strong>{t("text_walking_capacity_to_improve")}</strong>
             </p>
           </div>
         )}
@@ -183,54 +190,59 @@ function EvaluationMATCH() {
 
   const calculateWalkingObjective = (walkingTime) => {
     const time = parseFloat(walkingTime);
-    
-    if (isNaN(time) || time < 0 || walkingTime === '') {
+
+    if (isNaN(time) || time < 0 || walkingTime === "") {
       return null;
     }
-    
+
     if (time === 0) {
       return 10;
     }
-    
+
     const speed = 4 / time;
-    
+
     if (speed < 0.4) return 10;
     if (speed >= 0.4 && speed < 0.6) return 15;
     if (speed >= 0.6 && speed < 0.8) return 20;
     if (speed >= 0.8) return 30;
-    
+
     return null;
   };
 
-  const renderFormFields = (formData, handleChange, errors, isBalanceTestEnabled, calculateWalkingObjective) => {
+  const renderFormFields = (
+    formData,
+    handleChange,
+    errors,
+    isBalanceTestEnabled,
+    calculateWalkingObjective
+  ) => {
     return (
       <>
         {/* Section A: CARDIO-MUSCULAIRE */}
-        <h2>CARDIO-MUSCULAIRE</h2>
-        <Form.Item label="Test de la chaise en 30 secondes">
+        <h2>{t("title_sectionA")}</h2>
+        <Form.Item label={t("label_chair_test")}>
           <div
             style={{ marginBottom: "15px", fontStyle: "italic", color: "#666" }}
           >
             <InfoCircleOutlined style={{ marginRight: "5px" }} />
-            Commencer avec support. Si le patient réussi a faire 5 levers ou plus, 
-            refaire le test sans support
+            {t("info_start_with_support")}
           </div>
           <Radio.Group
             name="chairTestSupport"
             value={formData.chairTestSupport}
             onChange={(e) =>
               handleChange({
-                target: { name: "chairTestSupport", value: e.target.value }
+                target: { name: "chairTestSupport", value: e.target.value },
               })
             }
           >
-            <Radio value={true}>Avec appui</Radio>
-            <Radio value={false}>Sans appui</Radio>
+            <Radio value={true}>{t("radio_with_support")}</Radio>
+            <Radio value={false}>{t("radio_without_support")}</Radio>
           </Radio.Group>
         </Form.Item>
 
         <Form.Item
-          label="Nombre de levers"
+          label={t("label_stand_count")}
           validateStatus={errors.chairTestCount ? "error" : ""}
           help={errors.chairTestCount}
         >
@@ -238,26 +250,25 @@ function EvaluationMATCH() {
             name="chairTestCount"
             value={formData.chairTestCount}
             onChange={handleChange}
-            placeholder="Entrez le nombre"
+            placeholder={t("placeholder_stand_count")}
           />
         </Form.Item>
 
         {/* Section B: ÉQUILIBRE */}
-        <h2>ÉQUILIBRE (Debout, sans aide)</h2>
+        <h2>{t("title_SectionB_match_evaluation")}</h2>
         <div
           style={{ marginBottom: "15px", fontStyle: "italic", color: "#666" }}
         >
           <InfoCircleOutlined style={{ marginRight: "5px" }} />
-          Si le patient ne peut pas accomplir 5 levers avec support, 
-          seulement faire le test d'équilibre pieds joints
-          <br/>
+          {t("info_match_evaluation_1")}
+          <br />
           <InfoCircleOutlined style={{ marginRight: "5px" }} />
-          Si le patient n'arrive pas a garder un éuilibre dans une partie, entrer 0
+          {t("info_match_evaluation_2")}
         </div>
         <Row gutter={16}>
           <Col span={8}>
             <Form.Item
-              label="Temps Pieds joints (secondes)"
+              label={t("label_feet_together")}
               validateStatus={errors.balanceFeetTogether ? "error" : ""}
               help={errors.balanceFeetTogether}
               tooltip="< 10 secondes = Score 0, ≥ 10 secondes = Score 1"
@@ -266,13 +277,13 @@ function EvaluationMATCH() {
                 name="balanceFeetTogether"
                 value={formData.balanceFeetTogether}
                 onChange={handleChange}
-                placeholder="Entrez le temps"
+                placeholder={t("placeholder_time")}
               />
             </Form.Item>
           </Col>
           <Col span={8}>
             <Form.Item
-              label="Temps Semi-tandem (secondes)"
+              label={t("label_feet_semi_tandem")}
               validateStatus={errors.balanceSemiTandem ? "error" : ""}
               help={errors.balanceSemiTandem}
               tooltip="< 10 secondes = Score 2, ≥ 10 secondes = Score 3"
@@ -281,14 +292,14 @@ function EvaluationMATCH() {
                 name="balanceSemiTandem"
                 value={formData.balanceSemiTandem}
                 onChange={handleChange}
-                placeholder="Entrez le temps"
-                disabled={!isBalanceTestEnabled('balanceSemiTandem')}
+                placeholder={t("placeholder_time")}
+                disabled={!isBalanceTestEnabled("balanceSemiTandem")}
               />
             </Form.Item>
           </Col>
           <Col span={8}>
             <Form.Item
-              label="Temps Tandem (secondes)"
+              label={t("label_feet_tandem")}
               validateStatus={errors.balanceTandem ? "error" : ""}
               help={errors.balanceTandem}
               tooltip="≥ 3 secondes = Score 4"
@@ -297,34 +308,32 @@ function EvaluationMATCH() {
                 name="balanceTandem"
                 value={formData.balanceTandem}
                 onChange={handleChange}
-                placeholder="Entrez le temps"
-                disabled={!isBalanceTestEnabled('balanceTandem')}
+                placeholder={t("placeholder_time")}
+                disabled={!isBalanceTestEnabled("balanceTandem")}
               />
             </Form.Item>
           </Col>
         </Row>
 
         {/* Section C: VITESSE DE MARCHE */}
-        <h2>OBJECTIF DE MARCHE</h2>
-        <Form.Item label="Test 4 mètres – vitesse de marche confortable">
+        <h2>{t("title_SectionC_path_match_evaluation")}</h2>
+        <Form.Item label={t("label_match_walk_objective")}>
           <Radio.Group
             value={formData.canWalk}
             onChange={(e) =>
               handleChange({
-                target: { name: "canWalk", value: e.target.value }
+                target: { name: "canWalk", value: e.target.value },
               })
             }
             style={{ marginBottom: "16px" }}
           >
-            <Radio value={true}>Le patient peut marcher</Radio>
-            <Radio value={false}>
-              Le patient ne peut pas marcher
-            </Radio>
+            <Radio value={true}>{t("radio_patient_can_walk")}</Radio>
+            <Radio value={false}>{t("radio_patient_cannot_walk")}</Radio>
           </Radio.Group>
 
           {formData.canWalk && (
             <Form.Item
-              label="Temps nécessaire pour marcher 4 mètres (secondes)"
+              label={t("label_time_needed_walk_4m")}
               validateStatus={errors.walkingTime ? "error" : ""}
               help={errors.walkingTime}
             >
@@ -337,17 +346,17 @@ function EvaluationMATCH() {
                     handleChange(e);
                   }
                 }}
-                placeholder="Entrez le temps en secondes"
+                placeholder={t("walktime_placeholder")}
               />
               {formData.walkingTime && !errors.walkingTime && (
                 <div style={{ marginTop: 8, color: "#666" }}>
-                  Vitesse de marche :{" "}
-                  {calculateSpeed(formData.walkingTime)} m/s
+                  {t("text_walk_speed")} :{" "}
+                  {calculateSpeed(formData.walkingTime)} {t("text_speed_unit")}
                   <div style={{ marginTop: 4 }}>
                     <strong>
-                      Objectif de marche :{" "}
+                      {t("title_walk_objective")} :{" "}
                       {calculateWalkingObjective(formData.walkingTime)}{" "}
-                      minutes par jour
+                      {t("text_minutes_per_day")}
                     </strong>
                   </div>
                 </div>

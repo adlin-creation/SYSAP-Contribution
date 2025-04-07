@@ -12,7 +12,7 @@ export default function DoctorPatients() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { token } = useToken();
-  const { t } = useTranslation();
+  const { t } = useTranslation("Professionals");
 
   const {
     data: patients,
@@ -29,30 +29,32 @@ export default function DoctorPatients() {
   if (error) {
     return (
       <div style={{ textAlign: "center", marginTop: "20px" }}>
-        <h3>Error loading patients</h3>
-        <Button onClick={() => navigate("/doctors")}>Return to Doctors</Button>
+        <h3>{t("Physicians.error_loading_patients")}</h3>
+        <Button onClick={() => navigate("/doctors")}>
+          {t("Physicians.button_back_to_physicians")}
+        </Button>
       </div>
     );
   }
 
   const columns = [
     {
-      title: t("Patients:name"),
+      title: t("Patients:title_name"),
       key: "name",
       render: (_, record) => `${record.firstname} ${record.lastname}`,
     },
     {
-      title: t("Patients:email"),
+      title: t("Patients:title_email"),
       dataIndex: "email",
       key: "email",
     },
     {
-      title: t("Patients:phone"),
+      title: t("Patients:title_phone"),
       dataIndex: "phoneNumber",
       key: "phoneNumber",
     },
     {
-      title: t("Patients:birthday"),
+      title: t("Patients:title_birthday"),
       dataIndex: "birthDate",
       key: "birthDate",
       render: (date) => new Date(date).toLocaleDateString(),
@@ -73,11 +75,11 @@ export default function DoctorPatients() {
             type="primary"
             icon={<ArrowLeftOutlined />}
           >
-            {t("Professionals:Physicians:back_to_physicians_button")}
+            {t("Physicians.button_back_to_physicians")}
           </Button>
         </Col>
         <Col span={16} style={{ textAlign: "center" }}>
-          <h2> {t("Professionals:Physicians:physician_patients_title")}</h2>
+          <h2> {t("Physicians.title_physician_patients")}</h2>
         </Col>
         <Col span={4} />
       </Row>

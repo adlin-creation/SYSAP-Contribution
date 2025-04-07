@@ -11,7 +11,7 @@ const { Meta } = Card;
 const { Title, Text } = Typography;
 
 export default function Bloc({ bloc, onClick, onSelect, deleteBloc }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("Blocs");
   const [isModalVisible, setIsModalVisible] = useState(false); // Gérer l'affichage du modal
 
   const handleViewExercises = () => {
@@ -48,7 +48,7 @@ export default function Bloc({ bloc, onClick, onSelect, deleteBloc }) {
             }}
             style={{ marginRight: 8 }}
           >
-            {t("Blocs:edit_button")}
+            {t("button_edit")}
           </Button>
           <Button
             type="primary"
@@ -59,7 +59,7 @@ export default function Bloc({ bloc, onClick, onSelect, deleteBloc }) {
             }}
             icon={<DeleteOutlined />}
           >
-            {t("Blocs:delete_button")}
+            {t("button_delete")}
           </Button>
           {/* Ajouter le bouton pour afficher les exercices */}
           <Button
@@ -67,21 +67,18 @@ export default function Bloc({ bloc, onClick, onSelect, deleteBloc }) {
             onClick={handleViewExercises}
             style={{ marginTop: 8 }}
           >
-            {t("Blocs:view_exercises_button")}
+            {t("button_view_exercises")}
           </Button>
         </div>
       </Card>
 
-       {/* Modal pour afficher les exercices */}
-       <BlocDetailsModal
-       visible={isModalVisible}
-       onClose={handleCloseModal}
-       bloc={bloc} // Passe les informations du bloc sélectionné
-     />
-     </>
-
-     
-    
+      {/* Modal pour afficher les exercices */}
+      <BlocDetailsModal
+        visible={isModalVisible}
+        onClose={handleCloseModal}
+        bloc={bloc} // Passe les informations du bloc sélectionné
+      />
+    </>
   );
 }
 Bloc.propTypes = {

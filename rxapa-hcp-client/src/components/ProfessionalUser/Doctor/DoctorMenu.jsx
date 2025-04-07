@@ -27,7 +27,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 export default function DoctorMenu() {
-  const { t } = useTranslation();
+  const { t } = useTranslation("Professionals");
   const [isCreateDoctor, setIsCreateDoctor] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
@@ -62,34 +62,34 @@ export default function DoctorMenu() {
 
   const columns = [
     {
-      title: t("Professionals:Physicians:name"),
+      title: t("Physicians.title_name"),
       key: "name",
       render: (_, record) => `${record.firstname} ${record.lastname}`,
     },
     {
-      title: t("Professionals:Physicians:email"),
+      title: t("Physicians.title_email"),
       dataIndex: "email",
       key: "email",
     },
     {
-      title: t("Professionals:Physicians:phone"),
+      title: t("Physicians.title_phone"),
       dataIndex: "phoneNumber",
       key: "phoneNumber",
     },
     {
-      title: t("Professionals:Physicians:status"),
+      title: t("Physicians.title_status"),
       key: "active",
       dataIndex: "active",
       render: (active) => (
         <Tag color={active ? "green" : "red"}>
           {active
-            ? t("Professionals:Physicians:active_status")
-            : t("Professionals:Physicians:inactive_status")}
+            ? t("Physicians.active_status")
+            : t("Physicians.inactive_status")}
         </Tag>
       ),
     },
     {
-      title: t("Professionals:Physicians:actions"),
+      title: t("Physicians.title_actions"),
       key: "actions",
       render: (_, record) => (
         <Space size="middle">
@@ -98,10 +98,10 @@ export default function DoctorMenu() {
             onClick={() => navigate(`/doctor-patients/${record.id}`)}
           >
             <UserOutlined />
-            {t("Professionals:Physicians:patients_button")}
+            {t("Physicians.button_patients")}
           </Button>
           <Button type="link" onClick={() => handleEdit(record)}>
-            <EditOutlined /> {t("Professionals:Physicians:edit_button")}
+            <EditOutlined /> {t("Physicians.button_edit")}
           </Button>
         </Space>
       ),
@@ -115,11 +115,15 @@ export default function DoctorMenu() {
 
   const handleDelete = (doctor) => {
     AntModal.confirm({
-      title: "Are you sure you want to delete this physician?",
-      content: `This will permanently delete ${doctor.firstname} ${doctor.lastname}`,
-      okText: "Yes",
+      title: t("Physicians.title_delete_physician_confirmation"),
+      content: t("Physicians.content_deletion_message", {
+        firstname: doctor.firstname,
+        lastname: doctor.lastname,
+      }),
+
+      okText: t("Physicians.button_yes"),
       okType: "danger",
-      cancelText: "No",
+      cancelText: t("Physicians.button_no"),
       onOk() {
         axios
           .delete(
@@ -130,11 +134,12 @@ export default function DoctorMenu() {
           )
           .then(() => {
             refetchDoctors();
-            openModal("physician successfully deleted", false);
+            openModal(t("Physicians.success_physician_deletion"), false);
           })
           .catch((err) =>
             openModal(
-              err.response?.data?.message || "Error deleting physician",
+              t(`Backend:${err.response?.data?.message}`) ||
+                t("Physicians.error_physician_deletion"),
               true
             )
           );
@@ -145,7 +150,7 @@ export default function DoctorMenu() {
   const openModal = (message, isError) => {
     AntModal[isError ? "error" : "success"]({
       content: message,
-      okText: "Close",
+      okText: t("Physicians.button_close"),
       centered: true,
     });
   };
@@ -172,8 +177,10 @@ export default function DoctorMenu() {
     if (error) {
       return (
         <div style={{ textAlign: "center", marginTop: "20px" }}>
-          <h3>Error loading physicians</h3>
-          <Button onClick={() => refetchDoctors()}>Retry</Button>
+          <h3>{t("Physicians.error_loading_physicians")}</h3>
+          <Button onClick={() => refetchDoctors()}>
+            {t("Physicians.button_retry")}
+          </Button>
         </div>
       );
     }
@@ -194,11 +201,11 @@ export default function DoctorMenu() {
             icon={<PlusOutlined />}
             onClick={() => setIsCreateDoctor(true)}
           >
-            {t("Professionals:Physicians:register_physician")}
+            {t("Physicians.button_register_physician")}
           </Button>
 
           <Input
-            placeholder={t("Professionals:Physicians:search_placeholder")}
+            placeholder={t("Physicians.placeholder_search")}
             prefix={<SearchOutlined />}
             style={{ width: 300, marginTop: 45 }}
             value={searchTerm}
@@ -208,7 +215,7 @@ export default function DoctorMenu() {
 
           {doctorList?.length > 0 && (
             <span>
-              {t("Professionals:Physicians:total_physicians")}:{" "}
+              {t("Physicians.span_total_physicians")}:{" "}
               {filteredDoctors?.length || 0} / {doctorList.length}
             </span>
           )}
@@ -225,9 +232,9 @@ export default function DoctorMenu() {
           pagination={{
             pageSize: 10,
             showTotal: (total, range) =>
-              `${range[0]}-${range[1]} ${t(
-                "Professionals:Physicians:of"
-              )} ${total} ${t("Professionals:Physicians:physicians")}`,
+              `${range[0]}-${range[1]} ${t("Physicians.of")} ${total} ${t(
+                "Physicians.physicians"
+              )}`,
           }}
         />
       </>
@@ -253,14 +260,14 @@ export default function DoctorMenu() {
               type="primary"
               icon={<ArrowLeftOutlined />}
             >
-              {t("Professionals:Physicians:back_button")}
+              {t("Physicians.button_back")}
             </Button>
           </Col>
           <Col flex="auto" style={{ textAlign: "center" }}>
             <h2 style={{ marginBottom: 0 }}>
               {isCreateDoctor
-                ? t("Professionals:Physicians:register_physician_title")
-                : t("Professionals:Physicians:edit_physician")}
+                ? t("Physicians.title_register_physician")
+                : t("Physicians.title_edit_physician")}
             </h2>
           </Col>
           <Col span={4} />
