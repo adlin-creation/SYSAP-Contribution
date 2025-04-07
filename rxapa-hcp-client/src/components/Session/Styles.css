@@ -54,5 +54,36 @@
 }
 
 .input-element {
-  margin: 1.5rem;
+  margin: 0.8rem 0;
+}
+
+.input-element h5 {
+  margin-bottom: 0.3rem;
+}
+
+.input-element .ant-input,
+.input-element .ant-select {
+  margin-top: 0.2rem;
+}
+
+/* Modification history styles */
+.modification-history h4 {
+  margin-bottom: 1rem;
+}
+
+.modification-history > div {
+  margin-bottom: 1rem;
+  font-size: 14px;
+}
+
+.modification-history > div > div {
+  margin: 0.2rem 0;
+}
+
+.history-section {
+  position: absolute;
+  right: 20px;
+  top: 80px;
+  width: 300px;
+  padding-left: 20px;
 }

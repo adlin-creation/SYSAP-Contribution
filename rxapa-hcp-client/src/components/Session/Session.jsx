@@ -21,20 +21,25 @@ export default function Session({ onClick, onSelect, session, deleteSession }) {
     setIsOpenModal(false);
   }
 
+  // Extract day and clean description
+  const match = session.description?.match(/^\[(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)\] (.*)$/);
+  const day = match ? match[1] : null;
+  const cleanDescription = match ? match[2] : session.description;
+
   return (
     <div className="day-session">
       <List style={{ textAlign: "center" }}>
-        <h3>
-          {t("Sessions:session_name")}: {session.name}
-        </h3>
-        <br></br>
-        <h5>
-          {t("Sessions:session_description")}: {session.description}
-        </h5>
-        <br></br>
-        <h5>
-          {t("Sessions:session_constraints")}: {session.constraints}
-        </h5>
+        <h5>Nom</h5>
+        <div>{session.name}</div>
+        
+        <h5>Description</h5>
+        <div>{cleanDescription}</div>
+        
+        <h5>Jour de la semaine</h5>
+        <div>{day ? day.charAt(0).toUpperCase() + day.slice(1) : "Non spécifié"}</div>
+        
+        <h5>Contraintes</h5>
+        <div>{session.constraints}</div>
 
         <div>
           <AppButton
