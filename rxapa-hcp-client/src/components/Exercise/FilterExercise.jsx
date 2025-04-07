@@ -37,7 +37,7 @@ export default function FilterExercise({ updateSelectedValues }) {
     <div className="filters-container">
       <div className="filter-item">
         <Input
-          placeholder={t("placeholder_search")}
+          placeholder={t("search_placeholder")}
           value={searchTerm}
           onChange={handleSearchChange}
           allowClear
@@ -55,7 +55,7 @@ export default function FilterExercise({ updateSelectedValues }) {
           allowClear
           style={{ minWidth: 180 }}
         >
-          <Option value="ALL">{t("option_all")}</Option>
+          <Option value="ALL">{t("all")}</Option>
           <Option value="Aérobique">{t("option_aerobic")}</Option>
           <Option value="Endurance">{t("option_endurance")}</Option>
           <Option value="Force">{t("option_strength")}</Option>
@@ -73,7 +73,7 @@ export default function FilterExercise({ updateSelectedValues }) {
           allowClear
           style={{ minWidth: 180 }}
         >
-          <Option value="ALL">{t("option_all")}</Option>
+          <Option value="ALL">{t("all")}</Option>
           <Option value="Facile">{t("option_easy")}</Option>
           <Option value="Intermédiaire">{t("option_intermediate")}</Option>
           <Option value="Avancé">{t("option_advanced")}</Option>
