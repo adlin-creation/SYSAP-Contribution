@@ -134,6 +134,7 @@ export default function ExerciseMenu() {
       return "inactive";
     return status;
   };
+
   const filteredExercises = exerciseList?.filter((exercise) => {
     if (
       attributes.fitnessLevel !== "ALL" &&
@@ -155,7 +156,6 @@ export default function ExerciseMenu() {
     ) {
       return false;
     }
-    console.log(exerciseList.map((ex) => ex.status));
 
     if (attributes.searchTerm) {
       const searchTermLower = attributes.searchTerm.toLowerCase();
@@ -176,11 +176,11 @@ export default function ExerciseMenu() {
     <div>
       {!buttonState.isCreateExercise && !buttonState.isLearnMore && (
         <div>
-          <Row className="filter-button-row" gutter={[16, 16]} align="bottom">
-            <Col flex="auto">
+          <Row className="filter-button-row" gutter={16} align="middle">
+            <Col flex={1} style={{ display: 'flex', overflow: 'hidden' }}>
               <FilterExercise updateSelectedValues={updateSelectedValues} />
             </Col>
-            <Col>
+            <Col style={{ flexShrink: 0 }}>
               <Button
                 onClick={() => handleButtonState("create-exercise")}
                 type="primary"
