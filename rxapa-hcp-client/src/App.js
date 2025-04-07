@@ -27,8 +27,8 @@ import EvaluationPACE from "./components/Evaluation/EvaluationPACE";
 import EvaluationMATCH from "./components/Evaluation/EvaluationMATCH";
 import EvaluationPATH from "./components/Evaluation/EvaluationPATH";
 import EvaluationSearch from "./components/Evaluation/EvaluationSearch";
+import EvaluationDisplay from "./components/Evaluation/EvaluationDisplay";
 import CalendarCreationUI from "./components/Calendrier/CalendarCreationUI";
-
 import useToken from "./components/Authentication/useToken"; // Import du hook personnalisé
 import Constants from "./components/Utils/Constants";
 import LanguageSwitcher from "./components/LanguageSwitcher/LanguageSwitcher";
@@ -352,6 +352,14 @@ function App() {
                   <EvaluationPATH />
                 </Suspense>
               }
+            ></Route>
+            <Route
+            path="evaluations/patient/:patientId"
+            element={
+              <Suspense fallback={<div>Loading evaluations...</div>}>
+                <EvaluationDisplay />
+              </Suspense>
+            }
             ></Route>
             <Route
               path="*"

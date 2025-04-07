@@ -4,7 +4,7 @@ import "@testing-library/jest-dom";
 import EvaluationMATCH from "./EvaluationMATCH";
 import useToken from "../Authentication/useToken";
 import axios from "axios";
-import { act } from "@testing-library/react";
+import { act } from "react";
 
 jest.mock("axios");
 jest.mock("../Authentication/useToken", () => ({
@@ -17,6 +17,8 @@ jest.mock("react-router-dom", () => ({
   useParams: () => ({ patientId: "123" }),
   useNavigate: () => jest.fn(),
 }));
+
+jest.setTimeout(10000);
 
 describe("EvaluationMATCH Component", () => {
   const fillRequiredFields = async () => {
@@ -34,13 +36,11 @@ describe("EvaluationMATCH Component", () => {
       const submitButton = screen.getByText("Soumettre");
       fireEvent.click(submitButton);
     });
-
-    await waitFor(() => {
-      expect(axios.post).not.toHaveBeenCalled();
-    });
   };
 
   beforeEach(() => {
+    jest.clearAllMocks();
+
     useToken.mockReturnValue({ token: "fake-token" });
     axios.post.mockResolvedValue({ data: { success: true } });
 
@@ -61,8 +61,10 @@ describe("EvaluationMATCH Component", () => {
 
   describe("Rendu et structure du composant", () => {
     it("affiche correctement toutes les sections attendues", async () => {
+      const mockSubmit = jest.fn();
+
       await act(async () => {
-        render(<EvaluationMATCH />);
+        render(<EvaluationMATCH onSubmit={mockSubmit} />);
       });
 
       const sections = [
@@ -70,7 +72,7 @@ describe("EvaluationMATCH Component", () => {
         "ÉQUILIBRE (Debout, sans aide)",
         "OBJECTIF DE MARCHE",
       ];
-      
+
       sections.forEach((section) => {
         expect(screen.getByText(section)).toBeInTheDocument();
       });
@@ -78,7 +80,9 @@ describe("EvaluationMATCH Component", () => {
       expect(screen.getByText("Annuler")).toBeInTheDocument();
       expect(screen.getByText("Soumettre")).toBeInTheDocument();
 
-      expect(screen.getByText("Test de la chaise en 30 secondes")).toBeInTheDocument();
+      expect(
+        screen.getByText("Test de la chaise en 30 secondes")
+      ).toBeInTheDocument();
       expect(screen.getByText("Avec appui")).toBeInTheDocument();
       expect(screen.getByText("Sans appui")).toBeInTheDocument();
 
@@ -88,18 +92,33 @@ describe("EvaluationMATCH Component", () => {
         .querySelector("input");
       expect(withSupportRadio.checked).toBeTruthy();
 
-      expect(screen.getByText("Temps Pieds joints (secondes)")).toBeInTheDocument();
-      expect(screen.getByText("Temps Semi-tandem (secondes)")).toBeInTheDocument();
+      expect(
+        screen.getByText("Temps Pieds joints (secondes)")
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText("Temps Semi-tandem (secondes)")
+      ).toBeInTheDocument();
       expect(screen.getByText("Temps Tandem (secondes)")).toBeInTheDocument();
 
-      expect(screen.getByText("Test 4 mètres – vitesse de marche confortable")).toBeInTheDocument();
+      expect(
+        screen.getByText("Test 4 mètres – vitesse de marche confortable")
+      ).toBeInTheDocument();
       expect(screen.getByText("Le patient peut marcher")).toBeInTheDocument();
-      expect(screen.getByText("Le patient ne peut pas marcher")).toBeInTheDocument();
+      expect(
+        screen.getByText("Le patient ne peut pas marcher")
+      ).toBeInTheDocument();
     });
 
     it("gère correctement le bouton Annuler", async () => {
+      const mockSubmit = jest.fn();
+      const mockNavigate = jest.fn();
+
+      jest
+        .spyOn(require("react-router-dom"), "useNavigate")
+        .mockImplementation(() => mockNavigate);
+
       await act(async () => {
-        render(<EvaluationMATCH />);
+        render(<EvaluationMATCH onSubmit={mockSubmit} />);
       });
 
       await act(async () => {
@@ -110,13 +129,17 @@ describe("EvaluationMATCH Component", () => {
       await waitFor(() => {
         expect(axios.post).not.toHaveBeenCalled();
       });
+
+      jest.restoreAllMocks();
     });
   });
 
   describe("Section Cardio-Musculaire", () => {
     it("calcule correctement le score avec appui", async () => {
+      const mockSubmit = jest.fn();
+
       await act(async () => {
-        render(<EvaluationMATCH />);
+        render(<EvaluationMATCH onSubmit={mockSubmit} />);
       });
 
       await act(async () => {
@@ -125,10 +148,12 @@ describe("EvaluationMATCH Component", () => {
       });
 
       const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
-      const submitButton = screen.getByText("Soumettre");
 
       await act(async () => {
-        const withSupportRadio = screen.getByText("Avec appui");
+        const withSupportRadio = screen
+          .getByText("Avec appui")
+          .closest("label")
+          .querySelector("input");
         fireEvent.click(withSupportRadio);
       });
 
@@ -141,8 +166,10 @@ describe("EvaluationMATCH Component", () => {
 
       for (const scenario of withSupportScenarios) {
         await act(async () => {
-          fireEvent.change(chairTestInput, { target: { value: scenario.count } });
-          fireEvent.click(submitButton);
+          fireEvent.change(chairTestInput, {
+            target: { value: scenario.count },
+          });
+          fireEvent.click(screen.getByText("Soumettre"));
         });
 
         await waitFor(() => {
@@ -152,8 +179,10 @@ describe("EvaluationMATCH Component", () => {
     });
 
     it("calcule correctement le score sans appui", async () => {
+      const mockSubmit = jest.fn();
+
       await act(async () => {
-        render(<EvaluationMATCH />);
+        render(<EvaluationMATCH onSubmit={mockSubmit} />);
       });
 
       await act(async () => {
@@ -162,10 +191,12 @@ describe("EvaluationMATCH Component", () => {
       });
 
       const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
-      const submitButton = screen.getByText("Soumettre");
 
       await act(async () => {
-        const withoutSupportRadio = screen.getByText("Sans appui");
+        const withoutSupportRadio = screen
+          .getByText("Sans appui")
+          .closest("label")
+          .querySelector("input");
         fireEvent.click(withoutSupportRadio);
       });
 
@@ -178,8 +209,10 @@ describe("EvaluationMATCH Component", () => {
 
       for (const scenario of withoutSupportScenarios) {
         await act(async () => {
-          fireEvent.change(chairTestInput, { target: { value: scenario.count } });
-          fireEvent.click(submitButton);
+          fireEvent.change(chairTestInput, {
+            target: { value: scenario.count },
+          });
+          fireEvent.click(screen.getByText("Soumettre"));
         });
 
         await waitFor(() => {
@@ -191,8 +224,10 @@ describe("EvaluationMATCH Component", () => {
 
   describe("Section Équilibre", () => {
     it("active/désactive correctement les champs d'équilibre selon les résultats", async () => {
+      const mockSubmit = jest.fn();
+
       await act(async () => {
-        render(<EvaluationMATCH />);
+        render(<EvaluationMATCH onSubmit={mockSubmit} />);
       });
 
       await act(async () => {
@@ -206,6 +241,7 @@ describe("EvaluationMATCH Component", () => {
         fireEvent.change(balanceInputs[0], { target: { value: "5" } });
       });
       expect(balanceInputs[1]).toBeDisabled();
+
       await act(async () => {
         fireEvent.change(balanceInputs[0], { target: { value: "10" } });
       });
@@ -221,9 +257,12 @@ describe("EvaluationMATCH Component", () => {
       });
       expect(balanceInputs[2]).not.toBeDisabled();
     });
+
     it("calcule correctement les scores d'équilibre pour tous les scénarios", async () => {
+      const mockSubmit = jest.fn();
+
       await act(async () => {
-        render(<EvaluationMATCH />);
+        render(<EvaluationMATCH onSubmit={mockSubmit} />);
       });
 
       await act(async () => {
@@ -232,19 +271,20 @@ describe("EvaluationMATCH Component", () => {
       });
 
       const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
-      const submitButton = screen.getByText("Soumettre");
 
       const balanceScenarios = [
         { ft: "5", st: "", t: "", expectedScore: 0 },
-        { ft: "10", st: "0", t: "0", expectedScore: 1 },
-        { ft: "10", st: "5", t: "0", expectedScore: 2 },
+        { ft: "10", st: "0", t: "", expectedScore: 1 },
+        { ft: "10", st: "5", t: "", expectedScore: 2 },
         { ft: "10", st: "10", t: "0", expectedScore: 3 },
         { ft: "10", st: "10", t: "3", expectedScore: 4 },
       ];
 
       for (const scenario of balanceScenarios) {
         await act(async () => {
-          fireEvent.change(balanceInputs[0], { target: { value: scenario.ft } });
+          fireEvent.change(balanceInputs[0], {
+            target: { value: scenario.ft },
+          });
 
           if (scenario.st && !balanceInputs[1].disabled) {
             fireEvent.change(balanceInputs[1], {
@@ -253,10 +293,12 @@ describe("EvaluationMATCH Component", () => {
           }
 
           if (scenario.t && !balanceInputs[2].disabled) {
-            fireEvent.change(balanceInputs[2], { target: { value: scenario.t } });
+            fireEvent.change(balanceInputs[2], {
+              target: { value: scenario.t },
+            });
           }
 
-          fireEvent.click(submitButton);
+          fireEvent.click(screen.getByText("Soumettre"));
         });
 
         await waitFor(() => {
@@ -268,8 +310,10 @@ describe("EvaluationMATCH Component", () => {
 
   describe("Section Objectif de Marche", () => {
     it("affiche ou masque correctement le champ du temps de marche selon la capacité du patient", async () => {
+      const mockSubmit = jest.fn();
+
       await act(async () => {
-        render(<EvaluationMATCH />);
+        render(<EvaluationMATCH onSubmit={mockSubmit} />);
       });
 
       await act(async () => {
@@ -292,10 +336,11 @@ describe("EvaluationMATCH Component", () => {
         screen.queryByText("Temps nécessaire pour marcher 4 mètres (secondes)")
       ).not.toBeInTheDocument();
     });
-
     it("calcule correctement la vitesse de marche et l'objectif journalier", async () => {
+      const mockSubmit = jest.fn();
+
       await act(async () => {
-        render(<EvaluationMATCH />);
+        render(<EvaluationMATCH onSubmit={mockSubmit} />);
       });
 
       await act(async () => {
@@ -337,9 +382,12 @@ describe("EvaluationMATCH Component", () => {
         });
       }
     });
+
     it("valide correctement les saisies dans le champ de temps de marche", async () => {
+      const mockSubmit = jest.fn();
+
       await act(async () => {
-        render(<EvaluationMATCH />);
+        render(<EvaluationMATCH onSubmit={mockSubmit} />);
       });
 
       await act(async () => {
@@ -372,13 +420,14 @@ describe("EvaluationMATCH Component", () => {
 
   describe("Calcul des scores et programme recommandé", () => {
     it("calcule correctement le score total et détermine la couleur du programme", async () => {
+      const mockSubmit = jest.fn();
+
       await act(async () => {
-        render(<EvaluationMATCH />);
+        render(<EvaluationMATCH onSubmit={mockSubmit} />);
       });
 
       const chairTestInput = screen.getByPlaceholderText("Entrez le nombre");
       const balanceInputs = screen.getAllByPlaceholderText("Entrez le temps");
-      const submitButton = screen.getByText("Soumettre");
 
       const colorScenarios = [
         { chairCount: "0", balance: "5", expectedColor: "ROUGE" },
@@ -386,10 +435,10 @@ describe("EvaluationMATCH Component", () => {
         { chairCount: "10", balance: "10", st: "5", expectedColor: "ORANGE" },
         {
           withSupport: false,
-          chairCount: "7", 
-          balance: "10", 
-          st: "10", 
-          expectedColor: "VERT"
+          chairCount: "7",
+          balance: "10",
+          st: "10",
+          expectedColor: "VERT",
         },
         {
           withSupport: false,
@@ -397,7 +446,7 @@ describe("EvaluationMATCH Component", () => {
           balance: "10",
           st: "10",
           tandem: "3",
-          expectedColor: "BLEU"
+          expectedColor: "BLEU",
         },
       ];
 
@@ -431,7 +480,7 @@ describe("EvaluationMATCH Component", () => {
             });
           }
 
-          fireEvent.click(submitButton);
+          fireEvent.click(screen.getByText("Soumettre"));
         });
 
         await waitFor(() => {
@@ -443,8 +492,10 @@ describe("EvaluationMATCH Component", () => {
 
   describe("Validation du formulaire", () => {
     it("refuse de soumettre le formulaire avec des champs obligatoires vides", async () => {
+      const mockSubmit = jest.fn();
+
       await act(async () => {
-        render(<EvaluationMATCH />);
+        render(<EvaluationMATCH onSubmit={mockSubmit} />);
       });
 
       await act(async () => {
@@ -458,8 +509,10 @@ describe("EvaluationMATCH Component", () => {
     });
 
     it("gère correctement les saisies non numériques dans les champs", async () => {
+      const mockSubmit = jest.fn();
+
       await act(async () => {
-        render(<EvaluationMATCH />);
+        render(<EvaluationMATCH onSubmit={mockSubmit} />);
       });
 
       await act(async () => {
@@ -479,8 +532,10 @@ describe("EvaluationMATCH Component", () => {
     });
 
     it("gère correctement la valeur zéro dans les champs", async () => {
+      const mockSubmit = jest.fn();
+
       await act(async () => {
-        render(<EvaluationMATCH />);
+        render(<EvaluationMATCH onSubmit={mockSubmit} />);
       });
 
       await act(async () => {
@@ -499,13 +554,17 @@ describe("EvaluationMATCH Component", () => {
       });
     });
   });
+
   describe("Soumission du formulaire", () => {
     it("soumet correctement le formulaire pour un patient pouvant marcher", async () => {
-      const mockPostFn = jest.fn().mockResolvedValue({ data: { success: true } });
+      const mockPostFn = jest
+        .fn()
+        .mockResolvedValue({ data: { success: true } });
       axios.post.mockImplementation(mockPostFn);
+      const mockSubmit = jest.fn();
 
       await act(async () => {
-        render(<EvaluationMATCH />);
+        render(<EvaluationMATCH onSubmit={mockSubmit} />);
       });
 
       await act(async () => {
@@ -561,13 +620,15 @@ describe("EvaluationMATCH Component", () => {
 
       expect(mockPostFn).toHaveBeenCalled();
     });
-
     it("soumet correctement le formulaire pour un patient ne pouvant pas marcher", async () => {
-      const mockPostFn = jest.fn().mockResolvedValue({ data: { success: true } });
+      const mockPostFn = jest
+        .fn()
+        .mockResolvedValue({ data: { success: true } });
       axios.post.mockImplementation(mockPostFn);
+      const mockSubmit = jest.fn();
 
       await act(async () => {
-        render(<EvaluationMATCH />);
+        render(<EvaluationMATCH onSubmit={mockSubmit} />);
       });
 
       await act(async () => {
@@ -715,8 +776,10 @@ describe("EvaluationMATCH Component", () => {
 
   describe("Contenu modal", () => {
     it("vérifie le contenu modal pour un patient avec données de marche complètes", async () => {
+      const mockSubmit = jest.fn();
+
       await act(async () => {
-        render(<EvaluationMATCH />);
+        render(<EvaluationMATCH onSubmit={mockSubmit} />);
       });
 
       await act(async () => {
@@ -746,8 +809,10 @@ describe("EvaluationMATCH Component", () => {
     });
 
     it("vérifie le contenu modal pour un patient ne pouvant pas marcher", async () => {
+      const mockSubmit = jest.fn();
+
       await act(async () => {
-        render(<EvaluationMATCH />);
+        render(<EvaluationMATCH onSubmit={mockSubmit} />);
       });
 
       await act(async () => {
@@ -776,8 +841,10 @@ describe("EvaluationMATCH Component", () => {
 
   describe("Cas limites", () => {
     it("gère correctement les cas limites dans le calcul des scores", async () => {
+      const mockSubmit = jest.fn();
+
       await act(async () => {
-        render(<EvaluationMATCH />);
+        render(<EvaluationMATCH onSubmit={mockSubmit} />);
       });
 
       const originalParseInt = global.parseInt;

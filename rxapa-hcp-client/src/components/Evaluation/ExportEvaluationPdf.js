@@ -219,7 +219,7 @@ export const exportMatchPdf = async(evaluationData, token) => {
     if (evaluationData.walkingTime === 0) {
       firstPage.drawText('+', {x: 31, y: 161, size: 20, rotate: degrees(45)});
     } else {
-      const walkingSpeed = 4 / evaluationData.walkingTime;
+      const walkingSpeed = Math.round((4 / evaluationData.walkingTime) * 100) / 100;
       firstPage.drawText('+', {x: 31.5, y: 146, size: 20, rotate: degrees(45)});
       firstPage.drawText(`${evaluationData.walkingTime}`, {x: 228, y:150, size: 12})
       firstPage.drawText(`${walkingSpeed.toFixed(2)}`, {x: 453, y:150, size: 12})
@@ -422,11 +422,9 @@ export const exportPathPdf = async(evaluationData, token) => {
         firstPage.drawCircle({
           x: 532,
           y: 425,
+          size: 10,
           size : 8,
-          borderWidth: 2,
-          borderColor: rgb(1, 0, 0)
         });
-      break;
       case 3:
         firstPage.drawCircle({
           x: 532,
@@ -563,10 +561,10 @@ export const exportPathPdf = async(evaluationData, token) => {
     if (evaluationData.walkingTime === 0) {
       firstPage.drawText('+', {x: 31, y: 170, size: 20, rotate: degrees(45)});
     } else {
-      const walkingSpeed = 4 / evaluationData.walkingTime;
+      const walkingSpeed = Math.round((4 / evaluationData.walkingTime) * 100) / 100;
       firstPage.drawText('+', {x: 31.5, y: 153, size: 20, rotate: degrees(45)});
       firstPage.drawText(`${evaluationData.walkingTime}`, {x: 228, y:157, size: 12})
-      firstPage.drawText(`${walkingSpeed.toFixed(2)}`, {x: 440, y:157, size: 12})
+      firstPage.drawText(`${walkingSpeed}`, {x: 440, y:157, size: 12})
 
       if (walkingSpeed < 0.4) {
         firstPage.drawLine({
@@ -1019,7 +1017,7 @@ export const exportPacePdf = async(evaluationData, token) => {
     if (evaluationData.walkingTime === 0) {
       firstPage.drawText('Le patient ne peut pas marcher', {x: 310, y: 137, size: 12});
     } else {
-      const walkingSpeed = 4 / evaluationData.walkingTime;
+      const walkingSpeed = Math.round((4 / evaluationData.walkingTime) * 100) / 100;
       firstPage.drawText(`${evaluationData.walkingTime}`, {x: 285, y: 124, size: 12})
       firstPage.drawText(`${walkingSpeed.toFixed(2)}`, {x: 500, y: 124, size: 12})
 
