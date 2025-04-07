@@ -44,7 +44,8 @@ describe("updateExercise", () => {
       description: "Nouvelle description",
       category: "endurance",
       fitnessLevel: "intermediate",
-      videoUrl: "https://www.youtube.com/watch?v=newvalid"
+      videoUrl: "https://www.youtube.com/watch?v=newvalid",
+      status: "active"
     };
 
     await updateExercise(req, res);

@@ -33,8 +33,8 @@ describe("getExercises", () => {
 
   it("Should return a list of exercises successfully", async () => {
     const mockExercises = [
-      { id: 1, name: "Push-up", category: "Force", fitnessLevel: "Intermediare" },
-      { id: 2, name: "Pull-up", category: "Force", fitnessLevel: "Avancé" },
+      { id: 1, name: "Push-up", category: "Force", fitnessLevel: "Intermediare", status: "active" },
+      { id: 2, name: "Pull-up", category: "Force", fitnessLevel: "Avancé", status: "active" },
     ];
 
     Exercise.findAll.mockResolvedValue(mockExercises);

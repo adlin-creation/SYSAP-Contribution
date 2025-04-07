@@ -70,6 +70,7 @@ describe("createExercise", () => {
       fitnessLevel: "Intermédiaire",
       videoUrl: "https://www.youtube.com/watch?v=8CE4ijWlQ18",
       imageUrl: "/images/image.jpg",
+      status: "active",
     });
 
     await createExercise(req as Request, res as Response);
@@ -81,6 +82,7 @@ describe("createExercise", () => {
       fitnessLevel: "Intermédiaire",
       videoUrl: "https://www.youtube.com/watch?v=8CE4ijWlQ18",
       imageUrl: "/images/image.jpg",
+      status: "active",
     });
 
     expect(res.status).toHaveBeenCalledWith(201);
@@ -102,6 +104,7 @@ describe("createExercise", () => {
       fitnessLevel: "Intermédiaire",
       videoUrl: "https://www.youtube.com/watch?v=8CE4ijWlQ18",
       imageUrl: "/images/image.jpg",
+      status: "active",
     });
 
     expect(res.status).toHaveBeenCalledWith(409);
