@@ -27,8 +27,7 @@ export default function ExerciseDetail({ exercise, refetchExercises }) {
   );
 
   // Regex pour validation URL vidéo
-  const videoUrlRegex =
-    /^(https?:\/\/)?(www\.)?(youtube|vimeo)\.(com|be)\/(watch\?v=|.*\/)([a-zA-zA-Z0-9_-]{11,})$/;
+  const videoUrlRegex = /^(https?:\/\/)?(www\.)?(vimeo\.com\/\d+|(youtube\.com\/watch\?v=|youtu\.be\/)[\w-]{11})(\?.*)?$/;
 
   function openModal(message, isError) {
     setMessage(message);
