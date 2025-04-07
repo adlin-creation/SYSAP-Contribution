@@ -1,0 +1,401 @@
+meta {
+  name: RXAPA Evaluations API Collection
+  type: http
+  seq: 1
+}
+
+// Variables locales - modifier selon votre environnement
+vars {
+  base_url: http://localhost:3000/api
+  auth_token: votre_token_ici
+}
+
+// Test 1: Récupérer toutes les évaluations PACE
+label: "Récupérer toutes les évaluations PACE"
+get {
+  url: {{base_url}}/evaluations-pace
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{auth_token}}
+}
+
+// Test 2: Créer une évaluation PACE
+label: "Créer une évaluation PACE"
+post {
+  url: {{base_url}}/create-pace-evaluation
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{auth_token}}
+}
+
+body:json {
+  {
+    "idPatient": 1,
+    "chairTestSupport": "with",
+    "chairTestCount": "5",
+    "balanceFeetTogether": "30",
+    "balanceSemiTandem": "25",
+    "balanceTandem": "20",
+    "balanceOneFooted": "10",
+    "frtSitting": "sitting",
+    "frtDistance": "15",
+    "walkingTime": "10",
+    "scores": {
+      "program": "MARRON IV",
+      "cardioMusculaire": 5,
+      "equilibre": 5,
+      "mobilite": 5,
+      "total": 15
+    }
+  }
+}
+
+// Test 3: Créer une évaluation PATH
+label: "Créer une évaluation PATH"
+post {
+  url: {{base_url}}/create-path-evaluation
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{auth_token}}
+}
+
+body:json {
+  {
+    "idPatient": 2,
+    "chairTestSupport": "without",
+    "chairTestCount": "8",
+    "balanceFeetTogether": "30",
+    "balanceSemiTandem": "20",
+    "balanceTandem": "15",
+    "walkingTime": "6",
+    "scores": {
+      "program": "VERT",
+      "cardioMusculaire": 4,
+      "equilibre": 3,
+      "total": 7
+    }
+  }
+}
+
+// Test 4: Créer une évaluation MATCH
+label: "Créer une évaluation MATCH"
+post {
+  url: {{base_url}}/create-match-evaluation
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{auth_token}}
+}
+
+body:json {
+  {
+    "idPatient": 3,
+    "chairTestSupport": "with",
+    "chairTestCount": "7",
+    "balanceFeetTogether": "30",
+    "balanceSemiTandem": "15",
+    "balanceTandem": "10",
+    "walkingTime": "7.5",
+    "scores": {
+      "program": "ORANGE",
+      "cardioMusculaire": 3,
+      "equilibre": 2,
+      "total": 5
+    }
+  }
+}
+
+// Test 5: Récupérer une évaluation qui n'existe pas
+label: "Évaluation inexistante"
+get {
+  url: {{base_url}}/evaluations/123
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{auth_token}}
+}
+
+// Test 6: Mettre à jour une évaluation PACE
+label: "Mettre à jour évaluation PACE"
+put {
+  url: {{base_url}}/evaluation-pace/1
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{auth_token}}
+}
+
+body:json {
+  {
+    "chairTestSupport": "without",
+    "chairTestCount": "10",
+    "balanceFeetTogether": "30",
+    "balanceSemiTandem": "25",
+    "balanceTandem": "20",
+    "balanceOneFooted": "15",
+    "frtSitting": true,
+    "frtDistance": "20",
+    "walkingTime": "5.5",
+    "scores": {
+      "cardioMusculaire": 6,
+      "equilibre": 6,
+      "mobilite": 6,
+      "total": 18
+    }
+  }
+}
+
+// Test 7: Mettre à jour une évaluation PATH
+label: "Mettre à jour évaluation PATH"
+put {
+  url: {{base_url}}/evaluation-path/2
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{auth_token}}
+}
+
+body:json {
+  {
+    "chairTestSupport": "with",
+    "chairTestCount": "9",
+    "balanceFeetTogether": "30",
+    "balanceSemiTandem": "25",
+    "balanceTandem": "18",
+    "walkingTime": "5.2",
+    "scores": {
+      "program": "BLEU",
+      "cardioMusculaire": 5,
+      "equilibre": 4,
+      "total": 9
+    }
+  }
+}
+
+// Test 8: Mettre à jour une évaluation MATCH
+label: "Mettre à jour évaluation MATCH"
+put {
+  url: {{base_url}}/evaluation-match/3
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{auth_token}}
+}
+
+body:json {
+  {
+    "chairTestSupport": "without",
+    "chairTestCount": "12",
+    "balanceFeetTogether": "30",
+    "balanceSemiTandem": "22",
+    "balanceTandem": "16",
+    "walkingTime": "4.8",
+    "scores": {
+      "program": "VERT",
+      "cardioMusculaire": 5,
+      "equilibre": 3,
+      "total": 8
+    }
+  }
+}
+
+// Test 9: Récupérer les évaluations d'un patient
+label: "Récupérer évaluations d'un patient"
+get {
+  url: {{base_url}}/evaluations/patient/1
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{auth_token}}
+}
+
+// Test 10: Récupérer une évaluation PACE spécifique
+label: "Récupérer évaluation PACE"
+get {
+  url: {{base_url}}/evaluation-pace/1
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{auth_token}}
+}
+
+// Test 11: Récupérer une évaluation PATH spécifique
+label: "Récupérer évaluation PATH"
+get {
+  url: {{base_url}}/evaluation-path/2
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{auth_token}}
+}
+
+// Test 12: Récupérer une évaluation MATCH spécifique
+label: "Récupérer évaluation MATCH"
+get {
+  url: {{base_url}}/evaluation-match/3
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{auth_token}}
+}
+
+// Test 13: Supprimer une évaluation PACE
+label: "Supprimer évaluation PACE"
+delete {
+  url: {{base_url}}/evaluation-pace/1
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{auth_token}}
+}
+
+// Test 14: Récupérer toutes les évaluations PATH
+label: "Récupérer toutes les évaluations PATH"
+get {
+  url: {{base_url}}/evaluations-path
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{auth_token}}
+}
+
+// Test 15: Récupérer toutes les évaluations MATCH
+label: "Récupérer toutes les évaluations MATCH"
+get {
+  url: {{base_url}}/evaluations-match
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{auth_token}}
+}
+
+// Test 16: Créer une évaluation avec un programme invalide
+label: "Créer évaluation avec programme invalide"
+post {
+  url: {{base_url}}/create-pace-evaluation
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{auth_token}}
+}
+
+body:json {
+  {
+    "idPatient": 4,
+    "chairTestSupport": "with",
+    "chairTestCount": "5",
+    "balanceFeetTogether": "30",
+    "balanceSemiTandem": "25",
+    "balanceTandem": "20",
+    "balanceOneFooted": "10",
+    "frtSitting": "sitting",
+    "frtDistance": "15",
+    "walkingTime": "10",
+    "scores": {
+      "program": "PROGRAMME_INEXISTANT",
+      "cardioMusculaire": 5,
+      "equilibre": 5,
+      "mobilite": 5,
+      "total": 15
+    }
+  }
+}
+
+// Test 17: Créer une évaluation PACE avec des champs manquants
+label: "Créer évaluation avec champs manquants"
+post {
+  url: {{base_url}}/create-pace-evaluation
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{auth_token}}
+}
+
+body:json {
+  {
+    "idPatient": 5,
+    "chairTestSupport": "with",
+    "balanceFeetTogether": "30",
+    "balanceOneFooted": "10",
+    "frtSitting": "sitting",
+    "scores": {
+      "program": "MARRON IV",
+      "cardioMusculaire": 5,
+      "mobilite": 5,
+      "total": 15
+    }
+  }
+}
+
+// Test 18: Rechercher des patients par nom
+label: "Rechercher patients par nom"
+get {
+  url: {{base_url}}/patients/search?term=Dupont
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{auth_token}}
+}
+
+// Test 19: Rechercher des patients avec nom et prénom
+label: "Rechercher patients avec nom et prénom"
+get {
+  url: {{base_url}}/patients/search?term=Jean Dupont
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{auth_token}}
+}
+
+// Test 20: Rechercher des patients avec prénom vide
+label: "Rechercher patients - paramètre vide"
+get {
+  url: {{base_url}}/patients/search?term=
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{auth_token}}
+}

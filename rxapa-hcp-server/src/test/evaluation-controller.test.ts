@@ -25,6 +25,7 @@ const {
   updatePathEvaluation,
   deletePathEvaluation,
   searchPatients,
+  getPatientEvaluations,
 } = require("../controller/EvaluationController");
 
 describe("EvaluationController", () => {
@@ -730,6 +731,189 @@ describe("EvaluationController", () => {
       expect(mockRes.status).toHaveBeenCalledWith(500);
       expect(mockRes.json).toHaveBeenCalledWith({
         message: "Error deleting evaluation",
+      });
+    });
+  });
+
+  describe("Search tests", () => {
+    it("should return patients based on search term", async () => {
+      mockReq.query = { term: "John Doe" };
+
+      const mockPatients = [
+        { id: 1, firstname: "John", lastname: "Doe" },
+        { id: 2, firstname: "Jane", lastname: "Doe" },
+      ];
+
+      jest.spyOn(Patient, "findAll").mockResolvedValue(mockPatients as any);
+
+      await searchPatients(mockReq as Request, mockRes as Response);
+
+      expect(mockRes.status).toHaveBeenCalledWith(200);
+      expect(mockRes.json).toHaveBeenCalledWith(mockPatients);
+    });
+
+    it("should handle the case where no search term is provided", async () => {
+      mockReq.query = {};
+
+      await searchPatients(mockReq as Request, mockRes as Response);
+
+      expect(mockRes.status).toHaveBeenCalledWith(400);
+      expect(mockRes.json).toHaveBeenCalledWith({
+        message: "Terme de recherche requis",
+      });
+    });
+
+    it("should search with a single term", async () => {
+      mockReq.query = { term: "John" };
+
+      const mockPatients = [
+        { id: 1, firstname: "John", lastname: "Doe" },
+        { id: 2, firstname: "Johnny", lastname: "Smith" },
+      ];
+
+      jest.spyOn(Patient, "findAll").mockResolvedValue(mockPatients as any);
+
+      await searchPatients(mockReq as Request, mockRes as Response);
+
+      expect(Patient.findAll).toHaveBeenCalledWith({
+        where: {
+          [Op.or]: [
+            { firstname: { [Op.iLike]: "%John%" } },
+            { lastname: { [Op.iLike]: "%John%" } },
+          ],
+        },
+      });
+
+      expect(mockRes.status).toHaveBeenCalledWith(200);
+      expect(mockRes.json).toHaveBeenCalledWith(mockPatients);
+    });
+
+    it("should search with two terms (first name last name)", async () => {
+      mockReq.query = { term: "John Doe" };
+
+      const mockPatients = [{ id: 1, firstname: "John", lastname: "Doe" }];
+
+      jest.spyOn(Patient, "findAll").mockResolvedValue(mockPatients as any);
+
+      await searchPatients(mockReq as Request, mockRes as Response);
+
+      expect(Patient.findAll).toHaveBeenCalledWith({
+        where: {
+          [Op.or]: [
+            {
+              [Op.and]: [
+                { firstname: { [Op.iLike]: "%John%" } },
+                { lastname: { [Op.iLike]: "%Doe%" } },
+              ],
+            },
+            {
+              [Op.and]: [
+                { firstname: { [Op.iLike]: "%Doe%" } },
+                { lastname: { [Op.iLike]: "%John%" } },
+              ],
+            },
+          ],
+        },
+      });
+
+      expect(mockRes.status).toHaveBeenCalledWith(200);
+      expect(mockRes.json).toHaveBeenCalledWith(mockPatients);
+    });
+
+    it("should handle database errors during search", async () => {
+      mockReq.query = { term: "John" };
+
+      jest
+        .spyOn(Patient, "findAll")
+        .mockRejectedValue(new Error("Database error"));
+
+      await searchPatients(mockReq as Request, mockRes as Response);
+
+      expect(mockRes.status).toHaveBeenCalledWith(500);
+      expect(mockRes.json).toHaveBeenCalledWith({
+        message: "Échec de la recherche",
+      });
+    });
+  });
+  describe("getPatientEvaluations", () => {
+    const setupGetPatientEvaluationsTest = (id = "1") => {
+      mockReq.params = { id };
+    };
+  
+    it("should retrieve all evaluations for a specific patient", async () => {
+      setupGetPatientEvaluationsTest();
+  
+      const mockEvaluations = [
+        { 
+          id: 1, 
+          idPatient: 1,
+          Evaluation_PACE: { idPACE: 1 },
+          Program: { name: "MARRON IV" },
+          createdAt: new Date() 
+        },
+        { 
+          id: 2, 
+          idPatient: 1,
+          Evaluation_PATH: { idPATH: 2 },
+          Program: { name: "MARRON IV" },
+          createdAt: new Date() 
+        }
+      ];
+  
+      jest.spyOn(Evaluation, "findAll").mockResolvedValue(mockEvaluations as any);
+  
+      await getPatientEvaluations(mockReq as Request, mockRes as Response, mockNext);
+  
+      expect(Evaluation.findAll).toHaveBeenCalledWith({
+        where: { idPatient: "1" },
+        include: [
+          {
+            model: Evaluation_PACE,
+            required: false,
+          },
+          {
+            model: Evaluation_PATH,
+            required: false,
+          },
+          {
+            model: Evaluation_MATCH,
+            required: false,
+          },
+          {
+            model: Program,
+            required: false,
+          },
+        ],
+        order: [["createdAt", "DESC"]],
+      });
+  
+      expect(mockRes.status).toHaveBeenCalledWith(200);
+      expect(mockRes.json).toHaveBeenCalledWith(mockEvaluations);
+    });
+  
+    it("should return an empty array when no evaluations are found for the patient", async () => {
+      setupGetPatientEvaluationsTest("999");
+  
+      jest.spyOn(Evaluation, "findAll").mockResolvedValue([]);
+  
+      await getPatientEvaluations(mockReq as Request, mockRes as Response, mockNext);
+  
+      expect(mockRes.status).toHaveBeenCalledWith(200);
+      expect(mockRes.json).toHaveBeenCalledWith([]);
+    });
+  
+    it("should handle database errors when retrieving patient evaluations", async () => {
+      setupGetPatientEvaluationsTest();
+  
+      const dbError = new Error("Database error for patient evaluations");
+      jest.spyOn(Evaluation, "findAll").mockRejectedValue(dbError);
+  
+      await getPatientEvaluations(mockReq as Request, mockRes as Response, mockNext);
+  
+      expect(mockRes.status).toHaveBeenCalledWith(500);
+      expect(mockRes.json).toHaveBeenCalledWith({
+        message: "Erreur lors du chargement des évaluations depuis la base de données",
+        error: "Database error for patient evaluations"
       });
     });
   });

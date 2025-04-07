@@ -140,6 +140,13 @@ function EvaluationSearch() {
               Évaluation MATCH
             </Button>
           </div>
+
+          <Button
+            type="primary"
+            onClick={() => navigateToEvaluations(patient.id)}
+          >
+            Afficher évaluations
+          </Button>
         </div>
       ),
       width: "60%", // Assurer que la colonne est suffisamment large
