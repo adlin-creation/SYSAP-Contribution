@@ -98,10 +98,6 @@
   font-size: 16px;
 }
 
-.filter-item {
-  margin-bottom: 20px;
-}
-
 .select-wide {
   width: 100%;
 }
@@ -200,14 +196,34 @@
     height: 300px; 
   }
 }
+
+
+.filter-flex {
+  flex: 1;
+}
+
+.filters-container {
+  display: flex;
+  gap: 16px;
+  align-items: flex-end;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.filter-item {
+  flex: 1;
+  min-width: 180px;
+}
+
 .filter-button-row {
   display: flex;
-  align-items: flex-end;
-  flex-wrap: wrap;
+  align-items: center;
   gap: 16px;
   margin-bottom: 20px;
 }
 
-.filter-flex {
-  flex: 1;
+.filter-button-row > .ant-col {
+  display: flex;
+  align-items: center;
 }
