@@ -23,8 +23,7 @@ export default function CreateExercise(props) {
   const [exerciseStatus, setExerciseStatus] = useState("active");
 
   // Expression régulière pour vérifier un lien vidéo valide
-  const videoUrlRegex =
-    /^(https?:\/\/)?(www\.)?(youtube|vimeo)\.(com|be)\/(watch\?v=|.*\/)([a-zA-Z0-9_-]{11,})$/;
+  const videoUrlRegex = /^(https?:\/\/)?(www\.)?(vimeo\.com\/\d+|(youtube\.com\/watch\?v=|youtu\.be\/)[\w-]{11})(\?.*)?$/;
 
   // Correspondance des catégories en anglais vers le français
   const categoryTranslation = {
