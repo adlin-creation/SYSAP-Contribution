@@ -196,7 +196,6 @@ exports.getSessions = async (req: any, res: any, next: any) => {
  * Updates an exisitng exercise day session
  */
 exports.updateSession = async (req: any, res: any, next: any) => {
-  // Extract the required attribute values to update an exercise day session
   const sessionKey = req.params.sessionKey;
   const name = req.body.name;
   const description = req.body.description;
@@ -208,29 +207,22 @@ exports.updateSession = async (req: any, res: any, next: any) => {
     session = await Session.findOne({
       where: { key: sessionKey },
     });
-  } catch (error: any) {
-    if (!error.statusCode) {
-      error.statusCode = 500;
+    
+    if (!session) {
+      return res.status(404).json({ message: "Session not found" });
     }
-    res.json({ message: `Error: Can't find ${name} session` });
-    return res;
-  }
 
-  // Use sequelize (Database Framework) to update the exercise day session
-  try {
     await session.update({
       name: name || session.name,
       description: description || session.description,
       constraints: constraints || session.constraints,
     });
+    
     res.status(200).json({ message: `The session has been updated` });
-    // Otherwise, the action was not successful. Hence, let the user know that
-    // his request was unsuccessful.
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
-
     res.json({ message: `Failed to update the ${name}` });
   }
 };

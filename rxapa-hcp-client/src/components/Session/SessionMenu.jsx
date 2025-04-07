@@ -180,7 +180,10 @@ export default function SessionList(props) {
 
       {/* shows day session details when edit day session is clicked */}
       {buttonState.isEditSession && (
-        <SessionDetails sessionKey={selectedSession.key} />
+        <SessionDetails 
+          sessionKey={selectedSession.key} 
+          refetchSessions={refetchSessions}
+        />
       )}
       <Modal open={isOpenModal} onCancel={closeModal} footer={null}>
         <p>{message}</p>
