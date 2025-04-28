@@ -1,0 +1,135 @@
+/* App.css */
+/* .site-layout .site-layout-background {
+    background: #fff;
+  } */
+/* Sidebar par rôle */
+/* ---------- SIDEBAR PAR RÔLE ---------- */
+/* Appliquer la transparence pour que le fond du Sider soit visible */
+.doctor-sidebar .ant-menu {
+  background-color: transparent !important;
+}
+
+.kinesiologist-sidebar .ant-menu {
+  background-color: transparent !important;
+}
+
+.admin-sidebar .ant-menu {
+  background-color: transparent !important;
+}
+
+.doctor-sidebar {
+  background-color: #0d47a1 !important; /* bleu foncé */
+}
+
+.kinesiologist-sidebar {
+  background-color: #004d40 !important; /* vert foncé */
+}
+
+.admin-sidebar {
+  background-color: #4a148c !important; /* violet foncé */
+}
+
+/* ---------- HEADER PAR RÔLE ---------- */
+
+.doctor-header {
+  background-color: #1565c0 !important;
+}
+
+.kinesiologist-header {
+  background-color: #00695c !important;
+}
+
+.admin-header {
+  background-color: #6a1b9a !important;
+}
+
+/* ---------- LOGO ---------- */
+
+.logo {
+  color: white;
+  text-align: center;
+  padding: 16px;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+/* for dark sidebar background, make sure .logo blends with sidebar */
+.doctor-sidebar .logo,
+.kinesiologist-sidebar .logo,
+.admin-sidebar .logo {
+  background-color: inherit; /* héritera de la couleur du sidebar */
+}
+
+
+.header {
+  padding: 0;
+  position: fixed;
+  width: calc(
+    100% - 10rem
+  ); /* Adjust this value based on the width of your Sider */
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  right: 0;
+}
+
+.header-ar {
+  right: auto;
+  left: 0;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
+}
+
+.header-button {
+  margin-right: 0.5rem;
+}
+
+.header-avatar {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.header-avatar span {
+  margin-left: 0.5rem;
+  color: #fff;
+}
+
+.sider {
+  position: fixed;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 15rem; /* ✅ valeur cohérente avec .site-layout */
+  z-index: 2;
+}
+
+
+.sider-ar {
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 5rem;
+}
+
+.site-layout {
+  margin-left: 15rem; /* Adjust this value based on the width of your Sider */
+}
+
+.site-layout-ar {
+  margin-left: 0;
+  margin-right: 15rem;
+  width: calc(100% - 15rem);
+}
+
+.content {
+  padding-top: 4rem; /* Adjust this value based on the height of your Header */
+  margin: 1rem;
+  overflow: initial;
+}

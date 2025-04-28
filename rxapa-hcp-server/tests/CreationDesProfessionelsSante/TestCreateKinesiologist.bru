@@ -1,0 +1,22 @@
+meta {
+  name: TestCreateKinesiologist
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base_url}}/create-professional-user
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "firstname": "KinesiologistFirstName",
+    "lastname": "KinesiologistLastName",
+    "phoneNumber": "1234567890",
+    "email": "kinesiologist@example.com",
+    "password": "password123",
+    "role": "kinesiologist"
+  }
+}

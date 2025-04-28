@@ -1,0 +1,46 @@
+{
+    "error_choose_number_exercises": "Please choose your number of exercises",
+    "error_choose_difficulty": "Please choose your difficulty",
+    "error_choose_satisfaction": "Please choose your satisfaction",
+    "error_choose_pain_level": "Please choose your pain level",
+    "error_choose_walking_time": "Please choose your walking time",
+    "error_error": "Error",
+    "error_fill_required_fields": "Please fill in all required fields",
+    "error_recording_failed": "Recording failed",
+    "error_unknown_error_during_recording": "An error occurred while recording",
+    
+    "success_success": "Success",
+    "success:session_recorded": "Session successfully recorded",
+    
+    "button_confirm": "CONFIRM",
+    
+    "label_very_difficult": "Very difficult",
+    "label_difficult": "Difficult",
+    "label_easy": "Easy",
+    "label_very_easy": "Very easy",
+    "label_very_dissatisfied": "Very dissatisfied",
+    "label_dissatisfied": "Dissatisfied",
+    "label_satisfied": "Satisfied",
+    "label_very_satisfied": "Very satisfied",
+    "label_pain_none": "None",
+    "label_pain_mild": "Mild",
+    "label_pain_moderate": "Moderate",
+    "label_pain_severe": "Severe",
+    
+    "info_walking_time_today": "Walking time completed today",
+    "info_number_exercises": "Number of exercises completed today",
+    "info_difficulty_felt": "Difficulty felt during your session",
+    "info_satisfaction": "Satisfaction with today's session",
+    "info_pain_level": "Pain level felt during the session",
+    "info_walking_time": "Select walking time",
+    
+    "placeholder_number_exercises": "Choose your number of exercises",
+    "placeholder_difficulty_felt": "Choose your difficulty",
+    "placeholder_satisfaction": "Choose your satisfaction",
+    "placeholder_pain_level": "Choose your pain level",
+    "placeholder_walking_time": "Choose your walking time",
+    "placeholder_hour": "Choose hour",
+    "placeholder_minute": "Choose minute",
+    
+    "title_tracking_notebook": "Tracking Notebook"
+}

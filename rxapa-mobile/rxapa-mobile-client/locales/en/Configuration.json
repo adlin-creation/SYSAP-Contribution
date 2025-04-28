@@ -1,0 +1,26 @@
+{
+    "error_permission_denied": "Permission denied",
+    "error_notifications_required": "Enable notifications to receive reminders.",
+    "error_error": "Error",
+    "error_time_and_title_required": "Please select a time and a title.",
+    "error_reminder_creation": "Unable to schedule the reminder.",
+    
+    "success_reminder_added": "Reminder added",
+    "success_reminder_added_to": "Reminder added to",
+    "success_reminder_deleted": "Reminder deleted",
+    "success_reminder_deleted_subtitle": "The reminder has been deleted.",
+    
+    "button_delete": "Delete",
+    "button_add_reminder": "Add a reminder",
+    "button_schedule_reminder": "Schedule",
+    "button_cancel_reminder": "Cancel",
+
+    "placeholder_reminder_title": "Reminder title",
+    "placeholder_select_time": "Select time",
+
+    "title_reminder": "Reminder",
+    "title_reminder_subtitle": "It's time for your session!",
+    "title_programmed_reminders": "Scheduled reminders",
+    "title_no_reminders": "No reminders for now.",
+    "title_new_reminder": "New Reminder"
+}

@@ -1,0 +1,9 @@
+{
+    "error_invalid_enrollment_code": "Su identificador de programa no se encuentra. Por favor, autentíquese.",
+    "error_exercise_not_found": "No se encontraron ejercicios para esta sesión.",
+    "error_fetching_exercises": "Ocurrió un error al recuperar los ejercicios.",
+   
+    "title_loading_exercises": "Cargando ejercicios...",
+    "title_exercise_list": "Lista de ejercicios",
+    "title_no_exercise": "No hay ejercicios disponibles."
+}

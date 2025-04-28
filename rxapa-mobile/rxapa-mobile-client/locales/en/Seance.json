@@ -1,0 +1,9 @@
+{
+    "error_invalid_enrollment_code": "Your program ID could not be found. Please authenticate.",
+    "error_exercise_not_found": "No exercises found for this session.",
+    "error_fetching_exercises": "An error occurred while retrieving the exercises.",
+   
+    "title_loading_exercises": "Loading exercises...",
+    "title_exercise_list": "List of exercises",
+    "title_no_exercise": "No exercises available."
+}

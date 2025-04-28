@@ -1,0 +1,9 @@
+{
+    "error_invalid_enrollment_code": "Votre identifiant de programme est introuvable. Veuillez vous authentifier.",
+    "error_exercise_not_found": "Aucun exercice trouvé pour cette séance.",
+    "error_fetching_exercises": "Une erreur est survenue lors de la récupération des exercices.",
+    
+    "title_loading_exercises": "Chargement des exercices...",
+    "title_exercise_list": "Liste des exercices",
+    "title_no_exercise": "Aucun exercice disponible."
+}

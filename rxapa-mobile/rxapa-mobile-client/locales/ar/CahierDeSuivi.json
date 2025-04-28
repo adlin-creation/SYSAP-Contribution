@@ -1,0 +1,46 @@
+{
+    "error_choose_number_exercises": "يرجى اختيار عدد التمارين",
+    "error_choose_difficulty": "يرجى اختيار مستوى الصعوبة",
+    "error_choose_satisfaction": "يرجى اختيار مستوى الرضا",
+    "error_choose_pain_level": "يرجى اختيار مستوى الألم",
+    "error_choose_walking_time": "يرجى اختيار وقت المشي",
+    "error_error": "خطأ",
+    "error_fill_required_fields": "يرجى ملء جميع الحقول الإلزامية",
+    "error_recording_failed": "فشل في التسجيل",
+    "error_unknown_error_during_recording": "حدث خطأ أثناء التسجيل",
+    
+    "success_success": "نجاح",
+    "success:session_recorded": "تم تسجيل الجلسة بنجاح",
+    
+    "button_confirm": "تأكيد",
+    
+    "label_very_difficult": "صعب جدًا",
+    "label_difficult": "صعب",
+    "label_easy": "سهل",
+    "label_very_easy": "سهل جدًا",
+    "label_very_dissatisfied": "غير راضٍ جدًا",
+    "label_dissatisfied": "غير راضٍ",
+    "label_satisfied": "راضٍ",
+    "label_very_satisfied": "راضٍ جدًا",
+    "label_pain_none": "لا يوجد",
+    "label_pain_mild": "خفيف",
+    "label_pain_moderate": "متوسط",
+    "label_pain_severe": "شديد",
+    
+    "info_walking_time_today": "وقت المشي الذي تم إنجازه اليوم",
+    "info_number_exercises": "عدد التمارين التي تم إنجازها اليوم",
+    "info_difficulty_felt": "الصعوبة التي تم الشعور بها أثناء الجلسة",
+    "info_satisfaction": "الرضا عن جلسة اليوم",
+    "info_pain_level": "مستوى الألم الذي تم الشعور به أثناء التمرين",
+    "info_walking_time": "حدد وقت المشي",
+    
+    "placeholder_number_exercises": "اختر عدد التمارين",
+    "placeholder_difficulty_felt": "اختر مستوى الصعوبة",
+    "placeholder_satisfaction": "اختر مستوى الرضا",
+    "placeholder_pain_level": "اختر مستوى الألم",
+    "placeholder_walking_time": "اختر وقت المشي",
+    "placeholder_hour": "اختر الساعة",
+    "placeholder_minute": "اختر الدقيقة",
+    
+    "title_tracking_notebook": "دفتر المتابعة"
+}

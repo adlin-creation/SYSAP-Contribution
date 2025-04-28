@@ -1,0 +1,23 @@
+meta {
+  name: TestCreateProgramEnrollementWithCaregivers
+  type: http
+  seq: 10
+}
+
+post {
+  url: {{base_url}}/create-program-enrollement-with-caregivers
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "enrollementDate": "2023-01-01",
+    "startDate": "2023-01-01",
+    "endDate": "2023-12-31",
+    "programEnrollementCode": "XOC123",
+    "ProgramId": 2,
+    "PatientId": 1,
+    "caregivers": [2, 3]
+  }
+}

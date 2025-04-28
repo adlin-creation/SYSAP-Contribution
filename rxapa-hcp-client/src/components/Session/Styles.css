@@ -1,0 +1,89 @@
+.day-session {
+  background-color: #669999;
+  border-radius: 1rem;
+  padding: 1rem;
+  margin: 0.5rem;
+}
+
+.update-button {
+  box-shadow: 0 10px 14px -7px #276873;
+  background: linear-gradient(to bottom, #599bb3 5%, #408c99 100%);
+  background-color: #599bb3;
+  border-radius: 8px;
+  display: inline-block;
+  cursor: pointer;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 7px 12px;
+  text-decoration: none;
+  text-shadow: 0 1px 0 #3d768a;
+}
+.update-button:hover {
+  background: linear-gradient(to bottom, #408c99 5%, #599bb3 100%);
+  background-color: #408c99;
+}
+.update-button:active {
+  position: relative;
+  top: 1px;
+}
+
+.delete-button {
+  box-shadow: inset 0 1px 0 0 #cf866c;
+  background: linear-gradient(to bottom, #d0451b 5%, #bc3315 100%);
+  background-color: #d0451b;
+  border-radius: 3px;
+  border: 1px solid #942911;
+  display: inline-block;
+  cursor: pointer;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  padding: 6px 16px;
+  text-decoration: none;
+  text-shadow: 0px 1px 0px #854629;
+}
+.delte-button:hover {
+  background: linear-gradient(to bottom, #bc3315 5%, #d0451b 100%);
+  background-color: #bc3315;
+}
+.delte-button:active {
+  position: relative;
+  top: 1px;
+}
+
+.input-element {
+  margin: 0.8rem 0;
+}
+
+.input-element h5 {
+  margin-bottom: 0.3rem;
+}
+
+.input-element .ant-input,
+.input-element .ant-select {
+  margin-top: 0.2rem;
+}
+
+/* Modification history styles */
+.modification-history h4 {
+  margin-bottom: 1rem;
+}
+
+.modification-history > div {
+  margin-bottom: 1rem;
+  font-size: 14px;
+}
+
+.modification-history > div > div {
+  margin: 0.2rem 0;
+}
+
+.history-section {
+  position: absolute;
+  right: 20px;
+  top: 80px;
+  width: 300px;
+  padding-left: 20px;
+}

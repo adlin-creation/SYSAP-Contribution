@@ -1,0 +1,60 @@
+meta {
+  name: CreateCompleteProgramEnrollment
+  type: http
+  seq: 15
+}
+
+post {
+  url: {{base_url}}/create-complete-enrollment
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "patientData": {
+      "firstname": "Ressan",
+      "lastname": "Doe",
+      "birthday": "1990-01-01",
+      "phoneNumber": "1234567890",
+      "email": "ressan.doe@example.com",
+      "status": "active"
+    },
+    "caregivers": [
+      {
+        "firstname": "Jane",
+        "lastname": "Smith",
+        "phoneNumber": "0987654321",
+        "email": "jane.smith@example.com",
+        "relationship": "other",
+        "active": true
+      }
+    ],
+    "enrollmentData": {
+      "enrollementDate": "2023-01-01",
+      "startDate": "2023-01-15",
+      "endDate": "2023-12-31",
+      "programEnrollementCode": "PROG123",
+      "ProgramId": 2
+    }
+  }
+}
+
+docs {
+  
+  tests {
+      test("Status code should be 201"); {
+          expect(response.status).to.equal(201)
+      }
+      
+      test("Response should have patient and enrollment"); {
+          expect(response.body).to.have.property("patient")
+          expect(response.body).to.have.property("enrollment")
+      }
+      
+      test("Patient data should be correct"); {
+          expect(response.body.patient.firstName).to.equal("Ressan")
+          expect(response.body.patient.lastName).to.equal("Doe")
+      }
+  }
+}

@@ -1,0 +1,26 @@
+{
+    "error_permission_denied": "Permission refusée",
+    "error_notifications_required": "Activez les notifications pour recevoir les rappels.",
+    "error_error": "Erreur",
+    "error_time_and_title_required": "Veuillez sélectionner une heure et un titre.",
+    "error_reminder_creation": "Impossible de programmer le rappel.",
+    
+    "success_reminder_added": "Rappel ajouté",
+    "success_reminder_added_to": "Rappel ajouté à",
+    "success_reminder_deleted": "Rappel supprimé",
+    "success_reminder_deleted_subtitle": "Le rappel a été supprimé.",
+    
+    "button_delete": "Supprimer",
+    "button_add_reminder": "Ajouter un rappel",
+    "button_schedule_reminder": "Planifier",
+    "button_cancel_reminder": "Annuler",
+    
+    "placeholder_reminder_title": "Titre du rappel",
+    "placeholder_select_time": "Sélectionnez l'heure",
+    
+    "title_reminder": "Rappel",
+    "title_reminder_subtitle": "Il est temps de faire votre séance !",
+    "title_programmed_reminders": "Rappels programmés",
+    "title_no_reminders": "Aucun rappel pour l'instant.",
+    "title_new_reminder": "Nouveau Rappel"
+}

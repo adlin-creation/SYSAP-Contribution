@@ -1,0 +1,18 @@
+{
+    "error_enter_code": "Please enter a code.",
+    "error_incorrect_code": "The entered code is incorrect. Please try again.",
+
+    "button_no_code": "I don't have a personal code",
+    "button_close": "Close",
+
+    "info_enter_code": "Please enter your personal code",
+
+    "placeholder_enter_code": "Enter your code",
+    
+    "title_authentication": "AUTHENTICATION",
+    "title_login": "LOGIN",
+    "title_need_help": "Need help?",
+    "title_contact_info": "If you don't have the personal code or have forgotten it, please contact:",
+    "title_contact_it_department": "The IT department:",
+    "title_contact_kinesiologist": "Your kinesiologist to obtain a valid code."
+}

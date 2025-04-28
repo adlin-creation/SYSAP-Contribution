@@ -1,0 +1,18 @@
+{
+    "error_enter_code": "يرجى إدخال رمز.",
+    "error_incorrect_code": "الرمز الذي تم إدخاله غير صحيح. يرجى المحاولة مرة أخرى.",
+
+    "button_no_code": "ليس لدي رمز شخصي",
+    "button_close": "إغلاق",
+
+    "info_enter_code": "يرجى إدخال رمزك الشخصي",
+
+    "placeholder_enter_code": "أدخل رمزك",
+    
+    "title_authentication": "المصادقة",
+    "title_login": "تسجيل الدخول",
+    "title_need_help": "هل تحتاج إلى مساعدة؟",
+    "title_contact_info": "إذا لم يكن لديك رمز شخصي أو إذا نسيته، يرجى الاتصال بـ:",
+    "title_contact_it_department": "قسم تكنولوجيا المعلومات:",
+    "title_contact_kinesiologist": "أخصائي العلاج الحركي للحصول على رمز صالح."
+}

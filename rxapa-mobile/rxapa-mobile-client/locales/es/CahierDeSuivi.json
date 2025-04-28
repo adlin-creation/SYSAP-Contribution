@@ -1,0 +1,46 @@
+{
+    "error_choose_number_exercises": "Por favor, elige tu número de ejercicios",
+    "error_choose_difficulty": "Por favor, elige tu nivel de dificultad",
+    "error_choose_satisfaction": "Por favor, elige tu nivel de satisfacción",
+    "error_choose_pain_level": "Por favor, elige tu nivel de dolor",
+    "error_choose_walking_time": "Por favor, elige tu tiempo de caminata",
+    "error_error": "Error",
+    "error_fill_required_fields": "Por favor, completa todos los campos obligatorios",
+    "error_recording_failed": "Error en el registro",
+    "error_unknown_error_during_recording": "Ocurrió un error durante el registro",
+    
+    "success_success": "Éxito",
+    "success:session_recorded": "Sesión registrada con éxito",
+    
+    "button_confirm": "CONFIRMAR",
+    
+    "label_very_difficult": "Muy difícil",
+    "label_difficult": "Difícil",
+    "label_easy": "Fácil",
+    "label_very_easy": "Muy fácil",
+    "label_very_dissatisfied": "Muy insatisfecho",
+    "label_dissatisfied": "Insatisfecho",
+    "label_satisfied": "Satisfecho",
+    "label_very_satisfied": "Muy satisfecho",
+    "label_pain_none": "Ninguno",
+    "label_pain_mild": "Leve",
+    "label_pain_moderate": "Moderado",
+    "label_pain_severe": "Intenso",
+    
+    "info_walking_time_today": "Tiempo de caminata realizado hoy",
+    "info_number_exercises": "Número de ejercicios realizados hoy",
+    "info_difficulty_felt": "Dificultad sentida durante tu sesión",
+    "info_satisfaction": "Satisfacción con tu sesión de hoy",
+    "info_pain_level": "Nivel de dolor sentido durante la práctica",
+    "info_walking_time": "Selecciona el tiempo de caminata",
+    
+    "placeholder_number_exercises": "Elige tu número de ejercicios",
+    "placeholder_difficulty_felt": "Elige tu nivel de dificultad",
+    "placeholder_satisfaction": "Elige tu nivel de satisfacción",
+    "placeholder_pain_level": "Elige tu nivel de dolor",
+    "placeholder_walking_time": "Elige tu tiempo de caminata",
+    "placeholder_hour": "Elige la hora",
+    "placeholder_minute": "Elige el minuto",
+    
+    "title_tracking_notebook": "Registro de Seguimiento"
+}

@@ -1,0 +1,21 @@
+{
+  "change_language": "Cambiar idioma",
+  "label_admins": "Administradores",
+  "label_blocs": "Bloques",
+  "label_calendar": "calendario",
+  "label_cycles": "Ciclos",
+  "label_dashboard": "Tablero",
+  "label_evaluation": "Evaluación",
+  "label_exercises": "Ejercicios",
+  "label_kinesiologists": "Kinesiólogos",
+  "label_logout": "Cerrar sesión",
+  "label_patients": "Pacientes",
+  "label_phases": "Fases",
+  "label_physicians": "Doctores",
+  "label_professionals": "Profesionales",
+  "label_profile": "Perfil",
+  "label_programs": "Programas",
+  "label_sessions": "Sesiones",
+  "label_settings": "Configuración",
+  "title_loading_evaluations": "Cargando evaluaciones..."
+}

@@ -1,0 +1,22 @@
+meta {
+  name: TestCreateCaregiver
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{base_url}}/create-caregiver
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "firstname": "Jane",
+    "lastname": "Doe",
+    "phoneNumber": "0987654321",
+    "email": "jane.doe@example.com",
+    "relationship": "sibling",
+    "active": true
+  }
+}

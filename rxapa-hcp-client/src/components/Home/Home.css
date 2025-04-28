@@ -1,0 +1,23 @@
+.Home {
+  text-align: center;
+}
+
+.home_image {
+  margin-top: 50px;
+  text-align: center;
+  border-radius: 50%;
+}
+
+.home_text_head {
+  margin-top: 100px;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+  color: darkcyan;
+}
+
+.home_text_body {
+  margin-top: 100px;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+  color: blueviolet;
+}

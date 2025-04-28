@@ -1,0 +1,26 @@
+{
+    "error_permission_denied": "Permiso denegado",
+    "error_notifications_required": "Activa las notificaciones para recibir recordatorios.",
+    "error_error": "Error",
+    "error_time_and_title_required": "Por favor, selecciona una hora y un título.",
+    "error_reminder_creation": "No se pudo programar el recordatorio.",
+    
+    "success_reminder_added": "Recordatorio agregado",
+    "success_reminder_added_to": "Recordatorio agregado a",
+    "success_reminder_deleted": "Recordatorio eliminado",
+    "success_reminder_deleted_subtitle": "El recordatorio ha sido eliminado.",
+    
+    "button_delete": "Eliminar",
+    "button_add_reminder": "Agregar un recordatorio",
+    "button_schedule_reminder": "Planificar",
+    "button_cancel_reminder": "Cancelar",
+    
+    "placeholder_reminder_title": "Título del recordatorio",
+    "placeholder_select_time": "Selecciona la hora",
+    
+    "title_reminder": "Recordatorio",
+    "title_reminder_subtitle": "¡Es hora de hacer tu sesión!",
+    "title_programmed_reminders": "Recordatorios programados",
+    "title_no_reminders": "No hay recordatorios por el momento.",
+    "title_new_reminder": "Nuevo Recordatorio"
+}

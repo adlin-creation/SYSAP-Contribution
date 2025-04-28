@@ -1,0 +1,6 @@
+# [submodule "rxapa-hcp-server"]
+# 	path = rxapa-hcp-server
+# 	url = https://github.com/abdelnassergit/rxapa-hcp-server.git
+# [submodule "rxapa-hcp-client"]
+# 	path = rxapa-hcp-client
+# 	url = https://github.com/abdelnassergit/rxapa-hcp-client.git

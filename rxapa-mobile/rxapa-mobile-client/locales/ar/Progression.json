@@ -1,0 +1,16 @@
+{
+    "button_filter_weekly": "هذا الأسبوع",
+    "button_filter_since_beginning": "منذ البداية",
+
+    "info_average_difficulty": "متوسط الصعوبة",
+    "info_average_pain": "متوسط الألم",
+    "info_average_satisfaction": "متوسط الرضا",
+    "info_walking_time": "وقت المشي",
+    "info_number_exercises": "إجمالي التمارين",
+
+    "title_week": "الأسبوع",
+    "title_my_progress": "تقدمي",
+    "title_completion_rate": "معدل الإكمال",
+    "title_statistics_since_beginning": "إحصائيات منذ البداية",
+    "title_statistics_weekly": "إحصائيات الأسبوع"
+}

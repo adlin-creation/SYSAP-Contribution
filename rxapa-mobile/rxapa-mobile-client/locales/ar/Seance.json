@@ -1,0 +1,9 @@
+{
+    "error_invalid_enrollment_code": "لم يتم العثور على معرف البرنامج. يرجى تسجيل الدخول.",
+    "error_exercise_not_found": "لم يتم العثور على تمارين لهذه الجلسة.",
+    "error_fetching_exercises": "حدث خطأ أثناء استرجاع التمارين.",
+    
+    "title_loading_exercises": "جارٍ تحميل التمارين...",
+    "title_exercise_list": "قائمة التمارين",
+    "title_no_exercise": "لا توجد تمارين متاحة."
+}
