@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 {
   "alert_error": "Error: ",
   "alert_link_cannot_be_sent": "Unable to send the reset link",
@@ -42,48 +41,3 @@
   "title_phone_number": "Phone number",
   "title_role": "Role"
 }
-=======
-{
-  "alert_error": "Error: ",
-  "alert_link_cannot_be_sent": "Unable to send the reset link",
-  "alert_link_sending_error": "Error while sending the link",
-  "alert_link_sent_successfully": "Link sent successfully!",
-  "title_link_sent_to_reset_password": "Send a link to reset the password",
-  "alert_password_cannot_be_changed": "Cannot reset the password",
-  "alert_password_changed_successfully": "Password changed successfully!",
-  "alert_password_error_change": "Error changing the password",
-  "alert_password_missmatch": "The passwords do not match",
-  "button_back": "Back",
-  "button_close": "Close",
-  "button_confirm": "Confirm",
-  "button_login": "LOGIN",
-  "button_password_forgotten": "Password forgotten",
-  "button_register": "Register",
-  "button_signup": "SIGNUP",
-  "error_mail_required": "Please enter your email address!",
-  "error_password_confirmation_confirmation": "Please confirm the password!",
-  "error_password_min_length": "The password must contain at least 8 characters, one uppercase letter, a number, and a special character",
-  "error_password_required": "Please enter a password!",
-  "option_admin": "Administrator",
-  "option_kinesiologist": "Kinesiologist",
-  "option_physician": "Physician",
-  "option_super_admin": "Super Administrator",
-  "placeholder_confirm_password": "Confirm your password",
-  "placeholder_email": "Your email",
-  "placeholder_firstname": "Your first name",
-  "placeholder_name": "Your last name",
-  "placeholder_password": "Your password",
-  "placeholder_phone_number": "Your phone number",
-  "title_confirm_password": "Confirm password",
-  "title_define_new_password": "Set a new password",
-  "title_email": "Enter your email",
-  "title_firstname": "Enter your first name",
-  "title_login": "Login",
-  "title_name": "Enter your last name",
-  "title_new_password": "New password",
-  "title_password": "Your password",
-  "title_password_confirmation": "Confirm password",
-  "title_phone_number": "Phone number",
-  "title_role": "Role"
-}
->>>>>>> 14cb596907bdb9208979898040b04da5a64dcc68

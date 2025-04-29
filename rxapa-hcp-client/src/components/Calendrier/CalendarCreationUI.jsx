@@ -5,7 +5,6 @@ import interactionPlugin from "@fullcalendar/interaction";
 import axios from "axios";
 import useToken from "../Authentication/useToken";
 import Constants from "../Utils/Constants";
-<<<<<<< HEAD
 import frLocale from "@fullcalendar/core/locales/fr";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
@@ -21,9 +20,6 @@ import {
   Input,
   Button,
 } from "antd";
-=======
-import { Typography, message, Select, Row, Col, Card, Modal, Input } from "antd";
->>>>>>> 14cb596907bdb9208979898040b04da5a64dcc68
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -32,17 +28,11 @@ export default function CalendarCreationUI() {
   const { token } = useToken();
   const [patients, setPatients] = useState([]);
   const [programs, setPrograms] = useState([]);
-<<<<<<< HEAD
   const [allSessions, setAllSessions] = useState([]);
-=======
-  const [sessions, setSessions] = useState([]); // Pour le calendrier
-  const [allSessions, setAllSessions] = useState([]); // Pour le Select dans le Modal
->>>>>>> 14cb596907bdb9208979898040b04da5a64dcc68
   const [events, setEvents] = useState([]);
   const [selectedPatient, setSelectedPatient] = useState("");
   const [selectedProgram, setSelectedProgram] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
-<<<<<<< HEAD
   const [selectedSessionName, setSelectedSessionName] = useState("");
   const [newSessionDate, setNewSessionDate] = useState(null);
   const [newSessionEndTime, setNewSessionEndTime] = useState(null);
@@ -94,63 +84,10 @@ export default function CalendarCreationUI() {
       setEvents(sessionEvents);
     } catch (error) {
       console.error("Erreur chargement rendez-vous calendrier :", error);
-=======
-  const [selectedSessionName, setSelectedSessionName] = useState(""); // Nouveau nom clair
-  const [newSessionDate, setNewSessionDate] = useState(null);
-  const [newSessionTime, setNewSessionTime] = useState("14:00");
-
-  // Récupération initiale des patients, programmes et toutes les sessions
-  useEffect(() => {
-    const fetchDropdowns = async () => {
-      try {
-        const patientsRes = await axios.get(`${Constants.SERVER_URL}/patients`, {
-          headers: { Authorization: "Bearer " + token },
-        });
-        setPatients(patientsRes.data);
-
-        const programsRes = await axios.get(`${Constants.SERVER_URL}/programs`, {
-          headers: { Authorization: "Bearer " + token },
-        });
-        setPrograms(programsRes.data);
-
-        const sessionRes = await axios.get(`${Constants.SERVER_URL}/sessions`, {
-          headers: { Authorization: "Bearer " + token },
-        });
-        const data = Array.isArray(sessionRes.data) ? sessionRes.data : [];
-        setAllSessions(data);
-      } catch (error) {
-        console.error("Erreur chargement patients/programmes/sessions:", error);
-      }
-    };
-
-    fetchDropdowns();
-  }, [token]);
-
-  // Récupération des sessions liées à un programme sélectionné
-  const fetchSessions = async () => {
-    if (!selectedProgram) return;
-    try {
-      const sessionsRes = await axios.get(`${Constants.SERVER_URL}/sessions/by-program/${selectedProgram}`, {
-        headers: { Authorization: "Bearer " + token },
-      });
-      const data = Array.isArray(sessionsRes.data) ? sessionsRes.data : [];
-      setSessions(data);
-
-      const sessionEvents = data.map((session) => ({
-        id: session.id,
-        title: session.name,
-        start: session.startDate || session.date,
-        allDay: false,
-      }));
-      setEvents(sessionEvents);
-    } catch (error) {
-      console.error("Erreur chargement sessions:", error);
->>>>>>> 14cb596907bdb9208979898040b04da5a64dcc68
     }
   };
 
   useEffect(() => {
-<<<<<<< HEAD
     fetchCalendarSessions();
   }, [selectedProgram, token]);
 
@@ -174,23 +111,10 @@ export default function CalendarCreationUI() {
         ? { ...event, start: info.event.startStr }
         : event
     );
-=======
-    fetchSessions();
-  }, [selectedProgram, token]);
-
-  const handleEventDrop = (info) => {
-    const updatedEvents = events.map((event) => {
-      if (event.id === info.event.id) {
-        return { ...event, start: info.event.startStr };
-      }
-      return event;
-    });
->>>>>>> 14cb596907bdb9208979898040b04da5a64dcc68
     setEvents(updatedEvents);
     message.success("Session déplacée !");
   };
 
-<<<<<<< HEAD
   const handleEventResize = async (info) => {
     const updatedEvent = info.event;
     const fullStart = updatedEvent.start.toISOString();
@@ -313,102 +237,25 @@ export default function CalendarCreationUI() {
 
   return (
     <div style={{ padding: 24, maxWidth: 1200, margin: "0 auto", position: "relative" }}>
-=======
-  const handleDateClick = (info) => {
-    setNewSessionDate(info.dateStr);
-    setIsModalVisible(true);
-  };
-  const handleEventResize = (info) => {
-    const updatedEvents = events.map((event) => {
-      if (event.id === info.event.id) {
-        return {
-          ...event,
-          start: info.event.startStr,
-          end: info.event.endStr, // 👈 durée modifiée
-        };
-      }
-      return event;
-    });
-  
-    setEvents(updatedEvents);
-    message.success("Durée de la session modifiée !");
-  };
-  
-
-  const handleCreateSession = async () => {
-    if (!selectedSessionName || !newSessionDate || !selectedProgram || !selectedPatient) {
-      message.error("Veuillez remplir tous les champs.");
-      return;
-    }
-
-    const fullDateTime = `${newSessionDate}T${newSessionTime}:00`;
-
-    try {
-      await axios.post(`${Constants.SERVER_URL}/sessions`, {
-        name: selectedSessionName,
-        startDate: fullDateTime,
-        programId: selectedProgram,
-        patientId: selectedPatient
-      }, {
-        headers: { Authorization: "Bearer " + token }
-      });
-
-      message.success("Session ajoutée !");
-      setIsModalVisible(false);
-      setSelectedSessionName("");
-      setNewSessionTime("14:00");
-      //await fetchSessions(); // le backend n’est pas prêt
-      const newEvent = {
-        id: Date.now(), // ID temporaire
-        title: selectedSessionName,
-        start: `${newSessionDate}T${newSessionTime}:00`,
-        allDay: false,
-      };
-      
-      setEvents((prev) => [...prev, newEvent]); // Ajoute directement au calendrier
-      
-    } catch (error) {
-      message.error("Erreur lors de la création de la session.");
-    }
-  };
-
-  return (
-    <div style={{ padding: 24, maxWidth: 1200, margin: "0 auto" }}>
->>>>>>> 14cb596907bdb9208979898040b04da5a64dcc68
       <Title level={2} style={{ marginBottom: 32 }}>Calendrier des sessions</Title>
 
       <Card style={{ marginBottom: 24, backgroundColor: "#fafafa", borderRadius: 8 }}>
         <Row gutter={16}>
           <Col span={12}>
-<<<<<<< HEAD
             <label>Patient :</label>
-=======
-            <label style={{ display: "block", marginBottom: 8 }}>Patient :</label>
->>>>>>> 14cb596907bdb9208979898040b04da5a64dcc68
             <Select
               placeholder="Choisir un patient"
               onChange={setSelectedPatient}
               value={selectedPatient || undefined}
               style={{ width: "100%" }}
             >
-<<<<<<< HEAD
               {patients.map((p) => (
                 <Option key={p.id} value={p.id}>{p.firstname} {p.lastname}</Option>
-=======
-              {patients.map((patient) => (
-                <Option key={patient.id} value={patient.id}>
-                  {patient.firstname} {patient.lastname}
-                </Option>
->>>>>>> 14cb596907bdb9208979898040b04da5a64dcc68
               ))}
             </Select>
           </Col>
           <Col span={12}>
-<<<<<<< HEAD
             <label>Programme :</label>
-=======
-            <label style={{ display: "block", marginBottom: 8 }}>Programme :</label>
->>>>>>> 14cb596907bdb9208979898040b04da5a64dcc68
             <Select
               placeholder="Choisir un programme"
               onChange={setSelectedProgram}
@@ -416,13 +263,7 @@ export default function CalendarCreationUI() {
               style={{ width: "100%" }}
             >
               {programs.map((program) => (
-<<<<<<< HEAD
                 <Option key={program.id} value={program.id}>{program.name}</Option>
-=======
-                <Option key={program.id} value={program.id}>
-                  {program.name}
-                </Option>
->>>>>>> 14cb596907bdb9208979898040b04da5a64dcc68
               ))}
             </Select>
           </Col>
@@ -435,7 +276,6 @@ export default function CalendarCreationUI() {
           initialView="dayGridMonth"
           editable={true}
           eventResize={handleEventResize}
-<<<<<<< HEAD
           eventDrop={handleEventDrop}
           dateClick={handleDateClick}
           eventClick={handleEventClick}
@@ -448,59 +288,20 @@ export default function CalendarCreationUI() {
           height={650}
         />
         <Button onClick={handleDownloadPDF} style={{ marginTop: 16 }}>Télécharger en PDF</Button>
-=======
-          events={events}
-          eventDrop={handleEventDrop}
-          dateClick={handleDateClick}
-          eventColor="#1890ff"
-          headerToolbar={{
-            left: "prev,next today",
-            center: "title",
-            right: "dayGridMonth,dayGridWeek,dayGridDay"
-          }}
-          height={650}
-        />
-        <div style={{ textAlign: "right", marginTop: 16 }}>
-          <button
-            onClick={handleCreateSession}
-            style={{
-              padding: "8px 16px",
-              backgroundColor: "#1890ff",
-              color: "#fff",
-              border: "none",
-              borderRadius: 4,
-              cursor: "pointer"
-            }}
-          >
-            Sauvegarder le rendez-vous
-          </button>
-        </div>
->>>>>>> 14cb596907bdb9208979898040b04da5a64dcc68
       </Card>
 
       <Modal
         title="Ajouter une session"
         open={isModalVisible}
-<<<<<<< HEAD
         onCancel={() => setIsModalVisible(false)}
         footer={null}
       >
-=======
-        onOk={handleCreateSession}
-        onCancel={() => setIsModalVisible(false)}
-        okText="Créer"
-        cancelText="Annuler"
-      >
-        <p>Date : {newSessionDate}</p>
-
->>>>>>> 14cb596907bdb9208979898040b04da5a64dcc68
         <Select
           placeholder="Choisir une session existante"
           onChange={(value) => setSelectedSessionName(value)}
           value={selectedSessionName || undefined}
           style={{ width: "100%", marginBottom: 16 }}
         >
-<<<<<<< HEAD
           {allSessions.map((session) => (
             <Option key={session.id} value={session.name}>{session.name}</Option>
           ))}
@@ -541,26 +342,10 @@ export default function CalendarCreationUI() {
       </Modal>
 
       <div style={{ position: "fixed", bottom: 32, right: 32, zIndex: 9999 }}>
-        <Button type="primary" size="large" disabled={isSaveDisabled} onClick={handleCreateSession}>Sauvegarder</Button>
+        <Button type="primary" size="large" disabled={isSaveDisabled} onClick={handleCreateSession}>
+          Sauvegarder
+        </Button>
       </div>
     </div>
   );
 }
-=======
-          {Array.isArray(allSessions) && allSessions.map((session) => (
-            <Option key={session.id} value={session.name}>
-              {session.name}
-            </Option>
-          ))}
-        </Select>
-
-        <Input
-          type="time"
-          value={newSessionTime}
-          onChange={(e) => setNewSessionTime(e.target.value)}
-        />
-      </Modal>
-    </div>
-  );
-}
->>>>>>> 14cb596907bdb9208979898040b04da5a64dcc68

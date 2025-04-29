@@ -34,12 +34,9 @@ import { Evaluation_PACE } from "./Evaluation_PACE";
 import { Evaluation_PATH } from "./Evaluation_PATH";
 import { Evaluation_MATCH } from "./Evaluation_MATCH";
 
-<<<<<<< HEAD
 import { CalendarSession } from "./CalendarSession";
 
 
-=======
->>>>>>> 14cb596907bdb9208979898040b04da5a64dcc68
 export function createAssociations() {
   /**
    * @todo The constraints should be true for production.
@@ -467,7 +464,6 @@ export function createAssociations() {
     otherKey: "programId",
     onDelete: "CASCADE",
   });
-<<<<<<< HEAD
   // === Associations pour CalendarSession ===
 CalendarSession.belongsTo(Patient, {
   foreignKey: "PatientId",
@@ -489,6 +485,5 @@ Program.hasMany(CalendarSession, {
   onDelete: "CASCADE",
 });
 
-=======
->>>>>>> 14cb596907bdb9208979898040b04da5a64dcc68
+
 }

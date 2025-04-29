@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 {
   "change_language": "تغيير اللغة",
   "label_admins": "المسؤولون",
@@ -20,26 +19,3 @@
   "label_settings": "الإعدادات",
   "title_loading_evaluations": "جارٍ تحميل التقييمات..."
 }
-=======
-{
-  "change_language": "تغيير اللغة",
-  "label_admins": "المسؤولون",
-  "label_blocs": "كتل التمارين",
-  "label_calendar": "التقويم",
-  "label_cycles": "الدورات",
-  "label_dashboard": "لوحة التحكم",
-  "label_evaluation": "التقييم",
-  "label_exercises": "التمارين",
-  "label_kinesiologists": "أخصائيو الحركة",
-  "label_logout": "تسجيل الخروج",
-  "label_patients": "المرضى",
-  "label_phases": "المراحل",
-  "label_physicians": "الأطباء",
-  "label_professionals": "المهنيون",
-  "label_profile": "الملف الشخصي",
-  "label_programs": "البرامج",
-  "label_sessions": "الجلسات",
-  "label_settings": "الإعدادات",
-  "title_loading_evaluations": "جارٍ تحميل التقييمات..."
-}
->>>>>>> 14cb596907bdb9208979898040b04da5a64dcc68

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 {
   "change_language": "Change Language",
   "label_admins": "Admins",
@@ -20,26 +19,3 @@
   "label_settings": "Settings",
   "title_loading_evaluations": "Loading evaluations..."
 }
-=======
-{
-  "change_language": "Change Language",
-  "label_admins": "Admins",
-  "label_blocs": "Blocs",
-  "label_calendar": "calendar",
-  "label_cycles": "Cycles",
-  "label_dashboard": "Dashboard",
-  "label_evaluation": "Evaluation",
-  "label_exercises": "Exercises",
-  "label_kinesiologists": "Kinesiologists",
-  "label_logout": "Logout",
-  "label_patients": "Patients",
-  "label_phases": "Phases",
-  "label_physicians": "Physicians",
-  "label_professionals": "Professionals",
-  "label_profile": "Profile",
-  "label_programs": "Programs",
-  "label_sessions": "Sessions",
-  "label_settings": "Settings",
-  "title_loading_evaluations": "Loading evaluations..."
-}
->>>>>>> 14cb596907bdb9208979898040b04da5a64dcc68

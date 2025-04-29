@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 {
   "button_add_session": "Agregar sesión",
   "button_back": "Atrás",
@@ -30,36 +29,3 @@
   "title_select_update_sessions": "Por favor, seleccione o actualice las sesiones",
   "title_sessions_loading": "Cargando todas las sesiones..."
 }
-=======
-{
-  "button_add_session": "Agregar sesión",
-  "button_back": "Atrás",
-  "button_close": "Cerrar",
-  "button_create_cycle": "Crear ciclo",
-  "button_delete": "Eliminar",
-  "button_edit": "Editar",
-  "button_submit": "ENVIAR",
-  "button_update": "Actualizar",
-  "label_cycle_description": "Por favor, ingrese la descripción del ciclo : ",
-  "label_cycle_name": "Por favor, ingrese el nombre del ciclo : ",
-  "label_flexible": "Flexible",
-  "label_select_session_day_five": "Seleccione una sesión para el día cinco",
-  "label_select_session_day_four": "Seleccione una sesión para el día cuatro",
-  "label_select_session_day_one": "Seleccione una sesión para el día uno",
-  "label_select_session_day_seven": "Seleccione una sesión para el día siete",
-  "label_select_session_day_six": "Seleccione una sesión para el día seis",
-  "label_select_session_day_three": "Seleccione una sesión para el día tres",
-  "label_select_session_day_two": "Seleccione una sesión para el día dos",
-  "placeholder_update_cycle_description": "Ingrese otro valor para editar la descripción",
-  "placeholder_update_cycle_name": "Ingrese otro nombre para actualizar el nombre del ciclo",
-  "placeholder_weekly_cycle_description": "Descripción del ciclo semanal",
-  "placeholder_weekly_cycle_name": "Nombre del ciclo semanal",
-  "title_create_new_cycle": "Crear un nuevo ciclo",
-  "title_cycle_sessions_loading": "Cargando sesiones del ciclo...",
-  "title_edit": "Modificar ",
-  "title_error_cycle_sessions_loading": "Lo sentimos, ocurrió un error al cargar las sesiones del ciclo",
-  "title_error_sessions_loading": "Lo sentimos, ocurrió un error al cargar las sesiones",
-  "title_select_update_sessions": "Por favor, seleccione o actualice las sesiones",
-  "title_sessions_loading": "Cargando todas las sesiones..."
-}
->>>>>>> 14cb596907bdb9208979898040b04da5a64dcc68

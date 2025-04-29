@@ -12,9 +12,6 @@ router.get("/professional-users", isAuth, professionalUserController.getProfessi
 router.get("/kinesiologist-patients/:id", isAuth, professionalUserController.getKinesiologistPatients);
 router.get("/doctor-patients/:id", isAuth, professionalUserController.getDoctorPatients);
 router.get("/generate-password", isAuth, professionalUserController.generatePassword);
-<<<<<<< HEAD
 router.post("/activate", professionalUserController.activateProfessionalUser);
-=======
->>>>>>> 14cb596907bdb9208979898040b04da5a64dcc68
 
 export default router;

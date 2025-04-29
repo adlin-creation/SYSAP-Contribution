@@ -2,7 +2,6 @@
 /* .site-layout .site-layout-background {
     background: #fff;
   } */
-<<<<<<< HEAD
 /* Sidebar par rôle */
 /* ---------- SIDEBAR PAR RÔLE ---------- */
 /* Appliquer la transparence pour que le fond du Sider soit visible */
@@ -62,20 +61,7 @@
 }
 
 
-=======
 
-.logo {
-  height: 2rem;
-  margin: 1rem;
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #fff;
-  text-align: center;
-  line-height: 2rem;
-  font-family: cursive;
-}
-
->>>>>>> 14cb596907bdb9208979898040b04da5a64dcc68
 .header {
   padding: 0;
   position: fixed;
@@ -121,18 +107,12 @@
   left: 0;
   top: 0;
   bottom: 0;
-<<<<<<< HEAD
   width: 15rem; /* ✅ valeur cohérente avec .site-layout */
   z-index: 2;
 }
 
 
-=======
-  width: 1rem; /* Adjust this value based on your design */
-  z-index: 2;
-}
 
->>>>>>> 14cb596907bdb9208979898040b04da5a64dcc68
 .sider-ar {
   right: 0;
   top: 0;

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 {
   "button_add_bloc": "Ajouter un bloc",
   "button_back": "Retourner",
@@ -35,41 +34,3 @@
   "title_sessions_loading": "Chargement des sessions...",
   "title_sessions_loading_error": "Désolé, une erreur s'est produite lors du chargement des sessions"
 }
-=======
-{
-  "button_add_bloc": "Ajouter un bloc",
-  "button_back": "Retourner",
-  "button_create_session": "Créer une session",
-  "button_delete": "Supprimer",
-  "button_edit": "Modifier",
-  "button_submit": "SOUMETTRE",
-  "button_update": "Mettre à jour",
-  "edit": "Modifier",
-  "enter_day_session": "Veuillez entrer le nom de la session de jour",
-  "enter_day_session_description": "Veuillez entrer la description de la session de jour",
-  "label_day_time": "Jour et heure",
-  "label_description": "Description",
-  "label_name": "Nom",
-  "label_required": "Obligatoire",
-  "label_select_a_bloc": "Sélectionner un bloc",
-  "label_select_start_condition_type": "Sélectionner le type de condition de début",
-  "placeholder_day_session_constraints": "Contraintes de la session de jour",
-  "placeholder_day_session_name": "Nom de la session de jour",
-  "placeholder_session_constraints": "Entrez les contraintes de la session pour mettre à jour",
-  "placeholder_update_session": "Entrez le nom de la session à mettre à jour",
-  "plceholder_session_to_update": "Enter session to update",
-  "title_blocs_list_load": "Chargement de la liste des blocs...",
-  "title_blocs_list_loading_error": "Désolé, une erreur s'est produite lors du chargement des blocs",
-  "title_day_of_week": "Jour de la semaine",
-  "title_constraints_day_session": "Veuillez entrer les contraintes de la session de jour",
-  "title_day_session_description": "Description de la session de jour",
-  "title_select_a_bloc": "Veuillez sélectionner un bloc",
-  "title_select_day_time": "Veuillez sélectionner l'heure de la journée",
-  "title_session_constraints": "Contraintes",
-  "title_session_description": "Description",
-  "title_session_details": "Entrez les détails suivants puis soumettez pour créer une nouvelle session",
-  "title_session_name": "Nom",
-  "title_sessions_loading": "Chargement des sessions...",
-  "title_sessions_loading_error": "Désolé, une erreur s'est produite lors du chargement des sessions"
-}
->>>>>>> 14cb596907bdb9208979898040b04da5a64dcc68
