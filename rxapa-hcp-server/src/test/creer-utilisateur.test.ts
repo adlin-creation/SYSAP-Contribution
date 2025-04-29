@@ -272,7 +272,7 @@ describe("createProfessionalUser", () => {
       id: 1,
       firstname: "john",
       lastname: "doe",
-      email: "john.doe@example.com",
+      email: "john.doe5@example.com",
       phoneNumber: "9876543210",
       password: "hashedPassword",
       role: "doctor",
