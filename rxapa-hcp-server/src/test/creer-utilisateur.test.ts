@@ -313,7 +313,7 @@ describe("createProfessionalUser", () => {
       body: {
         firstname: "John",
         lastname: "Doe",
-        email: "Gamskanderrrrr@exemple.com",
+        email: "Gamskanderrrrrrr@exemple.com",
         phoneNumber: "5141234567",
         role: "doctor",
         workEnvironment: "Clinique Santé Plus"
