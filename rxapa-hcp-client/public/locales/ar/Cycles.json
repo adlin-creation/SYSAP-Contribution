@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "button_add_session": "إضافة جلسة",
   "button_back": "رجوع",
@@ -29,3 +30,36 @@
   "title_select_update_sessions": "يرجى تحديد أو تحديث الجلسات",
   "title_sessions_loading": "تحميل جميع الجلسات..."
 }
+=======
+{
+  "button_add_session": "إضافة جلسة",
+  "button_back": "رجوع",
+  "button_close": "إغلاق",
+  "button_create_cycle": "إنشاء دورة",
+  "button_delete": "حذف",
+  "button_edit": "تعديل",
+  "button_submit": "إرسال",
+  "button_update": "تحديث",
+  "label_cycle_description": "يرجى إدخال وصف الدورة : ",
+  "label_cycle_name": "يرجى إدخال اسم الدورة : ",
+  "label_flexible": "مرن",
+  "label_select_session_day_five": "اختر جلسة لليوم الخامس",
+  "label_select_session_day_four": "اختر جلسة لليوم الرابع",
+  "label_select_session_day_one": "اختر جلسة لليوم الأول",
+  "label_select_session_day_seven": "اختر جلسة لليوم السابع",
+  "label_select_session_day_six": "اختر جلسة لليوم السادس",
+  "label_select_session_day_three": "اختر جلسة لليوم الثالث",
+  "label_select_session_day_two": "اختر جلسة لليوم الثاني",
+  "placeholder_update_cycle_description": "أدخل قيمة أخرى لتعديل الوصف",
+  "placeholder_update_cycle_name": "أدخل اسمًا آخر لتحديث اسم الدورة",
+  "placeholder_weekly_cycle_description": "وصف الدورة الأسبوعية",
+  "placeholder_weekly_cycle_name": "اسم الدورة الأسبوعية",
+  "title_create_new_cycle": "إنشاء دورة جديدة",
+  "title_cycle_sessions_loading": "تحميل جلسات الدورة...",
+  "title_edit": "تعديل ",
+  "title_error_cycle_sessions_loading": "عذرًا، حدث خطأ أثناء تحميل جلسات الدورة",
+  "title_error_sessions_loading": "عذرًا، حدث خطأ أثناء تحميل الجلسات",
+  "title_select_update_sessions": "يرجى تحديد أو تحديث الجلسات",
+  "title_sessions_loading": "تحميل جميع الجلسات..."
+}
+>>>>>>> 14cb596907bdb9208979898040b04da5a64dcc68

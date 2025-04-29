@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* Ajoutez ce style pour le conteneur parent */
 .auth-container {
   display: flex;
@@ -44,3 +45,51 @@
   font-size: 0.9rem;
   margin-top: 4px;
 }
+=======
+/* Ajoutez ce style pour le conteneur parent */
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 85vh; /* Utilisez 100vh pour prendre toute la hauteur de la fenêtre */
+}
+
+/* Styles existants pour le formulaire */
+.auth-form {
+  border: 1px solid #3b0062;
+  border-radius: 10px;
+  background-color: #fff;
+  padding: 2rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px; /* Limitez la largeur maximale pour éviter qu'il ne s'étende trop */
+  margin: auto;
+}
+
+.auth-form h2 {
+  text-align: center;
+  color: #3b0062;
+  margin-bottom: 1rem;
+}
+
+.auth-form .input-element {
+  margin-bottom: 1.5rem;
+}
+
+.auth-form .input-element h5 {
+  margin-bottom: 0.5rem;
+  color: #3b0062;
+}
+
+.auth-form .ant-btn-primary {
+  width: 100%;
+  background-color: #3b0062;
+  border-color: #3b0062;
+}
+
+.error {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+>>>>>>> 14cb596907bdb9208979898040b04da5a64dcc68

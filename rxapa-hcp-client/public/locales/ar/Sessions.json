@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "button_add_bloc": "إضافة كتلة",
   "button_back": "عودة",
@@ -34,3 +35,41 @@
   "title_sessions_loading": "جارٍ تحميل الجلسات...",
   "title_sessions_loading_error": "عذرًا، حدث خطأ أثناء تحميل الجلسات"
 }
+=======
+{
+  "button_add_bloc": "إضافة كتلة",
+  "button_back": "عودة",
+  "button_create_session": "إنشاء جلسة",
+  "button_delete": "حذف",
+  "button_edit": "تعديل",
+  "button_submit": "إرسال",
+  "button_update": "تحديث",
+  "edit": "تعديل",
+  "enter_day_session": "يرجى إدخال اسم جلسة اليوم",
+  "enter_day_session_description": "يرجى إدخال وصف جلسة اليوم",
+  "label_day_time": "وقت اليوم",
+  "label_description": "الوصف",
+  "label_name": "الاسم",
+  "label_required": "مطلوب",
+  "label_select_a_bloc": "اختيار كتلة",
+  "label_select_start_condition_type": "اختر نوع شرط البداية",
+  "placeholder_day_session_constraints": "قيود جلسة اليوم",
+  "placeholder_day_session_name": "اسم جلسة اليوم",
+  "placeholder_session_constraints": "أدخل قيود الجلسة للتحديث",
+  "placeholder_session_to_update": "أدخل الجلسة لتحديثها",
+  "placeholder_update_session": "أدخل اسم الجلسة للتحديث",
+  "title_blocs_list_load": "جارٍ تحميل قائمة الكتل...",
+  "title_blocs_list_loading_error": "عذرًا، حدث خطأ أثناء تحميل الكتل",
+  "title_constraints_day_session": "يرجى إدخال قيود جلسة اليوم",
+  "title_day_of_week": "يوم من أيام الأسبوع",
+  "title_day_session_description": "وصف جلسة اليوم",
+  "title_select_a_bloc": "يرجى اختيار كتلة",
+  "title_select_day_time": "يرجى اختيار وقت اليوم",
+  "title_session_constraints": "القيود",
+  "title_session_description": "الوصف",
+  "title_session_details": "أدخل التفاصيل التالية ثم أرسل لإنشاء جلسة جديدة",
+  "title_session_name": "الاسم",
+  "title_sessions_loading": "جارٍ تحميل الجلسات...",
+  "title_sessions_loading_error": "عذرًا، حدث خطأ أثناء تحميل الجلسات"
+}
+>>>>>>> 14cb596907bdb9208979898040b04da5a64dcc68

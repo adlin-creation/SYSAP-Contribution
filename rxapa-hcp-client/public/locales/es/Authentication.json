@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "alert_error": "Error: ",
   "alert_link_cannot_be_sent": "No se puede enviar el enlace de restablecimiento",
@@ -41,3 +42,48 @@
   "title_phone_number": "Número de teléfono",
   "title_role": "Rol"
 }
+=======
+{
+  "alert_error": "Error: ",
+  "alert_link_cannot_be_sent": "No se puede enviar el enlace de restablecimiento",
+  "alert_link_sending_error": "Error al enviar el enlace",
+  "alert_link_sent_successfully": "¡Enlace enviado con éxito!",
+  "title_link_sent_to_reset_password": "Enviar un enlace para restablecer la contraseña",
+  "alert_password_cannot_be_changed": "No se puede restablecer la contraseña",
+  "alert_password_changed_successfully": "¡Contraseña modificada con éxito!",
+  "alert_password_error_change": "Error al cambiar la contraseña",
+  "alert_password_missmatch": "Las contraseñas no coinciden",
+  "button_back": "Volver",
+  "button_close": "Cerrar",
+  "button_confirm": "Confirmar",
+  "button_login": "INICIAR SESIÓN",
+  "button_password_forgotten": "Contraseña olvidada",
+  "button_register": "Registrarse",
+  "button_signup": "REGÍSTRATE",
+  "error_mail_required": "¡Por favor, ingrese su dirección de correo electrónico!",
+  "error_password_confirmation_confirmation": "¡Por favor, confirme la contraseña!",
+  "error_password_min_length": "La contraseña debe contener al menos 8 caracteres, una mayúscula, un número y un carácter especial",
+  "error_password_required": "¡Por favor, ingrese una contraseña!",
+  "option_admin": "Administrador",
+  "option_kinesiologist": "Kinesiólogo",
+  "option_physician": "Médico",
+  "option_super_admin": "Super Administrador",
+  "placeholder_confirm_password": "Confirme su contraseña",
+  "placeholder_email": "Su correo electrónico",
+  "placeholder_firstname": "Su nombre",
+  "placeholder_name": "Su apellido",
+  "placeholder_password": "Su contraseña",
+  "placeholder_phone_number": "Su número de teléfono",
+  "title_confirm_password": "Confirme la contraseña",
+  "title_define_new_password": "Definir una nueva contraseña",
+  "title_email": "Introduzca su correo electrónico",
+  "title_firstname": "Ingrese su nombre",
+  "title_login": "Inicio de sesión",
+  "title_name": "Ingrese su apellido",
+  "title_new_password": "Nueva contraseña",
+  "title_password": "Su contraseña",
+  "title_password_confirmation": "Confirmar la contraseña",
+  "title_phone_number": "Número de teléfono",
+  "title_role": "Rol"
+}
+>>>>>>> 14cb596907bdb9208979898040b04da5a64dcc68

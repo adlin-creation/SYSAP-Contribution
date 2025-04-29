@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "change_language": "Changer de langue",
   "label_admins": "Administrateurs",
@@ -19,3 +20,26 @@
   "label_settings": "Paramètres",
   "title_loading_evaluations": "Chargement des évaluations..."
 }
+=======
+{
+  "change_language": "Changer de langue",
+  "label_admins": "Administrateurs",
+  "label_blocs": "Blocs",
+  "label_calendar": "calendrier",
+  "label_cycles": "Cycles",
+  "label_dashboard": "Tableau de bord",
+  "label_evaluation": "Évaluation",
+  "label_exercises": "Exercices",
+  "label_kinesiologists": "Kinésiologues",
+  "label_logout": "Déconnexion",
+  "label_patients": "Patients",
+  "label_phases": "Phases",
+  "label_physicians": "Médecins",
+  "label_professionals": "Professionnels",
+  "label_profile": "Profile",
+  "label_programs": "Programmes",
+  "label_sessions": "Sessions",
+  "label_settings": "Paramètres",
+  "title_loading_evaluations": "Chargement des évaluations..."
+}
+>>>>>>> 14cb596907bdb9208979898040b04da5a64dcc68

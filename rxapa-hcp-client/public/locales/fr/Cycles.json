@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "button_add_session": "Ajouter La session",
   "button_back": "Retour",
@@ -29,3 +30,36 @@
   "title_select_update_sessions": "Veuillez sélectionner ou mettre à jour les sessions",
   "title_sessions_loading": "Chargement de toutes les sessions..."
 }
+=======
+{
+  "button_add_session": "Ajouter La session",
+  "button_back": "Retour",
+  "button_close": "Fermer",
+  "button_create_cycle": "Créer un cycle",
+  "button_delete": "Supprimer",
+  "button_edit": "Modifier",
+  "button_submit": "SOUMETTRE",
+  "button_update": "Mettre à jour",
+  "label_cycle_description": "Veuillez entrer la description du cycle : ",
+  "label_cycle_name": "Veuillez entrer le nom du cycle : ",
+  "label_flexible": "Flexible",
+  "label_select_session_day_five": "Sélectionnez une session pour le cinquième jour",
+  "label_select_session_day_four": "Sélectionnez une session pour le quatrième jour",
+  "label_select_session_day_one": "Sélectionnez une session pour le premier jour",
+  "label_select_session_day_seven": "Sélectionnez une session pour le septième jour",
+  "label_select_session_day_six": "Sélectionnez une session pour le sixième jour",
+  "label_select_session_day_three": "Sélectionnez une session pour le troisième jour",
+  "label_select_session_day_two": "Sélectionnez une session pour le deuxième jour",
+  "placeholder_update_cycle_description": "Entrez une autre valeur pour modifier la description",
+  "placeholder_update_cycle_name": "Entrez un autre nom pour mettre à jour le nom du cycle",
+  "placeholder_weekly_cycle_description": "Description du cycle hebdomadaire",
+  "placeholder_weekly_cycle_name": "Nom du cycle hebdomadaire",
+  "title_create_new_cycle": "Créer un nouveau cycle",
+  "title_cycle_sessions_loading": "Chargement des sessions du cycle...",
+  "title_edit": "Modifier ",
+  "title_error_cycle_sessions_loading": "Désolé, une erreur est survenue lors du chargement des sessions du cycle",
+  "title_error_sessions_loading": "Désolé, une erreur est survenue lors du chargement des sessions",
+  "title_select_update_sessions": "Veuillez sélectionner ou mettre à jour les sessions",
+  "title_sessions_loading": "Chargement de toutes les sessions..."
+}
+>>>>>>> 14cb596907bdb9208979898040b04da5a64dcc68

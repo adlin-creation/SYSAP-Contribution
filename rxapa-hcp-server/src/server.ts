@@ -97,7 +97,10 @@ app.use(
 );
 
 app.use(userRoutes);
+<<<<<<< HEAD
 app.use(professionalUserRoutes);
+=======
+>>>>>>> 14cb596907bdb9208979898040b04da5a64dcc68
 app.use(patientRoutes);
 app.use(exerciseRoutes);
 app.use(blocRoutes);
@@ -108,12 +111,18 @@ app.use(programEnrollementRoutes);
 app.use(programRoutes);
 app.use(patientCaregiverRoutes);
 app.use(caregiverRoutes);
+<<<<<<< HEAD
 
 app.use(evaluationRoutes);
 
 app.use("/calendar-sessions", require("./routes/sessionCalendarRoutes"));
 
 
+=======
+app.use(professionalUserRoutes);
+app.use(evaluationRoutes);
+
+>>>>>>> 14cb596907bdb9208979898040b04da5a64dcc68
 // app.use("/", programPhaseRoutes);
 
 app.use("*", function (req, res) {

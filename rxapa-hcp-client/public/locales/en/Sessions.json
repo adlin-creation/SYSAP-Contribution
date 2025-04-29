@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "button_add_bloc": "Add bloc",
   "button_back": "Back",
@@ -34,3 +35,41 @@
   "title_sessions_loading": "Sessions Loading...",
   "title_sessions_loading_error": "Sorry, an error occured while loading sessions"
 }
+=======
+{
+  "button_add_bloc": "Add bloc",
+  "button_back": "Back",
+  "button_create_session": "Create session",
+  "button_delete": "Delete",
+  "button_edit": "Edit",
+  "button_submit": "SUBMIT",
+  "button_update": "Update",
+  "edit": "Edit",
+  "enter_day_session": "Please enter the name of the day session",
+  "enter_day_session_description": "Please enter the description of the day session",
+  "label_day_time": "Day Time",
+  "label_description": "Description",
+  "label_name": "Name",
+  "label_required": "Required",
+  "label_select_a_bloc": "Select a bloc",
+  "label_select_start_condition_type": "Select Start Condition Type",
+  "placeholder_day_session_constraints": "Day Session Constraints",
+  "placeholder_day_session_name": "Day Session Name",
+  "placeholder_session_constraints": "Enter session constraints to update",
+  "placeholder_session_to_update": "Ingrese la sesión a actualizar",
+  "placeholder_update_session": "Enter session name to update",
+  "title_blocs_list_load": "List of blocs Loading...",
+  "title_blocs_list_loading_error": "Sorry, an error occured while loading the blocs",
+  "title_constraints_day_session": "Please enter the constraints of the day session",
+  "title_day_of_week": "Day of the week",
+  "title_day_session_description": "Day Session Description",
+  "title_select_a_bloc": "Please select a bloc",
+  "title_select_day_time": "Please select day time",
+  "title_session_constraints": "Constraints",
+  "title_session_description": "Description",
+  "title_session_details": "Enter the following details and then submit to create a new session",
+  "title_session_name": "Name",
+  "title_sessions_loading": "Sessions Loading...",
+  "title_sessions_loading_error": "Sorry, an error occured while loading sessions"
+}
+>>>>>>> 14cb596907bdb9208979898040b04da5a64dcc68

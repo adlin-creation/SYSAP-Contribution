@@ -1,4 +1,5 @@
-/*import { createProfessionalUser } from "../controller/ProfessionalUserController";
+
+import { createProfessionalUser } from "../controller/ProfessionalUserController";
 import { Professional_User } from "../model/Professional_User";
 import { Admin } from "../model/Admin";
 import { Doctor } from "../model/Doctor";
@@ -301,36 +302,5 @@ describe("createProfessionalUser", () => {
 
     expect(generateCode).toHaveBeenCalled();
     expect(sendEmail).toHaveBeenCalled();
-  });
-});
-*/
-import { createProfessionalUser } from "../controller/ProfessionalUserController"; // Ajuste le chemin si besoin
-import { Request, Response, NextFunction } from "express";
-
-describe("createProfessionalUser", () => {
-  it("should create a professional user successfully", async () => {
-    const req = {
-      body: {
-        firstname: "John",
-        lastname: "Doe",
-        email: "Gamskanderrrrrrr@exemple.com",
-        phoneNumber: "5141234567",
-        role: "doctor",
-        workEnvironment: "Clinique Santé Plus"
-
-      },
-    } as unknown as Request;
-
-    const res = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn(),
-    } as unknown as Response;
-
-    const next = jest.fn() as unknown as NextFunction; // <<< AJOUT ici !
-
-    await createProfessionalUser(req, res, next); // <<< APPELER AVEC 3 arguments
-
-    expect(res.status).toHaveBeenCalledWith(201);
-    expect(res.json).toHaveBeenCalled();
   });
 });
